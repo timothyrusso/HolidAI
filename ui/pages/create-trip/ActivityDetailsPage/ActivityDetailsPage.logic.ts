@@ -36,6 +36,9 @@ export const useActivityDetailsPageLogic = () => {
 
   const ticketPricing = activity?.ticketPricing;
 
+  const latitude = activity?.geoCoordinates.latitude;
+  const longitude = activity?.geoCoordinates.longitude;
+
   const goBackHandler = () => {
     router.back();
   };
@@ -52,5 +55,7 @@ export const useActivityDetailsPageLogic = () => {
     rating,
     bestTimeToVisit,
     ticketPricing,
+    latitude,
+    longitude,
   };
 };

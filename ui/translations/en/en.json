@@ -14,9 +14,10 @@
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Useful Tips",
-    "BEST_TIME_TO_VISIT": "Best Time to Visit",
-    "TICKET_PRICING": "Ticket Pricing",
-    "PRICE_ALERT": "Prices may vary, do not rely solely on this information and do your own research."
+    "BEST_TIME_TO_VISIT": "Best Time to Visit:",
+    "TICKET_PRICING": "Ticket Pricing:",
+    "PRICE_ALERT": "Prices may vary, do not rely solely on this information and do your own research.",
+    "OPEN_MAP": "OPEN IN MAPS"
   },
   "PROFILE": {
     "TITLE": "Profile",

@@ -5,15 +5,27 @@ import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import { icons } from '@/ui/constants/style/icons';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
+import { showLocation } from 'react-native-map-link';
+import { OpenMapButton } from '../OpenMapButton/OpenMapButton';
 import { styles } from './ActivityDetailsBox.style';
 
 type ActivityDetailsBoxProps = {
+  locationTitle?: string;
   rating?: number;
   bestTimeToVisit?: string;
   ticketPricing?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
-export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({ rating, bestTimeToVisit, ticketPricing }) => {
+export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
+  rating,
+  bestTimeToVisit,
+  ticketPricing,
+  locationTitle,
+  latitude,
+  longitude,
+}) => {
   return (
     <View style={styles.container}>
       {rating && (
@@ -46,6 +58,18 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({ rating, bestTi
             <CustomText text="ACTIVITY_DETAILS.PRICE_ALERT" style={styles.priceAlert} />
           </View>
         </Fragment>
+      )}
+      {latitude && longitude && locationTitle && (
+        <OpenMapButton
+          onPress={() =>
+            showLocation({
+              latitude,
+              longitude,
+              title: locationTitle,
+            })
+          }
+          style={styles.mapLink}
+        />
       )}
     </View>
   );

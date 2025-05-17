@@ -43,30 +43,28 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.Minimal,
   },
   bestTimeToVisitContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: spacing.Single,
   },
   bestTimeToVisitTitle: {
-    fontSize: spacing.Double + spacing.Minimal,
-    fontFamily: fonts.interBold,
-  },
-  bestTimeToVisitValue: {
     fontSize: spacing.Double,
     fontFamily: fonts.interMedium,
   },
+  bestTimeToVisitValue: {
+    fontSize: spacing.Double,
+    fontFamily: fonts.interBold,
+  },
   ticketPricingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: spacing.Single,
   },
   ticketPricingValue: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fonts.interBold,
+    flexWrap: 'wrap',
+    flexShrink: 1,
   },
   ticketPricingTitle: {
-    fontSize: spacing.Double + spacing.Minimal,
-    fontFamily: fonts.interBold,
+    fontSize: spacing.Double,
+    fontFamily: fonts.interMedium,
   },
   priceAlert: {
     fontSize: spacing.SingleAndHalf + spacing.Minimal,
@@ -77,5 +75,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.Minimal,
     paddingRight: spacing.Fourfold,
+  },
+  mapLink: {
+    position: 'absolute',
+    top: spacing.Fourfold,
+    right: spacing.Fourfold,
   },
 });

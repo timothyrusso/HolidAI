@@ -28,6 +28,8 @@ export const ActivityDetailsPage = () => {
     rating,
     bestTimeToVisit,
     ticketPricing,
+    latitude,
+    longitude,
   } = useActivityDetailsPageLogic();
 
   const styles = stylesFactory(isImageLoading);
@@ -57,6 +59,9 @@ export const ActivityDetailsPage = () => {
               rating={rating}
               bestTimeToVisit={bestTimeToVisit}
               ticketPricing={ticketPricing?.toString()}
+              locationTitle={locationTitle}
+              latitude={latitude}
+              longitude={longitude}
             />
             {mainDescription && <CustomText text={mainDescription} style={styles.description} />}
             {activityInsights && (

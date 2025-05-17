@@ -1,6 +1,5 @@
 import { components } from '@/ui/constants/style/dimensions/components';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { fonts } from '@/ui/constants/style/fonts';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -13,17 +12,17 @@ export const styles = StyleSheet.create({
   animation: {
     width: '100%',
     height: components.travelAnimationHeight,
+    zIndex: 2,
   },
   button: {
     alignSelf: 'center',
     width: components.customButtonWidth,
   },
-  title: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.Fourfold,
-    textAlign: 'center',
-    width: '100%',
-    paddingHorizontal: spacing.Quintuple,
-    lineHeight: spacing.Quintuple,
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });

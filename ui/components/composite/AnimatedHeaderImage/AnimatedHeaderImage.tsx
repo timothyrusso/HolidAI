@@ -54,7 +54,11 @@ const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
           <View style={styles.detailsChipRow}>{chips}</View>
         </View>
       </Animated.View>
-      <View style={styles.image}>{imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}</View>
+      <View style={styles.image}>
+        {imageUrl && (
+          <Image source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl} style={styles.image} />
+        )}
+      </View>
       {headerIcons && <View style={styles.iconsContainer}>{headerIcons}</View>}
     </Animated.View>
   );
