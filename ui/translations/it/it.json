@@ -14,9 +14,10 @@
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Consigli utili",
-    "BEST_TIME_TO_VISIT": "Miglior momento per visitare",
-    "TICKET_PRICING": "Prezzo del biglietto",
-    "PRICE_ALERT": "I prezzi possono variare, non affidarti esclusivamente a queste informazioni e fai le opportune verifiche."
+    "BEST_TIME_TO_VISIT": "Miglior momento per visitare:",
+    "TICKET_PRICING": "Prezzo del biglietto:",
+    "PRICE_ALERT": "I prezzi possono variare, non affidarti esclusivamente a queste informazioni e fai le opportune verifiche.",
+    "OPEN_MAP": "APRI NELLA MAPPA"
   },
   "PROFILE": {
     "TITLE": "Profilo",

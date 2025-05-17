@@ -33,6 +33,7 @@
     "plugins": [
       "expo-router",
       "expo-localization",
+      "react-native-map-link",
       "expo-font",
       [
         "expo-build-properties",

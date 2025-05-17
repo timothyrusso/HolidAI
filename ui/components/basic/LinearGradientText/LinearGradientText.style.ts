@@ -18,7 +18,7 @@ export const styles = (height: number) =>
     },
     title: {
       fontFamily: fonts.interBold,
-      fontSize: spacing.Fourfold,
+      fontSize: spacing.Triple + spacing.Minimal,
       textAlign: 'center',
       width: '100%',
       paddingHorizontal: spacing.Quintuple,

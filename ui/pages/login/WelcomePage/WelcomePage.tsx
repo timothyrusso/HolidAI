@@ -5,7 +5,9 @@ import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimati
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/routes';
+import { colors } from '@/ui/constants/style/colors';
 import { components } from '@/ui/constants/style/dimensions/components';
+import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 import { useWelcomePageLogic } from './WelcomePage.logic';
 import { styles } from './WelcomePage.style';
@@ -14,10 +16,11 @@ const WelcomePage = () => {
   const { handlePress, animation, welcomeTextBackground } = useWelcomePageLogic();
 
   return (
-    <BasicView nameView={Routes.Welcome}>
+    <BasicView nameView={Routes.Welcome} isFullScreen>
       <CustomScrollView>
         <View style={styles.container}>
           <LottieAnimation style={styles.animation} animationPath={animation} />
+          <LinearGradient colors={[colors.primary, colors.primaryWhite]} style={styles.gradient} />
           <LinearGradientText
             text="WELCOME.TITLE"
             imageSource={welcomeTextBackground}
