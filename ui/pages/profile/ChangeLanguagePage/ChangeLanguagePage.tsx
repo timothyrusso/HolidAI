@@ -1,7 +1,8 @@
+import { Languages } from '@/modules/shared/domain/Languages';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/routes';
 import { View } from 'react-native';
-import { Languages, useChangeLanguagePageLogic } from './ChangeLanguagePage.logic';
+import { useChangeLanguagePageLogic } from './ChangeLanguagePage.logic';
 import { styles } from './ChangeLanguagePage.style';
 import { LanguageItem } from './components/LanguageItem/LanguageItem';
 export const ChangeLanguagePage = () => {

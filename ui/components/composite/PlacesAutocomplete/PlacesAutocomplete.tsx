@@ -1,3 +1,4 @@
+import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import type { LocationInfo } from '@/modules/trip/domain/entities/LocationInfo';
 import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
@@ -32,7 +33,7 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
       }}
       query={{
         key: Constants.expoConfig?.extra?.googlePlacesApiKey,
-        language: getLanguage ?? 'en',
+        language: getLanguage ?? AppKeys.defaultLanguage,
         // types: 'airport',
       }}
       styles={{

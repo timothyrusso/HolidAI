@@ -1,8 +1,9 @@
+import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import { create } from '../shared/createStore';
 import type { AppActions, AppState } from './types';
 
 const initialState: AppState = {
-  language: 'en',
+  language: AppKeys.defaultLanguage,
   loading: false,
 };
 

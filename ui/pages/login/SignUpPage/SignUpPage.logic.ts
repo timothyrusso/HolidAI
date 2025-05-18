@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { Routes } from '@/ui/constants/routes';
 import { useToast } from '@/ui/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
@@ -45,8 +46,7 @@ export const useSignUpPageLogic = () => {
     } catch (error) {
       const { code: errorCode, message: errorMessage } = error as FirebaseError;
       showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      // biome-ignore lint/suspicious/noConsole: <explanation>
-      console.log(errorCode, errorMessage);
+      logger.error(new Error(errorCode), errorMessage);
     } finally {
       setLoading(false);
     }
