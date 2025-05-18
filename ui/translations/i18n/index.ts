@@ -1,4 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@/di/resolve';
+import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import * as Localization from 'expo-localization';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -10,18 +11,18 @@ const resources = {
   en: { translation: translationEn },
 };
 
-const initI18n = async () => {
-  let savedLanguage = await AsyncStorage.getItem('language');
+const initI18n = () => {
+  let savedLanguage = storage.getString(AppKeys.storageLanguageKey);
 
   if (!savedLanguage) {
-    savedLanguage = Localization.getLocales()[0].languageCode ?? 'en';
+    savedLanguage = Localization.getLocales()[0].languageCode ?? AppKeys.defaultLanguage;
   }
 
   i18n.use(initReactI18next).init({
     compatibilityJSON: 'v3',
     resources,
     lng: savedLanguage,
-    fallbackLng: 'en',
+    fallbackLng: AppKeys.defaultLanguage,
     interpolation: {
       escapeValue: false,
     },

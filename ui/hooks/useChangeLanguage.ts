@@ -1,15 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@/di/resolve';
+import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import * as Localization from 'expo-localization';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Languages } from '../pages/profile/ChangeLanguagePage/ChangeLanguagePage.logic';
 
 export const useChangeLanguage = () => {
   const { i18n } = useTranslation();
-  const initialLanguage = Localization.getLocales()[0].languageCode ?? Languages.EN;
+  const initialLanguage = Localization.getLocales()[0].languageCode ?? AppKeys.defaultLanguage;
 
-  const loadLanguage = async () => {
-    const savedLanguage = await AsyncStorage.getItem('language');
+  const loadLanguage = () => {
+    const savedLanguage = storage.getString(AppKeys.storageLanguageKey);
     if (savedLanguage) {
       i18n.changeLanguage(savedLanguage);
     } else {
@@ -22,8 +22,8 @@ export const useChangeLanguage = () => {
     loadLanguage();
   }, [i18n]);
 
-  const changeLanguage = async (lang: string) => {
-    await AsyncStorage.setItem('language', lang);
+  const changeLanguage = (lang: string) => {
+    storage.set(AppKeys.storageLanguageKey, lang);
     i18n.changeLanguage(lang);
   };
 

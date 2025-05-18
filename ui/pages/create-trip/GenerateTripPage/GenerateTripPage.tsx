@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
@@ -10,8 +11,7 @@ const GenerateTripPage = () => {
   const animation = require('../../../assets/lottie/loading_animation.json');
   const { generateAiTrip } = useGenerateTripPageLogic();
 
-  // biome-ignore lint/suspicious/noConsole: <explanation>
-  console.log(generateAiTrip);
+  logger.log(generateAiTrip);
 
   return (
     <BasicView nameView={Routes.GenerateTrip} statusBarStyle="dark">

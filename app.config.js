@@ -15,6 +15,7 @@ export default ({ config }) => {
       googleGeminiApiKey: process.env.GOOGLE_GEMINI_API_KEY,
       rapidApiKey: process.env.RAPID_API_KEY,
       unsplashAccessKey: process.env.UNSPLASH_ACCESS_KEY,
+      mmkvEncryptionKey: process.env.MMKV_ENCRYPTION_KEY,
     },
     ios: {
       ...config.ios,

@@ -3,9 +3,11 @@
   "language": "en",
   "words": [
     "lefthook",
+    "mmkv",
     "pkgs",
     "Pressable",
     "statsig",
+    "tsyringe",
     "zustand"
   ],
   "flagWords": [

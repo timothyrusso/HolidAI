@@ -1,3 +1,4 @@
+import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import * as Localization from 'expo-localization';
 
 /**
@@ -16,7 +17,7 @@ import * as Localization from 'expo-localization';
  * convertFromUTCToLocale('2025-03-13T09:00:00Z', 'en-US');
  */
 export const convertFromUTCToLocaleUseCase = (dateString: string): string => {
-  const locale = Localization.getLocales()[0].languageCode ?? 'en';
+  const locale = Localization.getLocales()[0].languageCode ?? AppKeys.defaultLanguage;
 
   const date = new Date(dateString);
   const day = date.getUTCDate();

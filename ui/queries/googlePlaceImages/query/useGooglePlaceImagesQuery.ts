@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { GooglePlaceImagesKeys } from '../GooglePlaceImagesKeys';
@@ -17,7 +18,7 @@ export const useGooglePlaceImagesQuery = (placeName: string, maxWidthPx = 500) =
 
   const getImage = async (placeName: string) => {
     if (!placeName) {
-      console.log('No place name provided');
+      logger.log('No place name provided');
       return noImage;
     }
 
@@ -43,13 +44,13 @@ export const useGooglePlaceImagesQuery = (placeName: string, maxWidthPx = 500) =
           : noImage;
       }
 
-      console.log('No photo found for place:', placeName);
+      logger.log('No photo found for place:', placeName);
       return noImage;
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Failed to fetch place ID:', error.message);
+        logger.error(error, 'Failed to fetch place ID:', error.message);
       } else {
-        console.error('Failed to fetch place ID:', error);
+        logger.error(new Error(error as string), 'Failed to fetch place ID:', error);
       }
       return noImage;
     }
