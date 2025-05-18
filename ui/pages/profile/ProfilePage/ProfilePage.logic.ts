@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { Routes, Stacks } from '@/ui/constants/routes';
 import { components } from '@/ui/constants/style/dimensions/components';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
@@ -16,7 +17,7 @@ export const useProfilePageLogic = () => {
         router.replace(`/${Routes.Welcome}`);
       })
       .catch(error => {
-        console.error(error);
+        logger.error(error);
       });
   };
 
@@ -27,7 +28,7 @@ export const useProfilePageLogic = () => {
         router.replace(`/${Routes.Welcome}`);
       })
       .catch(error => {
-        console.error(error);
+        logger.error(error);
       });
   };
 

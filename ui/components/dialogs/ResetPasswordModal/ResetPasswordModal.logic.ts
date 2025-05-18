@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { ToastType, useToast } from '@/ui/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import auth from '@react-native-firebase/auth';
@@ -23,7 +24,7 @@ export const useResetPasswordModalLogic = () => {
       showToast('SIGNIN.RESET_PASSWORD_SENT', ToastType.SUCCESS);
       closeModal();
     } catch (error) {
-      console.error(error);
+      logger.error(error as Error);
     }
   };
 

@@ -35,6 +35,25 @@ export interface TripAiResp {
   dayPlans: DayPlan[];
   transportationNotes: string;
   tripDetails: TripDetails;
+  weather: Weather;
+  food: Food;
+}
+
+export interface Weather {
+  weatherGeneralNotes: string;
+  averageHighTemperature: string;
+  averageLowTemperature: string;
+  daylight: string;
+  weatherClothingNotes: string;
+  weatherSunProtectionNotes: string;
+  weatherRainPreparednessNotes: string;
+  weatherOutdoorActivitiesNotes: string;
+}
+
+export interface Food {
+  foodGeneralNotes: string;
+  foodBudgetNotes: string;
+  typicalDishes: string[];
 }
 
 export interface UserTrips {

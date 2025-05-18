@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import Constants from 'expo-constants';
@@ -22,7 +23,7 @@ export const useVercelAi = () => {
         prompt: prompt,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error as Error);
       return null;
     }
   };

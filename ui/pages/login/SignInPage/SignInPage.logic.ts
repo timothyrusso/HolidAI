@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { Routes } from '@/ui/constants/routes';
 import { ToastType, useToast } from '@/ui/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
@@ -50,8 +51,7 @@ export const useSignInPageLogic = () => {
     } catch (error) {
       const typedError = error as AuthError;
       showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      // biome-ignore lint/suspicious/noConsole: <explanation>
-      console.error(typedError);
+      logger.error(typedError);
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export const useSignInPageLogic = () => {
       await auth().sendPasswordResetEmail(email);
       showToast('SIGNIN.RESET_PASSWORD_SENT', ToastType.SUCCESS);
     } catch (error) {
-      console.error(error);
+      logger.error(error as Error);
     }
   };
 

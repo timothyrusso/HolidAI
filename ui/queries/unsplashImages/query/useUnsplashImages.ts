@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { UnsplashImagesKeys } from '../UnsplashImagesKeys';
@@ -25,7 +26,7 @@ const getUnsplashImages = async (placeName: string, urlType: UrlTypes) => {
 
     return noImage;
   } catch (error) {
-    console.error('Failed to fetch unsplash images:', error);
+    logger.error(new Error('Failed to fetch unsplash images:'), error);
     return noImage;
   }
 };

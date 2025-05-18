@@ -24,7 +24,12 @@ export const ListHeaderComponent: FC<ListHeaderComponentProps> = ({
   return (
     <View style={style.container}>
       <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />
-      <NotesCard title="TRIP_DETAILS.BUDGET_NOTES" icon={icons.card} notes={budgetNotes} />
+      <NotesCard
+        title="TRIP_DETAILS.BUDGET_NOTES"
+        icon={icons.card}
+        notes={budgetNotes}
+        backgroundColor={colors.primaryBlue}
+      />
       <NotesCard
         title="TRIP_DETAILS.TRANSPORTATION_NOTES"
         icon={icons.bus}

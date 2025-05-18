@@ -2,9 +2,12 @@ import { chatSession } from '@/configs/ai/geminiConfig';
 // FIXME: react-native-get-random-values must be imported before nanoid
 import { ai_prompt } from '@/configs/ai/prompt';
 import { db } from '@/configs/firebaseConfig';
+import { logger } from '@/di/resolve';
 
+import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { Routes } from '@/ui/constants/routes';
+import { useLocale } from '@/ui/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
 import auth from '@react-native-firebase/auth';
 import { useRouter } from 'expo-router';
@@ -18,6 +21,7 @@ export const useGenerateTripPageLogic = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const userId = auth().currentUser?.uid;
+  const { locale } = useLocale();
 
   const userTripData = {
     startDate: tripSelectors.datesInfo().startDate,
@@ -38,7 +42,10 @@ export const useGenerateTripPageLogic = () => {
     .replace('{traveler}', userTripData.traveler)
     .replace('{budget}', userTripData.budget)
     .replace('{days}', userTripData.days)
-    .replace('{nights}', userTripData.nights);
+    .replace('{nights}', userTripData.nights)
+    .replace('{startDate}', translateDate(locale, userTripData.startDate))
+    .replace('{endDate}', translateDate(locale, userTripData.endDate))
+    .replace('{locale}', locale);
 
   const generateAiTrip = async () => {
     setIsLoading(true);
@@ -59,8 +66,7 @@ export const useGenerateTripPageLogic = () => {
 
       router.push(`/${Routes.MyTrips}`);
     } catch (error) {
-      // biome-ignore lint/suspicious/noConsole: <explanation>
-      console.error('Error generating AI trip:', error);
+      logger.error(new Error('Error generating AI trip:'), error);
     } finally {
       setIsLoading(false);
     }

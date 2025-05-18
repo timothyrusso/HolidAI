@@ -2,11 +2,11 @@ import { getTimezoneFormattedDateUseCase } from '@/modules/dates/application/get
 import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getTodayInLocalTimezoneUseCase';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { Routes, Stacks } from '@/ui/constants/routes';
+import { useLocale } from '@/ui/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
 import { differenceInDays } from 'date-fns';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export const useSelectDatesPageLogic = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -39,11 +39,11 @@ export const useSelectDatesPageLogic = () => {
     });
     router.push(`/${Stacks.CreateTrip}/${Routes.SelectBudget}`);
   };
-  const { i18n } = useTranslation();
-  const getLanguage = () => i18n.language;
 
-  const startDateLabel = `${translateDate(getLanguage(), startDate)}`;
-  const endDateLabel = `${translateDate(getLanguage(), endDate)}`;
+  const { locale } = useLocale();
+
+  const startDateLabel = `${translateDate(locale, startDate)}`;
+  const endDateLabel = `${translateDate(locale, endDate)}`;
 
   return {
     handleDateChange,
