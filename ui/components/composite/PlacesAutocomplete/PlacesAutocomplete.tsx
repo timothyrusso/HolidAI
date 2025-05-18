@@ -1,3 +1,4 @@
+import { logger } from '@/di/resolve';
 import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import type { LocationInfo } from '@/modules/trip/domain/entities/LocationInfo';
 import { colors } from '@/ui/constants/style/colors';
@@ -46,7 +47,7 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
           backgroundColor: colors.primaryWhite,
         },
       }}
-      onFail={console.error}
+      onFail={logger.error}
     />
   );
 };

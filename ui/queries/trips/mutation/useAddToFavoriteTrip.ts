@@ -1,10 +1,12 @@
 import { db } from '@/configs/firebaseConfig';
+import { logger } from '@/di/resolve';
 import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import auth from '@react-native-firebase/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 import { tripsKeys } from '../TripsKeys';
+
 export const useAddToFavoriteTrip = (id: string) => {
   const queryClient = useQueryClient();
   const user = auth().currentUser;
@@ -21,7 +23,7 @@ export const useAddToFavoriteTrip = (id: string) => {
 
         return true;
       } catch (error) {
-        console.error(`Error updating favorite trip: ${error}`);
+        logger.error(new Error(`Error updating favorite trip: ${error}`), error);
         return false;
       }
     },

@@ -24,7 +24,7 @@ export const chatSession = model.startChat({
       role: 'user',
       parts: [
         {
-          text: 'Generate Travel Plan for Location: {Rome}, for {2} Days and {1} Nights for {2} with a {Moderate} budget with geo coordinates, rating, descriptions and Places to visit nearby with placeName, Place Details, Geo Coordinates, ticket Pricing of the location for {2} days and {1} nights with each day plan with best time to visit in JSON format.',
+          text: 'Generate Travel Plan in {en} localization for Location: {Rome}, for {2} Days and {1} Nights for {2} travelers with a {Moderate} budget with geo coordinates, rating, descriptions and Places to visit nearby with placeName, Place Details, Place rating, Geo Coordinates, ticket Pricing of the location for {2} days and {1} nights with each day plan with best time to visit in JSON format. The placeDetailsLongDescription must be between 200 and 350 words. Each day schedule must have between 3 and 5 activities.',
         },
       ],
     },
@@ -38,7 +38,10 @@ export const chatSession = model.startChat({
     "durationDays": 2,
     "durationNights": 1,
     "travelers": 2,
-    "budget": "Moderate"
+    "budget": "Moderate",
+    "startDate": "05-18-2025",
+    "endDate": "05-20-2025",
+    "locale": "en"
   },
   "dayPlans": [
     {
@@ -174,6 +177,26 @@ export const chatSession = model.startChat({
       ]
     }
   ],
+  "weather": {
+    "weatherGeneralNotes": "In May, Rome experiences pleasant spring weather, making it an ideal time for travel.",
+    "averageHighTemperature": "Approximately 22.8°C (73°F)",
+    "averageLowTemperature": "Around 11.6°C (53°F)",
+    "daylight: "Approximately 14 hours and 34 minutes",
+    "weatherClothingNotes": "Light layers are recommended. Mornings and evenings can be cool, so a light jacket or sweater is advisable.",
+    "weatherSunProtectionNotes": "With a high UV index, it's important to use sunscreen, wear sunglasses, and consider a hat for sun protection.",
+    "weatherRainPreparednessNotes": "While May isn't the wettest month, occasional showers can occur. Packing a compact umbrella or a light raincoat is prudent.",
+    "weatherOutdoorActivitiesNotes": "The pleasant temperatures and extended daylight hours make it a great time for sightseeing and outdoor dining.",
+  },
+  "food": {
+    "foodGeneralNotes": "Rome is renowned for its culinary delights, offering a wide range of traditional Italian dishes.",
+    "typicalDishes": [
+      "cacio e pepe",
+      "carbonara",
+      "supplì",
+      "Roman artichokes"
+    ],
+    "foodBudgetNotes": "With a moderate budget in Rome, travelers can enjoy two-course meals at traditional osterias or trattorias, often including pasta, a main dish, and local wine, for around €20–€35 per person. Many restaurants also offer prix fixe menus with seasonal Roman dishes in this price range.",
+  },
   "budgetNotes": "This is a moderate budget plan.  To save money, consider: using public transport, eating at local pizzerias or markets, packing snacks, and looking for free activities.  Entrance fees and dining costs are estimates and can be adjusted.",
   "transportationNotes": "Rome has an efficient public transport system (metro, buses, trams).  Consider purchasing a Roma Pass for unlimited travel and discounts on attractions.  Walking is also a great way to explore the city."
 }`,

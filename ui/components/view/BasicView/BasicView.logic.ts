@@ -1,6 +1,7 @@
 import { Platform, StatusBar } from 'react-native';
 import { match } from 'ts-pattern';
 
+import { logger } from '@/di/resolve';
 import { PlatformOS } from '@/ui/constants/PlatformOS';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import type { BasicViewProps } from './BasicView';
@@ -14,7 +15,7 @@ export const useBasicViewLogic = ({
   bottomButtonPress,
   hasHeader = true,
 }: BasicViewProps) => {
-  console.debug('+++++++++++++++ Render view:', nameView, ' +++++++++++++++');
+  logger.debug('+++++++++++++++ Render view:', nameView, ' +++++++++++++++');
 
   const paddingTop = match({ isFullScreen, platform: Platform.OS })
     .with({ isFullScreen: false, platform: PlatformOS.android }, () => (hasHeader ? 0 : (StatusBar.currentHeight ?? 0)))
