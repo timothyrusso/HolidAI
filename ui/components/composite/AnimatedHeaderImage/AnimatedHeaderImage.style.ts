@@ -40,6 +40,7 @@ export const style = (
       paddingVertical: spacing.Single,
       paddingHorizontal: spacing.Triple,
       height: spacing.Quintuple,
+      maxWidth: '80%',
     },
     chipsContainer: {
       flexDirection: 'row',

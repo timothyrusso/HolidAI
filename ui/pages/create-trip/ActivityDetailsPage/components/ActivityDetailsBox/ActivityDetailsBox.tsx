@@ -51,7 +51,10 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
         <Fragment>
           <View style={styles.ticketPricingContainer}>
             <CustomText text="ACTIVITY_DETAILS.TICKET_PRICING" style={styles.ticketPricingTitle} />
-            <CustomText text={ticketPricing} style={styles.ticketPricingValue} />
+            <CustomText
+              text={`${ticketPricing}${Number(ticketPricing.toString()) > 0 ? '$' : ''}`}
+              style={styles.ticketPricingValue}
+            />
           </View>
           <View style={styles.priceAlertContainer}>
             <CustomIcon name={icons.info} size={spacing.Triple} color={colors.primaryBlack} />

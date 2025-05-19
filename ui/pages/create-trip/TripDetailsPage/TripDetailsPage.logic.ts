@@ -1,7 +1,7 @@
 import type { TripAiResp, UserTripData, UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { format } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 
 export interface AllCoordinates {
@@ -17,6 +17,15 @@ export interface AllCoordinates {
 export const useTripDetailsPageLogic = () => {
   const { trip } = useLocalSearchParams();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  const [isLoadingMainImage, setIsLoadingMainImage] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoadingMainImage(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // TODO: fix type
   const _tripData = JSON.parse(trip as string) as UserTrips & UserTripData & TripAiResp & { image: string; id: string };
@@ -90,6 +99,7 @@ export const useTripDetailsPageLogic = () => {
   const travelers = _tripData.tripDetails.travelers;
   const budget = _tripData.tripDetails.budget;
   const date = _tripData.tripDetails.durationDays;
+  const weather = _tripData.weather;
 
   return {
     _tripData,
@@ -105,5 +115,7 @@ export const useTripDetailsPageLogic = () => {
     travelers,
     budget,
     date,
+    weather,
+    isLoadingMainImage,
   };
 };

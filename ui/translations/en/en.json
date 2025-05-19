@@ -10,7 +10,17 @@
     "BUDGET_NOT_AVAILABLE": "Budget not available",
     "DAYS": "Day",
     "DAYS_plural": "Days",
-    "DAY": "DAY"
+    "DAY": "DAY",
+    "WEATHER_INFORMATION": "WEATHER INFORMATION",
+    "GENERAL_CONDITIONS": "General conditions",
+    "HIGH_TEMPERATURE": "High Temperature",
+    "LOW_TEMPERATURE": "Low Temperature",
+    "DAYLIGHT_HOURS": "Daylight Hours",
+    "RECOMMENDATIONS": "Recommendations",
+    "CLOTHING": "Clothing",
+    "SUN_PROTECTION": "Sun Protection",
+    "RAIN_PREPAREDNESS": "Rain Preparedness",
+    "OUTDOOR_ACTIVITIES": "Outdoor Activities"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Useful Tips",

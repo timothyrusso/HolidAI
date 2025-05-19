@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement } from 'react';
 import type { ModalProps } from 'react-native-modal';
 import Modal from 'react-native-modal';
 
@@ -13,7 +13,7 @@ import ModalHeader from './ModalTemplateHeader/ModalTemplateHeader';
 
 type ModalTemplateProps = Partial<ModalProps> & {
   isVisible: boolean;
-  children: ReactNode;
+  children: ReactElement;
 };
 
 const ModalTemplate = ({ isVisible = false, children, ...props }: ModalTemplateProps) => {
