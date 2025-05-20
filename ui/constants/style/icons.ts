@@ -32,4 +32,10 @@ export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   clock: 'time-outline',
   star: 'star',
   info: 'information-circle-outline',
+  cloud: 'cloud-outline',
+  thermometer: 'thermometer',
+  sun: 'sunny-outline',
+  umbrella: 'umbrella-outline',
+  shirt: 'shirt-outline',
+  walk: 'walk',
 };

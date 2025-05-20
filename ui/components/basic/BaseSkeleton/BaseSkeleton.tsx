@@ -1,5 +1,5 @@
 import { colors } from '@/ui/constants/style/colors';
-import { useEffect } from 'react';
+import { type ReactElement, useEffect } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 export type BaseSkeletonProps = {
-  children?: React.ReactNode;
+  children?: ReactElement;
   style?: StyleProp<ViewStyle>;
 };
 

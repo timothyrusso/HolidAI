@@ -1,5 +1,6 @@
 export const colors = {
   primary: '#A01A7D',
+  primaryLight: '#C41E95',
   primaryDisabled: '#E5B3D1',
   primaryBlack: '#000000',
   primaryBlackDisabled: '#8E8E8F',
@@ -8,8 +9,12 @@ export const colors = {
   primaryGrey: '#8E8E8F',
   secondaryGrey: '#E6E6E6',
   primaryYellow: '#FFE5D9',
+  secondaryYellow: '#FFD9B3',
   primaryGreen: '#D8E2DC',
   primaryPink: '#FFCAD4',
   secondaryPink: '#F4ACB7',
   primaryBlue: '#cae9ff',
+  secondaryBlue: '#96d0ff',
+  tertiaryBlue: '#63b3ff',
+  primaryRed: '#FFD9D9',
 };

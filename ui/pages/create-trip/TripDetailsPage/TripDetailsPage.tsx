@@ -5,13 +5,10 @@ import { Routes } from '@/ui/constants/routes';
 import { Fragment } from 'react';
 import { SectionList, View } from 'react-native';
 import { useTripDetailsPageLogic } from './TripDetailsPage.logic';
-import { styles } from './TripDetailsPage.style';
+import { styles as stylesTripDetailsPage } from './TripDetailsPage.style';
 import { DayItem } from './components/DayItem/DayItem';
-import { HeaderChips } from './components/HeaderChips/HeaderChips';
 import { HeaderIcons } from './components/HeaderIcons/HeaderIcons';
 import { ListHeaderComponent } from './components/ListHeaderComponent/ListHeaderComponent';
-
-const separator = () => <View style={styles.separator} />;
 
 export const TripDetailsPage = () => {
   const {
@@ -24,10 +21,14 @@ export const TripDetailsPage = () => {
     sectionData,
     budgetNotes,
     transportationNotes,
-    travelers,
-    budget,
-    date,
+    weather,
+    isLoadingMainImage,
+    tripDetails,
   } = useTripDetailsPageLogic();
+
+  const styles = stylesTripDetailsPage(isLoadingMainImage);
+
+  const separator = () => <View style={styles.separator} />;
 
   const renderItem = ({ item }: { item: DayPlan }) => <DayItem dayPlan={item} location={title} tripId={_tripData.id} />;
 
@@ -37,8 +38,8 @@ export const TripDetailsPage = () => {
         value={scrollOffsetY}
         imageUrl={_tripData.image}
         title={title}
-        chips={<HeaderChips travelers={travelers} budget={budget} date={date} />}
         headerIcons={<HeaderIcons />}
+        isLoading={isLoadingMainImage}
       />
       <BasicView nameView={Routes.TripDetails} containerStyle={styles.basicViewContainer} isFullScreen>
         <SectionList
@@ -57,6 +58,8 @@ export const TripDetailsPage = () => {
               allCoordinates={allCoordinates}
               budgetNotes={budgetNotes}
               transportationNotes={transportationNotes}
+              weather={weather}
+              tripDetails={tripDetails}
             />
           )}
         />

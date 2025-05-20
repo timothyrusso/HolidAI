@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactElement } from 'react';
 import { Animated, Image, View, type ViewStyle } from 'react-native';
 
 import { images } from '@/ui/constants/style/dimensions/images';
@@ -11,9 +11,9 @@ interface AnimatedHeaderImageProps {
   value: Animated.Value;
   title?: string;
   imageUrl?: string;
-  chips?: React.ReactNode;
+  chips?: ReactElement;
   isLoading?: boolean;
-  headerIcons?: React.ReactNode;
+  headerIcons?: ReactElement;
   chipsAlignment?: ViewStyle['justifyContent'];
 }
 
@@ -50,7 +50,9 @@ const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
     <Animated.View style={styles.header}>
       <Animated.View style={styles.titleContainer}>
         <View style={styles.chipsContainer}>
-          {title && <CustomText text={title.toUpperCase()} style={styles.title} />}
+          {title && (
+            <CustomText text={title.toUpperCase()} style={styles.title} numberOfLines={2} ellipsizeMode="tail" />
+          )}
           <View style={styles.detailsChipRow}>{chips}</View>
         </View>
       </Animated.View>

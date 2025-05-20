@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.interBold,
   },
   description: {
-    fontSize: spacing.Triple,
+    fontSize: spacing.Double,
     fontFamily: fonts.interMedium,
   },
   price: {

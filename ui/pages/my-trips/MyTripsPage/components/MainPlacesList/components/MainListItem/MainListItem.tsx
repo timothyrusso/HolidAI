@@ -17,7 +17,7 @@ export const MainListItem: FC<MainListItemProps> = ({ id, index }) => {
 
   return index === MIN_MAIN_LIST_ITEM_INDEX ? (
     <View style={styles.lastItem}>
-      <CustomIcon name={icons.add} size={spacing.Triple} color={colors.primaryBlack} />
+      <CustomIcon name={icons.star} size={spacing.Triple} color={colors.primaryBlack} />
     </View>
   ) : (
     <Image source={{ uri: data }} style={styles.image} />
