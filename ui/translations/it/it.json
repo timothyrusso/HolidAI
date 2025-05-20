@@ -10,6 +10,8 @@
     "BUDGET_NOT_AVAILABLE": "Budget non disponibile",
     "DAYS": "Giorno",
     "DAYS_plural": "Giorni",
+    "NIGHT": "Notte",
+    "NIGHTS_plural": "Notti",
     "DAY": "GIORNO",
     "WEATHER_INFORMATION": "INFORMAZIONI METEO",
     "GENERAL_CONDITIONS": "Condizioni generali",
@@ -20,7 +22,10 @@
     "CLOTHING": "Abbigliamento",
     "SUN_PROTECTION": "Protezione solare",
     "RAIN_PREPAREDNESS": "Protezione dalla pioggia",
-    "OUTDOOR_ACTIVITIES": "Attività all'aria aperta"
+    "OUTDOOR_ACTIVITIES": "Attività all'aria aperta",
+    "TRAVELERS": "Viaggiatori",
+    "BUDGET": "Budget",
+    "TRAVEL_DATES": "Date del viaggio"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Consigli utili",

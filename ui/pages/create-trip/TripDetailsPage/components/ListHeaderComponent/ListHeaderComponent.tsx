@@ -1,4 +1,4 @@
-import type { Weather } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { TripDetails, Weather } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { colors } from '@/ui/constants/style/colors';
 import { icons } from '@/ui/constants/style/icons';
 import type { FC } from 'react';
@@ -7,6 +7,7 @@ import type { Region } from 'react-native-maps';
 import type { AllCoordinates } from '../../TripDetailsPage.logic';
 import { MapListHeaderComponent } from '../MapListHeaderComponent/MapListHeaderComponent';
 import { NotesCard } from '../NotesCard/NotesCard';
+import { TripDetailsCard } from '../TripDetailsCard/TripDetailsCard';
 import { WeatherCard } from '../WeatherCard/WeatherCard';
 import { style } from './ListHeaderComponent.style';
 
@@ -16,6 +17,7 @@ type ListHeaderComponentProps = {
   budgetNotes: string;
   transportationNotes: string;
   weather: Weather;
+  tripDetails: Omit<TripDetails, 'location'> & { startDate: string; endDate: string };
 };
 
 export const ListHeaderComponent: FC<ListHeaderComponentProps> = ({
@@ -24,9 +26,11 @@ export const ListHeaderComponent: FC<ListHeaderComponentProps> = ({
   budgetNotes,
   transportationNotes,
   weather,
+  tripDetails,
 }) => {
   return (
     <View style={style.container}>
+      <TripDetailsCard tripDetails={tripDetails} />
       <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />
       <WeatherCard weather={weather} />
       <NotesCard

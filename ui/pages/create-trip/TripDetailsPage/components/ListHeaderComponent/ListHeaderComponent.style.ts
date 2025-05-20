@@ -5,5 +5,6 @@ export const style = StyleSheet.create({
   container: {
     rowGap: spacing.Double,
     marginBottom: spacing.SingleAndHalf,
+    width: '100%',
   },
 });

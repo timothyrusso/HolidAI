@@ -1,4 +1,6 @@
-import type { TripAiResp, UserTripData, UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
+import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import type { TripAiResp, TripDetails, UserTripData, UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
+import { useLocale } from '@/ui/hooks/useLocale';
 import { format } from 'date-fns';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -18,6 +20,7 @@ export const useTripDetailsPageLogic = () => {
   const { trip } = useLocalSearchParams();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const [isLoadingMainImage, setIsLoadingMainImage] = useState(true);
+  const { locale } = useLocale();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -96,10 +99,17 @@ export const useTripDetailsPageLogic = () => {
   const budgetNotes = _tripData.budgetNotes;
   const transportationNotes = _tripData.transportationNotes;
 
-  const travelers = _tripData.tripDetails.travelers;
-  const budget = _tripData.tripDetails.budget;
-  const date = _tripData.tripDetails.durationDays;
+  const { budget, travelers, durationDays, durationNights } = _tripData.tripDetails;
   const weather = _tripData.weather;
+
+  const tripDetails: Omit<TripDetails, 'location'> & { startDate: string; endDate: string } = {
+    budget,
+    travelers,
+    durationDays,
+    durationNights,
+    startDate: translateDate(locale, _tripData.startDate),
+    endDate: translateDate(locale, _tripData.endDate),
+  };
 
   return {
     _tripData,
@@ -112,9 +122,7 @@ export const useTripDetailsPageLogic = () => {
     sectionData,
     budgetNotes,
     transportationNotes,
-    travelers,
-    budget,
-    date,
+    tripDetails,
     weather,
     isLoadingMainImage,
   };

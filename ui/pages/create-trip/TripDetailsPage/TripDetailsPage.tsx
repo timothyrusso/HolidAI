@@ -7,7 +7,6 @@ import { SectionList, View } from 'react-native';
 import { useTripDetailsPageLogic } from './TripDetailsPage.logic';
 import { styles as stylesTripDetailsPage } from './TripDetailsPage.style';
 import { DayItem } from './components/DayItem/DayItem';
-import { HeaderChips } from './components/HeaderChips/HeaderChips';
 import { HeaderIcons } from './components/HeaderIcons/HeaderIcons';
 import { ListHeaderComponent } from './components/ListHeaderComponent/ListHeaderComponent';
 
@@ -22,11 +21,9 @@ export const TripDetailsPage = () => {
     sectionData,
     budgetNotes,
     transportationNotes,
-    travelers,
-    budget,
-    date,
     weather,
     isLoadingMainImage,
+    tripDetails,
   } = useTripDetailsPageLogic();
 
   const styles = stylesTripDetailsPage(isLoadingMainImage);
@@ -41,7 +38,6 @@ export const TripDetailsPage = () => {
         value={scrollOffsetY}
         imageUrl={_tripData.image}
         title={title}
-        chips={<HeaderChips travelers={travelers} budget={budget} date={date} />}
         headerIcons={<HeaderIcons />}
         isLoading={isLoadingMainImage}
       />
@@ -63,6 +59,7 @@ export const TripDetailsPage = () => {
               budgetNotes={budgetNotes}
               transportationNotes={transportationNotes}
               weather={weather}
+              tripDetails={tripDetails}
             />
           )}
         />

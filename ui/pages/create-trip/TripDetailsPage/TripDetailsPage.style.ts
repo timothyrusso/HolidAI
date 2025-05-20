@@ -34,5 +34,6 @@ export const styles = (isLoadingMainImage: boolean) =>
       borderRadius: spacing.Triple,
       marginTop: spacing.Fourfold,
       flex: 1,
+      width: '100%',
     },
   });
