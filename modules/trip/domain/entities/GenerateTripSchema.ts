@@ -8,6 +8,9 @@ export const generatedTripSchema = z.object({
     durationNights: z.number(),
     travelers: z.number(),
     budget: z.string(),
+    startDate: z.string(),
+    endDate: z.string(),
+    locale: z.string(),
   }),
   dayPlans: z.array(
     z.object({
@@ -34,5 +37,19 @@ export const generatedTripSchema = z.object({
   ),
   budgetNotes: z.string(),
   transportationNotes: z.string(),
-  importantNotes: z.string(),
+  weather: z.object({
+    weatherGeneralNotes: z.string(),
+    averageHighTemperature: z.string(),
+    averageLowTemperature: z.string(),
+    daylight: z.string(),
+    weatherClothingNotes: z.string(),
+    weatherSunProtectionNotes: z.string(),
+    weatherRainPreparednessNotes: z.string(),
+    weatherOutdoorActivitiesNotes: z.string(),
+  }),
+  food: z.object({
+    foodGeneralNotes: z.string(),
+    foodBudgetNotes: z.string(),
+    typicalDishes: z.array(z.string()),
+  }),
 }) satisfies ZodSchema<TripAiResp>;

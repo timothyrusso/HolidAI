@@ -1,4 +1,3 @@
-import type { TripItem } from '@/modules/trip/domain/entities/TripItem';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
@@ -18,13 +17,23 @@ type DetailsBoxProps = {
   days: number;
   budget: string;
   travelers: number;
-  tripItem: TripItem;
+  tripId: string;
+  tripStartDate: string;
   style?: StyleProp<ViewStyle>;
 };
 
-export const DetailsBox: FC<DetailsBoxProps> = ({ location, days, budget, travelers, tripItem, style }) => {
+export const DetailsBox: FC<DetailsBoxProps> = ({
+  location,
+  days,
+  budget,
+  travelers,
+  tripId,
+  tripStartDate,
+  style,
+}) => {
   const { handlePress, budgetLabel, travelersLabel, daysLabel, dateLabel } = useDetailsBoxLogic(
-    tripItem,
+    tripId,
+    tripStartDate,
     budget,
     travelers,
     days,

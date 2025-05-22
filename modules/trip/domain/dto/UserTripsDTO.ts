@@ -28,6 +28,9 @@ export interface TripDetails {
   travelers: number;
   durationDays: number;
   durationNights: number;
+  startDate: string;
+  endDate: string;
+  locale: string;
 }
 
 export interface TripAiResp {
@@ -59,15 +62,6 @@ export interface Food {
 export interface UserTrips {
   docId: string;
   tripAiResp: TripAiResp;
-  userTripData: string;
   isFavorite: boolean;
-}
-
-export interface UserTripData {
-  startDate: string;
-  endDate: string;
-  location: string;
-  days: string;
-  nights: string;
   createdAt: string;
 }

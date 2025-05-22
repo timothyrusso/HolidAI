@@ -6,26 +6,14 @@ import { useRouter } from 'expo-router';
 export const useTripCardLogic = (item: UserTrips) => {
   const router = useRouter();
 
-  const placeName = item.userTripData ? JSON.parse(item.userTripData).location.split(',')[0] : undefined;
+  const location = item.tripAiResp.tripDetails.location.split(',')[0];
 
-  const { data: imageUrl } = useUnsplashImages(placeName, UrlTypes.REGULAR);
-
-  const location = item.userTripData ? JSON.parse(item.userTripData).location.split(',')[0] : undefined;
-
-  const _userTripData = item.userTripData ? JSON.parse(item.userTripData) : {};
-
-  const itemParams = {
-    ...item.tripAiResp,
-    ..._userTripData,
-    image: imageUrl,
-    id: item.docId,
-    isFavorite: item.isFavorite,
-  };
+  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.REGULAR);
 
   const onCardPress = () => {
     router.push({
       pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`,
-      params: { trip: JSON.stringify(itemParams) },
+      params: { id: item.docId },
     });
   };
 

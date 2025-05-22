@@ -8,7 +8,9 @@ const animation = require('../../../../../assets/lottie/trip_animation.json');
 export const EmptyListContainer = () => {
   return (
     <View style={styles.container}>
-      <StartNewTripCard />
+      <View style={styles.newTripContainer}>
+        <StartNewTripCard />
+      </View>
       <LottieAnimation animationPath={animation} style={styles.animation} />
     </View>
   );

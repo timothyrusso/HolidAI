@@ -9,7 +9,8 @@ import { HomeCustomHeader } from './components/HomeCustomHeader/HomeCustomHeader
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
 
 const MyTripsPage = () => {
-  const { lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripItem } = useMyTripsPageLogic();
+  const { lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripId, tripStartDate } =
+    useMyTripsPageLogic();
 
   return (
     <BasicView nameView={Routes.MyTrips} isFullScreen isMenuVisible statusBarStyle="light">
@@ -24,7 +25,8 @@ const MyTripsPage = () => {
             days={days}
             budget={budget}
             travelers={travelers}
-            tripItem={tripItem}
+            tripId={tripId}
+            tripStartDate={tripStartDate}
             style={styles.detailsBox}
           />
         </View>

@@ -6,24 +6,24 @@ export const useMyTripsPageLogic = () => {
 
   const lastCreatedTrip = data?.lastCreatedTrip;
 
-  const _userTripData = lastCreatedTrip?.userTripData ? JSON.parse(lastCreatedTrip?.userTripData) : {};
-
-  const location = _userTripData?.location?.split(',')[0];
+  const location = data?.lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
   const { data: imageUrl } = useUnsplashImages(location, UrlTypes.REGULAR);
 
   const image = imageUrl;
-  const days = _userTripData?.days;
+  const days = lastCreatedTrip?.tripAiResp.tripDetails.durationDays ?? 0;
   const budget = lastCreatedTrip?.tripAiResp.tripDetails.budget ?? 'MY_TRIP.BUDGET_NOT_AVAILABLE';
   const travelers = lastCreatedTrip?.tripAiResp.tripDetails.travelers ?? 0;
 
-  const tripItem = {
-    ...lastCreatedTrip?.tripAiResp,
-    ..._userTripData,
-    image: imageUrl,
-    id: lastCreatedTrip?.docId,
-    isFavorite: lastCreatedTrip?.isFavorite,
+  return {
+    lastCreatedTrip: data?.lastCreatedTrip,
+    isLoading,
+    image,
+    location,
+    days,
+    budget,
+    travelers,
+    tripId: lastCreatedTrip?.docId ?? '',
+    tripStartDate: lastCreatedTrip?.tripAiResp.tripDetails.startDate ?? '',
   };
-
-  return { lastCreatedTrip: data?.lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripItem };
 };

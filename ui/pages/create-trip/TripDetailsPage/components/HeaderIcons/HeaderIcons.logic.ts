@@ -1,24 +1,28 @@
-import type { TripAiResp, UserTripData, UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { useAddToFavoriteTrip } from '@/ui/queries/trips/mutation/useAddToFavoriteTrip';
 import { useRemoveTrip } from '@/ui/queries/trips/mutation/useRemoveTrip';
+import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
-  const { trip } = useLocalSearchParams();
-  // TODO: fix type
-  const _tripData = JSON.parse(trip as string) as UserTrips & UserTripData & TripAiResp & { image: string; id: string };
-  const [isFavorite, setIsFavorite] = useState(_tripData.isFavorite);
+  const { id } = useLocalSearchParams();
 
-  const { removeTrip } = useRemoveTrip(_tripData.id);
-  const { updateFavorite } = useAddToFavoriteTrip(_tripData.id);
+  const { data } = useGetUserTripsQuery();
+
+  const trip = data?.selectTripById(id as string);
+
+  const [isFavorite, setIsFavorite] = useState(trip?.isFavorite);
+
+  const { removeTrip } = useRemoveTrip(trip?.docId ?? '');
+  const { updateFavorite } = useAddToFavoriteTrip(trip?.docId ?? '');
+
   const addToFavoritesHandler = () => {
     setIsFavorite(prev => !prev);
-    updateFavorite(isFavorite);
+    updateFavorite(isFavorite ?? false);
   };
 
   const handleDeleteTrip = () => {
-    removeTrip(_tripData.id);
+    removeTrip(trip?.docId ?? '');
     router.back();
   };
 

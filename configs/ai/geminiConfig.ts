@@ -41,7 +41,7 @@ export const chatSession = model.startChat({
     "budget": "Moderate",
     "startDate": "05-18-2025",
     "endDate": "05-20-2025",
-    "locale": "en"
+    "locale": "en",
   },
   "dayPlans": [
     {

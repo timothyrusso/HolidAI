@@ -12,38 +12,39 @@ import { ListHeaderComponent } from './components/ListHeaderComponent/ListHeader
 
 export const TripDetailsPage = () => {
   const {
-    _tripData,
     title,
     allCoordinates,
+    region,
     scrollOffsetY,
     handleScroll,
-    region,
     sectionData,
     budgetNotes,
     transportationNotes,
+    tripDetails,
     weather,
     isLoadingMainImage,
-    tripDetails,
+    id,
+    imageUrl,
   } = useTripDetailsPageLogic();
 
   const styles = stylesTripDetailsPage(isLoadingMainImage);
 
   const separator = () => <View style={styles.separator} />;
 
-  const renderItem = ({ item }: { item: DayPlan }) => <DayItem dayPlan={item} location={title} tripId={_tripData.id} />;
+  const renderItem = ({ item }: { item: DayPlan }) => <DayItem dayPlan={item} location={title} tripId={id} />;
 
   return (
     <Fragment>
       <AnimatedHeaderImage
         value={scrollOffsetY}
-        imageUrl={_tripData.image}
+        imageUrl={imageUrl}
         title={title}
         headerIcons={<HeaderIcons />}
         isLoading={isLoadingMainImage}
       />
       <BasicView nameView={Routes.TripDetails} containerStyle={styles.basicViewContainer} isFullScreen>
         <SectionList
-          sections={sectionData}
+          sections={sectionData ?? []}
           keyExtractor={item => item.day.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.dayPlans}

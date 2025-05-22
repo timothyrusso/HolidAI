@@ -13,11 +13,11 @@ import { style } from './ListHeaderComponent.style';
 
 type ListHeaderComponentProps = {
   region: Region;
-  allCoordinates: AllCoordinates[];
-  budgetNotes: string;
-  transportationNotes: string;
-  weather: Weather;
-  tripDetails: Omit<TripDetails, 'location'> & { startDate: string; endDate: string };
+  allCoordinates?: AllCoordinates[];
+  budgetNotes?: string;
+  transportationNotes?: string;
+  weather?: Weather;
+  tripDetails: Omit<TripDetails, 'locale' | 'location'>;
 };
 
 export const ListHeaderComponent: FC<ListHeaderComponentProps> = ({
@@ -31,21 +31,25 @@ export const ListHeaderComponent: FC<ListHeaderComponentProps> = ({
   return (
     <View style={style.container}>
       <TripDetailsCard tripDetails={tripDetails} />
-      <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />
-      <WeatherCard weather={weather} />
-      <NotesCard
-        title="TRIP_DETAILS.BUDGET_NOTES"
-        icon={icons.card}
-        notes={budgetNotes}
-        backgroundColor={colors.primaryBlue}
-      />
-      <NotesCard
-        title="TRIP_DETAILS.TRANSPORTATION_NOTES"
-        icon={icons.bus}
-        notes={transportationNotes}
-        isTitleInverted
-        backgroundColor={colors.secondaryPink}
-      />
+      {allCoordinates && <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />}
+      {weather && <WeatherCard weather={weather} />}
+      {budgetNotes && (
+        <NotesCard
+          title="TRIP_DETAILS.BUDGET_NOTES"
+          icon={icons.card}
+          notes={budgetNotes}
+          backgroundColor={colors.primaryBlue}
+        />
+      )}
+      {transportationNotes && (
+        <NotesCard
+          title="TRIP_DETAILS.TRANSPORTATION_NOTES"
+          icon={icons.bus}
+          notes={transportationNotes}
+          isTitleInverted
+          backgroundColor={colors.secondaryPink}
+        />
+      )}
     </View>
   );
 };

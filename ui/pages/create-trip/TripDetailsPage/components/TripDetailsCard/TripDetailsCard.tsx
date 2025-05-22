@@ -4,20 +4,17 @@ import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import { icons } from '@/ui/constants/style/icons';
-import { useBudgetColorsMap } from '@/ui/hooks/useBudgetColorsMap';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { styles as tripDetailsCardStyles } from './TripDetailsCard.style';
+import { styles } from './TripDetailsCard.style';
 
 type TripDetailsCardProps = {
-  tripDetails: Omit<TripDetails, 'location'> & { startDate: string; endDate: string };
+  tripDetails: Omit<TripDetails, 'locale' | 'location'>;
 };
 
 export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
-  const { budgetColorsMap } = useBudgetColorsMap();
-  const styles = tripDetailsCardStyles(budgetColorsMap[tripDetails.budget]);
   const { t } = useTranslation();
 
   return (

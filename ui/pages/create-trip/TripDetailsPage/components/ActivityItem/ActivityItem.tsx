@@ -37,7 +37,12 @@ export const ActivityItem: FC<ActivityItemProps> = ({ scheduleItem, day, locatio
         <View style={styles.headerContainer}>
           <View style={styles.timeContainer}>
             <CustomIcon name={icons.clock} size={spacing.Fourfold} color={colors.primaryBlack} />
-            <CustomText text={scheduleItem.bestTimeToVisit} style={styles.time} />
+            <CustomText
+              text={scheduleItem.bestTimeToVisit}
+              style={styles.time}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            />
           </View>
           <View style={styles.ratingContainer}>
             <CustomText text={scheduleItem.rating.toString()} style={styles.rating} />
