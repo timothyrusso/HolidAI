@@ -20,6 +20,8 @@ export const MapListHeaderComponent = ({ region, allCoordinates }: MapListHeader
         style={styles.map}
         provider={Platform.OS === PlatformOS.android ? PROVIDER_GOOGLE : undefined}
         region={region}
+        loadingEnabled
+        loadingBackgroundColor={colors.primaryGrey}
       >
         {/* Draw the route line */}
         <Polyline
