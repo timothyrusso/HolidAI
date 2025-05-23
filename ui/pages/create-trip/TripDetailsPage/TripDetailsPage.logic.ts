@@ -1,7 +1,8 @@
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import type { TripAiResp, TripDetails, UserTripData, UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { TripDetails } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { useLocale } from '@/ui/hooks/useLocale';
-import { format } from 'date-fns';
+import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
+import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Animated } from 'react-native';
@@ -17,11 +18,20 @@ export interface AllCoordinates {
 }
 
 export const useTripDetailsPageLogic = () => {
-  const { trip } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const [isLoadingMainImage, setIsLoadingMainImage] = useState(true);
   const { locale } = useLocale();
 
+  const { data } = useGetUserTripsQuery();
+
+  const trip = data?.selectTripById(id as string);
+
+  const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
+
+  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.SMALL);
+
+  // TODO: mocked loading state for main image
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoadingMainImage(false);
@@ -30,15 +40,10 @@ export const useTripDetailsPageLogic = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // TODO: fix type
-  const _tripData = JSON.parse(trip as string) as UserTrips & UserTripData & TripAiResp & { image: string; id: string };
-
-  const _tripDays = `${format(_tripData.startDate ?? new Date(), 'dd MMM yyyy')} - ${format(_tripData.endDate ?? new Date(), 'dd MMM yy')}`;
-
-  const title = _tripData?.location?.split(',')[0];
+  const title = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
   // Get all coordinates from the trip plan with day information
-  const allCoordinates = _tripData.dayPlans.flatMap((dayPlan, dayIndex) =>
+  const allCoordinates = trip?.tripAiResp?.dayPlans.flatMap((dayPlan, dayIndex) =>
     dayPlan.schedule.map((item, scheduleIndex) => ({
       ...item.geoCoordinates,
       title: item.placeName,
@@ -51,7 +56,7 @@ export const useTripDetailsPageLogic = () => {
 
   // Calculate the bounds of all coordinates
   const calculateRegion = () => {
-    if (allCoordinates.length === 0) {
+    if (allCoordinates?.length === 0) {
       return {
         latitude: 37.78825,
         longitude: -122.4324,
@@ -61,13 +66,13 @@ export const useTripDetailsPageLogic = () => {
     }
 
     // Find the min and max coordinates
-    const latitudes = allCoordinates.map(coord => coord.latitude);
-    const longitudes = allCoordinates.map(coord => coord.longitude);
+    const latitudes = allCoordinates?.map(coord => coord.latitude);
+    const longitudes = allCoordinates?.map(coord => coord.longitude);
 
-    const minLat = Math.min(...latitudes);
-    const maxLat = Math.max(...latitudes);
-    const minLng = Math.min(...longitudes);
-    const maxLng = Math.max(...longitudes);
+    const minLat = Math.min(...(latitudes ?? []));
+    const maxLat = Math.max(...(latitudes ?? []));
+    const minLng = Math.min(...(longitudes ?? []));
+    const maxLng = Math.max(...(longitudes ?? []));
 
     // Calculate the center point
     const centerLat = (minLat + maxLat) / 2;
@@ -91,29 +96,33 @@ export const useTripDetailsPageLogic = () => {
     useNativeDriver: false,
   });
 
-  const sectionData = _tripData.dayPlans.map(plan => ({
+  const sectionData = trip?.tripAiResp?.dayPlans.map(plan => ({
     title: `Day ${plan.day}`,
     data: [plan],
   }));
 
-  const budgetNotes = _tripData.budgetNotes;
-  const transportationNotes = _tripData.transportationNotes;
+  const budgetNotes = trip?.tripAiResp?.budgetNotes;
+  const transportationNotes = trip?.tripAiResp?.transportationNotes;
 
-  const { budget, travelers, durationDays, durationNights } = _tripData.tripDetails;
-  const weather = _tripData.weather;
+  trip?.tripAiResp?.tripDetails;
 
-  const tripDetails: Omit<TripDetails, 'location'> & { startDate: string; endDate: string } = {
-    budget,
-    travelers,
-    durationDays,
-    durationNights,
-    startDate: translateDate(locale, _tripData.startDate),
-    endDate: translateDate(locale, _tripData.endDate),
+  const budget = trip?.tripAiResp?.tripDetails?.budget;
+  const travelers = trip?.tripAiResp?.tripDetails?.travelers;
+  const durationDays = trip?.tripAiResp?.tripDetails?.durationDays;
+  const durationNights = trip?.tripAiResp?.tripDetails?.durationNights;
+
+  const weather = trip?.tripAiResp?.weather;
+
+  const tripDetails: Omit<TripDetails, 'locale' | 'location'> = {
+    budget: budget ?? '',
+    travelers: travelers ?? 0,
+    durationDays: durationDays ?? 0,
+    durationNights: durationNights ?? 0,
+    startDate: translateDate(locale, trip?.tripAiResp.tripDetails.startDate),
+    endDate: translateDate(locale, trip?.tripAiResp.tripDetails.endDate),
   };
 
   return {
-    _tripData,
-    _tripDays,
     title,
     allCoordinates,
     region,
@@ -125,5 +134,7 @@ export const useTripDetailsPageLogic = () => {
     tripDetails,
     weather,
     isLoadingMainImage,
+    id: trip?.docId ?? '',
+    imageUrl,
   };
 };

@@ -23,28 +23,16 @@ export const useGenerateTripPageLogic = () => {
   const userId = auth().currentUser?.uid;
   const { locale } = useLocale();
 
-  const userTripData = {
-    startDate: tripSelectors.datesInfo().startDate,
-    endDate: tripSelectors.datesInfo().endDate,
-    location: tripSelectors.locationInfo().name,
-    days: tripSelectors.datesInfo().totalNoOfDays.toString(),
-    nights: (tripSelectors.datesInfo().totalNoOfDays - 1).toString(),
-    traveler: tripSelectors.travelerInfo,
-    budget: tripSelectors.budgetInfo,
-    isFavorite: false,
-    createdAt: new Date().toISOString(),
-  };
-
   const PROMPT = ai_prompt
-    .replace('{location}', userTripData.location)
-    .replace('{days}', userTripData.days)
-    .replace('{nights}', userTripData.nights)
-    .replace('{traveler}', userTripData.traveler)
-    .replace('{budget}', userTripData.budget)
-    .replace('{days}', userTripData.days)
-    .replace('{nights}', userTripData.nights)
-    .replace('{startDate}', translateDate(locale, userTripData.startDate))
-    .replace('{endDate}', translateDate(locale, userTripData.endDate))
+    .replace('{location}', tripSelectors.locationInfo().name)
+    .replace('{days}', tripSelectors.datesInfo().totalNoOfDays.toString())
+    .replace('{nights}', (tripSelectors.datesInfo().totalNoOfDays - 1).toString())
+    .replace('{traveler}', tripSelectors.travelerInfo)
+    .replace('{budget}', tripSelectors.budgetInfo)
+    .replace('{days}', tripSelectors.datesInfo().totalNoOfDays.toString())
+    .replace('{nights}', (tripSelectors.datesInfo().totalNoOfDays - 1).toString())
+    .replace('{startDate}', translateDate(locale, tripSelectors.datesInfo().startDate))
+    .replace('{endDate}', translateDate(locale, tripSelectors.datesInfo().endDate))
     .replace('{locale}', locale);
 
   const generateAiTrip = async () => {
@@ -60,7 +48,8 @@ export const useGenerateTripPageLogic = () => {
 
       await setDoc(doc(db, `${dbKeys.userTrips}/${userId}/trips`, docId), {
         tripAiResp,
-        userTripData: JSON.stringify(userTripData),
+        isFavorite: false,
+        createdAt: new Date().toISOString(),
         docId,
       });
 

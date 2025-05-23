@@ -33,22 +33,9 @@ export const useGetUserTripsQuery = () => {
       trips: data,
       totalTrips: data?.length,
       favoriteTrips: data?.filter(trip => trip.isFavorite),
-      tripItems: data?.map(trip => {
-        const userTripData = JSON.parse(trip.userTripData);
-        return {
-          ...trip.tripAiResp,
-          ...userTripData,
-          image: userTripData?.imageUrl,
-          id: trip.docId,
-          isFavorite: trip.isFavorite,
-        };
-      }),
       lastCreatedTrip: data?.sort((a, b) => {
-        const userTripDataA = JSON.parse(a.userTripData);
-        const userTripDataB = JSON.parse(b.userTripData);
-
-        const dateA = new Date(userTripDataA.createdAt);
-        const dateB = new Date(userTripDataB.createdAt);
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
 
         return dateB.getTime() - dateA.getTime();
       })[0],

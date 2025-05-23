@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
   time: {
     fontSize: spacing.Double,
     fontFamily: fonts.interMedium,
+    maxWidth: '80%',
   },
   place: {
     fontSize: spacing.Triple,
