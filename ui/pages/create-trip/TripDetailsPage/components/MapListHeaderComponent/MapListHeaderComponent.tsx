@@ -22,6 +22,7 @@ export const MapListHeaderComponent = ({ region, allCoordinates }: MapListHeader
         region={region}
         loadingEnabled
         loadingBackgroundColor={colors.primaryGrey}
+        loadingIndicatorColor={colors.primaryGrey}
       >
         {/* Draw the route line */}
         <Polyline
