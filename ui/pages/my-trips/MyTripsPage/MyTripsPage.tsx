@@ -9,7 +9,7 @@ import { HomeCustomHeader } from './components/HomeCustomHeader/HomeCustomHeader
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
 
 const MyTripsPage = () => {
-  const { lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripId, tripStartDate } =
+  const { lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripId, tripStartDate, totalTrips } =
     useMyTripsPageLogic();
 
   return (
@@ -18,7 +18,7 @@ const MyTripsPage = () => {
         <HomeSkeleton />
       ) : lastCreatedTrip ? (
         <View style={styles.container}>
-          <HomeCustomHeader />
+          {totalTrips > 0 && <HomeCustomHeader />}
           <Image source={{ uri: image }} style={styles.image} />
           <DetailsBox
             location={location}

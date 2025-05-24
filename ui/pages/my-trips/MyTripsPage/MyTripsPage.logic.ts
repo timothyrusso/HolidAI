@@ -8,12 +8,14 @@ export const useMyTripsPageLogic = () => {
 
   const location = data?.lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.REGULAR);
+  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.FULL);
 
   const image = imageUrl;
   const days = lastCreatedTrip?.tripAiResp.tripDetails.durationDays ?? 0;
   const budget = lastCreatedTrip?.tripAiResp.tripDetails.budget ?? 'MY_TRIP.BUDGET_NOT_AVAILABLE';
   const travelers = lastCreatedTrip?.tripAiResp.tripDetails.travelers ?? 0;
+
+  const totalTrips = data?.totalTrips ?? 0;
 
   return {
     lastCreatedTrip: data?.lastCreatedTrip,
@@ -25,5 +27,6 @@ export const useMyTripsPageLogic = () => {
     travelers,
     tripId: lastCreatedTrip?.docId ?? '',
     tripStartDate: lastCreatedTrip?.tripAiResp.tripDetails.startDate ?? '',
+    totalTrips,
   };
 };

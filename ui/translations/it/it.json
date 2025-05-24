@@ -39,7 +39,7 @@
     "LABEL": {
       "TOTAL_TRIPS": "Totale viaggi",
       "FAVORITE_TRIPS": "Viaggi preferiti",
-      "MONTHLY_TRIPS_CAP": "Limite viaggi mensile"
+      "REMAINING_TOKENS": "Token rimanenti"
     },
     "BUTTON": {
       "CHANGE_LANGUAGE": "Cambia lingua",

@@ -19,9 +19,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userDataLabel: {
-    fontSize: spacing.SingleAndHalf + spacing.Minimal,
+    fontSize: spacing.Double,
     fontFamily: fonts.interMedium,
     textAlign: 'center',
+    maxWidth: '60%',
+    paddingBottom: spacing.Quintuple,
   },
   userDataValue: {
     fontSize: spacing.Double,
@@ -41,6 +43,8 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: spacing.Double,
+    position: 'absolute',
+    bottom: 0,
   },
   pressed: {
     opacity: opacity.default,
