@@ -4,14 +4,13 @@ import i18n from '@/ui/translations/i18n';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export default function RootLayout() {
   // Initialize localization
   i18n;
 
-  SplashScreen.preventAutoHideAsync();
+  // SplashScreen.preventAutoHideAsync();
 
   useFonts({
     'inter-regular': require('../ui/assets/fonts/Inter-Regular.ttf'),
