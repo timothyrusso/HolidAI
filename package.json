@@ -83,6 +83,7 @@
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
     "@babel/core": "^7.20.0",
+    "@biomejs/biome": "^1.9.4",
     "@commitlint/config-conventional": "^19.7.1",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.3.12",

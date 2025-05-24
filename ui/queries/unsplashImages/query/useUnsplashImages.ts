@@ -8,6 +8,7 @@ const _unsplashAccessKey = Constants.expoConfig?.extra?.unsplashAccessKey;
 const noImage = require('../../../assets/images/no-image-placeholder.jpg');
 
 export enum UrlTypes {
+  FULL = 'full',
   REGULAR = 'regular',
   SMALL = 'small',
   THUMB = 'thumb',

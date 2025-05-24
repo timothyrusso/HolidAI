@@ -32,7 +32,7 @@ export const style = StyleSheet.create({
     columnGap: spacing.Double,
   },
   title: {
-    fontSize: spacing.Double,
+    fontSize: spacing.Double + spacing.Minimal,
     fontFamily: fonts.interMedium,
   },
 });
