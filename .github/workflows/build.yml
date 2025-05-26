@@ -63,7 +63,7 @@ jobs:
 
       - name: Build app
         env:
-          GOOGLE_SERVICES_JSON: /home/runner/work/ai-travel-planner-app/ai-travel-planner-app/android/app/google-services.json
+          GOOGLE_SERVICES_JSON: /home/runner/work/holidai/holidai/android/app/google-services.json
           GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_PLIST }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -81,9 +81,9 @@ jobs:
           MMKV_ENCRYPTION_KEY: ${{ secrets.MMKV_ENCRYPTION_KEY }}
         run: |
           # Create google-services.json from base64
-          mkdir -p /home/runner/work/ai-travel-planner-app/ai-travel-planner-app/android/app
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > /home/runner/work/ai-travel-planner-app/ai-travel-planner-app/android/app/google-services.json
-          ls -la /home/runner/work/ai-travel-planner-app/ai-travel-planner-app/android/app/
+          mkdir -p /home/runner/work/holidai/holidai/android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > /home/runner/work/holidai/holidai/android/app/google-services.json
+          ls -la /home/runner/work/holidai/holidai/android/app/
 
           # Do the build
           eas build --local \
@@ -96,5 +96,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: /home/runner/work/ai-travel-planner-app/ai-travel-planner-app/app-build
+          path: /home/runner/work/holidai/holidai/app-build
           retention-days: 1

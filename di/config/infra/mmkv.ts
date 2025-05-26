@@ -4,7 +4,7 @@ import { MMKV } from 'react-native-mmkv';
 import { container } from 'tsyringe';
 
 const mmkvInstance = new MMKV({
-  id: 'travel-app.expo.storage',
+  id: 'holidai.expo.storage',
   encryptionKey: Constants.expoConfig?.extra?.mmkvEncryptionKey,
 });
 

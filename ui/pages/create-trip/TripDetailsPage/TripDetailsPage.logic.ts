@@ -4,7 +4,7 @@ import { useLocale } from '@/ui/hooks/useLocale';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Animated } from 'react-native';
 
 export interface AllCoordinates {
@@ -20,7 +20,6 @@ export interface AllCoordinates {
 export const useTripDetailsPageLogic = () => {
   const { id } = useLocalSearchParams();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const [isLoadingMainImage, setIsLoadingMainImage] = useState(true);
   const { locale } = useLocale();
 
   const { data } = useGetUserTripsQuery();
@@ -30,15 +29,6 @@ export const useTripDetailsPageLogic = () => {
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
   const { data: imageUrl } = useUnsplashImages(location, UrlTypes.SMALL);
-
-  // TODO: mocked loading state for main image
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoadingMainImage(false);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const title = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
@@ -133,7 +123,6 @@ export const useTripDetailsPageLogic = () => {
     transportationNotes,
     tripDetails,
     weather,
-    isLoadingMainImage,
     id: trip?.docId ?? '',
     imageUrl,
   };

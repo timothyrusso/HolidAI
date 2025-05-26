@@ -1,4 +1,4 @@
-# Travel Planner AI
+# HolidAI
 
 A smart travel planning assistant that leverages Google Gemini AI to create personalized trip itineraries. Simply input your destination, travel dates, budget, and number of travelers to receive customized travel plans tailored specifically to your needs - eliminating hours of research and planning.
 

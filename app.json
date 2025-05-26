@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Travel Planner",
-    "slug": "travelplanner",
+    "name": "HolidAI",
+    "slug": "holidai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./ui/assets/images/icon.png",
-    "scheme": "travelplanner",
+    "scheme": "holidai",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./ui/assets/images/icon.png",
@@ -14,11 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.app.travelplanner",
+      "bundleIdentifier": "com.app.holidai",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "package": "com.app.travelplanner",
+      "package": "com.app.holidai",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./ui/assets/images/android-icon.png",
@@ -78,8 +78,8 @@
     "newArchEnabled": true,
     "extra": {
       "router": { "origin": false },
-      "eas": { "projectId": "619a2a72-6d4c-4395-8262-2dc83d81556a" }
+      "eas": { "projectId": "23b4e2dd-269e-4fdc-a235-8e0d9e28b886" }
     },
-    "owner": "russotimothy"
+    "owner": "holidai"
   }
 }
