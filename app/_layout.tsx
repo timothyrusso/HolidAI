@@ -1,3 +1,6 @@
+// @ts-ignore // Remove Firebase deprecation warning logs
+globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
+
 import { queryClient } from '@/di/resolve';
 import { Stacks } from '@/ui/constants/routes';
 import i18n from '@/ui/translations/i18n';
@@ -9,8 +12,6 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 export default function RootLayout() {
   // Initialize localization
   i18n;
-
-  // SplashScreen.preventAutoHideAsync();
 
   useFonts({
     'inter-regular': require('../ui/assets/fonts/Inter-Regular.ttf'),

@@ -2,7 +2,7 @@ import { useAddToFavoriteTrip } from '@/ui/queries/trips/mutation/useAddToFavori
 import { useRemoveTrip } from '@/ui/queries/trips/mutation/useRemoveTrip';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
   const { id } = useLocalSearchParams();
@@ -16,10 +16,10 @@ export const useHeaderIconsLogic = () => {
   const { removeTrip } = useRemoveTrip(trip?.docId ?? '');
   const { updateFavorite } = useAddToFavoriteTrip(trip?.docId ?? '');
 
-  const addToFavoritesHandler = () => {
+  const addToFavoritesHandler = useCallback(() => {
     setIsFavorite(prev => !prev);
     updateFavorite(isFavorite ?? false);
-  };
+  }, [isFavorite]);
 
   const handleDeleteTrip = () => {
     removeTrip(trip?.docId ?? '');
