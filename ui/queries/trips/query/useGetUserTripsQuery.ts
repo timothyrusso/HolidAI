@@ -4,6 +4,7 @@ import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import auth from '@react-native-firebase/auth';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query } from 'firebase/firestore';
+import { QueryOptionKeys } from '../../QueryOptionKeys';
 import { tripsKeys } from '../TripsKeys';
 
 export const useGetUserTripsQuery = () => {
@@ -29,6 +30,8 @@ export const useGetUserTripsQuery = () => {
     queryKey: [tripsKeys.getUserTrips],
     queryFn: getMyTrips,
     enabled: !!user,
+    staleTime: QueryOptionKeys.STALE_TIME,
+    gcTime: QueryOptionKeys.GC_TIME,
     select: data => ({
       trips: data,
       totalTrips: data?.length,

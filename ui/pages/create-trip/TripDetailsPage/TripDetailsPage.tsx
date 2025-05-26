@@ -5,7 +5,7 @@ import { Routes } from '@/ui/constants/routes';
 import { Fragment } from 'react';
 import { SectionList, View } from 'react-native';
 import { useTripDetailsPageLogic } from './TripDetailsPage.logic';
-import { styles as stylesTripDetailsPage } from './TripDetailsPage.style';
+import { styles } from './TripDetailsPage.style';
 import { DayItem } from './components/DayItem/DayItem';
 import { HeaderIcons } from './components/HeaderIcons/HeaderIcons';
 import { ListHeaderComponent } from './components/ListHeaderComponent/ListHeaderComponent';
@@ -22,12 +22,9 @@ export const TripDetailsPage = () => {
     transportationNotes,
     tripDetails,
     weather,
-    isLoadingMainImage,
     id,
     imageUrl,
   } = useTripDetailsPageLogic();
-
-  const styles = stylesTripDetailsPage(isLoadingMainImage);
 
   const separator = () => <View style={styles.separator} />;
 
@@ -35,13 +32,7 @@ export const TripDetailsPage = () => {
 
   return (
     <Fragment>
-      <AnimatedHeaderImage
-        value={scrollOffsetY}
-        imageUrl={imageUrl}
-        title={title}
-        headerIcons={<HeaderIcons />}
-        isLoading={isLoadingMainImage}
-      />
+      <AnimatedHeaderImage value={scrollOffsetY} imageUrl={imageUrl} title={title} headerIcons={<HeaderIcons />} />
       <BasicView nameView={Routes.TripDetails} containerStyle={styles.basicViewContainer} isFullScreen>
         <SectionList
           sections={sectionData ?? []}
@@ -53,7 +44,7 @@ export const TripDetailsPage = () => {
           onScroll={handleScroll}
           style={styles.sectionList}
           stickySectionHeadersEnabled={false}
-          ListHeaderComponent={() => (
+          ListHeaderComponent={
             <ListHeaderComponent
               region={region}
               allCoordinates={allCoordinates}
@@ -62,7 +53,7 @@ export const TripDetailsPage = () => {
               weather={weather}
               tripDetails={tripDetails}
             />
-          )}
+          }
         />
       </BasicView>
     </Fragment>
