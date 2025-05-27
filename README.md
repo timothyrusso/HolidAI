@@ -1,5 +1,5 @@
 <div align="center">
-        <img src="ui/assets/images/icon.png" width="64" height="64" alt="HolidAI Icon" style="border-radius: 50%;">
+        <img src="ui/assets/images/readme_icon.png" width="64" height="64" alt="HolidAI Icon" style="border-radius: 50%;">
     <h1>
             HolidAI
     </h1>
