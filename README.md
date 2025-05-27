@@ -1,4 +1,9 @@
-# HolidAI
+<div align="center">
+        <img src="ui/assets/images/icon.png" width="64" height="64" alt="HolidAI Icon" style="border-radius: 50%;">
+    <h1>
+            HolidAI
+    </h1>
+</div>
 
 A smart travel planning assistant that leverages Google Gemini AI to create personalized trip itineraries. Simply input your destination, travel dates, budget, and number of travelers to receive customized travel plans tailored specifically to your needs - eliminating hours of research and planning.
 
@@ -6,11 +11,12 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Screenshots
 
-**Home Page**
-![Home Page](wiki/images/home_page.png)
-
-**Trip detail page**
-![Trip Detail Page](wiki/images/trip_detail_page.png)
+<table>
+   <tr>
+      <td><strong>Home Page</strong><br><img src="wiki/images/home_page.png" alt="Home Page"></td>
+      <td><strong>Detail Page</strong><br><img src="wiki/images/trip_detail_page.png" alt="Trip Detail Page"></td>
+   </tr>
+</table>
 
 ## Get started with the development build
 
