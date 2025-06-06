@@ -14,11 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.app.holidai",
+      "bundleIdentifier": "com.app.travelplanner",
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "package": "com.app.holidai",
+      "package": "com.app.travelplanner",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./ui/assets/images/android-icon.png",
@@ -38,7 +38,9 @@
       [
         "expo-build-properties",
         {
-          "ios": { "useFrameworks": "static" },
+          "ios": {
+            "useFrameworks": "static"
+          },
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 34,
