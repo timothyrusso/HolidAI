@@ -1,7 +1,5 @@
 import type { ILogger } from '../domain';
 
-/* eslint-disable no-console */
-
 /**
  * The `BasicLogger` class is a logger implementation that logs messages to the console using the `console.debug`, `console.info`, `console.warn`, `console.log`, and `console.error` methods.
  * It implements the `ILogger` interface and is designed to be used as a singleton.
@@ -13,6 +11,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   debug<T, O>(message: T, ...optionalParams: O[]): void {
+    /* biome-ignore lint/suspicious/noConsole: basic logger */
     console.debug(message, ...optionalParams);
   }
 
@@ -22,6 +21,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   info<T, O>(message: T, ...optionalParams: O[]): void {
+    /* biome-ignore lint/suspicious/noConsole: basic logger */
     console.info(message, ...optionalParams);
   }
 
@@ -31,6 +31,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   warning<T, O>(message: T, ...optionalParams: O[]): void {
+    /* biome-ignore lint/suspicious/noConsole: basic logger */
     console.warn(message, ...optionalParams);
   }
 
@@ -40,6 +41,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   log<T, O>(message: T, ...optionalParams: O[]): void {
+    /* biome-ignore lint/suspicious/noConsole: basic logger */
     console.log(message, ...optionalParams);
   }
 
@@ -49,6 +51,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the error.
    */
   error<O>(error: Error, ...optionalParams: O[]): void {
+    /* biome-ignore lint/suspicious/noConsole: basic logger */
     console.error(error, ...optionalParams);
   }
 }
