@@ -24,6 +24,7 @@ export const TripDetailsPage = () => {
     weather,
     id,
     imageUrl,
+    food,
   } = useTripDetailsPageLogic();
 
   const separator = () => <View style={styles.separator} />;
@@ -52,6 +53,7 @@ export const TripDetailsPage = () => {
               transportationNotes={transportationNotes}
               weather={weather}
               tripDetails={tripDetails}
+              food={food}
             />
           }
         />

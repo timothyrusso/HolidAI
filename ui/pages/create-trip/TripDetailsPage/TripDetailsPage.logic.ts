@@ -102,6 +102,7 @@ export const useTripDetailsPageLogic = () => {
   const durationNights = trip?.tripAiResp?.tripDetails?.durationNights;
 
   const weather = trip?.tripAiResp?.weather;
+  const food = trip?.tripAiResp?.food;
 
   const tripDetails: Omit<TripDetails, 'locale' | 'location'> = {
     budget: budget ?? '',
@@ -125,5 +126,6 @@ export const useTripDetailsPageLogic = () => {
     weather,
     id: trip?.docId ?? '',
     imageUrl,
+    food,
   };
 };

@@ -38,4 +38,5 @@ export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   umbrella: 'umbrella-outline',
   shirt: 'shirt-outline',
   walk: 'walk',
+  cafe: 'cafe-outline',
 };

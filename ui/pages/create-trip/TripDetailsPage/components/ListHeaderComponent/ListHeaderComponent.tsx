@@ -1,10 +1,11 @@
-import type { TripDetails, Weather } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { Food, TripDetails, Weather } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { colors } from '@/ui/constants/style/colors';
 import { icons } from '@/ui/constants/style/icons';
 import { type FC, memo } from 'react';
 import { View } from 'react-native';
 import type { Region } from 'react-native-maps';
 import type { AllCoordinates } from '../../TripDetailsPage.logic';
+import { FoodCard } from '../FoodCard/FoodCard';
 import { MapListHeaderComponent } from '../MapListHeaderComponent/MapListHeaderComponent';
 import { NotesCard } from '../NotesCard/NotesCard';
 import { TripDetailsCard } from '../TripDetailsCard/TripDetailsCard';
@@ -18,15 +19,17 @@ type ListHeaderComponentProps = {
   transportationNotes?: string;
   weather?: Weather;
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;
+  food?: Food;
 };
 
 export const ListHeaderComponent: FC<ListHeaderComponentProps> = memo(
-  ({ region, allCoordinates, budgetNotes, transportationNotes, weather, tripDetails }) => {
+  ({ region, allCoordinates, budgetNotes, transportationNotes, weather, tripDetails, food }) => {
     return (
       <View style={style.container}>
         <TripDetailsCard tripDetails={tripDetails} />
         {allCoordinates && <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />}
         {weather && <WeatherCard weather={weather} />}
+        {food && <FoodCard food={food} />}
         {budgetNotes && (
           <NotesCard
             title="TRIP_DETAILS.BUDGET_NOTES"

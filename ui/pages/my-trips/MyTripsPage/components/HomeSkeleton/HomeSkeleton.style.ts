@@ -17,14 +17,14 @@ export const styles = StyleSheet.create({
     left: spacing.Fourfold,
     right: spacing.Fourfold,
     borderRadius: spacing.Fourfold,
+    justifyContent: 'flex-end',
+    paddingBottom: spacing.Fourfold,
   },
   button: {
-    position: 'absolute',
-    bottom: spacing.Fourfold,
-    left: spacing.Fourfold,
-    right: spacing.Fourfold,
     height: components.buttonLargeHeight,
     borderRadius: spacing.Double,
     backgroundColor: colors.primaryBlack,
+    width: '60%',
+    alignSelf: 'center',
   },
 });
