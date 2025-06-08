@@ -11,7 +11,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   debug<T, O>(message: T, ...optionalParams: O[]): void {
-    /* biome-ignore lint/suspicious/noConsole: basic logger */
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.debug(message, ...optionalParams);
   }
 
@@ -21,7 +21,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   info<T, O>(message: T, ...optionalParams: O[]): void {
-    /* biome-ignore lint/suspicious/noConsole: basic logger */
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.info(message, ...optionalParams);
   }
 
@@ -31,7 +31,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   warning<T, O>(message: T, ...optionalParams: O[]): void {
-    /* biome-ignore lint/suspicious/noConsole: basic logger */
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.warn(message, ...optionalParams);
   }
 
@@ -41,7 +41,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the message.
    */
   log<T, O>(message: T, ...optionalParams: O[]): void {
-    /* biome-ignore lint/suspicious/noConsole: basic logger */
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.log(message, ...optionalParams);
   }
 
@@ -51,7 +51,7 @@ export class BasicLogger implements ILogger {
    * @param optionalParams - Optional parameters to be logged along with the error.
    */
   error<O>(error: Error, ...optionalParams: O[]): void {
-    /* biome-ignore lint/suspicious/noConsole: basic logger */
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.error(error, ...optionalParams);
   }
 }
