@@ -51,10 +51,10 @@ export const styles = StyleSheet.create({
     color: colors.primaryBlack,
     backgroundColor: colors.primaryGreen,
     borderWidth: 1,
-    borderRadius: spacing.Triple,
+    borderRadius: spacing.SingleAndHalf,
     paddingHorizontal: spacing.Single,
     paddingVertical: spacing.Minimal,
-    width: (SCREEN_WIDTH - spacing.Quintuple * 6) / 2,
+    width: (SCREEN_WIDTH - spacing.Quintuple * 4) / 2,
     textAlign: 'center',
   },
   contentContainer: {
