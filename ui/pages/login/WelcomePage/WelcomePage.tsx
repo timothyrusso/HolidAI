@@ -4,7 +4,7 @@ import { LinearGradientText } from '@/ui/components/basic/LinearGradientText/Lin
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { colors } from '@/ui/constants/style/colors';
 import { components } from '@/ui/constants/style/dimensions/components';
 import { LinearGradient } from 'expo-linear-gradient';

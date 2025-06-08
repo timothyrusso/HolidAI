@@ -6,7 +6,7 @@ import { logger } from '@/di/resolve';
 
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
 import auth from '@react-native-firebase/auth';

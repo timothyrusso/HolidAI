@@ -2,7 +2,7 @@ import { logger } from '@/di/resolve';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { View } from 'react-native';
 import { useGenerateTripPageLogic } from './GenerateTripPage.logic';
 import { style } from './GenerateTripPage.style';

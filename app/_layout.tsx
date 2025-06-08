@@ -2,7 +2,8 @@
 globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
 
 import { queryClient } from '@/di/resolve';
-import { Stacks } from '@/ui/constants/routes';
+import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
+import { Stacks } from '@/ui/constants/navigation/routes';
 import i18n from '@/ui/translations/i18n';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
@@ -26,7 +27,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack screenOptions={screenOptions}>
           <Stack.Screen name={Stacks.Main} />
         </Stack>
       </KeyboardProvider>

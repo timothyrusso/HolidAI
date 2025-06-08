@@ -1,4 +1,4 @@
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { useRouter } from 'expo-router';
 
 export const useWelcomePageLogic = () => {

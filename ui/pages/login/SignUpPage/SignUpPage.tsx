@@ -4,7 +4,7 @@ import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInp
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSignUpPageLogic } from './SignUpPage.logic';

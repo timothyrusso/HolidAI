@@ -3,7 +3,7 @@ import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { colors } from '@/ui/constants/style/colors';
 import { FlatList, View } from 'react-native';
 import { useSelectTravelersPageLogic } from './SelectTravelersPage.logic';

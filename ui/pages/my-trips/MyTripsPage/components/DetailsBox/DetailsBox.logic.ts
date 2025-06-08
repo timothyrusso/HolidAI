@@ -1,5 +1,5 @@
 import { convertFromUTCToLocaleUseCase } from '@/modules/dates/application/convertFromUTCToLocaleUseCase';
-import { Routes, Stacks } from '@/ui/constants/routes';
+import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 export const useDetailsBoxLogic = (
