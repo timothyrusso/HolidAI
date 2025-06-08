@@ -26,5 +26,6 @@ export const styles = StyleSheet.create({
     height: components.buttonLargeHeight,
     borderRadius: spacing.Double,
     backgroundColor: colors.primaryBlack,
+    width: '70%',
   },
 });

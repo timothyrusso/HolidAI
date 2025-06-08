@@ -25,7 +25,11 @@
     "OUTDOOR_ACTIVITIES": "Attività all'aria aperta",
     "TRAVELERS": "Viaggiatori",
     "BUDGET": "Budget",
-    "TRAVEL_DATES": "Date del viaggio"
+    "TRAVEL_DATES": "Date del viaggio",
+    "FOOD_INFORMATION": "INFORMAZIONI SUL CIBO",
+    "BUDGET_NOTES": "Note sul budget",
+    "GENERAL_NOTES": "Note generali",
+    "TYPICAL_DISHES": "Piatti tipici"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Consigli utili",

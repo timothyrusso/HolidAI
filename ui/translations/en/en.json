@@ -25,7 +25,11 @@
     "OUTDOOR_ACTIVITIES": "Outdoor Activities",
     "TRAVELERS": "Travelers",
     "BUDGET": "Budget",
-    "TRAVEL_DATES": "Travel Dates"
+    "TRAVEL_DATES": "Travel Dates",
+    "FOOD_INFORMATION": "FOOD INFORMATION",
+    "BUDGET_NOTES": "Budget Notes",
+    "GENERAL_NOTES": "General Notes",
+    "TYPICAL_DISHES": "Typical Dishes"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Useful Tips",
