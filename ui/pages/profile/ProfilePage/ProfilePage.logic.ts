@@ -1,5 +1,5 @@
 import { logger } from '@/di/resolve';
-import { Routes, Stacks } from '@/ui/constants/routes';
+import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { components } from '@/ui/constants/style/dimensions/components';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { miniavs } from '@dicebear/collection';

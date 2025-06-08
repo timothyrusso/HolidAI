@@ -1,7 +1,7 @@
 import type { DayPlan } from '@/modules/trip/domain/dto/UserTripsDTO';
 import AnimatedHeaderImage from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { Fragment } from 'react';
 import { SectionList, View } from 'react-native';
 import { useTripDetailsPageLogic } from './TripDetailsPage.logic';

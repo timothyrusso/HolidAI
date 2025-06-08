@@ -1,6 +1,6 @@
 import { Languages } from '@/modules/shared/domain/Languages';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { View } from 'react-native';
 import { useChangeLanguagePageLogic } from './ChangeLanguagePage.logic';
 import { styles } from './ChangeLanguagePage.style';

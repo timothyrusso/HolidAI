@@ -8,7 +8,7 @@ import { ActionModal } from '@/ui/components/dialogs/ActionModal/ActionModal';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import Toast from 'react-native-toast-message';

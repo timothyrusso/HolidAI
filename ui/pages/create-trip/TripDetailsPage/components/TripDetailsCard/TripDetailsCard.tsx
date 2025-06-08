@@ -17,6 +17,11 @@ type TripDetailsCardProps = {
 export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
   const { t } = useTranslation();
 
+  const dateLabel =
+    tripDetails.startDate !== tripDetails.endDate
+      ? `${tripDetails.startDate} - ${tripDetails.endDate}`
+      : tripDetails.startDate;
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -44,7 +49,7 @@ export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
           <CustomText text="MY_TRIP.TRAVEL_DATES" style={styles.subtitle} />
         </View>
         {tripDetails.startDate && tripDetails.endDate ? (
-          <CustomText text={`${tripDetails.startDate} - ${tripDetails.endDate}`} style={styles.contentValue} />
+          <CustomText text={dateLabel} style={styles.contentValue} />
         ) : (
           <CustomText text={tripDetails.startDate} style={styles.contentValue} />
         )}

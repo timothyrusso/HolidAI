@@ -1,6 +1,15 @@
 const getDateInstance = (date?: Date | string | null) => {
   if (!date) throw new Error('Missing date');
-  const dateInstance = typeof date === 'string' ? new Date(date) : date;
+
+  let dateInstance: Date;
+
+  if (typeof date === 'string') {
+    const [month, day, year] = date.split('-');
+    dateInstance = new Date(Number.parseInt(year), Number.parseInt(month) - 1, Number.parseInt(day));
+  } else {
+    dateInstance = date;
+  }
+
   return dateInstance;
 };
 

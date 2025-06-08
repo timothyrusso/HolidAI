@@ -1,7 +1,7 @@
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { colors } from '@/ui/constants/style/colors';
 import { View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';

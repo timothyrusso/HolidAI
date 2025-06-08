@@ -1,4 +1,4 @@
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { useUniqueItems } from '@/ui/hooks/useUniqueItems';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { useRouter } from 'expo-router';

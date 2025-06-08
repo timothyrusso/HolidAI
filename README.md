@@ -44,6 +44,49 @@ To run this project, you'll need to:
 
 These files contain necessary configuration for Google services integration and environment-specific settings.
 
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+### Firebase Configuration
+
+- `FIREBASE_API_KEY`: Your Firebase API key from the Firebase Console
+- `FIREBASE_AUTH_DOMAIN`: Your Firebase Auth domain (e.g., `your-project.firebaseapp.com`)
+- `FIREBASE_PROJECT_ID`: Your Firebase project ID
+- `FIREBASE_STORAGE_BUCKET`: Your Firebase storage bucket (e.g., `your-project.appspot.com`)
+- `FIREBASE_MESSAGING_SENDER_ID`: Your Firebase messaging sender ID
+- `FIREBASE_APP_ID`: Your Firebase app ID
+
+To obtain these values:
+
+1. Go to the [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project or select an existing one
+3. Add a web app to your project
+4. The configuration values will be shown in the setup instructions
+
+### Google Services
+
+- `GOOGLE_PLACES_API_KEY`: API key for Google Places API
+- `GOOGLE_MAPS_API_KEY_IOS`: API key for Google Maps on iOS
+- `GOOGLE_MAPS_API_KEY_ANDROID`: API key for Google Maps on Android
+- `GOOGLE_GEMINI_API_KEY`: API key for Google Gemini AI
+
+To obtain these values:
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the required APIs (Places API, Geocoding, Maps SDK for iOS/Android, Gemini API)
+4. Create credentials (API keys) for each service
+
+### Other Services
+
+- `RAPID_API_KEY`: API key for RapidAPI (used for flight information)
+  - Sign up at [RapidAPI](https://rapidapi.com/) and subscribe to the Sky Scrapper API
+- `UNSPLASH_ACCESS_KEY`: API key for Unsplash (used for destination images)
+  - Sign up at [Unsplash Developers](https://unsplash.com/developers) to get an access key
+- `MMKV_ENCRYPTION_KEY`: A secure random string for encrypting local storage
+  - Generate a secure random string (at least 32 characters)
+
 ## Get started with the development build
 
 1. Install dependencies
@@ -112,10 +155,7 @@ Feel free to pick up any issue that interests you. If you're new to the project,
 
 ### Development Process
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+1. Setup and run the project
 2. Make your changes
 3. Run tests (if available)
 4. Commit your changes with clear commit messages

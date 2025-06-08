@@ -1,5 +1,5 @@
 import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
-import { Routes, Stacks } from '@/ui/constants/routes';
+import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 import { useRouter } from 'expo-router';
 

@@ -1,5 +1,5 @@
 import { logger } from '@/di/resolve';
-import { Routes } from '@/ui/constants/routes';
+import { Routes } from '@/ui/constants/navigation/routes';
 import { ToastType, useToast } from '@/ui/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import auth, { sendEmailVerification, type FirebaseAuthTypes } from '@react-native-firebase/auth';
