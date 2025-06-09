@@ -97,10 +97,12 @@
   "SELECT_TRAVELERS": {
     "TITLE": "Select travelers",
     "DESCRIPTION": "Choose your companions for your trip.",
-    "JUST_ME": "Just me",
-    "COUPLE": "A couple",
+    "SINGLE": "Single",
+    "COUPLE": "Couple",
     "FAMILY": "Family",
-    "FRIENDS": "Friends"
+    "FRIENDS": "Friends",
+    "TRAVELERS_NUMBER": "How many travelers are going to participate?",
+    "TRAVELERS_TYPE": "Travelers type?"
   },
   "SELECT_DATES": {
     "TITLE": "Select dates",
@@ -124,7 +126,8 @@
     "TRAVEL_DATE": "Travel Date:",
     "TRAVELERS": "Travelers:",
     "BUDGET": "Budget:",
-    "BUILD_TRIP": "Build Trip"
+    "BUILD_TRIP": "Build Trip",
+    "TRAVELERS_TYPE": "Travelers Type:"
   },
   "GENERATE_TRIP": {
     "TITLE": "Generating Trip",

@@ -1,16 +1,22 @@
+import { isValid, parse } from 'date-fns';
+
 const getDateInstance = (date?: Date | string | null) => {
   if (!date) throw new Error('Missing date');
 
-  let dateInstance: Date;
-
   if (typeof date === 'string') {
-    const [month, day, year] = date.split('-');
-    dateInstance = new Date(Number.parseInt(year), Number.parseInt(month) - 1, Number.parseInt(day));
-  } else {
-    dateInstance = date;
+    // Try different common date formats
+    const formats = ['dd/MM/yyyy', 'MM/dd/yyyy', 'yyyy/dd/MM', 'yyyy-MM-dd', 'dd-MM-yyyy', 'MM-dd-yyyy'];
+
+    for (const format of formats) {
+      const parsedDate = parse(date, format, new Date());
+      if (isValid(parsedDate)) {
+        return parsedDate;
+      }
+    }
+    throw new Error('Invalid date format');
   }
 
-  return dateInstance;
+  return date;
 };
 
 /**

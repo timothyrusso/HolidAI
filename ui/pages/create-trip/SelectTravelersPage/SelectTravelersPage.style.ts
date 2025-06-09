@@ -15,7 +15,7 @@ export const style = StyleSheet.create({
   },
   list: {
     paddingHorizontal: spacing.Fourfold,
-    paddingTop: spacing.Double,
+    paddingTop: spacing.Fourfold,
   },
   contentContainer: {
     paddingBottom: spacing.Triple,
@@ -25,5 +25,11 @@ export const style = StyleSheet.create({
   },
   twoColumnCard: {
     width: (SCREEN_WIDTH - spacing.Fourfold * 3) / 2,
+  },
+  listTitle: {
+    fontSize: spacing.Triple,
+    fontFamily: fonts.interMedium,
+    alignSelf: 'flex-start',
+    paddingBottom: spacing.Fourfold,
   },
 });

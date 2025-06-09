@@ -97,10 +97,12 @@
   "SELECT_TRAVELERS": {
     "TITLE": "Seleziona i viaggiatori",
     "DESCRIPTION": "Scegli i viaggiatori per il tuo viaggio.",
-    "JUST_ME": "Solo io",
+    "SINGLE": "Single",
     "COUPLE": "Coppia",
     "FAMILY": "Famiglia",
-    "FRIENDS": "Amici"
+    "FRIENDS": "Amici",
+    "TRAVELERS_NUMBER": "Quanti viaggiatori partecipano?",
+    "TRAVELERS_TYPE": "Tipologia di viaggiatori?"
   },
   "SELECT_DATES": {
     "TITLE": "Seleziona le date",
@@ -115,7 +117,6 @@
     "BASIC": "Essenziale",
     "CHEAP": "Economico",
     "MODERATE": "Moderato",
-    "EXPENSIVE": "Costoso",
     "LUXURY": "Lusso"
   },
   "REVIEW_TRIP": {
@@ -125,7 +126,8 @@
     "TRAVEL_DATE": "Data del viaggio:",
     "TRAVELERS": "Viaggiatori:",
     "BUDGET": "Budget:",
-    "BUILD_TRIP": "Genera viaggio"
+    "BUILD_TRIP": "Genera viaggio",
+    "TRAVELERS_TYPE": "Tipologia di viaggiatori:"
   },
   "GENERATE_TRIP": {
     "TITLE": "Creazione del viaggio",

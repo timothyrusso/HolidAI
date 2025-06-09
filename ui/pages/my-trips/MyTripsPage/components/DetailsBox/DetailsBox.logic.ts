@@ -1,5 +1,6 @@
-import { convertFromUTCToLocaleUseCase } from '@/modules/dates/application/convertFromUTCToLocaleUseCase';
+import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { useLocale } from '@/ui/hooks/useLocale';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 export const useDetailsBoxLogic = (
@@ -11,6 +12,7 @@ export const useDetailsBoxLogic = (
 ) => {
   const router = useRouter();
   const { t } = useTranslation();
+  const { locale } = useLocale();
 
   const handlePress = () => {
     router.push({
@@ -24,7 +26,7 @@ export const useDetailsBoxLogic = (
   const travelersLabel = travelers;
   const daysLabel = days;
 
-  const dateLabel = convertFromUTCToLocaleUseCase(tripStartDate);
+  const dateLabel = translateDate(locale, tripStartDate);
 
   return { handlePress, budgetLabel, travelersLabel, daysLabel, dateLabel };
 };
