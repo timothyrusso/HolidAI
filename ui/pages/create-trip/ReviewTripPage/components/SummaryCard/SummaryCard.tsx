@@ -1,3 +1,4 @@
+import type { TravelerInfo } from '@/modules/trip/domain/entities/TravelerInfo';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/constants/style/colors';
@@ -10,7 +11,7 @@ import { style } from './SummaryCard.style';
 type SummaryCardProps = {
   destination: string;
   dates: string;
-  travelers: string;
+  travelers: TravelerInfo;
   budget: string;
 };
 
@@ -36,7 +37,14 @@ export const SummaryCard: FC<SummaryCardProps> = ({ destination, dates, traveler
           <CustomIcon name={icons.people} size={spacing.Fourfold} color={colors.primaryBlack} />
           <CustomText text="REVIEW_TRIP.TRAVELERS" style={style.label} />
         </View>
-        <CustomText text={travelers} style={style.value} />
+        <CustomText text={travelers.travelersNumber.toString()} style={style.value} />
+      </View>
+      <View style={style.itemRow}>
+        <View style={style.title}>
+          <CustomIcon name={icons.people} size={spacing.Fourfold} color={colors.primaryBlack} />
+          <CustomText text="REVIEW_TRIP.TRAVELERS_TYPE" style={style.label} />
+        </View>
+        <CustomText text={travelers.travelersType} style={style.value} />
       </View>
       <View style={style.itemRow}>
         <View style={style.title}>

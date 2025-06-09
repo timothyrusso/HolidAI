@@ -1,6 +1,7 @@
+import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { useLocale } from '@/ui/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
-import { format } from 'date-fns';
 import { useRouter } from 'expo-router';
 
 export type TripRecap = {
@@ -11,10 +12,11 @@ export type TripRecap = {
 export const useReviewTripPageLogic = () => {
   const router = useRouter();
   const { tripSelectors } = useTripState();
+  const { locale } = useLocale();
 
   const getTripDates = () => {
     const { startDate, endDate } = tripSelectors.datesInfo();
-    return startDate && `${format(startDate, 'dd MMM yyyy')}${endDate ? ` to ${format(endDate, 'dd MMM yy')}` : ''}`;
+    return startDate && `${translateDate(locale, startDate)}${endDate ? ` - ${translateDate(locale, endDate)}` : ''}`;
   };
 
   const handleButtonPress = () => {
@@ -28,7 +30,10 @@ export const useReviewTripPageLogic = () => {
     handleButtonPress,
     destination: tripSelectors.locationInfo().name.split(',')[0],
     dates: getTripDates() ?? '',
-    travelers: tripSelectors.travelerInfo(),
+    travelers: {
+      travelersNumber: tripSelectors.travelersNumber(),
+      travelersType: tripSelectors.travelerType(),
+    },
     budget: tripSelectors.budgetInfo(),
     animation,
   };
