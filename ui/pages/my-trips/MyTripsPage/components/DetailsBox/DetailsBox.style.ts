@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     right: spacing.Fourfold,
     color: colors.primaryWhite,
     fontFamily: fonts.interBold,
-    fontSize: spacing.Double,
+    fontSize: spacing.Double + spacing.Minimal,
   },
   labelDetailsContainer: {
     flexDirection: 'row',
