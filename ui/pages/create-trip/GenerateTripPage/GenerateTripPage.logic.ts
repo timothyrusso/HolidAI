@@ -8,8 +8,10 @@ import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
+import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
 import auth from '@react-native-firebase/auth';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
@@ -22,6 +24,8 @@ export const useGenerateTripPageLogic = () => {
   const [isLoading, setIsLoading] = useState(false);
   const userId = auth().currentUser?.uid;
   const { locale } = useLocale();
+
+  const queryClient = useQueryClient();
 
   const PROMPT = ai_prompt
     .replace('{location}', tripSelectors.locationInfo().name)
@@ -52,6 +56,8 @@ export const useGenerateTripPageLogic = () => {
         createdAt: new Date().toISOString(),
         docId,
       });
+
+      queryClient.invalidateQueries({ queryKey: [tripsKeys.getUserTrips] });
 
       router.push(`/${Routes.MyTrips}`);
     } catch (error) {

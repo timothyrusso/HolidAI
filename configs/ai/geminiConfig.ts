@@ -24,7 +24,7 @@ export const chatSession = model.startChat({
       role: 'user',
       parts: [
         {
-          text: 'Generate Travel Plan in {en} localization for Location: {Rome}, for {2} Days and {1} Nights for {2} travelers with a {Moderate} budget with geo coordinates, rating, descriptions and Places to visit nearby with placeName, Place Details, Place rating, Geo Coordinates, ticket Pricing of the location for {2} days and {1} nights with each day plan with best time to visit in JSON format. The placeDetailsLongDescription must be between 200 and 350 words. Each day schedule must have between 3 and 5 activities.',
+          text: 'Generate Travel Plan in {en} localization for Location: {Rome}, for {2} Days and {1} Nights for {2} travelers with a {Moderate} budget with geo coordinates, rating, descriptions and Places to visit nearby with placeName, Place Details, Place rating, Geo Coordinates, ticket Pricing of the location for {2} days and {1} nights with each day plan with best time to visit in JSON format. The placeDetailsLongDescription must be between 200 and 350 words. Each day schedule must have between 3 and 5 activities. The JSON must be in the following format in the chat history with the exact properties and values. Do not add any other text or comments and follow the correct types.',
         },
       ],
     },
