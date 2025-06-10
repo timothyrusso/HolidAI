@@ -19,12 +19,12 @@ export const style = StyleSheet.create({
     fontFamily: fonts.interMedium,
   },
   titleContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
     paddingBottom: spacing.Triple,
     paddingHorizontal: spacing.Fourfold,
     columnGap: spacing.Triple,
+    rowGap: spacing.Double,
   },
   subtitle: {
     fontSize: spacing.Triple,

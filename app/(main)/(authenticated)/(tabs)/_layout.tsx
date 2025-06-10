@@ -7,6 +7,7 @@ import { icons } from '@/ui/constants/style/icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 const TabLayout = () => {
@@ -16,17 +17,18 @@ const TabLayout = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     router.push(searchRoute);
   };
+  const { t } = useTranslation();
 
   return (
     <Tabs>
       <TabSlot />
       <TabList style={tabsStyle.tabList}>
         <TabTrigger name="home" href="/my-trips" style={tabsStyle.tabTrigger} asChild>
-          <CustomTabButtonWithText icon={icons.location}>My Trips</CustomTabButtonWithText>
+          <CustomTabButtonWithText icon={icons.location}>{t('MY_TRIP.MY_TRIPS')}</CustomTabButtonWithText>
         </TabTrigger>
         <CustomTabButton icon={icons.add} onPress={handlePress} />
         <TabTrigger name="profile" href="/profile" style={tabsStyle.tabTrigger} asChild>
-          <CustomTabButtonWithText icon={icons.personCircleOutline}>Profile</CustomTabButtonWithText>
+          <CustomTabButtonWithText icon={icons.personCircleOutline}>{t('PROFILE.TITLE')}</CustomTabButtonWithText>
         </TabTrigger>
       </TabList>
     </Tabs>

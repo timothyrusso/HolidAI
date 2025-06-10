@@ -39,7 +39,7 @@ export const style = (
       borderRadius: spacing.Fourfold,
       paddingVertical: spacing.Single,
       paddingHorizontal: spacing.Triple,
-      height: spacing.Quintuple,
+      textAlign: 'center',
       maxWidth: '80%',
     },
     chipsContainer: {

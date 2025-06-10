@@ -96,5 +96,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: /home/runner/work/holidai/holidai/app-build
+          path: /home/runner/work/HolidAI/HolidAI/app-build
           retention-days: 1

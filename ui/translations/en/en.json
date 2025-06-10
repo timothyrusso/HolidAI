@@ -29,7 +29,9 @@
     "FOOD_INFORMATION": "FOOD INFORMATION",
     "BUDGET_NOTES": "Budget Notes",
     "GENERAL_NOTES": "General Notes",
-    "TYPICAL_DISHES": "Typical Dishes"
+    "TYPICAL_DISHES": "Typical Dishes",
+    "PROFILE": "Profile",
+    "MY_TRIPS": "My Trips"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Useful Tips",
