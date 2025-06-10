@@ -8,8 +8,8 @@ on:
         type: choice
         description: OS to build on. Ubuntu is faster, MacOS supports iOS builds
         options:
-          - macos-latest
           - ubuntu-latest
+          - macos-latest
       platform:
         type: choice
         description: Platform to build for
@@ -63,7 +63,7 @@ jobs:
 
       - name: Build app
         env:
-          GOOGLE_SERVICES_JSON: /home/runner/work/holidai/holidai/android/app/google-services.json
+          GOOGLE_SERVICES_JSON: /home/runner/work/HolidAI/HolidAI/android/app/google-services.json
           GOOGLE_SERVICES_PLIST: ${{ secrets.GOOGLE_SERVICES_PLIST }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -71,6 +71,7 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_MOBILE_APP_ID: ${{ secrets.FIREBASE_MOBILE_APP_ID }}
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
           RAPID_API_KEY: ${{ secrets.RAPID_API_KEY }}
@@ -81,9 +82,9 @@ jobs:
           MMKV_ENCRYPTION_KEY: ${{ secrets.MMKV_ENCRYPTION_KEY }}
         run: |
           # Create google-services.json from base64
-          mkdir -p /home/runner/work/holidai/holidai/android/app
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > /home/runner/work/holidai/holidai/android/app/google-services.json
-          ls -la /home/runner/work/holidai/holidai/android/app/
+          mkdir -p /home/runner/work/HolidAI/HolidAI/android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > /home/runner/work/HolidAI/HolidAI/android/app/google-services.json
+          ls -la /home/runner/work/HolidAI/HolidAI/android/app/
 
           # Do the build
           eas build --local \
@@ -98,3 +99,15 @@ jobs:
           name: build-artifacts
           path: /home/runner/work/HolidAI/HolidAI/app-build
           retention-days: 1
+
+      - name: List build artifacts
+        run: ls -la /home/runner/work/HolidAI/HolidAI/app-build
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_MOBILE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+          file: /home/runner/work/HolidAI/HolidAI/app-build
+          debug: true
