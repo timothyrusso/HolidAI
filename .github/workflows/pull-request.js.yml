@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ubuntudroid/automerge-labeler@v2
+      - uses: ubuntudroid/automerge-labeler@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           label: 'auto-merge' # optional
