@@ -29,7 +29,11 @@ export class LocalStorage implements IStorage {
    * @param value The value to set.
    */
   set(key: string, value: boolean | string | number | Uint8Array): void {
-    this.storage.set(key, value);
+    if (value instanceof Uint8Array) {
+      this.storage.set(key, value.buffer as ArrayBuffer);
+    } else {
+      this.storage.set(key, value);
+    }
   }
 
   /**
