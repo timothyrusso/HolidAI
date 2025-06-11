@@ -3,6 +3,7 @@ import { inject, singleton } from 'tsyringe';
 
 import { TYPES } from '@/di/types';
 import type { IStorage } from '@/modules/shared/infra/storage';
+import { ensureError } from '../../error/infra/ensureError';
 import type { ILogger } from '../../logger';
 
 /**
