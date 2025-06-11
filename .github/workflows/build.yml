@@ -100,8 +100,10 @@ jobs:
           path: /home/runner/work/HolidAI/HolidAI/app-build
           retention-days: 1
 
-      - name: List build artifacts
-        run: ls -la /home/runner/work/HolidAI/HolidAI/app-build
+      - name: Extract build artifacts
+        uses: montudor/action-zip@v1
+        with:
+          args: unzip -qq app-build/*.zip -d app-build/
 
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -109,5 +111,5 @@ jobs:
           appId: ${{secrets.FIREBASE_MOBILE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: testers
-          file: /home/runner/work/HolidAI/HolidAI/app-build
+          file: /home/runner/work/HolidAI/HolidAI/app-build/*.apk
           debug: true
