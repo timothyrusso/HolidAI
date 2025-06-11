@@ -93,17 +93,26 @@ jobs:
             --platform=${{ github.event.inputs.platform  || 'android' }} \
             --profile=${{ github.event.inputs.profile || 'test' }}
 
+      - name: List build outputs
+        run: ls -la /home/runner/work/HolidAI/HolidAI/app-build/
+
+      - name: Rename build output
+        run: |
+          # Find the actual build file and rename it to .apk
+          cd /home/runner/work/HolidAI/HolidAI/app-build
+          BUILD_FILE=$(ls | head -n 1)  # Get the first file
+          if [ ! -z "$BUILD_FILE" ]; then
+            mv "$BUILD_FILE" "app-release.apk"
+            echo "Renamed $BUILD_FILE to app-release.apk"
+          fi
+          ls -la
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: /home/runner/work/HolidAI/HolidAI/app-build
+          path: /home/runner/work/HolidAI/HolidAI/app-build/*.apk
           retention-days: 1
-
-      - name: Extract build artifacts
-        uses: montudor/action-zip@v1
-        with:
-          args: unzip -qq app-build/*.zip -d app-build/
 
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
