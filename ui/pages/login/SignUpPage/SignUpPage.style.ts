@@ -29,14 +29,22 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.Fourfold,
     paddingBottom: spacing.Fourfold,
   },
-  subtitle: {
-    fontFamily: fonts.interRegular,
-    fontSize: spacing.Triple,
-    paddingHorizontal: spacing.Fourfold,
-    alignSelf: 'flex-start',
-    ...(Platform.OS === PlatformOS.ios && { marginTop: spacing.Double }),
-  },
   container: {
     width: '100%',
+  },
+  verifyContainer: {
+    width: '100%',
+    paddingHorizontal: spacing.Fourfold,
+    justifyContent: 'flex-start',
+  },
+  verifyContent: {
+    width: '100%',
+    rowGap: spacing.Double,
+  },
+  verifyTitle: {
+    fontFamily: fonts.interRegular,
+    fontSize: spacing.Triple,
+    alignSelf: 'flex-start',
+    ...(Platform.OS === PlatformOS.ios && { marginTop: spacing.Double }),
   },
 });

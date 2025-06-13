@@ -10,7 +10,7 @@ export type ModalState = {
 
 export type ResetPasswordModalContentType = {
   headerTitle?: string;
-  primaryAction: () => void;
+  primaryAction?: () => void;
   secondaryAction?: () => void;
   primaryButtonTitle?: string;
   secondaryButtonTitle?: string;

@@ -71,11 +71,9 @@
     "TITLE": "ACCEDI",
     "RESET_PASSWORD": "Hai dimenticato la password?",
     "RESET_PASSWORD_TITLE": "Reimposta la password",
-    "RESET_PASSWORD_SENT": "Email di reimpostazione password inviata",
-    "UNCONFIRMED_EMAIL_TITLE": "Email non verificata",
-    "UNCONFIRMED_EMAIL_DESCRIPTION": "Email non verificata, per favore verifica la tua email e riprova.",
-    "SEND_EMAIL_VERIFICATION": "Invia email di verifica",
-    "EMAIL_VERIFICATION_SENT": "Email di verifica inviata"
+    "RESET_PASSWORD_SUCCESS": "Reimpostazione password avvenuta con successo",
+    "RESET_PASSWORD_EMAIL_CODE": "Codice di verifica inviato per email",
+    "VERIFY": "Verifica"
   },
   "SIGNUP": {
     "TITLE": "REGISTRATI",
@@ -88,8 +86,7 @@
     "PASSWORD_PLACEHOLDER": "Inserisci la tua password",
     "CONFIRM_PASSWORD": "Conferma password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la tua password",
-    "EMAIL_VERIFICATION_TITLE": "Verifica la tua email",
-    "EMAIL_VERIFICATION_DESCRIPTION": "Per completare il processo di registrazione, ti abbiamo inviato un'email di verifica. Per favore, controlla la tua email e clicca sul link per completare il processo di registrazione."
+    "EMAIL_VERIFICATION_TITLE": "Verifica la tua email"
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Cerca",

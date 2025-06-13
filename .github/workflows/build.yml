@@ -93,9 +93,6 @@ jobs:
             --platform=${{ github.event.inputs.platform  || 'android' }} \
             --profile=${{ github.event.inputs.profile || 'test' }}
 
-      - name: List build outputs
-        run: ls -la /home/runner/work/HolidAI/HolidAI/app-build/
-
       - name: Rename build output
         run: |
           # Find the actual build file and rename it to .apk
@@ -111,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: /home/runner/work/HolidAI/HolidAI/app-build/*.apk
+          path: /home/runner/work/HolidAI/HolidAI/app-build/app-release.apk
           retention-days: 1
 
       - name: upload artifact to Firebase App Distribution
@@ -120,5 +117,5 @@ jobs:
           appId: ${{secrets.FIREBASE_MOBILE_APP_ID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: testers
-          file: /home/runner/work/HolidAI/HolidAI/app-build/*.apk
+          file: /home/runner/work/HolidAI/HolidAI/app-build/app-release.apk
           debug: true

@@ -35,4 +35,8 @@ export const style = StyleSheet.create({
     fontSize: spacing.Double + spacing.Minimal,
     fontFamily: fonts.interMedium,
   },
+  isLoading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

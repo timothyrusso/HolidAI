@@ -1,10 +1,7 @@
 import { logger } from '@/di/resolve';
 import { Routes } from '@/ui/constants/navigation/routes';
-import { useToast } from '@/ui/hooks/useToast';
-import { useModalState } from '@/ui/state/modal/useModalState';
-import auth, { sendEmailVerification, updateProfile } from '@react-native-firebase/auth';
+import { useSignUp } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
-import type { FirebaseError } from 'firebase/app';
 import { useState } from 'react';
 
 export const useSignUpPageLogic = () => {
@@ -13,47 +10,71 @@ export const useSignUpPageLogic = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [fullName, setFullName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const { showToast } = useToast();
-
-  const { modalActions } = useModalState();
+  const [pendingVerification, setPendingVerification] = useState<boolean>(false);
+  const [code, setCode] = useState<string>('');
 
   const router = useRouter();
 
-  const emailRegex = /\S+@\S+\.\S+/;
+  const { isLoaded, signUp, setActive } = useSignUp();
 
-  const showInfoModal = () => {
-    modalActions.showInfoModal({
-      primaryAction: () => router.replace(`/${Routes.SignIn}`),
-      description: 'SIGNUP.EMAIL_VERIFICATION_DESCRIPTION',
-    });
+  // Handle submission of sign-up form
+  const onSignUpPress = async () => {
+    if (!isLoaded) return;
+
+    setLoading(true);
+
+    // Start sign-up process using email and password provided
+    try {
+      await signUp.create({
+        emailAddress: email,
+        password,
+        firstName: fullName,
+      });
+
+      // Send user an email with verification code
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+
+      // Set 'pendingVerification' to true to display second form
+      // and capture OTP code
+      setPendingVerification(true);
+    } catch (error) {
+      logger.error(error as Error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onCreateAccount = async () => {
-    if (!(emailRegex.test(email) && password && password === confirmPassword && fullName)) {
-      showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      return;
-    }
+  // Handle submission of verification form
+  const onVerifyPress = async () => {
+    if (!isLoaded) return;
 
     setLoading(true);
 
     try {
-      const result = await auth().createUserWithEmailAndPassword(email.toLowerCase(), password);
-      updateProfile(result.user, {
-        displayName: fullName,
+      // Use the code the user provided to attempt verification
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({
+        code,
       });
-      sendEmailVerification(result.user);
-      showInfoModal();
+
+      // If verification was completed, set the session to active
+      // and redirect the user
+      if (signUpAttempt.status === 'complete') {
+        await setActive({ session: signUpAttempt.createdSessionId });
+
+        router.replace(`/${Routes.MyTrips}`);
+      } else {
+        // If the status is not complete, check why. User may need to
+        // complete further steps.
+        console.error(JSON.stringify(signUpAttempt, null, 2));
+      }
     } catch (error) {
-      const { code: errorCode, message: errorMessage } = error as FirebaseError;
-      showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      logger.error(new Error(errorCode), errorMessage);
+      logger.error(error as Error);
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    onCreateAccount,
     email,
     setEmail,
     password,
@@ -62,6 +83,12 @@ export const useSignUpPageLogic = () => {
     setConfirmPassword,
     fullName,
     setFullName,
+    pendingVerification,
+    setPendingVerification,
+    code,
+    setCode,
+    onSignUpPress,
+    onVerifyPress,
     isLoading: loading,
   };
 };

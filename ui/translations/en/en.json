@@ -71,11 +71,9 @@
     "TITLE": "SIGN IN",
     "RESET_PASSWORD": "Forgot your password?",
     "RESET_PASSWORD_TITLE": "Reset Password",
-    "RESET_PASSWORD_SENT": "Password reset email sent",
-    "UNCONFIRMED_EMAIL_TITLE": "Unconfirmed email",
-    "UNCONFIRMED_EMAIL_DESCRIPTION": "Email not verified, please verify your email and try again.",
-    "SEND_EMAIL_VERIFICATION": "Send email verification",
-    "EMAIL_VERIFICATION_SENT": "Email verification sent"
+    "RESET_PASSWORD_SUCCESS": "Reset password successful",
+    "RESET_PASSWORD_EMAIL_CODE": "Reset password email code",
+    "VERIFY": "Verify"
   },
   "SIGNUP": {
     "TITLE": "SIGN UP",
@@ -88,8 +86,7 @@
     "PASSWORD_PLACEHOLDER": "Enter your password",
     "CONFIRM_PASSWORD": "Confirm password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your password",
-    "EMAIL_VERIFICATION_TITLE": "Verify your email",
-    "EMAIL_VERIFICATION_DESCRIPTION": "To complete the registration process, we have sent you an email verification. Please check your email and click on the link to complete the registration process."
+    "EMAIL_VERIFICATION_TITLE": "Verify your email"
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Search",

@@ -9,15 +9,13 @@ import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/navigation/routes';
-import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSignInPageLogic } from './SignInPage.logic';
 import { styles } from './SignInPage.style';
 
 const SignInPage = () => {
-  const router = useRouter();
-  const { onSignIn, email, setEmail, password, setPassword, isLoading, handleResetPasswordModal } =
+  const { email, setEmail, password, setPassword, isLoading, handleResetPasswordModal, onSignInPress, router } =
     useSignInPageLogic();
 
   return (
@@ -51,7 +49,7 @@ const SignInPage = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButtonLarge title="SIGNIN.TITLE" onPress={onSignIn} isLoading={isLoading} />
+            <CustomButtonLarge title="SIGNIN.TITLE" onPress={onSignInPress} isLoading={isLoading} />
             <CustomButtonLarge
               title="SIGNIN.CREATE_ACCOUNT"
               onPress={() => router.replace(`/${Routes.SignUp}`)}

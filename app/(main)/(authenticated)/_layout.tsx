@@ -1,14 +1,12 @@
 import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
 import { Routes, Stacks } from '@/ui/constants/navigation/routes';
-import { useUserState } from '@/ui/hooks/useUserState';
+import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Stack } from 'expo-router';
 
 export default function AuthLayout() {
-  const { user, initializing } = useUserState();
+  const { isSignedIn } = useAuth();
 
-  if (initializing) return null;
-
-  if (!user?.emailVerified) return <Redirect href={`/${Routes.Welcome}`} />;
+  if (!isSignedIn) return <Redirect href={`/${Routes.Welcome}`} />;
 
   return (
     <Stack screenOptions={screenOptions}>

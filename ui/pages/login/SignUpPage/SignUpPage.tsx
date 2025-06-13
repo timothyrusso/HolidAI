@@ -5,14 +5,13 @@ import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomS
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/navigation/routes';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSignUpPageLogic } from './SignUpPage.logic';
 import { styles } from './SignUpPage.style';
 
 const SignUpPage = () => {
   const {
-    onCreateAccount,
     email,
     setEmail,
     password,
@@ -21,14 +20,34 @@ const SignUpPage = () => {
     setConfirmPassword,
     fullName,
     setFullName,
+    pendingVerification,
+    code,
+    setCode,
+    onSignUpPress,
+    onVerifyPress,
     isLoading,
   } = useSignUpPageLogic();
+
+  if (pendingVerification) {
+    return (
+      <BasicView nameView={Routes.SignUp} statusBarStyle="dark" viewStyle={styles.verifyContainer}>
+        <View style={styles.verifyContent}>
+          <CustomText text="SIGNIN.RESET_PASSWORD_EMAIL_CODE" style={styles.verifyTitle} />
+          <CustomTextInput
+            value={code}
+            placeholder="Enter your verification code"
+            onChangeText={code => setCode(code)}
+          />
+          <CustomButtonLarge onPress={onVerifyPress} title="SIGNIN.VERIFY" isLoading={isLoading} />
+        </View>
+      </BasicView>
+    );
+  }
 
   return (
     <BasicView nameView={Routes.SignUp} statusBarStyle="dark">
       <CustomScrollView>
         <View style={styles.container}>
-          <Text style={styles.subtitle}>Create a new account!</Text>
           <View style={styles.inputContainer}>
             <View style={styles.emailContainer}>
               <CustomText text="SIGNUP.NAME" style={styles.label} />
@@ -70,7 +89,7 @@ const SignUpPage = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onCreateAccount} isLoading={isLoading} />
+            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onSignUpPress} isLoading={isLoading} />
           </View>
         </View>
         <Toast />

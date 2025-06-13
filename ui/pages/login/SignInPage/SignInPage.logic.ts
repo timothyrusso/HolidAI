@@ -1,86 +1,63 @@
 import { logger } from '@/di/resolve';
-import { Routes } from '@/ui/constants/navigation/routes';
-import { ToastType, useToast } from '@/ui/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
-import auth, { sendEmailVerification, type FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { router } from 'expo-router';
-import type { AuthError } from 'firebase/auth';
+import { useSignIn } from '@clerk/clerk-expo';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useSignInPageLogic = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const { showToast } = useToast();
 
   const { modalActions } = useModalState();
 
-  const handleUnconfirmedEmailModal = (authUser: FirebaseAuthTypes.User) => {
-    modalActions.showActionModal({
-      headerTitle: 'SIGNIN.UNCONFIRMED_EMAIL_TITLE',
-      description: 'SIGNIN.UNCONFIRMED_EMAIL_DESCRIPTION',
-      primaryAction: () => modalActions.hideActionModal(),
-      secondaryAction: () => handleSendEmailVerification(authUser),
-      secondaryButtonTitle: 'SIGNIN.SEND_EMAIL_VERIFICATION',
+  const handleResetPasswordModal = () => {
+    modalActions.showResetPasswordModal({
+      headerTitle: 'SIGNIN.RESET_PASSWORD_TITLE',
     });
   };
 
-  const handleSendEmailVerification = (authUser: FirebaseAuthTypes.User) => {
-    sendEmailVerification(authUser);
-    modalActions.hideActionModal();
-    showToast('SIGNIN.EMAIL_VERIFICATION_SENT', ToastType.SUCCESS);
-  };
+  const router = useRouter();
+  const { signIn, setActive, isLoaded } = useSignIn();
 
-  const emailRegex = /\S+@\S+\.\S+/;
-
-  const onSignIn = async () => {
-    if (!(emailRegex.test(email) && password)) {
-      showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      return;
-    }
+  // Handle the submission of the sign-in form
+  const onSignInPress = async () => {
+    if (!isLoaded) return;
 
     setLoading(true);
 
+    // Start the sign-in process using the email and password provided
     try {
-      const response = await auth().signInWithEmailAndPassword(email.toLowerCase(), password);
-      if (!response.user.emailVerified) {
-        handleUnconfirmedEmailModal(response.user);
-        return;
+      const signInAttempt = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      // If sign-in process is complete, set the created session as active
+      // and redirect the user
+      if (signInAttempt.status === 'complete') {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace('/');
+      } else {
+        // If the status isn't complete, check why. User might need to
+        // complete further steps.
+        console.error(JSON.stringify(signInAttempt, null, 2));
       }
-      router.replace(`/${Routes.MyTrips}`);
     } catch (error) {
-      const typedError = error as AuthError;
-      showToast('GLOBAL.ERROR.INVALID_CREDENTIALS');
-      logger.error(typedError);
+      logger.error(error as Error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleResetPasswordButton = async () => {
-    try {
-      await auth().sendPasswordResetEmail(email);
-      showToast('SIGNIN.RESET_PASSWORD_SENT', ToastType.SUCCESS);
-    } catch (error) {
-      logger.error(error as Error);
-    }
-  };
-
-  const handleResetPasswordModal = () => {
-    modalActions.showResetPasswordModal({
-      headerTitle: 'SIGNIN.RESET_PASSWORD_TITLE',
-      primaryAction: handleResetPasswordButton,
-    });
-  };
-
   return {
-    onSignIn,
     email,
     setEmail,
     password,
     setPassword,
     isLoading: loading,
-    handleResetPasswordButton,
     handleResetPasswordModal,
+    onSignInPress,
+    router,
   };
 };
