@@ -72,7 +72,8 @@
     "RESET_PASSWORD": "Forgot your password?",
     "RESET_PASSWORD_TITLE": "Reset Password",
     "RESET_PASSWORD_SUCCESS": "Reset password successful",
-    "RESET_PASSWORD_EMAIL_CODE": "Reset password email code"
+    "RESET_PASSWORD_EMAIL_CODE": "Reset password email code",
+    "VERIFY": "Verify"
   },
   "SIGNUP": {
     "TITLE": "SIGN UP",

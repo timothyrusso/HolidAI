@@ -72,7 +72,8 @@
     "RESET_PASSWORD": "Hai dimenticato la password?",
     "RESET_PASSWORD_TITLE": "Reimposta la password",
     "RESET_PASSWORD_SUCCESS": "Reimpostazione password avvenuta con successo",
-    "RESET_PASSWORD_EMAIL_CODE": "Codice di verifica inviato per email"
+    "RESET_PASSWORD_EMAIL_CODE": "Codice di verifica inviato per email",
+    "VERIFY": "Verifica"
   },
   "SIGNUP": {
     "TITLE": "REGISTRATI",
