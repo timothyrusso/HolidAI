@@ -1,21 +1,21 @@
 import { db } from '@/configs/firebaseConfig';
 import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
-import auth from '@react-native-firebase/auth';
+import { useUser } from '@clerk/clerk-expo';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { QueryOptionKeys } from '../../QueryOptionKeys';
 import { tripsKeys } from '../TripsKeys';
 
 export const useGetUserTripsQuery = () => {
-  const user = auth().currentUser;
+  const { user } = useUser();
 
   const getMyTrips = async () => {
     if (!user) return;
 
     const userTrips: UserTrips[] = [];
 
-    const q = query(collection(db, `${dbKeys.userTrips}/${user?.uid}/trips`));
+    const q = query(collection(db, `${dbKeys.userTrips}/${user?.id}/trips`));
 
     const querySnapshot = await getDocs(q);
 

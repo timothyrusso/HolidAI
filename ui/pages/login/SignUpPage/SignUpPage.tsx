@@ -5,6 +5,7 @@ import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomS
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/navigation/routes';
+import { Fragment } from 'react';
 import { Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSignUpPageLogic } from './SignUpPage.logic';
@@ -12,7 +13,6 @@ import { styles } from './SignUpPage.style';
 
 const SignUpPage = () => {
   const {
-    onCreateAccount,
     email,
     setEmail,
     password,
@@ -21,8 +21,23 @@ const SignUpPage = () => {
     setConfirmPassword,
     fullName,
     setFullName,
-    isLoading,
+    pendingVerification,
+    code,
+    setCode,
+    onSignUpPress,
+    onVerifyPress,
+    loading,
   } = useSignUpPageLogic();
+
+  if (pendingVerification) {
+    return (
+      <Fragment>
+        <Text>Verify your email</Text>
+        <CustomTextInput value={code} placeholder="Enter your verification code" onChangeText={code => setCode(code)} />
+        <CustomButtonLarge onPress={onVerifyPress} title="Verify" />
+      </Fragment>
+    );
+  }
 
   return (
     <BasicView nameView={Routes.SignUp} statusBarStyle="dark">
@@ -70,7 +85,7 @@ const SignUpPage = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onCreateAccount} isLoading={isLoading} />
+            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onSignUpPress} isLoading={loading} />
           </View>
         </View>
         <Toast />

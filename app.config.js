@@ -16,6 +16,7 @@ export default ({ config }) => {
       rapidApiKey: process.env.RAPID_API_KEY,
       unsplashAccessKey: process.env.UNSPLASH_ACCESS_KEY,
       mmkvEncryptionKey: process.env.MMKV_ENCRYPTION_KEY,
+      clerkPublishableKey: process.env.CLERK_PUBLISHABLE_KEY,
     },
     ios: {
       ...config.ios,

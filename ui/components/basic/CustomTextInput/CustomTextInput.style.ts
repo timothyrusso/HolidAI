@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   container: {
     borderWidth: spacing.ThreeQuarterMinimal,
     borderColor: colors.primaryBlack,
-    borderRadius: spacing.Triple,
+    borderRadius: spacing.Fourfold,
     padding: spacing.Triple,
   },
 });

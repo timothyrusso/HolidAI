@@ -10,7 +10,7 @@ import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
-import auth from '@react-native-firebase/auth';
+import { useUser } from '@clerk/clerk-expo';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { doc, setDoc } from 'firebase/firestore';
@@ -22,7 +22,8 @@ export const useGenerateTripPageLogic = () => {
   const { tripSelectors } = useTripState();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const userId = auth().currentUser?.uid;
+  const { user } = useUser();
+  const userId = user?.id;
   const { locale } = useLocale();
 
   const queryClient = useQueryClient();

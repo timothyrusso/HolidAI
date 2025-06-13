@@ -88,8 +88,7 @@
     "PASSWORD_PLACEHOLDER": "Enter your password",
     "CONFIRM_PASSWORD": "Confirm password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your password",
-    "EMAIL_VERIFICATION_TITLE": "Verify your email",
-    "EMAIL_VERIFICATION_DESCRIPTION": "To complete the registration process, we have sent you an email verification. Please check your email and click on the link to complete the registration process."
+    "EMAIL_VERIFICATION_TITLE": "Verify your email"
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Search",
