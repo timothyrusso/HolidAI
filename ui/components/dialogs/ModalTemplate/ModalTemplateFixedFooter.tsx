@@ -9,6 +9,7 @@ const ModalFixedFooter = ({
   secondaryAction,
   primaryButtonTitle = 'GLOBAL.BUTTON.CONFIRM',
   secondaryButtonTitle = 'GLOBAL.BUTTON.CANCEL',
+  isPrimaryButtonLoading = false,
 }: {
   primaryAction: () => void;
   secondaryAction?: () => void;
@@ -16,6 +17,7 @@ const ModalFixedFooter = ({
   primaryButtonDisabled?: boolean;
   secondaryButtonTitle?: string;
   preventClosing?: boolean;
+  isPrimaryButtonLoading?: boolean;
 }) => {
   return (
     <View style={[styles.footer, styles.fixedFooterContainer]}>
@@ -32,7 +34,12 @@ const ModalFixedFooter = ({
         </View>
       ) : null}
       <View style={styles.buttonContainer}>
-        <CustomButtonLarge title={primaryButtonTitle} onPress={primaryAction} style={styles.button} />
+        <CustomButtonLarge
+          title={primaryButtonTitle}
+          onPress={primaryAction}
+          style={styles.button}
+          isLoading={isPrimaryButtonLoading}
+        />
       </View>
     </View>
   );

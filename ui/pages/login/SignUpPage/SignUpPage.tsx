@@ -26,7 +26,7 @@ const SignUpPage = () => {
     setCode,
     onSignUpPress,
     onVerifyPress,
-    loading,
+    isLoading,
   } = useSignUpPageLogic();
 
   if (pendingVerification) {
@@ -34,7 +34,7 @@ const SignUpPage = () => {
       <Fragment>
         <Text>Verify your email</Text>
         <CustomTextInput value={code} placeholder="Enter your verification code" onChangeText={code => setCode(code)} />
-        <CustomButtonLarge onPress={onVerifyPress} title="Verify" />
+        <CustomButtonLarge onPress={onVerifyPress} title="Verify" isLoading={isLoading} />
       </Fragment>
     );
   }
@@ -85,7 +85,7 @@ const SignUpPage = () => {
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onSignUpPress} isLoading={loading} />
+            <CustomButtonLarge title="SIGNIN.CREATE_ACCOUNT" onPress={onSignUpPress} isLoading={isLoading} />
           </View>
         </View>
         <Toast />

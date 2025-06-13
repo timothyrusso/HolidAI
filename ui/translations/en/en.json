@@ -71,11 +71,8 @@
     "TITLE": "SIGN IN",
     "RESET_PASSWORD": "Forgot your password?",
     "RESET_PASSWORD_TITLE": "Reset Password",
-    "RESET_PASSWORD_SENT": "Password reset email sent",
-    "UNCONFIRMED_EMAIL_TITLE": "Unconfirmed email",
-    "UNCONFIRMED_EMAIL_DESCRIPTION": "Email not verified, please verify your email and try again.",
-    "SEND_EMAIL_VERIFICATION": "Send email verification",
-    "EMAIL_VERIFICATION_SENT": "Email verification sent"
+    "RESET_PASSWORD_SUCCESS": "Reset password successful",
+    "RESET_PASSWORD_EMAIL_CODE": "Reset password email code"
   },
   "SIGNUP": {
     "TITLE": "SIGN UP",

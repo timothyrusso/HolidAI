@@ -9,22 +9,30 @@ import { miniavs } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
 import { router } from 'expo-router';
 import { deleteDoc, doc } from 'firebase/firestore';
+import { useState } from 'react';
 
 export const useProfilePageLogic = () => {
   const { data, isLoading } = useGetUserTripsQuery();
   const { signOut } = useClerk();
   const { user } = useUser();
 
+  const [isLogoutLoading, setIsLogoutLoading] = useState<boolean>(false);
+  const [isDeleteAccountLoading, setIsDeleteAccountLoading] = useState<boolean>(false);
+
   const logout = async () => {
+    setIsLogoutLoading(true);
     try {
       await signOut();
       router.replace(`/${Routes.Welcome}`);
     } catch (error) {
       logger.error(error as Error);
+    } finally {
+      setIsLogoutLoading(false);
     }
   };
 
   const deleteAccount = async () => {
+    setIsDeleteAccountLoading(true);
     try {
       // Delete user data from firestore
       await deleteDoc(doc(db, `${dbKeys.userTrips}/${user?.id}`));
@@ -34,6 +42,8 @@ export const useProfilePageLogic = () => {
       router.replace(`/${Routes.Welcome}`);
     } catch (error) {
       logger.error(error as Error);
+    } finally {
+      setIsDeleteAccountLoading(false);
     }
   };
 
@@ -67,5 +77,7 @@ export const useProfilePageLogic = () => {
     isTripDataLoading: isLoading,
     goToChangeLanguage,
     goToShowAllTrips,
+    isLogoutLoading,
+    isDeleteAccountLoading,
   };
 };

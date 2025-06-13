@@ -24,6 +24,8 @@ export const ProfilePage = () => {
     isTripDataLoading,
     goToChangeLanguage,
     goToShowAllTrips,
+    isDeleteAccountLoading,
+    isLogoutLoading,
   } = useProfilePageLogic();
 
   return (
@@ -51,9 +53,11 @@ export const ProfilePage = () => {
             secondTitle="PROFILE.BUTTON.DELETE_ACCOUNT"
             secondOnPress={deleteAccount}
             secondIcon={icons.delete}
+            secondIsLoading={isDeleteAccountLoading}
             thirdTitle="GLOBAL.BUTTON.LOGOUT"
             thirdOnPress={logout}
             thirdIcon={icons.logout}
+            thirdIsLoading={isLogoutLoading}
           />
         </View>
       </CustomScrollView>

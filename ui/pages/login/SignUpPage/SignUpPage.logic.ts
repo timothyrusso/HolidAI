@@ -89,6 +89,6 @@ export const useSignUpPageLogic = () => {
     setCode,
     onSignUpPress,
     onVerifyPress,
-    loading,
+    isLoading: loading,
   };
 };

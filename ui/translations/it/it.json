@@ -71,11 +71,8 @@
     "TITLE": "ACCEDI",
     "RESET_PASSWORD": "Hai dimenticato la password?",
     "RESET_PASSWORD_TITLE": "Reimposta la password",
-    "RESET_PASSWORD_SENT": "Email di reimpostazione password inviata",
-    "UNCONFIRMED_EMAIL_TITLE": "Email non verificata",
-    "UNCONFIRMED_EMAIL_DESCRIPTION": "Email non verificata, per favore verifica la tua email e riprova.",
-    "SEND_EMAIL_VERIFICATION": "Invia email di verifica",
-    "EMAIL_VERIFICATION_SENT": "Email di verifica inviata"
+    "RESET_PASSWORD_SUCCESS": "Reimpostazione password avvenuta con successo",
+    "RESET_PASSWORD_EMAIL_CODE": "Codice di verifica inviato per email"
   },
   "SIGNUP": {
     "TITLE": "REGISTRATI",
