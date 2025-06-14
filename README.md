@@ -86,6 +86,7 @@ To obtain these values:
   - Sign up at [Unsplash Developers](https://unsplash.com/developers) to get an access key
 - `MMKV_ENCRYPTION_KEY`: A secure random string for encrypting local storage
   - Generate a secure random string (at least 32 characters)
+- `CLERK_PUBLISHABLE_KEY`: API key for Clerk authentication
 
 ## Get started with the development build
 
@@ -120,10 +121,11 @@ To obtain these values:
 - **Frontend**: React Native with Expo
 - **AI Integration**: Google Gemini 2.0 Flash
 - **Maps**: Google Maps API and Apple Maps
-- **Authentication**: Firebase Authentication
+- **Authentication**: Clerk Authentication
 - **Database**: Firebase Firestore
 - **State Management**: Zustand
 - **Dependency Injection**: tsyringe
+- **Caching**: Tanstack Query
 
 ## Contributing
 

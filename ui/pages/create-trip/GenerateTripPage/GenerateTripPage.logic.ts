@@ -8,6 +8,7 @@ import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
+import { useToast } from '@/ui/hooks/useToast';
 import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
@@ -25,6 +26,7 @@ export const useGenerateTripPageLogic = () => {
   const { user } = useUser();
   const userId = user?.id;
   const { locale } = useLocale();
+  const { showToast } = useToast();
 
   const queryClient = useQueryClient();
 
@@ -63,6 +65,8 @@ export const useGenerateTripPageLogic = () => {
 
       router.push(`/${Routes.MyTrips}`);
     } catch (error) {
+      router.replace(`/${Routes.MyTrips}`);
+      showToast('GENERATE_TRIP.ERROR');
       logger.error(new Error('Error generating AI trip:'), error);
     } finally {
       setIsLoading(false);

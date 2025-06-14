@@ -131,7 +131,8 @@
   },
   "GENERATE_TRIP": {
     "TITLE": "Creazione del viaggio",
-    "DESCRIPTION": "Stiamo lavorando per creare il viaggio dei tuoi sogni in base alle tue preferenze!"
+    "DESCRIPTION": "Stiamo lavorando per creare il viaggio dei tuoi sogni in base alle tue preferenze!",
+    "ERROR": "Errore nella generazione del viaggio, riprova"
   },
   "SHOW_ALL_TRIPS": {
     "TITLE": "Tutti i viaggi"

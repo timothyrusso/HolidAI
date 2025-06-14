@@ -102,14 +102,27 @@ jobs:
 
       - name: Rename build output
         run: |
-          # Find the actual build file and rename it to .apk
-          cd /home/runner/work/HolidAI/HolidAI/app-build
-          BUILD_FILE=$(ls | head -n 1)  # Get the first file
-          if [ ! -z "$BUILD_FILE" ]; then
-            mv "$BUILD_FILE" "app-release.apk"
-            echo "Renamed $BUILD_FILE to app-release.apk"
+          # Create the app-build directory that the upload step expects
+          mkdir -p /home/runner/work/HolidAI/HolidAI/app-build
+
+          # Move and rename the EAS build output file to the expected directory
+          if [ -f "/home/runner/work/HolidAI/HolidAI/app-build" ]; then
+            # If app-build is a file (EAS output), move it into the directory
+            mv "/home/runner/work/HolidAI/HolidAI/app-build" "/home/runner/work/HolidAI/HolidAI/app-build-temp"
+            mkdir -p /home/runner/work/HolidAI/HolidAI/app-build
+            mv "/home/runner/work/HolidAI/HolidAI/app-build-temp" "/home/runner/work/HolidAI/HolidAI/app-build/app-release.apk"
+          else
+            # If app-build is already a directory, just rename files inside it
+            cd /home/runner/work/HolidAI/HolidAI/app-build
+            BUILD_FILE=$(ls | head -n 1)
+            if [ ! -z "$BUILD_FILE" ]; then
+              mv "$BUILD_FILE" "app-release.apk"
+              echo "Renamed $BUILD_FILE to app-release.apk"
+            fi
           fi
-          ls -la
+
+          echo "Contents of app-build directory:"
+          ls -la /home/runner/work/HolidAI/HolidAI/app-build/
 
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
