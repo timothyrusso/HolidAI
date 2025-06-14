@@ -23,6 +23,6 @@ export const components = {
   customButtonWidth: 300,
   tripAnimationHeight: 250,
   searchAnimationHeight: 250,
-  welcomePageBackgroundTextHeight: 180,
+  welcomePageBackgroundTextHeight: 50,
   welcomeLogoHeight: 150,
 };

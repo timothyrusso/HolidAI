@@ -30,13 +30,23 @@ export const styles = StyleSheet.create({
     zIndex: 2,
   },
   title: {
-    fontFamily: fonts.arimaBold,
-    fontSize: spacing.Fourfold,
+    fontFamily: fonts.interBold,
+    fontSize: spacing.separator40 + spacing.Triple,
     zIndex: 2,
     color: colors.primaryWhite,
     textAlign: 'center',
+    lineHeight: components.welcomePageBackgroundTextHeight,
   },
   logoContainer: {
     width: '100%',
+    zIndex: 2,
+  },
+  subtitle: {
+    fontFamily: fonts.interRegular,
+    paddingHorizontal: spacing.Triple,
+    fontSize: spacing.TripleAndHalf,
+    zIndex: 2,
+    color: colors.primaryWhite,
+    textAlign: 'center',
   },
 });

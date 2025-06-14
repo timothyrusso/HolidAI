@@ -102,23 +102,28 @@ jobs:
 
       - name: Rename build output
         run: |
-          # Create the app-build directory that the upload step expects
-          mkdir -p /home/runner/work/HolidAI/HolidAI/app-build
-
-          # Move and rename the EAS build output file to the expected directory
+          # Check if app-build is a file (EAS output) before creating directory
           if [ -f "/home/runner/work/HolidAI/HolidAI/app-build" ]; then
-            # If app-build is a file (EAS output), move it into the directory
+            # app-build is a file - move it and create directory structure
+            echo "app-build is a file, moving it to directory structure"
             mv "/home/runner/work/HolidAI/HolidAI/app-build" "/home/runner/work/HolidAI/HolidAI/app-build-temp"
             mkdir -p /home/runner/work/HolidAI/HolidAI/app-build
             mv "/home/runner/work/HolidAI/HolidAI/app-build-temp" "/home/runner/work/HolidAI/HolidAI/app-build/app-release.apk"
-          else
-            # If app-build is already a directory, just rename files inside it
+            echo "Moved app-build file to app-build/app-release.apk"
+          elif [ -d "/home/runner/work/HolidAI/HolidAI/app-build" ]; then
+            # app-build is already a directory - rename files inside it
+            echo "app-build is already a directory, renaming files inside"
             cd /home/runner/work/HolidAI/HolidAI/app-build
             BUILD_FILE=$(ls | head -n 1)
             if [ ! -z "$BUILD_FILE" ]; then
               mv "$BUILD_FILE" "app-release.apk"
               echo "Renamed $BUILD_FILE to app-release.apk"
             fi
+          else
+            # app-build doesn't exist - create directory and handle error
+            echo "app-build doesn't exist, creating directory"
+            mkdir -p /home/runner/work/HolidAI/HolidAI/app-build
+            echo "Warning: No build output found"
           fi
 
           echo "Contents of app-build directory:"
