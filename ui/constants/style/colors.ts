@@ -1,4 +1,5 @@
 export const colors = {
+  alpha: '#220059',
   primary: '#A01A7D',
   primaryLight: '#C41E95',
   primaryDisabled: '#E5B3D1',
