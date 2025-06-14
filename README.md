@@ -15,6 +15,7 @@ HolidAI is powered by Google's Gemini 2.0 Flash model, a state-of-the-art large 
 - **Context Understanding**: Advanced natural language processing capabilities to understand complex travel requirements
 - **Personalization**: Ability to consider multiple factors like budget, preferences, and constraints when creating travel plans
 - **Knowledge Base**: Extensive training on travel-related data, including destinations, activities, and cultural information
+- **Real-time Information**: Integration with Google Search to provide up-to-date information about destinations, events, and travel conditions
 
 The model processes user inputs through a carefully designed prompt engineering system that ensures consistent, relevant, and practical travel recommendations.
 
@@ -122,10 +123,13 @@ To obtain these values:
 - **AI Integration**: Google Gemini 2.0 Flash
 - **Maps**: Google Maps API and Apple Maps
 - **Authentication**: Clerk Authentication
-- **Database**: Firebase Firestore
-- **State Management**: Zustand
+- **Database**: Firebase Firestore (moving di Convex)
+- **Client State Management**: Zustand
+- **Caching and Server State Management**: Tanstack Query
 - **Dependency Injection**: tsyringe
-- **Caching**: Tanstack Query
+- **Linting**: Biome
+- **Git hooks manager**: Lefthook
+- **Push Notifications**: WIP - Expo Push Notifications
 
 ## Contributing
 

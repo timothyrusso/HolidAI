@@ -21,14 +21,15 @@ const WelcomePage = () => {
         <View style={styles.container}>
           <View style={styles.logoContainer}>
             <Image source={require('../../../assets/images/logo.png')} style={styles.logo} />
-            <CustomText text="MY_TRIP.LOGO" style={styles.title} />
+            <LinearGradientText
+              text="MY_TRIP.LOGO"
+              imageSource={welcomeTextBackground}
+              height={components.welcomePageBackgroundTextHeight}
+              textStyle={styles.title}
+            />
           </View>
           <LinearGradient colors={[colors.alpha, colors.primaryWhite]} style={styles.gradient} />
-          <LinearGradientText
-            text="WELCOME.TITLE"
-            imageSource={welcomeTextBackground}
-            height={components.welcomePageBackgroundTextHeight}
-          />
+          <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
           <CustomButtonLarge
             title="WELCOME.BUTTON"
             onPress={handlePress}

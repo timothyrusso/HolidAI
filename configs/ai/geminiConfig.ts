@@ -17,7 +17,10 @@ const generationConfig = {
   responseMimeType: 'application/json',
 };
 
-export const chatSession = model.startChat({
+const chatSession = model.startChat({
+  config: {
+    tools: [{ googleSearch: {} }],
+  },
   generationConfig,
   history: [
     {
@@ -205,3 +208,5 @@ export const chatSession = model.startChat({
     },
   ],
 });
+
+export { chatSession };
