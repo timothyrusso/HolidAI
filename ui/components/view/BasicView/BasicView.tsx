@@ -44,7 +44,7 @@ export const BasicView = (props: PropsWithChildren<BasicViewProps>) => {
 
   return (
     <Container style={[componentStyle.containerViewStyle, componentStyle.basicContainer, containerStyle]}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} style={statusBarStyle} />
+      <StatusBar translucent={true} style={statusBarStyle} />
       <View style={[componentStyle.containerViewStyle, viewStyle]}>
         {topGradientColor && bottomGradientColor && (
           <LinearGradient

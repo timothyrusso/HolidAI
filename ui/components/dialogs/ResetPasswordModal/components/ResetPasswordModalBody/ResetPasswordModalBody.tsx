@@ -27,7 +27,7 @@ export const ResetPasswordModalBody: FC<ResetPasswordModalBodyProps> = ({
     <View style={styles.container}>
       {!successfulCreation && (
         <Fragment>
-          <CustomTextInput placeholder="Email" value={email} onChangeText={setEmail} />
+          <CustomTextInput placeholder="Email" keyboardType="email-address" value={email} onChangeText={setEmail} />
         </Fragment>
       )}
       {successfulCreation && (
