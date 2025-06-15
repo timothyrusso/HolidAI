@@ -1,6 +1,6 @@
 import { colors } from '@/ui/constants/style/colors';
 import { components } from '@/ui/constants/style/dimensions/components';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { SCREEN_HEIGHT, SCREEN_WIDTH, spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
 import { StyleSheet } from 'react-native';
 
@@ -8,45 +8,51 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    justifyContent: 'center',
-    rowGap: spacing.Quintuple,
+    justifyContent: 'flex-end',
   },
   button: {
     alignSelf: 'center',
     width: components.customButtonWidth,
-    zIndex: 2,
   },
-  gradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  titleContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  logo: {
-    width: components.welcomeLogoHeight,
-    height: components.welcomeLogoHeight,
-    alignSelf: 'center',
-    zIndex: 2,
+  secondLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontFamily: fonts.interBold,
-    fontSize: spacing.separator40 + spacing.Triple,
-    zIndex: 2,
-    color: colors.primaryWhite,
+    paddingHorizontal: spacing.Triple,
+    fontSize: spacing.Quintuple,
     textAlign: 'center',
-    lineHeight: components.welcomePageBackgroundTextHeight,
+    lineHeight: spacing.Quintuple + spacing.Double,
   },
-  logoContainer: {
-    width: '100%',
-    zIndex: 2,
+  peopleText: {
+    color: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.secondaryPink,
+    padding: 0,
+    margin: 0,
+    borderRadius: spacing.Triple,
   },
   subtitle: {
-    fontFamily: fonts.interRegular,
+    fontFamily: fonts.interMedium,
     paddingHorizontal: spacing.Triple,
-    fontSize: spacing.TripleAndHalf,
-    zIndex: 2,
-    color: colors.primaryWhite,
+    fontSize: spacing.Double + spacing.Minimal,
     textAlign: 'center',
+    color: colors.primaryGrey,
+  },
+  illustrationContainer: {
+    position: 'absolute',
+    top: -(SCREEN_WIDTH / 2),
+  },
+  contentContainer: {
+    width: '100%',
+    height: SCREEN_HEIGHT / 2,
+    justifyContent: 'center',
+    rowGap: spacing.Fourfold,
   },
 });

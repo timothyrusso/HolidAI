@@ -1,41 +1,41 @@
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { LinearGradientText } from '@/ui/components/basic/LinearGradientText/LinearGradientText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/navigation/routes';
-import { colors } from '@/ui/constants/style/colors';
-import { components } from '@/ui/constants/style/dimensions/components';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Image, View } from 'react-native';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/ui/constants/style/dimensions/spacing';
+import { View } from 'react-native';
+import WelcomeIllustration from '../../../assets/images/welcome_illustration.svg';
 import { useWelcomePageLogic } from './WelcomePage.logic';
 import { styles } from './WelcomePage.style';
 
 const WelcomePage = () => {
-  const { handlePress, welcomeTextBackground } = useWelcomePageLogic();
+  const { handlePress } = useWelcomePageLogic();
 
   return (
     <BasicView nameView={Routes.Welcome} isFullScreen>
       <CustomScrollView>
         <View style={styles.container}>
-          <View style={styles.logoContainer}>
-            <Image source={require('../../../assets/images/logo.png')} style={styles.logo} />
-            <LinearGradientText
-              text="MY_TRIP.LOGO"
-              imageSource={welcomeTextBackground}
-              height={components.welcomePageBackgroundTextHeight}
-              textStyle={styles.title}
+          <View style={styles.illustrationContainer}>
+            <WelcomeIllustration width={SCREEN_WIDTH} height={SCREEN_HEIGHT} />
+          </View>
+          <View style={styles.contentContainer}>
+            <View style={styles.titleContainer}>
+              <CustomText text="People don't take trips," style={styles.title} />
+              <View style={styles.secondLineContainer}>
+                <CustomText text="trips take " style={styles.title} />
+                <CustomText text="people" style={[styles.title, styles.peopleText]} />
+              </View>
+            </View>
+            <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
+            <CustomButtonLarge
+              title="WELCOME.BUTTON"
+              onPress={handlePress}
+              style={styles.button}
+              buttonType={ButtonType.Main}
             />
           </View>
-          <LinearGradient colors={[colors.alpha, colors.primaryWhite]} style={styles.gradient} />
-          <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
-          <CustomButtonLarge
-            title="WELCOME.BUTTON"
-            onPress={handlePress}
-            style={styles.button}
-            buttonType={ButtonType.Main}
-          />
         </View>
       </CustomScrollView>
     </BasicView>
