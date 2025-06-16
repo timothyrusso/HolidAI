@@ -1,52 +1,68 @@
 import { colors } from '@/ui/constants/style/colors';
+import { breakpoints } from '@/ui/constants/style/dimensions/breakpoints';
 import { components } from '@/ui/constants/style/dimensions/components';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { images } from '@/ui/constants/style/dimensions/images';
+import { SCREEN_HEIGHT, spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    rowGap: spacing.Quintuple,
-  },
   button: {
     alignSelf: 'center',
     width: components.customButtonWidth,
-    zIndex: 2,
   },
-  gradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+  titleContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  logo: {
-    width: components.welcomeLogoHeight,
-    height: components.welcomeLogoHeight,
-    alignSelf: 'center',
-    zIndex: 2,
+  secondLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  title: {
+  titleFirstLine: {
     fontFamily: fonts.interBold,
-    fontSize: spacing.separator40 + spacing.Triple,
-    zIndex: 2,
-    color: colors.primaryWhite,
+    paddingHorizontal: spacing.Triple,
+    fontSize: spacing.Quintuple,
     textAlign: 'center',
-    lineHeight: components.welcomePageBackgroundTextHeight,
+    lineHeight: spacing.Quintuple + spacing.Double,
   },
-  logoContainer: {
-    width: '100%',
-    zIndex: 2,
+  titleSecondLine: {
+    fontFamily: fonts.interBold,
+    fontSize: spacing.Quintuple,
+    textAlign: 'center',
+    lineHeight: spacing.Quintuple + spacing.Double,
+  },
+  peopleText: {
+    fontFamily: fonts.interBold,
+    fontSize: spacing.Quintuple,
+    textAlign: 'center',
+    lineHeight: spacing.Quintuple + spacing.Double,
+    color: colors.tertiaryBlue,
   },
   subtitle: {
-    fontFamily: fonts.interRegular,
-    paddingHorizontal: spacing.Triple,
-    fontSize: spacing.TripleAndHalf,
-    zIndex: 2,
-    color: colors.primaryWhite,
+    fontFamily: fonts.interMedium,
+    paddingHorizontal: spacing.Quintuple,
+    fontSize: spacing.Double + spacing.Minimal,
     textAlign: 'center',
+    color: colors.primaryGrey,
+  },
+  contentContainer: {
+    width: '100%',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  image: {
+    marginTop: SCREEN_HEIGHT < breakpoints.smallDevicesHeight ? 0 : '20%',
+    width: '100%',
+    height: images.welcomeImageHeight,
+    resizeMode: 'contain',
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    rowGap: spacing.Fourfold,
+    paddingBottom: spacing.Triple,
   },
 });

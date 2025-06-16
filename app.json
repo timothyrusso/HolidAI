@@ -50,15 +50,6 @@
         }
       ],
       [
-        "@react-native-firebase/app",
-        {
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ],
-      "@react-native-firebase/auth",
-      [
         "expo-splash-screen",
         {
           "backgroundColor": "#220059",

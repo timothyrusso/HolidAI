@@ -60,8 +60,11 @@
     }
   },
   "WELCOME": {
-    "TITLE": "Pianifica i tuoi viaggi da sogno con l'AI",
-    "BUTTON": "INIZIA"
+    "TITLE": "Pianifica i tuoi viaggi da sogno con l'intelligenza artificiale",
+    "BUTTON": "INIZIA",
+    "SUBTITLE_FIRST_LINE": "Le persone non prendono viaggi,",
+    "SUBTITLE_SECOND_LINE": "i viaggi prendono",
+    "SUBTITLE_THIRD_LINE": " le persone"
   },
   "SIGNIN": {
     "EMAIL": "Email",

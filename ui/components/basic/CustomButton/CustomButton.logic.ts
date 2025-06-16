@@ -26,8 +26,8 @@ export const useCustomButtonLogic = () => {
         textColor: colors.primaryWhite,
       }))
       .with({ buttonType: ButtonType.Main, isDisabled: false }, () => ({
-        backgroundColor: colors.primary,
-        borderColor: colors.primary,
+        backgroundColor: colors.alpha,
+        borderColor: colors.alpha,
         textColor: colors.primaryWhite,
       }))
       .with({ buttonType: ButtonType.Primary, isDisabled: true }, () => ({

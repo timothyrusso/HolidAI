@@ -1,6 +1,3 @@
-// @ts-ignore // Remove Firebase deprecation warning logs
-globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
-
 import { queryClient } from '@/di/resolve';
 import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
 import { Stacks } from '@/ui/constants/navigation/routes';
