@@ -1,16 +1,9 @@
 import { ActivityIndicator, Pressable, type StyleProp, type ViewStyle } from 'react-native';
 
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { useCustomButtonLogic } from '../CustomButton/CustomButton.logic';
+import { ButtonState, ButtonType, useCustomButtonLogic } from '../CustomButton/CustomButton.logic';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
 import { styleButton } from './CustomIconButton.style';
-
-// Define button states
-export const ButtonState = { Active: 'active', Disabled: 'disabled' } as const;
-export type ButtonState = (typeof ButtonState)[keyof typeof ButtonState];
-
-export const ButtonType = { Primary: 'primary', Secondary: 'secondary', Tertiary: 'tertiary', Ghost: 'ghost' } as const;
-export type ButtonType = (typeof ButtonType)[keyof typeof ButtonType];
 
 export type CustomIconButtonProps = {
   onPress: () => void;

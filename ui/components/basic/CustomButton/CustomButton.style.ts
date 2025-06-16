@@ -35,7 +35,7 @@ export const styleButton = (
       justifyContent: 'center',
       marginVertical: 0,
       marginHorizontal: 0,
-      borderRadius: spacing.Triple,
+      borderRadius: spacing.Double,
       borderWidth: spacing.Minimal,
       borderColor: buttonStyles.borderColor,
       backgroundColor: buttonStyles.backgroundColor,

@@ -22,9 +22,9 @@ const SignInPage = () => {
     <BasicView nameView={Routes.SignIn} statusBarStyle="dark">
       <CustomScrollView>
         <View style={styles.container}>
+          <CustomText text="SIGNIN.SUBTITLE" style={styles.subtitle} />
           <View style={styles.inputContainer}>
             <View style={styles.emailContainer}>
-              <CustomText text="SIGNIN.EMAIL" style={styles.label} />
               <CustomTextInput
                 placeholder="SIGNIN.EMAIL_PLACEHOLDER"
                 onChangeText={(text: string) => setEmail(text)}
@@ -34,27 +34,34 @@ const SignInPage = () => {
               />
             </View>
             <View style={styles.passwordContainer}>
-              <CustomText text="SIGNIN.PASSWORD" style={styles.label} />
               <CustomTextInput
                 placeholder="SIGNIN.PASSWORD_PLACEHOLDER"
-                secureTextEntry={true}
                 onChangeText={(text: string) => setPassword(text)}
                 value={password}
+                isPassword={true}
               />
               <CustomTextButton
                 title="SIGNIN.RESET_PASSWORD"
                 onPress={handleResetPasswordModal}
-                textStyle={styles.resetPasswordButton}
+                textStyle={styles.textButton}
               />
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            <CustomButtonLarge title="SIGNIN.TITLE" onPress={onSignInPress} isLoading={isLoading} />
             <CustomButtonLarge
-              title="SIGNIN.CREATE_ACCOUNT"
-              onPress={() => router.replace(`/${Routes.SignUp}`)}
-              buttonType={ButtonType.Secondary}
+              title="SIGNIN.TITLE"
+              onPress={onSignInPress}
+              isLoading={isLoading}
+              buttonType={ButtonType.Main}
             />
+            <View style={styles.noAccountContainer}>
+              <CustomText text="SIGNIN.NO_ACCOUNT" style={styles.labelText} />
+              <CustomTextButton
+                title="SIGNUP.TITLE"
+                onPress={() => router.replace(`/${Routes.SignUp}`)}
+                textStyle={styles.textButton}
+              />
+            </View>
           </View>
         </View>
         <Toast />

@@ -11,8 +11,10 @@ export const ButtonType = {
   Primary: 'primary',
   Secondary: 'secondary',
   Tertiary: 'tertiary',
+  Quaternary: 'quaternary',
   Ghost: 'ghost',
 } as const;
+
 export type ButtonType = (typeof ButtonType)[keyof typeof ButtonType];
 
 export const useCustomButtonLogic = () => {
@@ -60,6 +62,16 @@ export const useCustomButtonLogic = () => {
         borderColor: colors.primaryWhite,
         textColor: colors.primaryBlack,
       }))
+      .with({ buttonType: ButtonType.Quaternary, isDisabled: true }, () => ({
+        backgroundColor: colors.secondaryGrey,
+        borderColor: colors.secondaryGrey,
+        textColor: colors.primaryBlackDisabled,
+      }))
+      .with({ buttonType: ButtonType.Quaternary, isDisabled: false }, () => ({
+        backgroundColor: colors.secondaryGrey,
+        borderColor: colors.secondaryGrey,
+        textColor: colors.primaryBlack,
+      }))
       .with({ buttonType: ButtonType.Ghost, isDisabled: true }, () => ({
         backgroundColor: 'transparent',
         borderColor: 'transparent',
@@ -85,6 +97,8 @@ export const useCustomButtonLogic = () => {
       .with({ buttonType: ButtonType.Secondary, isDisabled: false }, () => colors.primaryBlack)
       .with({ buttonType: ButtonType.Tertiary, isDisabled: true }, () => colors.primaryBlackDisabled)
       .with({ buttonType: ButtonType.Tertiary, isDisabled: false }, () => colors.primaryBlack)
+      .with({ buttonType: ButtonType.Quaternary, isDisabled: true }, () => colors.primaryBlackDisabled)
+      .with({ buttonType: ButtonType.Quaternary, isDisabled: false }, () => colors.primaryBlack)
       .with({ buttonType: ButtonType.Ghost, isDisabled: true }, () => colors.primaryBlackDisabled)
       .with({ buttonType: ButtonType.Ghost, isDisabled: false }, () => colors.primaryBlack)
       .exhaustive();

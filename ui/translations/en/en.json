@@ -67,20 +67,21 @@
     "SUBTITLE_THIRD_LINE": " people"
   },
   "SIGNIN": {
-    "EMAIL": "Email",
     "EMAIL_PLACEHOLDER": "Enter your email",
     "PASSWORD": "Password",
     "PASSWORD_PLACEHOLDER": "Enter your password",
     "CREATE_ACCOUNT": "CREATE AN ACCOUNT",
-    "TITLE": "SIGN IN",
+    "TITLE": "Sign In",
+    "SUBTITLE": "Please sign in to continue our app",
     "RESET_PASSWORD": "Forgot your password?",
     "RESET_PASSWORD_TITLE": "Reset Password",
     "RESET_PASSWORD_SUCCESS": "Reset password successful",
     "RESET_PASSWORD_EMAIL_CODE": "Reset password email code",
-    "VERIFY": "Verify"
+    "VERIFY": "Verify",
+    "NO_ACCOUNT": "Don’t have an account? "
   },
   "SIGNUP": {
-    "TITLE": "SIGN UP",
+    "TITLE": "Sign Up",
     "SUBTITLE": "Create a new account!",
     "NAME": "Name",
     "NAME_PLACEHOLDER": "Enter your name",

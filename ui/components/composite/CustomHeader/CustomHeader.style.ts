@@ -9,8 +9,6 @@ export const style = (headerPaddingTop: number) =>
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: spacing.Fourfold,
       paddingTop: headerPaddingTop,
       backgroundColor: colors.primaryWhite,
       paddingBottom: spacing.Double,
@@ -18,5 +16,13 @@ export const style = (headerPaddingTop: number) =>
     title: {
       fontSize: spacing.Fourfold,
       fontFamily: fonts.interBold,
+      textAlign: 'center',
+      width: '100%',
+    },
+    icon: {
+      position: 'absolute',
+      left: spacing.Fourfold,
+      top: headerPaddingTop,
+      zIndex: 1,
     },
   });

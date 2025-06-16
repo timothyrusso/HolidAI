@@ -67,20 +67,21 @@
     "SUBTITLE_THIRD_LINE": " le persone"
   },
   "SIGNIN": {
-    "EMAIL": "Email",
     "EMAIL_PLACEHOLDER": "Inserisci la tua email",
     "PASSWORD": "Password",
     "PASSWORD_PLACEHOLDER": "Inserisci la tua password",
     "CREATE_ACCOUNT": "CREA UN ACCOUNT",
-    "TITLE": "ACCEDI",
+    "TITLE": "Accedi",
+    "SUBTITLE": "Per continuare, accedi al tuo account",
     "RESET_PASSWORD": "Hai dimenticato la password?",
     "RESET_PASSWORD_TITLE": "Reimposta la password",
     "RESET_PASSWORD_SUCCESS": "Reimpostazione password avvenuta con successo",
     "RESET_PASSWORD_EMAIL_CODE": "Codice di verifica inviato per email",
-    "VERIFY": "Verifica"
+    "VERIFY": "Verifica",
+    "NO_ACCOUNT": "Non hai un account? "
   },
   "SIGNUP": {
-    "TITLE": "REGISTRATI",
+    "TITLE": "Registrati",
     "SUBTITLE": "Crea un nuovo account!",
     "NAME": "Nome",
     "NAME_PLACEHOLDER": "Inserisci il tuo nome",
