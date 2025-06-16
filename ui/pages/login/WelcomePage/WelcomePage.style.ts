@@ -1,15 +1,12 @@
 import { colors } from '@/ui/constants/style/colors';
+import { breakpoints } from '@/ui/constants/style/dimensions/breakpoints';
 import { components } from '@/ui/constants/style/dimensions/components';
-import { SCREEN_HEIGHT, SCREEN_WIDTH, spacing } from '@/ui/constants/style/dimensions/spacing';
+import { images } from '@/ui/constants/style/dimensions/images';
+import { SCREEN_HEIGHT, spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-end',
-  },
   button: {
     alignSelf: 'center',
     width: components.customButtonWidth,
@@ -23,36 +20,49 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
+  titleFirstLine: {
     fontFamily: fonts.interBold,
     paddingHorizontal: spacing.Triple,
     fontSize: spacing.Quintuple,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
+  titleSecondLine: {
+    fontFamily: fonts.interBold,
+    fontSize: spacing.Quintuple,
+    textAlign: 'center',
+    lineHeight: spacing.Quintuple + spacing.Double,
+  },
   peopleText: {
-    color: colors.primary,
-    borderWidth: 2,
-    borderColor: colors.secondaryPink,
-    padding: 0,
-    margin: 0,
-    borderRadius: spacing.Triple,
+    fontFamily: fonts.interBold,
+    fontSize: spacing.Quintuple,
+    textAlign: 'center',
+    lineHeight: spacing.Quintuple + spacing.Double,
+    color: colors.tertiaryBlue,
   },
   subtitle: {
     fontFamily: fonts.interMedium,
-    paddingHorizontal: spacing.Triple,
+    paddingHorizontal: spacing.Quintuple,
     fontSize: spacing.Double + spacing.Minimal,
     textAlign: 'center',
     color: colors.primaryGrey,
   },
-  illustrationContainer: {
-    position: 'absolute',
-    top: -(SCREEN_WIDTH / 2),
-  },
   contentContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT / 2,
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  image: {
+    marginTop: SCREEN_HEIGHT < breakpoints.smallDevicesHeight ? 0 : '20%',
+    width: '100%',
+    height: images.welcomeImageHeight,
+    resizeMode: 'contain',
+  },
+  textContainer: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     rowGap: spacing.Fourfold,
+    paddingBottom: spacing.Triple,
   },
 });

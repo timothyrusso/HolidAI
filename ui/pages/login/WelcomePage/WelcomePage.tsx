@@ -4,28 +4,24 @@ import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Routes } from '@/ui/constants/navigation/routes';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/ui/constants/style/dimensions/spacing';
-import { View } from 'react-native';
-import WelcomeIllustration from '../../../assets/images/welcome_illustration.svg';
+import { Image, View } from 'react-native';
 import { useWelcomePageLogic } from './WelcomePage.logic';
 import { styles } from './WelcomePage.style';
 
 const WelcomePage = () => {
-  const { handlePress } = useWelcomePageLogic();
+  const { handlePress, welcomePageImage } = useWelcomePageLogic();
 
   return (
-    <BasicView nameView={Routes.Welcome} isFullScreen>
+    <BasicView nameView={Routes.Welcome} isFullScreen statusBarStyle="dark">
       <CustomScrollView>
-        <View style={styles.container}>
-          <View style={styles.illustrationContainer}>
-            <WelcomeIllustration width={SCREEN_WIDTH} height={SCREEN_HEIGHT} />
-          </View>
-          <View style={styles.contentContainer}>
+        <View style={styles.contentContainer}>
+          <Image source={welcomePageImage} style={styles.image} />
+          <View style={styles.textContainer}>
             <View style={styles.titleContainer}>
-              <CustomText text="People don't take trips," style={styles.title} />
+              <CustomText text="WELCOME.SUBTITLE_FIRST_LINE" style={styles.titleFirstLine} />
               <View style={styles.secondLineContainer}>
-                <CustomText text="trips take " style={styles.title} />
-                <CustomText text="people" style={[styles.title, styles.peopleText]} />
+                <CustomText text="WELCOME.SUBTITLE_SECOND_LINE" style={styles.titleSecondLine} />
+                <CustomText text="WELCOME.SUBTITLE_THIRD_LINE" style={[styles.titleSecondLine, styles.peopleText]} />
               </View>
             </View>
             <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
