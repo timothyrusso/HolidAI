@@ -8,6 +8,7 @@ export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   personCircleOutline: 'person-circle-outline',
   arrowBack: 'arrow-back',
   arrowRight: 'chevron-forward',
+  arrowLeft: 'chevron-back',
   addCircle: 'add-circle',
   add: 'add',
   remove: 'trash',
@@ -39,4 +40,6 @@ export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   shirt: 'shirt-outline',
   walk: 'walk',
   cafe: 'cafe-outline',
+  eye: 'eye-outline',
+  eyeOff: 'eye-off-outline',
 };

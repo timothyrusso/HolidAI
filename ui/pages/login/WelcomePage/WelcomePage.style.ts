@@ -1,6 +1,5 @@
 import { colors } from '@/ui/constants/style/colors';
 import { breakpoints } from '@/ui/constants/style/dimensions/breakpoints';
-import { components } from '@/ui/constants/style/dimensions/components';
 import { images } from '@/ui/constants/style/dimensions/images';
 import { SCREEN_HEIGHT, spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
@@ -9,7 +8,6 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
-    width: components.customButtonWidth,
   },
   titleContainer: {
     flexDirection: 'column',
@@ -22,7 +20,6 @@ export const styles = StyleSheet.create({
   },
   titleFirstLine: {
     fontFamily: fonts.interBold,
-    paddingHorizontal: spacing.Triple,
     fontSize: spacing.Quintuple,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
@@ -42,7 +39,6 @@ export const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: fonts.interMedium,
-    paddingHorizontal: spacing.Quintuple,
     fontSize: spacing.Double + spacing.Minimal,
     textAlign: 'center',
     color: colors.primaryGrey,
@@ -64,5 +60,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     rowGap: spacing.Fourfold,
     paddingBottom: spacing.Triple,
+    paddingHorizontal: spacing.Fourfold,
   },
 });

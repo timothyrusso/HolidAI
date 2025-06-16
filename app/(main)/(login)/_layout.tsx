@@ -12,13 +12,25 @@ export default function LoginLayout() {
       <Stack.Screen
         name={Routes.SignIn}
         options={{
-          header: () => <CustomHeader title="SIGNIN.TITLE" icon={icons.close} onPress={() => router.back()} />,
+          header: () => (
+            <CustomHeader
+              title="SIGNIN.TITLE"
+              icon={icons.arrowBack}
+              onPress={() => router.replace(`/${Routes.Welcome}`)}
+            />
+          ),
         }}
       />
       <Stack.Screen
         name={Routes.SignUp}
         options={{
-          header: () => <CustomHeader title="SIGNUP.TITLE" icon={icons.close} onPress={() => router.back()} />,
+          header: () => (
+            <CustomHeader
+              title="SIGNUP.TITLE"
+              icon={icons.arrowBack}
+              onPress={() => router.replace(`/${Routes.SignIn}`)}
+            />
+          ),
         }}
       />
     </Stack>

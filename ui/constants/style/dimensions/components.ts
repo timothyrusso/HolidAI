@@ -20,7 +20,6 @@ export const components = {
   textIconCard: 136,
   reviewPageAnimationHeight: 300,
   cardHeight: 100,
-  customButtonWidth: 300,
   tripAnimationHeight: 250,
   searchAnimationHeight: 250,
   welcomePageBackgroundTextHeight: 50,

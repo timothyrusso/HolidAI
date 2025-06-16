@@ -3,8 +3,8 @@ import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import type { Ionicons } from '@expo/vector-icons';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { ButtonType } from '../../basic/CustomIconButton/BaseIconButton';
-import { CustomIconButtonLarge } from '../../basic/CustomIconButton/CustomIconButtonLarge';
+import { ButtonType } from '../../basic/CustomButton/CustomButton.logic';
+import { CustomIconButtonMedium } from '../../basic/CustomIconButton/CustomIconButtonMedium';
 import { useCustomHeaderLogic } from './CustomHeader.logic';
 
 type CustomHeaderProps = {
@@ -18,15 +18,16 @@ const CustomHeader: FC<CustomHeaderProps> = ({ title, icon, onPress }) => {
 
   return (
     <View style={styleComponent.container}>
-      <CustomText text={title} style={styleComponent.title} />
       {onPress && icon && (
-        <CustomIconButtonLarge
+        <CustomIconButtonMedium
           iconName={icon}
           iconSize={spacing.Quintuple}
           onPress={onPress}
-          buttonType={ButtonType.Tertiary}
+          buttonType={ButtonType.Quaternary}
+          style={styleComponent.icon}
         />
       )}
+      <CustomText text={title} style={styleComponent.title} />
     </View>
   );
 };

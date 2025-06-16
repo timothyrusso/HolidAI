@@ -1,7 +1,7 @@
-import { PlatformOS } from '@/ui/constants/PlatformOS';
+import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   title: {
@@ -20,7 +20,8 @@ export const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     paddingHorizontal: spacing.Fourfold,
-    ...(Platform.OS === PlatformOS.ios && { paddingTop: spacing.Triple }),
+    paddingTop: spacing.Quintuple,
+    rowGap: spacing.Double,
   },
   buttonContainer: {
     paddingTop: spacing.separator40,
@@ -32,7 +33,29 @@ export const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  resetPasswordButton: {
+  textButton: {
     fontFamily: fonts.interBold,
+    textAlign: 'right',
+    color: colors.tertiaryBlue,
+    fontSize: spacing.Double + spacing.Minimal,
+  },
+  labelText: {
+    fontFamily: fonts.interMedium,
+    color: colors.primaryGrey,
+    alignSelf: 'flex-end',
+    fontSize: spacing.Double + spacing.Minimal,
+  },
+  subtitle: {
+    fontFamily: fonts.interMedium,
+    fontSize: spacing.Triple,
+    textAlign: 'center',
+    color: colors.primaryGrey,
+    paddingTop: spacing.Double,
+  },
+  noAccountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    columnGap: spacing.Minimal,
   },
 });
