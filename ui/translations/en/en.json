@@ -82,7 +82,7 @@
   },
   "SIGNUP": {
     "TITLE": "Sign Up",
-    "SUBTITLE": "Create a new account!",
+    "SUBTITLE": "Please fill the details and create account",
     "NAME": "Name",
     "NAME_PLACEHOLDER": "Enter your name",
     "EMAIL": "Email",
@@ -91,7 +91,8 @@
     "PASSWORD_PLACEHOLDER": "Enter your password",
     "CONFIRM_PASSWORD": "Confirm password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your password",
-    "EMAIL_VERIFICATION_TITLE": "Verify your email"
+    "EMAIL_VERIFICATION_TITLE": "Verify your email",
+    "ALREADY_ACCOUNT": "Already have an account? "
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Search",

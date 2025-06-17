@@ -1,4 +1,5 @@
 import { PlatformOS } from '@/ui/constants/PlatformOS';
+import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import { fonts } from '@/ui/constants/style/fonts';
 import { Platform, StyleSheet } from 'react-native';
@@ -8,26 +9,17 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.interBold,
     fontSize: spacing.Fourfold,
   },
-  emailContainer: {
-    paddingTop: spacing.Triple,
-  },
-  passwordContainer: {
-    paddingVertical: spacing.Triple,
-    rowGap: spacing.Triple,
-  },
-  label: {
-    marginBottom: spacing.Single,
-  },
   inputContainer: {
-    ...(Platform.OS === PlatformOS.ios && { paddingTop: spacing.Triple }),
+    paddingTop: spacing.Quintuple,
     width: '100%',
     paddingHorizontal: spacing.Fourfold,
+    rowGap: spacing.Fourfold,
   },
   buttonContainer: {
-    paddingTop: spacing.separator40,
+    paddingTop: spacing.separator80,
     width: '100%',
     paddingHorizontal: spacing.Fourfold,
-    paddingBottom: spacing.Fourfold,
+    rowGap: spacing.Triple,
   },
   container: {
     width: '100%',
@@ -46,5 +38,30 @@ export const styles = StyleSheet.create({
     fontSize: spacing.Triple,
     alignSelf: 'flex-start',
     ...(Platform.OS === PlatformOS.ios && { marginTop: spacing.Double }),
+  },
+  subtitle: {
+    fontFamily: fonts.interMedium,
+    fontSize: spacing.Triple,
+    textAlign: 'center',
+    color: colors.primaryGrey,
+    paddingTop: spacing.Double,
+  },
+  textButton: {
+    fontFamily: fonts.interBold,
+    textAlign: 'right',
+    color: colors.tertiaryBlue,
+    fontSize: spacing.Double + spacing.Minimal,
+  },
+  labelText: {
+    fontFamily: fonts.interMedium,
+    color: colors.primaryGrey,
+    alignSelf: 'flex-end',
+    fontSize: spacing.Double + spacing.Minimal,
+  },
+  alreadyAccountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    columnGap: spacing.Minimal,
   },
 });

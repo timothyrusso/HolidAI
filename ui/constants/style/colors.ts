@@ -8,7 +8,7 @@ export const colors = {
   primaryWhite: '#FFFFFF',
   primaryWhiteDisabled: '#F9F9F9',
   primaryGrey: '#8E8E8F',
-  secondaryGrey: '#E6E6E6',
+  secondaryGrey: '#f5f5f5',
   primaryYellow: '#FFE5D9',
   secondaryYellow: '#FFD9B3',
   primaryGreen: '#D8E2DC',

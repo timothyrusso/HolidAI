@@ -24,15 +24,13 @@ const SignInPage = () => {
         <View style={styles.container}>
           <CustomText text="SIGNIN.SUBTITLE" style={styles.subtitle} />
           <View style={styles.inputContainer}>
-            <View style={styles.emailContainer}>
-              <CustomTextInput
-                placeholder="SIGNIN.EMAIL_PLACEHOLDER"
-                onChangeText={(text: string) => setEmail(text)}
-                value={email}
-                autoComplete="email"
-                keyboardType="email-address"
-              />
-            </View>
+            <CustomTextInput
+              placeholder="SIGNIN.EMAIL_PLACEHOLDER"
+              onChangeText={(text: string) => setEmail(text)}
+              value={email}
+              autoComplete="email"
+              keyboardType="email-address"
+            />
             <View style={styles.passwordContainer}>
               <CustomTextInput
                 placeholder="SIGNIN.PASSWORD_PLACEHOLDER"
