@@ -82,7 +82,7 @@
   },
   "SIGNUP": {
     "TITLE": "Registrati",
-    "SUBTITLE": "Crea un nuovo account!",
+    "SUBTITLE": "Per continuare, crea un nuovo account",
     "NAME": "Nome",
     "NAME_PLACEHOLDER": "Inserisci il tuo nome",
     "EMAIL": "Email",
@@ -91,7 +91,8 @@
     "PASSWORD_PLACEHOLDER": "Inserisci la tua password",
     "CONFIRM_PASSWORD": "Conferma password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la tua password",
-    "EMAIL_VERIFICATION_TITLE": "Verifica la tua email"
+    "EMAIL_VERIFICATION_TITLE": "Verifica la tua email",
+    "ALREADY_ACCOUNT": "Hai già un account? "
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Cerca",

@@ -8,14 +8,8 @@ export const styles = StyleSheet.create({
     fontFamily: fonts.interBold,
     fontSize: spacing.Fourfold,
   },
-  emailContainer: {
-    paddingTop: spacing.Double,
-  },
   passwordContainer: {
     paddingVertical: spacing.Double,
-  },
-  label: {
-    marginBottom: spacing.Single,
   },
   inputContainer: {
     width: '100%',
