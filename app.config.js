@@ -1,36 +1,57 @@
 export default ({ config }) => {
+  const {
+    GOOGLE_PLACES_API_KEY,
+    FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID,
+    GOOGLE_MAPS_API_KEY_IOS,
+    GOOGLE_MAPS_API_KEY_ANDROID,
+    GOOGLE_SERVICES_PLIST,
+    GOOGLE_SERVICES_PLIST_LOCAL_PATH,
+    GOOGLE_SERVICES_JSON,
+    GOOGLE_SERVICES_JSON_LOCAL_PATH,
+    GOOGLE_GEMINI_API_KEY,
+    RAPID_API_KEY,
+    UNSPLASH_ACCESS_KEY,
+    MMKV_ENCRYPTION_KEY,
+    CLERK_PUBLISHABLE_KEY,
+  } = process.env;
+
   return {
     ...config,
     extra: {
       ...config.extra,
-      googlePlacesApiKey: process.env.GOOGLE_PLACES_API_KEY,
+      googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
       firebaseConfig: {
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.FIREBASE_APP_ID,
+        apiKey: FIREBASE_API_KEY,
+        authDomain: FIREBASE_AUTH_DOMAIN,
+        projectId: FIREBASE_PROJECT_ID,
+        storageBucket: FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+        appId: FIREBASE_APP_ID,
       },
-      googleGeminiApiKey: process.env.GOOGLE_GEMINI_API_KEY,
-      rapidApiKey: process.env.RAPID_API_KEY,
-      unsplashAccessKey: process.env.UNSPLASH_ACCESS_KEY,
-      mmkvEncryptionKey: process.env.MMKV_ENCRYPTION_KEY,
-      clerkPublishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+      googleGeminiApiKey: GOOGLE_GEMINI_API_KEY,
+      rapidApiKey: RAPID_API_KEY,
+      unsplashAccessKey: UNSPLASH_ACCESS_KEY,
+      mmkvEncryptionKey: MMKV_ENCRYPTION_KEY,
+      clerkPublishableKey: CLERK_PUBLISHABLE_KEY,
     },
     ios: {
       ...config.ios,
-      googleServicesFile: process.env.GOOGLE_SERVICES_PLIST ?? process.env.GOOGLE_SERVICES_PLIST_LOCAL_PATH,
-      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
+      googleServicesFile: GOOGLE_SERVICES_PLIST ?? GOOGLE_SERVICES_PLIST_LOCAL_PATH,
+      googleMapsApiKey: GOOGLE_MAPS_API_KEY_IOS,
     },
     android: {
       ...config.android,
       config: {
         googleMaps: {
-          apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID,
+          apiKey: GOOGLE_MAPS_API_KEY_ANDROID,
         },
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? process.env.GOOGLE_SERVICES_JSON_LOCAL_PATH,
+      googleServicesFile: GOOGLE_SERVICES_JSON ?? GOOGLE_SERVICES_JSON_LOCAL_PATH,
     },
   };
 };
