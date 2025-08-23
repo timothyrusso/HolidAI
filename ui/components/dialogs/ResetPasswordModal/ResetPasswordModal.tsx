@@ -26,7 +26,7 @@ export const ResetPasswordModal = () => {
           successfulCreation ? components.createResetPasswordModalHeight : components.changeResetPasswordModalHeight
         }
       >
-        <ModalTemplate.Header title={'SIGNIN.RESET_PASSWORD_TITLE'} action={handleResetModal} />
+        <ModalTemplate.Header title={'SIGNIN.RESET_PASSWORD_TITLE'} action={handleResetModal} preventClosing />
         <ModalTemplate.Content>
           <ModalTemplate.Body>
             <ResetPasswordModalBody

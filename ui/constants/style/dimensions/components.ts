@@ -24,4 +24,5 @@ export const components = {
   searchAnimationHeight: 250,
   welcomePageBackgroundTextHeight: 50,
   welcomeLogoHeight: 150,
+  customInputHeight: 40,
 };

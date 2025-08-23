@@ -28,7 +28,7 @@ const CustomTextInput: FC<CustomTextInputProps> = ({
         placeholder={t(placeholder)}
         placeholderTextColor={placeholderTextColor}
         style={[styles.input]}
-        secureTextEntry={!isPasswordVisible}
+        secureTextEntry={isPassword ? !isPasswordVisible : false}
         {...TextInputProps}
       />
       {isPassword && (

@@ -67,14 +67,12 @@ const SignUpPage = () => {
             />
             <CustomTextInput
               placeholder="SIGNUP.PASSWORD_PLACEHOLDER"
-              secureTextEntry={true}
               onChangeText={(text: string) => setPassword(text)}
               value={password}
               isPassword
             />
             <CustomTextInput
               placeholder="SIGNUP.CONFIRM_PASSWORD_PLACEHOLDER"
-              secureTextEntry={true}
               onChangeText={(text: string) => setConfirmPassword(text)}
               value={confirmPassword}
               isPassword
