@@ -35,7 +35,7 @@ const SignUpPage = () => {
     return (
       <BasicView nameView={Routes.SignUp} statusBarStyle="dark" viewStyle={styles.verifyContainer}>
         <View style={styles.verifyContent}>
-          <CustomText text="SIGNIN.RESET_PASSWORD_EMAIL_CODE" style={styles.verifyTitle} />
+          <CustomText text="SIGNUP.EMAIL_VERIFICATION_CODE" style={styles.verifyTitle} />
           <CustomTextInput
             value={code}
             placeholder="Enter your verification code"

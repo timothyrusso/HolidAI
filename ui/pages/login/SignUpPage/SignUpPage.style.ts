@@ -28,10 +28,11 @@ export const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: spacing.Fourfold,
     justifyContent: 'flex-start',
+    paddingTop: spacing.Fourfold,
   },
   verifyContent: {
     width: '100%',
-    rowGap: spacing.Double,
+    rowGap: spacing.Fourfold,
   },
   verifyTitle: {
     fontFamily: fonts.interRegular,
