@@ -18,6 +18,7 @@ export default ({ config }) => {
     UNSPLASH_ACCESS_KEY,
     MMKV_ENCRYPTION_KEY,
     CLERK_PUBLISHABLE_KEY,
+    CONVEX_URL,
   } = process.env;
 
   return {
@@ -38,6 +39,7 @@ export default ({ config }) => {
       unsplashAccessKey: UNSPLASH_ACCESS_KEY,
       mmkvEncryptionKey: MMKV_ENCRYPTION_KEY,
       clerkPublishableKey: CLERK_PUBLISHABLE_KEY,
+      convexUrl: CONVEX_URL,
     },
     ios: {
       ...config.ios,

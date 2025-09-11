@@ -6,6 +6,7 @@ import i18n from '@/ui/translations/i18n';
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -19,6 +20,10 @@ const InitialLayout = () => {
     </Stack>
   );
 };
+
+const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL ?? '', {
+  unsavedChangesWarning: false,
+});
 
 export default function RootLayout() {
   // Initialize localization
@@ -40,9 +45,11 @@ export default function RootLayout() {
     <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
         <QueryClientProvider client={queryClient}>
-          <KeyboardProvider>
-            <InitialLayout />
-          </KeyboardProvider>
+          <ConvexProvider client={convex}>
+            <KeyboardProvider>
+              <InitialLayout />
+            </KeyboardProvider>
+          </ConvexProvider>
         </QueryClientProvider>
       </ClerkLoaded>
     </ClerkProvider>
