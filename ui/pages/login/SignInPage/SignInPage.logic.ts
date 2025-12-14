@@ -41,6 +41,7 @@ export const useSignInPageLogic = () => {
       } else {
         // If the status isn't complete, check why. User might need to
         // complete further steps.
+        // biome-ignore lint/suspicious/noConsole: <>
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (error) {

@@ -46,6 +46,10 @@ export default ({ config }) => {
     },
     android: {
       ...config.android,
+      adaptiveIcon: {
+        backgroundColor: "#FFFFFF",
+      },
+      edgeToEdgeEnabled: true,
       config: {
         googleMaps: {
           apiKey: GOOGLE_MAPS_API_KEY_ANDROID,
@@ -53,5 +57,6 @@ export default ({ config }) => {
       },
       googleServicesFile: GOOGLE_SERVICES_JSON ?? GOOGLE_SERVICES_JSON_LOCAL_PATH,
     },
+    plugins: ['expo-web-browser'],
   };
 };

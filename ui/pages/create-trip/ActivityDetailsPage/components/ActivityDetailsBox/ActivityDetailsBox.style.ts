@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
   ratingText: {
     fontSize: spacing.Triple,
     color: colors.primaryWhite,
+    fontFamily: fonts.interMedium,
   },
   ratingContainer: {
     alignItems: 'flex-start',
