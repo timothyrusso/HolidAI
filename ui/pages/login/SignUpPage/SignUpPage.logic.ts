@@ -65,6 +65,7 @@ export const useSignUpPageLogic = () => {
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
+        // biome-ignore lint/suspicious/noConsole: <>
         console.error(JSON.stringify(signUpAttempt, null, 2));
       }
     } catch (error) {

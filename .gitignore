@@ -40,3 +40,5 @@ GoogleService-Info.plist
 **/GoogleService-Info.plist
 ./google-services.json
 ./GoogleService-Info.plist
+.env.local
+Google-Service.info.plist
