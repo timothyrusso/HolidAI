@@ -47,7 +47,7 @@ export default ({ config }) => {
     android: {
       ...config.android,
       adaptiveIcon: {
-        backgroundColor: "#FFFFFF",
+        backgroundColor: '#FFFFFF',
       },
       edgeToEdgeEnabled: true,
       config: {
