@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.Double,
     paddingHorizontal: spacing.Quintuple,
     borderTopWidth: spacing.HalfMinimal,
-    borderTopColor: colors.primaryBlack,
+    borderTopColor: colors.primaryGrey,
     backgroundColor: colors.primaryWhite,
     borderBottomLeftRadius: spacing.Triple,
     borderBottomRightRadius: spacing.Triple,

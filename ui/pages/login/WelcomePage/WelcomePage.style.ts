@@ -20,19 +20,19 @@ export const styles = StyleSheet.create({
   },
   titleFirstLine: {
     fontFamily: fonts.interBold,
-    fontSize: spacing.Quintuple,
+    fontSize: spacing.FourfoldAndHalf,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   titleSecondLine: {
     fontFamily: fonts.interBold,
-    fontSize: spacing.Quintuple,
+    fontSize: spacing.FourfoldAndHalf,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   peopleText: {
     fontFamily: fonts.interBold,
-    fontSize: spacing.Quintuple,
+    fontSize: spacing.FourfoldAndHalf,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
     color: colors.tertiaryBlue,

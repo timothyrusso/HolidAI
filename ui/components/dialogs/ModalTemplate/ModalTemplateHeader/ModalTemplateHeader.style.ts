@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontFamily: fonts.interMedium,
-    fontSize: spacing.Triple,
+    fontSize: spacing.Fourfold,
   },
   cancelIcon: {
     alignSelf: 'flex-end',

@@ -92,6 +92,7 @@
     "CONFIRM_PASSWORD": "Conferma password",
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la tua password",
     "EMAIL_VERIFICATION_TITLE": "Verifica la tua email",
+    "EMAIL_VERIFICATION_CODE": "Inserisci il codice di verifica che ti è stato inviato per email",
     "ALREADY_ACCOUNT": "Hai già un account? "
   },
   "SEARCH_PLACE_PAGE": {
