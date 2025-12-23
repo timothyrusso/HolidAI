@@ -5,9 +5,9 @@ name: Pull Request
 
 on:
   push:
-    branches: ['main', 'test', 'development']
+    branches: ["main", "test", "development"]
   pull_request:
-    branches: ['main', 'test', 'development']
+    branches: ["main", "test", "development"]
 
 jobs:
   build:
@@ -24,7 +24,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
+      - run: npm cache clean --force
+      - run: npm install -g npm@latest
       - run: npm ci
       - run: npm run lint
