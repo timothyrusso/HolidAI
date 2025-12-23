@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.17",
-    "@clerk/clerk-expo": "^2.13.0",
+    "@clerk/clerk-expo": "canary",
     "@dicebear/collection": "^9.2.2",
     "@dicebear/core": "^9.2.2",
     "@expo/vector-icons": "^15.0.3",
