@@ -62,7 +62,6 @@ export const TripAiResp = v.object({
 });
 
 export const Trips = v.object({
-  userId: v.id('users'), // Reference to the user
   docId: v.string(),
   tripAiResp: TripAiResp,
   isFavorite: v.boolean(),
