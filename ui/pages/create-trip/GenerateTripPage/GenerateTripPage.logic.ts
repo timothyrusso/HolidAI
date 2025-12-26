@@ -4,6 +4,7 @@ import { ai_prompt } from '@/configs/ai/prompt';
 import { db } from '@/configs/firebaseConfig';
 import { logger } from '@/di/resolve';
 
+import { api } from '@/convex/_generated/api';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { Routes } from '@/ui/constants/navigation/routes';
@@ -13,6 +14,7 @@ import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
 import { useQueryClient } from '@tanstack/react-query';
+import { useMutation } from 'convex/react';
 import { useRouter } from 'expo-router';
 import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
@@ -29,6 +31,8 @@ export const useGenerateTripPageLogic = () => {
   const { showToast } = useToast();
 
   const queryClient = useQueryClient();
+
+  const addTripToDb = useMutation(api.trips.createTrip);
 
   const PROMPT = ai_prompt
     .replace('{location}', tripSelectors.locationInfo().name)
@@ -59,6 +63,14 @@ export const useGenerateTripPageLogic = () => {
         isFavorite: false,
         createdAt: new Date().toISOString(),
         docId,
+      });
+
+      await addTripToDb({
+        tripId: docId,
+        userId: userId || 'unknown_user',
+        tripAiResp,
+        isFavorite: false,
+        createdAt: new Date().toISOString(),
       });
 
       queryClient.invalidateQueries({ queryKey: [tripsKeys.getUserTrips] });
