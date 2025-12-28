@@ -52,7 +52,7 @@ export const useGenerateTripPageLogic = () => {
 
     try {
       const resultPrompt = await chatSession.sendMessage(PROMPT);
-      const responseText = await resultPrompt.response.text();
+      const responseText = (await resultPrompt.response.text()).replace('```json', '').replace('```', '');
 
       const docId = nanoid();
 
