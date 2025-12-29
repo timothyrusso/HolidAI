@@ -3,7 +3,16 @@
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["android/**", "ios/**", "node_modules/**", "dist/**", "coverage/**", "scripts/**", ".expo/**"]
+    "ignore": [
+      "android/**",
+      "ios/**",
+      "node_modules/**",
+      "dist/**",
+      "coverage/**",
+      "scripts/**",
+      ".expo/**",
+      "convex/_generated/**"
+    ]
   },
   "formatter": {
     "enabled": true,
