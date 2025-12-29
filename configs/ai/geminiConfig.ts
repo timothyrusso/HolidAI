@@ -184,7 +184,7 @@ const chatSession = model.startChat({
     "weatherGeneralNotes": "In May, Rome experiences pleasant spring weather, making it an ideal time for travel.",
     "averageHighTemperature": "Approximately 22.8°C (73°F)",
     "averageLowTemperature": "Around 11.6°C (53°F)",
-    "daylight: "Approximately 14 hours and 34 minutes",
+    "daylight": "Approximately 14 hours and 34 minutes",
     "weatherClothingNotes": "Light layers are recommended. Mornings and evenings can be cool, so a light jacket or sweater is advisable.",
     "weatherSunProtectionNotes": "With a high UV index, it's important to use sunscreen, wear sunglasses, and consider a hat for sun protection.",
     "weatherRainPreparednessNotes": "While May isn't the wettest month, occasional showers can occur. Packing a compact umbrella or a light raincoat is prudent.",

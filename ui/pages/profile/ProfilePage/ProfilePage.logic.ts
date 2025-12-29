@@ -5,7 +5,7 @@ import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { components } from '@/ui/constants/style/dimensions/components';
 import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
 import { useClerk, useUser } from '@clerk/clerk-expo';
-import { miniavs } from '@dicebear/collection';
+import { thumbs } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
 import { router } from 'expo-router';
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -47,7 +47,7 @@ export const useProfilePageLogic = () => {
     }
   };
 
-  const avatar = createAvatar(miniavs, {
+  const avatar = createAvatar(thumbs, {
     radius: components.profileImageHeight / 2,
     seed: user?.id,
   }).toString();

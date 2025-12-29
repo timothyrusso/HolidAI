@@ -6,6 +6,7 @@ import i18n from '@/ui/translations/i18n';
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ConvexProvider, ConvexReactClient } from 'convex/react';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -24,6 +25,11 @@ export default function RootLayout() {
   // Initialize localization
   i18n;
 
+  // biome-ignore lint/style/noNonNullAssertion: <following the convex docs: https://docs.convex.dev/quickstart/react-native>
+  const convex = new ConvexReactClient(Constants.expoConfig?.extra?.convexUrl!, {
+    unsavedChangesWarning: false,
+  });
+
   SplashScreen.preventAutoHideAsync();
 
   const [fontsLoaded] = useFonts({
@@ -39,11 +45,13 @@ export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>
       <ClerkLoaded>
-        <QueryClientProvider client={queryClient}>
-          <KeyboardProvider>
-            <InitialLayout />
-          </KeyboardProvider>
-        </QueryClientProvider>
+        <ConvexProvider client={convex}>
+          <QueryClientProvider client={queryClient}>
+            <KeyboardProvider>
+              <InitialLayout />
+            </KeyboardProvider>
+          </QueryClientProvider>
+        </ConvexProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );

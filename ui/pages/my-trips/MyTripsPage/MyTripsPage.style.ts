@@ -1,3 +1,4 @@
+import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
@@ -13,6 +14,8 @@ export const styles = StyleSheet.create({
   },
   detailsBox: {
     marginBottom: spacing.separator80 + spacing.Double,
+    borderWidth: spacing.Minimal,
+    borderColor: colors.primaryWhite,
   },
   skeleton: {
     width: '100%',
