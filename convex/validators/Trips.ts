@@ -50,8 +50,8 @@ export const Food = v.object({
   foodGeneralNotes: v.optional(v.string()),
   foodBudgetNotes: v.optional(v.string()),
   typicalDishes: v.optional(v.array(v.string())),
-  cheapEats: v.optional(v.array(v.string())),
-  recommendedRestaurants: v.optional(v.array(v.string())),
+  cheapEats: v.optional(v.array(v.string())), // TODO: check if needed
+  recommendedRestaurants: v.optional(v.array(v.string())), // TODO: check if needed
 });
 
 export const TripAiResp = v.object({
