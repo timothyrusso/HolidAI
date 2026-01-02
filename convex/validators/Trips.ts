@@ -1,72 +1,70 @@
 import { v } from 'convex/values';
 
 export const GeoCoordinates = v.object({
-  latitude: v.optional(v.number()),
-  longitude: v.optional(v.number()),
+  latitude: v.number(),
+  longitude: v.number(),
 });
 
 export const ScheduleItem = v.object({
-  placeNumberID: v.optional(v.number()),
-  bestTimeToVisit: v.optional(v.string()),
-  rating: v.optional(v.number()),
-  ticketPricing: v.optional(v.union(v.string(), v.number())),
-  placeDetails: v.optional(v.string()),
-  placeDetailsLongDescription: v.optional(v.string()),
-  placeSecretsAndInsights: v.optional(v.string()),
+  placeNumberID: v.number(),
+  bestTimeToVisit: v.string(),
+  rating: v.number(),
+  ticketPricing: v.union(v.string(), v.number()),
+  placeDetails: v.string(),
+  placeDetailsLongDescription: v.string(),
+  placeSecretsAndInsights: v.string(),
   geoCoordinates: GeoCoordinates,
-  placeName: v.optional(v.string()),
-  activity: v.optional(v.string()),
+  placeName: v.string(),
+  activity: v.string(),
 });
 
 export const DayPlan = v.object({
   schedule: v.array(ScheduleItem),
-  day: v.optional(v.number()),
-  theme: v.optional(v.string()),
+  day: v.number(),
+  theme: v.string(),
 });
 
 export const TripDetails = v.object({
-  location: v.optional(v.string()),
-  budget: v.optional(v.string()),
-  travelers: v.optional(v.number()),
-  durationDays: v.optional(v.number()),
-  durationNights: v.optional(v.number()),
-  startDate: v.optional(v.string()),
-  endDate: v.optional(v.string()),
-  locale: v.optional(v.string()),
+  location: v.string(),
+  budget: v.string(),
+  travelers: v.number(),
+  durationDays: v.number(),
+  durationNights: v.number(),
+  startDate: v.string(),
+  endDate: v.string(),
+  locale: v.string(),
 });
 
 export const Weather = v.object({
-  weatherGeneralNotes: v.optional(v.string()),
-  averageHighTemperature: v.optional(v.string()),
-  averageLowTemperature: v.optional(v.string()),
-  daylight: v.optional(v.string()),
-  weatherClothingNotes: v.optional(v.string()),
-  weatherSunProtectionNotes: v.optional(v.string()),
-  weatherRainPreparednessNotes: v.optional(v.string()),
-  weatherOutdoorActivitiesNotes: v.optional(v.string()),
+  weatherGeneralNotes: v.string(),
+  averageHighTemperature: v.string(),
+  averageLowTemperature: v.string(),
+  daylight: v.string(),
+  weatherClothingNotes: v.string(),
+  weatherSunProtectionNotes: v.string(),
+  weatherRainPreparednessNotes: v.string(),
+  weatherOutdoorActivitiesNotes: v.string(),
 });
 
 export const Food = v.object({
-  foodGeneralNotes: v.optional(v.string()),
-  foodBudgetNotes: v.optional(v.string()),
-  typicalDishes: v.optional(v.array(v.string())),
-  cheapEats: v.optional(v.array(v.string())), // TODO: check if needed
-  recommendedRestaurants: v.optional(v.array(v.string())), // TODO: check if needed
+  foodGeneralNotes: v.string(),
+  foodBudgetNotes: v.string(),
+  typicalDishes: v.array(v.string()),
 });
 
 export const TripAiResp = v.object({
-  budgetNotes: v.optional(v.string()),
-  dayPlans: v.optional(v.array(DayPlan)),
-  transportationNotes: v.optional(v.string()),
+  budgetNotes: v.string(),
+  dayPlans: v.array(DayPlan),
+  transportationNotes: v.string(),
   tripDetails: TripDetails,
   weather: Weather,
   food: Food,
 });
 
 export const Trips = v.object({
-  tripId: v.optional(v.string()),
-  userId: v.optional(v.string()),
+  tripId: v.string(),
+  userId: v.string(),
   tripAiResp: TripAiResp,
-  isFavorite: v.optional(v.boolean()),
-  createdAt: v.optional(v.string()),
+  isFavorite: v.boolean(),
+  createdAt: v.string(),
 });
