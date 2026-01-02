@@ -1,12 +1,12 @@
-import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
+import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 
 export const useMyTripsPageLogic = () => {
-  const { data, isLoading } = useGetUserTripsQuery();
+  const { isLoading, getLastCreatedTrip, getTotalTrips } = useGetUserTrips();
 
-  const lastCreatedTrip = data?.lastCreatedTrip;
+  const lastCreatedTrip = getLastCreatedTrip();
 
-  const location = data?.lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
+  const location = lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
   const { data: imageUrl } = useUnsplashImages(location, UrlTypes.FULL);
 
@@ -15,17 +15,17 @@ export const useMyTripsPageLogic = () => {
   const budget = lastCreatedTrip?.tripAiResp.tripDetails.budget ?? 'MY_TRIP.BUDGET_NOT_AVAILABLE';
   const travelers = lastCreatedTrip?.tripAiResp.tripDetails.travelers ?? 0;
 
-  const totalTrips = data?.totalTrips ?? 0;
+  const totalTrips = getTotalTrips();
 
   return {
-    lastCreatedTrip: data?.lastCreatedTrip,
+    lastCreatedTrip,
     isLoading,
     image,
     location,
     days,
     budget,
     travelers,
-    tripId: lastCreatedTrip?.docId ?? '',
+    tripId: lastCreatedTrip?.tripId ?? '',
     tripStartDate: lastCreatedTrip?.tripAiResp.tripDetails.startDate ?? '',
     totalTrips,
   };

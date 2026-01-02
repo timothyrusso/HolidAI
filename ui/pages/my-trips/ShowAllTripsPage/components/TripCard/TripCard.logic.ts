@@ -13,7 +13,7 @@ export const useTripCardLogic = (item: UserTrips) => {
   const onCardPress = () => {
     router.push({
       pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`,
-      params: { id: item.docId },
+      params: { id: item.tripId },
     });
   };
 

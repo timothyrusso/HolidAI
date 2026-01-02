@@ -60,7 +60,7 @@ export interface Food {
 }
 
 export interface UserTrips {
-  docId: string;
+  tripId: string;
   tripAiResp: TripAiResp;
   isFavorite: boolean;
   createdAt: string;

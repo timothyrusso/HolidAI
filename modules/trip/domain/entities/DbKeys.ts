@@ -1,3 +1,3 @@
 export const dbKeys = {
-  userTrips: 'UserTrips',
-};
+  trips: 'trips',
+} as const;

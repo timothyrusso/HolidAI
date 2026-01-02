@@ -1,5 +1,5 @@
 import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
-import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
+import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
@@ -10,9 +10,9 @@ export const useActivityDetailsPageLogic = () => {
 
   const { tripId, activityId } = useLocalSearchParams();
 
-  const { data: activityData } = useGetUserTripsQuery();
+  const { getActivityById, getTripById } = useGetUserTrips();
 
-  const activity = activityData?.selectActivityById(tripId as string, Number(activityId));
+  const activity = getActivityById(tripId as string, Number(activityId));
 
   const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }], {
     useNativeDriver: false,
@@ -20,7 +20,7 @@ export const useActivityDetailsPageLogic = () => {
 
   const locationTitle = activity?.placeName;
 
-  const location = activityData?.selectTripById(tripId as string)?.tripAiResp.tripDetails.location.split(',')[0];
+  const location = getTripById(tripId as string)?.tripAiResp.tripDetails.location.split(',')[0];
 
   const imageLocationName = `${activity?.placeName}, ${location}`;
 

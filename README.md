@@ -30,10 +30,10 @@ The model processes user inputs through a carefully designed prompt engineering 
 ## Tech Stack
 
 - **Frontend**: React Native with Expo
-- **AI Integration**: Google Gemini 2.0 Flash
+- **AI Integration**: Google Gemini 2.0 Flash with Vercel AI SDK
 - **Maps**: Google Maps API and Apple Maps
 - **Authentication**: Clerk Authentication
-- **Database**: Firebase Firestore (moving di Convex)
+- **Database**: Convex
 - **Client State Management**: Zustand
 - **Caching and Server State Management**: Tanstack Query
 - **Dependency Injection**: tsyringe

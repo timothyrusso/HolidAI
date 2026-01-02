@@ -1,24 +1,19 @@
 // FIXME: react-native-get-random-values must be imported before nanoid
 import { ai_prompt } from '@/configs/ai/prompt';
-import { db } from '@/configs/firebaseConfig';
 import { logger } from '@/di/resolve';
 
 import { AiModels } from '@/configs/ai/AiModels';
 import { api } from '@/convex/_generated/api';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { generatedTripSchema } from '@/modules/trip/domain/entities/GenerateTripSchema';
 import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useToast } from '@/ui/hooks/useToast';
 import { useVercelAi } from '@/ui/hooks/useVercelAi';
-import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
-import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from 'convex/react';
 import { useRouter } from 'expo-router';
-import { doc, setDoc } from 'firebase/firestore';
 import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
 import 'react-native-get-random-values';
@@ -33,8 +28,6 @@ export const useGenerateTripPageLogic = () => {
   const { showToast } = useToast();
 
   const { generateAiObject } = useVercelAi();
-
-  const queryClient = useQueryClient();
 
   const addTripToDb = useMutation(api.trips.createTrip);
 
@@ -65,24 +58,15 @@ export const useGenerateTripPageLogic = () => {
         throw new Error('Failed to generate trip plan');
       }
 
-      const docId = nanoid();
-
-      await setDoc(doc(db, `${dbKeys.userTrips}/${userId}/trips`, docId), {
-        tripAiResp: output,
-        isFavorite: false,
-        createdAt: new Date().toISOString(),
-        docId,
-      });
+      const tripId = nanoid();
 
       await addTripToDb({
-        tripId: docId,
+        tripId,
         userId: userId || 'unknown_user',
         tripAiResp: output,
         isFavorite: false,
         createdAt: new Date().toISOString(),
       });
-
-      queryClient.invalidateQueries({ queryKey: [tripsKeys.getUserTrips] });
 
       router.push(`/${Routes.MyTrips}`);
     } catch (error) {

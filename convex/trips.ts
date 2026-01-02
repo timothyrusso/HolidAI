@@ -1,3 +1,4 @@
+import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { TripAiResp } from './validators/Trips';
@@ -5,7 +6,7 @@ import { TripAiResp } from './validators/Trips';
 export const getAllTripsbyUserId = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const trips = await ctx.db.query('trips').collect();
+    const trips = await ctx.db.query(dbKeys.trips).collect();
 
     return trips.filter(trip => trip.userId === args.userId);
   },
@@ -20,7 +21,7 @@ export const createTrip = mutation({
     createdAt: v.string(),
   },
   handler: async (ctx, args) => {
-    const tripId = await ctx.db.insert('trips', {
+    const tripId = await ctx.db.insert(dbKeys.trips, {
       tripId: args.tripId,
       userId: args.userId,
       tripAiResp: args.tripAiResp,
@@ -32,17 +33,17 @@ export const createTrip = mutation({
 });
 
 export const deleteTrip = mutation({
-  args: { id: v.id('trips') },
+  args: { id: v.id(dbKeys.trips) },
   handler: async (ctx, args) => {
-    await ctx.db.delete('trips', args.id);
+    await ctx.db.delete(dbKeys.trips, args.id);
     return;
   },
 });
 
 export const toggleFavoriteTrip = mutation({
-  args: { id: v.id('trips'), isFavorite: v.boolean() },
+  args: { id: v.id(dbKeys.trips), isFavorite: v.boolean() },
   handler: async (ctx, args) => {
-    const trip = await ctx.db.get('trips', args.id);
+    const trip = await ctx.db.get(dbKeys.trips, args.id);
     if (!trip) {
       throw new Error('Trip not found');
     }
@@ -50,6 +51,21 @@ export const toggleFavoriteTrip = mutation({
       ...trip,
       isFavorite: args.isFavorite,
     });
+    return;
+  },
+});
+
+export const deleteAllTripsByUserId = mutation({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const trips = await ctx.db.query(dbKeys.trips).collect();
+
+    const userTrips = trips.filter(trip => trip.userId === args.userId);
+
+    for (const trip of userTrips) {
+      await ctx.db.delete(dbKeys.trips, trip._id);
+    }
+
     return;
   },
 });
