@@ -1,3 +1,5 @@
+import type { Id } from '@/convex/_generated/dataModel';
+
 interface GeoCoordinates {
   latitude: number;
   longitude: number;
@@ -60,7 +62,7 @@ export interface Food {
 }
 
 export interface UserTrips {
-  tripId: string;
+  _id: Id<'trips'>;
   tripAiResp: TripAiResp;
   isFavorite: boolean;
   createdAt: string;

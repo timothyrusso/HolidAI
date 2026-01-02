@@ -1,4 +1,3 @@
-// FIXME: react-native-get-random-values must be imported before nanoid
 import { ai_prompt } from '@/configs/ai/prompt';
 import { logger } from '@/di/resolve';
 
@@ -14,9 +13,7 @@ import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
 import { useRouter } from 'expo-router';
-import { nanoid } from 'nanoid';
 import { useEffect, useState } from 'react';
-import 'react-native-get-random-values';
 
 export const useGenerateTripPageLogic = () => {
   const { tripSelectors } = useTripState();
@@ -58,10 +55,7 @@ export const useGenerateTripPageLogic = () => {
         throw new Error('Failed to generate trip plan');
       }
 
-      const tripId = nanoid();
-
       await addTripToDb({
-        tripId,
         userId: userId || 'unknown_user',
         tripAiResp: output,
         isFavorite: false,

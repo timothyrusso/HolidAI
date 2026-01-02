@@ -35,13 +35,13 @@ export const useGetUserTrips = () => {
 
   const getActivityById = (tripId: string, activityId: number) => {
     return userTrips
-      ?.find(trip => trip.tripId === tripId)
+      ?.find(trip => trip._id === tripId)
       ?.tripAiResp.dayPlans.find(dayPlan => dayPlan.schedule.find(activity => activity.placeNumberID === activityId))
       ?.schedule.find(activity => activity.placeNumberID === activityId);
   };
 
   const getTripById = (tripId: string) => {
-    return userTrips?.find(trip => trip.tripId === tripId);
+    return userTrips?.find(trip => trip._id === tripId);
   };
 
   return {

@@ -25,7 +25,7 @@ export const useMyTripsPageLogic = () => {
     days,
     budget,
     travelers,
-    tripId: lastCreatedTrip?.tripId ?? '',
+    tripId: lastCreatedTrip?._id ?? '',
     tripStartDate: lastCreatedTrip?.tripAiResp.tripDetails.startDate ?? '',
     totalTrips,
   };

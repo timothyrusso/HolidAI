@@ -124,7 +124,7 @@ export const useTripDetailsPageLogic = () => {
     transportationNotes,
     tripDetails,
     weather,
-    id: trip?.tripId ?? '',
+    id: trip?._id ?? '',
     imageUrl,
     food,
   };

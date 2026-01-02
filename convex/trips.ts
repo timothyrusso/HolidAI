@@ -14,21 +14,18 @@ export const getAllTripsbyUserId = query({
 
 export const createTrip = mutation({
   args: {
-    tripId: v.string(),
     userId: v.string(),
     tripAiResp: TripAiResp,
     isFavorite: v.boolean(),
     createdAt: v.string(),
   },
   handler: async (ctx, args) => {
-    const tripId = await ctx.db.insert(dbKeys.trips, {
-      tripId: args.tripId,
+    await ctx.db.insert(dbKeys.trips, {
       userId: args.userId,
       tripAiResp: args.tripAiResp,
       isFavorite: args.isFavorite,
       createdAt: args.createdAt,
     });
-    return tripId;
   },
 });
 
