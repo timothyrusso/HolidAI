@@ -28,9 +28,9 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primaryWhite,
   },
   time: {
-    fontSize: spacing.Double,
+    fontSize: spacing.SingleAndHalf + spacing.Minimal,
     fontFamily: fonts.interMedium,
-    maxWidth: '80%',
+    maxWidth: '90%',
   },
   place: {
     fontSize: spacing.Triple,

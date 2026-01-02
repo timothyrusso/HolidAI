@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
 
   const { data } = useGetUserTripsQuery();
 
@@ -17,7 +18,7 @@ export const useHeaderIconsLogic = () => {
 
   const convexTripsData = useQuery(api.trips.getAllTripsbyUserId, { userId: userId ?? '' });
 
-  const tripToDelete = convexTripsData?.find(trip => trip._id.toString() === (id as string));
+  const tripToDelete = convexTripsData?.find(trip => trip.tripId === id);
 
   const trip = data?.selectTripById(id as string);
 
@@ -40,8 +41,6 @@ export const useHeaderIconsLogic = () => {
     }
     router.back();
   };
-
-  const router = useRouter();
 
   const goBackHandler = () => router.back();
 
