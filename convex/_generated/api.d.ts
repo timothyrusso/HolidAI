@@ -8,8 +8,11 @@
  * @module
  */
 
+import type * as http from "../http.js";
 import type * as trips from "../trips.js";
+import type * as users from "../users.js";
 import type * as validators_Trips from "../validators/Trips.js";
+import type * as validators_Users from "../validators/Users.js";
 
 import type {
   ApiFromModules,
@@ -18,8 +21,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  http: typeof http;
   trips: typeof trips;
+  users: typeof users;
   "validators/Trips": typeof validators_Trips;
+  "validators/Users": typeof validators_Users;
 }>;
 
 /**

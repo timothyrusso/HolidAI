@@ -1,16 +1,17 @@
 import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { Fragment } from 'react';
+import { type FC, Fragment } from 'react';
 import { Pressable, View } from 'react-native';
 import { styles } from './UserDataBox.style';
 
 type UserDataBoxProps = {
   totalTrips: number;
   favoriteTrips: UserTrips[];
+  userTokens: number;
   onPress: () => void;
 };
 
-export const UserDataBox: FC<UserDataBoxProps> = ({ totalTrips, favoriteTrips, onPress }) => {
+export const UserDataBox: FC<UserDataBoxProps> = ({ totalTrips, favoriteTrips, userTokens, onPress }) => {
   return (
     <Pressable
       style={({ pressed }) => [styles.userDataContainer, pressed && styles.pressed]}
@@ -37,7 +38,7 @@ export const UserDataBox: FC<UserDataBoxProps> = ({ totalTrips, favoriteTrips, o
       <View style={styles.userDataItem}>
         <CustomText text="PROFILE.LABEL.REMAINING_TOKENS" style={styles.userDataLabel} />
         <View style={[styles.userDataValueContainer, styles.capStatusContainer]}>
-          <CustomText text={'5'} style={[styles.userDataValue, styles.capStatusText]} />
+          <CustomText text={userTokens?.toString() ?? '0'} style={[styles.userDataValue, styles.capStatusText]} />
         </View>
       </View>
     </Pressable>

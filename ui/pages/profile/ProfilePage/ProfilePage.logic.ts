@@ -3,6 +3,7 @@ import { logger } from '@/di/resolve';
 import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { components } from '@/ui/constants/style/dimensions/components';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
+import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { thumbs } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
@@ -23,6 +24,10 @@ export const useProfilePageLogic = () => {
   const [isDeleteAccountLoading, setIsDeleteAccountLoading] = useState<boolean>(false);
 
   const deleteUserTrips = useMutation(api.trips.deleteAllTripsByUserId);
+
+  const { getUserTokens } = useGetUserStatus();
+
+  const userTokens = getUserTokens();
 
   const logout = async () => {
     setIsLogoutLoading(true);
@@ -80,5 +85,6 @@ export const useProfilePageLogic = () => {
     goToShowAllTrips,
     isLogoutLoading,
     isDeleteAccountLoading,
+    userTokens,
   };
 };

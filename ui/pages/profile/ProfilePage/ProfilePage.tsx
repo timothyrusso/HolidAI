@@ -26,6 +26,7 @@ export const ProfilePage = () => {
     goToShowAllTrips,
     isDeleteAccountLoading,
     isLogoutLoading,
+    userTokens,
   } = useProfilePageLogic();
 
   return (
@@ -43,7 +44,12 @@ export const ProfilePage = () => {
             <BaseSkeleton style={styles.skeleton} />
           </View>
         ) : (
-          <UserDataBox totalTrips={totalTrips} favoriteTrips={favoriteTrips} onPress={goToShowAllTrips} />
+          <UserDataBox
+            totalTrips={totalTrips}
+            favoriteTrips={favoriteTrips}
+            userTokens={userTokens}
+            onPress={goToShowAllTrips}
+          />
         )}
         <View style={styles.settingsContainer}>
           <ButtonsContainer

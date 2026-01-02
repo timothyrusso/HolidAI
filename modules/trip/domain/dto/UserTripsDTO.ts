@@ -65,5 +65,5 @@ export interface UserTrips {
   _id: Id<'trips'>;
   tripAiResp: TripAiResp;
   isFavorite: boolean;
-  _creationTime: string;
+  _creationTime: number;
 }
