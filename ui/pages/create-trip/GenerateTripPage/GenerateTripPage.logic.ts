@@ -59,7 +59,6 @@ export const useGenerateTripPageLogic = () => {
         userId: userId || 'unknown_user',
         tripAiResp: output,
         isFavorite: false,
-        createdAt: new Date().toISOString(),
       });
 
       router.push(`/${Routes.MyTrips}`);

@@ -26,8 +26,8 @@ export const useGetUserTrips = () => {
 
   const getLastCreatedTrip = () => {
     return userTrips?.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      const dateA = new Date(a._creationTime);
+      const dateB = new Date(b._creationTime);
 
       return dateB.getTime() - dateA.getTime();
     })[0];
