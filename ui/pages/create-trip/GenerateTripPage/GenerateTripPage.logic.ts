@@ -1,15 +1,17 @@
-import { chatSession } from '@/configs/ai/geminiConfig';
 // FIXME: react-native-get-random-values must be imported before nanoid
 import { ai_prompt } from '@/configs/ai/prompt';
 import { db } from '@/configs/firebaseConfig';
 import { logger } from '@/di/resolve';
 
+import { AiModels } from '@/configs/ai/AiModels';
 import { api } from '@/convex/_generated/api';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
+import { generatedTripSchema } from '@/modules/trip/domain/entities/GenerateTripSchema';
 import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useToast } from '@/ui/hooks/useToast';
+import { useVercelAi } from '@/ui/hooks/useVercelAi';
 import { tripsKeys } from '@/ui/queries/trips/TripsKeys';
 import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
@@ -29,6 +31,8 @@ export const useGenerateTripPageLogic = () => {
   const userId = user?.id;
   const { locale } = useLocale();
   const { showToast } = useToast();
+
+  const { generateAiObject } = useVercelAi();
 
   const queryClient = useQueryClient();
 
@@ -51,15 +55,20 @@ export const useGenerateTripPageLogic = () => {
     setIsLoading(true);
 
     try {
-      const resultPrompt = await chatSession.sendMessage(PROMPT);
-      const responseText = (await resultPrompt.response.text()).replace('```json', '').replace('```', '');
+      const output = await generateAiObject<typeof generatedTripSchema>(
+        PROMPT,
+        generatedTripSchema,
+        AiModels.GEMINI_2_0_FLASH,
+      );
+
+      if (!output) {
+        throw new Error('Failed to generate trip plan');
+      }
 
       const docId = nanoid();
 
-      const tripAiResp = JSON.parse(responseText);
-
       await setDoc(doc(db, `${dbKeys.userTrips}/${userId}/trips`, docId), {
-        tripAiResp,
+        tripAiResp: output,
         isFavorite: false,
         createdAt: new Date().toISOString(),
         docId,
@@ -68,7 +77,7 @@ export const useGenerateTripPageLogic = () => {
       await addTripToDb({
         tripId: docId,
         userId: userId || 'unknown_user',
-        tripAiResp,
+        tripAiResp: output,
         isFavorite: false,
         createdAt: new Date().toISOString(),
       });

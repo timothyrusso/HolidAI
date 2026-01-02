@@ -1,8 +1,7 @@
-import { logger } from '@/di/resolve';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { generateObject } from 'ai';
+import { Output, generateText } from 'ai';
 import Constants from 'expo-constants';
-import type { ZodSchema, z } from 'zod';
+import type { ZodType, z } from 'zod';
 
 export const useVercelAi = () => {
   const apiKey = Constants.expoConfig?.extra?.googleGeminiApiKey;
@@ -11,20 +10,28 @@ export const useVercelAi = () => {
     apiKey: apiKey,
   });
 
-  const generateAiObject = async <T extends ZodSchema>(
+  const generateAiObject = async <T extends ZodType>(
     prompt: string,
     schema: T,
     model: string,
-  ): Promise<z.infer<T>> => {
+  ): Promise<z.infer<T> | undefined> => {
     try {
-      return await generateObject({
+      const { output } = await generateText({
         model: google(model),
-        schema: schema,
+        output: Output.object({
+          schema: schema,
+        }),
+        tools: {
+          google_search: google.tools.googleSearch({}),
+        },
         prompt: prompt,
       });
+
+      return output as z.infer<T>;
     } catch (error) {
-      logger.error(error as Error);
-      return null;
+      // biome-ignore lint/suspicious/noConsole: <Needed for error logging>
+      console.error('Error generating AI object: ', error);
+      return undefined;
     }
   };
 

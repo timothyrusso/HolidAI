@@ -12,7 +12,7 @@ export const useGenerateAiUserTripQuery = (prompt: string) => {
 
   const { data, isLoading } = useQuery({
     queryKey: [tripsKeys.generateAiUserTrip],
-    queryFn: () => generateAiObject(prompt, generatedTripSchema, AiModels.GEMINI_2_0_FLASH),
+    queryFn: () => generateAiObject<typeof generatedTripSchema>(prompt, generatedTripSchema, AiModels.GEMINI_2_0_FLASH),
     enabled: !!user,
     staleTime: QueryOptionKeys.STALE_TIME,
     gcTime: QueryOptionKeys.GC_TIME,

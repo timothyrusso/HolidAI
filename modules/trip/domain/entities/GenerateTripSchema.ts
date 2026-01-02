@@ -4,10 +4,10 @@ import type { TripAiResp } from '../dto/UserTripsDTO';
 export const generatedTripSchema = z.object({
   tripDetails: z.object({
     location: z.string(),
+    budget: z.string(),
+    travelers: z.number(),
     durationDays: z.number(),
     durationNights: z.number(),
-    travelers: z.number(),
-    budget: z.string(),
     startDate: z.string(),
     endDate: z.string(),
     locale: z.string(),
@@ -18,9 +18,14 @@ export const generatedTripSchema = z.object({
       theme: z.string(),
       schedule: z.array(
         z.object({
-          placeNumberID: z.number(),
-          activity: z.string(),
-          placeName: z.string(),
+          placeNumberID: z
+            .number()
+            .describe(
+              'A unique identifier for the place in the schedule. The identifier must be unique across all days in the schedule, including past days.',
+            ),
+          bestTimeToVisit: z.string(),
+          rating: z.number(),
+          ticketPricing: z.string().describe('Price of the ticket, can be a number or text like "Free" or "Varies"'),
           placeDetails: z.string(),
           placeDetailsLongDescription: z.string(),
           placeSecretsAndInsights: z.string(),
@@ -28,9 +33,8 @@ export const generatedTripSchema = z.object({
             latitude: z.number(),
             longitude: z.number(),
           }),
-          rating: z.number(),
-          ticketPricing: z.string().describe('Price of the ticket, can be a number or text like "Free" or "Varies"'),
-          bestTimeToVisit: z.string(),
+          placeName: z.string(),
+          activity: z.string().describe('Should include the name of the place'),
         }),
       ),
     }),
