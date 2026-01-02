@@ -13,7 +13,7 @@ export const TripCard = ({ item }: { item: UserTrips }) => {
 
   return (
     <Pressable style={({ pressed }) => [styles.container, pressed ? styles.pressed : {}]} onPress={onCardPress}>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+      <Image source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl} style={styles.image} />
       <View style={styles.iconContainer}>
         <CustomIcon
           name={isFavorite ? icons.heartOutline : icons.hearth}

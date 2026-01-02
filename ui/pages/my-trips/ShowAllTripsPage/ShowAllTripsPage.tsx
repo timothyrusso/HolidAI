@@ -21,7 +21,7 @@ export const ShowAllTripsPage = () => {
       <FlatList<UserTrips | UniqueItem>
         data={userTrips}
         renderItem={({ item }) => renderItem(item)}
-        keyExtractor={item => ('docId' in item ? item.docId : item.uuid)}
+        keyExtractor={item => ('_id' in item ? item._id : item.uuid)}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         style={styles.container}

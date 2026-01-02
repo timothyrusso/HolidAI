@@ -62,9 +62,7 @@ export const TripAiResp = v.object({
 });
 
 export const Trips = v.object({
-  tripId: v.string(),
   userId: v.string(),
   tripAiResp: TripAiResp,
   isFavorite: v.boolean(),
-  createdAt: v.string(),
 });

@@ -19,7 +19,7 @@ const MyTripsPage = () => {
       ) : lastCreatedTrip ? (
         <View style={styles.container}>
           {totalTrips > 0 && <HomeCustomHeader />}
-          <Image source={{ uri: image }} style={styles.image} />
+          <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
           <DetailsBox
             location={location}
             days={days}

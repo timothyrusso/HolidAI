@@ -1,7 +1,7 @@
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import type { TripDetails } from '@/modules/trip/domain/dto/UserTripsDTO';
 import { useLocale } from '@/ui/hooks/useLocale';
-import { useGetUserTripsQuery } from '@/ui/queries/trips/query/useGetUserTripsQuery';
+import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
@@ -22,9 +22,9 @@ export const useTripDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const { locale } = useLocale();
 
-  const { data } = useGetUserTripsQuery();
+  const { getTripById } = useGetUserTrips();
 
-  const trip = data?.selectTripById(id as string);
+  const trip = getTripById(id as string);
 
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
@@ -124,7 +124,7 @@ export const useTripDetailsPageLogic = () => {
     transportationNotes,
     tripDetails,
     weather,
-    id: trip?.docId ?? '',
+    id: trip?._id ?? '',
     imageUrl,
     food,
   };
