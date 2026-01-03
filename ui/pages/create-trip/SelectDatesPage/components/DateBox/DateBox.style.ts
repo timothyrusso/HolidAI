@@ -56,4 +56,11 @@ export const style = StyleSheet.create({
   icon: {
     transform: [{ rotate: '-45deg' }],
   },
+  removeDateButton: {
+    position: 'absolute',
+    left: -spacing.TripleAndHalf,
+    top: -spacing.TripleAndHalf,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

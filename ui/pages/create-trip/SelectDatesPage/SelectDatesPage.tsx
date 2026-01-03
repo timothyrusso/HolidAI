@@ -18,6 +18,8 @@ const SelectDatesPage = () => {
     numberOfDays,
     startDateLabel,
     endDateLabel,
+    removeDates,
+    calendarKey,
   } = useSelectDatesPageLogic();
 
   return (
@@ -40,9 +42,10 @@ const SelectDatesPage = () => {
             selectedDayTextStyle={style.calendarDayText}
             onDateChange={handleDateChange}
             selectedRangeStartStyle={numberOfDays !== 1 ? style.rangeSelection : null}
+            key={calendarKey}
           />
         </View>
-        {startDateLabel && <DateBox startDateLabel={startDateLabel} endDateLabel={endDateLabel} />}
+        {startDateLabel && <DateBox startDateLabel={startDateLabel} endDateLabel={endDateLabel} action={removeDates} />}
       </CustomScrollView>
     </BasicView>
   );
