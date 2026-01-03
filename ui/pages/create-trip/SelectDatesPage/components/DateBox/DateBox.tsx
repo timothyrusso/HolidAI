@@ -1,4 +1,6 @@
+import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/constants/style/colors';
 import { spacing } from '@/ui/constants/style/dimensions/spacing';
@@ -10,9 +12,10 @@ import { style } from './DateBox.style';
 type DateBoxProps = {
   startDateLabel: string;
   endDateLabel: string;
+  action: () => void;
 };
 
-export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel }) => {
+export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel, action }) => {
   return (
     <View style={style.dateLabelContainer}>
       <View style={style.rowLabelContainer}>
@@ -33,6 +36,17 @@ export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel }) => {
         <View style={style.singleDayLabelContainer}>
           <CustomText text="SELECT_DATES.SINGLE_DAY" style={style.singleDayLabel} />
         </View>
+      )}
+      {startDateLabel && (
+        <CustomIconButtonMedium
+          iconName={icons.close}
+          buttonType={ButtonType.Secondary}
+          iconSize={spacing.Fourfold}
+          style={style.removeDateButton}
+          onPress={() => {
+            action();
+          }}
+        />
       )}
     </View>
   );

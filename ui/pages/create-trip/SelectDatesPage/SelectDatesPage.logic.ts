@@ -11,6 +11,8 @@ import { useState } from 'react';
 export const useSelectDatesPageLogic = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [calendarKey, setCalendarKey] = useState<number>(0); // To force re-render of CalendarPicker
+
   const { tripActions } = useTripState();
   const router = useRouter();
   const todayInLocalTimezone = getTodayInLocalTimezoneUseCase;
@@ -45,6 +47,12 @@ export const useSelectDatesPageLogic = () => {
   const startDateLabel = `${translateDate(locale, startDate)}`;
   const endDateLabel = `${translateDate(locale, endDate)}`;
 
+  const removeDates = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setCalendarKey(prev => prev + 1);
+  };
+
   return {
     handleDateChange,
     handleButtonPress,
@@ -53,5 +61,7 @@ export const useSelectDatesPageLogic = () => {
     numberOfDays: calculateDifferenceInDays(),
     startDateLabel,
     endDateLabel,
+    removeDates,
+    calendarKey,
   };
 };
