@@ -13,7 +13,7 @@ export const useBasicViewLogic = ({
   isMenuVisible = false,
   bottomButtonTitle,
   bottomButtonPress,
-  hasHeader = true,
+  hasHeader,
 }: BasicViewProps) => {
   logger.debug('+++++++++++++++ Render view:', nameView, ' +++++++++++++++');
 

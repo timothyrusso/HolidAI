@@ -36,11 +36,12 @@ export const BasicView = (props: PropsWithChildren<BasicViewProps>) => {
     bottomGradientColor,
     isFullScreen = false,
     statusBarStyle = 'light',
+    hasHeader = true,
   } = props;
 
   const { componentStyle } = useBasicViewLogic(props);
 
-  const Container = isFullScreen ? View : SafeAreaView;
+  const Container = isFullScreen || hasHeader ? View : SafeAreaView;
 
   return (
     <Container style={[componentStyle.containerViewStyle, componentStyle.basicContainer, containerStyle]}>
