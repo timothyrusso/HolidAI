@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
-import { SafeAreaView, View } from 'react-native';
+import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -36,11 +36,12 @@ export const BasicView = (props: PropsWithChildren<BasicViewProps>) => {
     bottomGradientColor,
     isFullScreen = false,
     statusBarStyle = 'light',
+    hasHeader = true,
   } = props;
 
   const { componentStyle } = useBasicViewLogic(props);
 
-  const Container = isFullScreen ? View : SafeAreaView;
+  const Container = isFullScreen || hasHeader ? View : SafeAreaView;
 
   return (
     <Container style={[componentStyle.containerViewStyle, componentStyle.basicContainer, containerStyle]}>
