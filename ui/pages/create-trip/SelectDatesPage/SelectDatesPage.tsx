@@ -20,6 +20,7 @@ const SelectDatesPage = () => {
     endDateLabel,
     removeDates,
     calendarKey,
+    userTokens,
   } = useSelectDatesPageLogic();
 
   return (
@@ -37,6 +38,7 @@ const SelectDatesPage = () => {
           <CalendarPicker
             allowRangeSelection
             minDate={todayInLocalTimezone}
+            maxRangeDuration={userTokens - 1}
             textStyle={style.calendarText}
             selectedDayColor={colors.primaryBlack}
             selectedDayTextStyle={style.calendarDayText}

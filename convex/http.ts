@@ -1,4 +1,3 @@
-import { logger } from '@/di/resolve';
 import { httpRouter } from 'convex/server';
 import { internal } from './_generated/api';
 import { httpAction } from './_generated/server';
@@ -16,7 +15,8 @@ export const handleClerkWebHook = httpAction(async (ctx, request) => {
       await ctx.runMutation(internal.users.deleteFromClerk, { clerkId: data.id });
       break;
     default:
-      logger.error(new Error('Unhandled event type:'), type);
+      // biome-ignore lint/suspicious/noConsole: <No logger available here>
+      console.error(new Error('Unhandled event type:'), type);
   }
 
   return new Response(null, { status: 200 });

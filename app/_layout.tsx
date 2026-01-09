@@ -1,3 +1,10 @@
+// Polyfill for window.addEventListener untile official Convex fix is released
+// Reference: https://github.com/get-convex/convex-backend/issues/304
+if (typeof window !== 'undefined' && !window.addEventListener) {
+  window.addEventListener = () => {};
+  window.removeEventListener = () => {};
+}
+
 import { queryClient } from '@/di/resolve';
 import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
 import { Stacks } from '@/ui/constants/navigation/routes';
@@ -42,6 +49,10 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>

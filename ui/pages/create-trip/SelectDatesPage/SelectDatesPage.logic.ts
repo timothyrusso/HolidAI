@@ -3,6 +3,7 @@ import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getT
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { Routes, Stacks } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
+import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
 import { useTripState } from '@/ui/state/trip';
 import { differenceInDays } from 'date-fns';
 import { useRouter } from 'expo-router';
@@ -44,6 +45,10 @@ export const useSelectDatesPageLogic = () => {
 
   const { locale } = useLocale();
 
+  const { getUserTokens } = useGetUserStatus();
+
+  const userTokens = getUserTokens();
+
   const startDateLabel = `${translateDate(locale, startDate)}`;
   const endDateLabel = `${translateDate(locale, endDate)}`;
 
@@ -63,5 +68,6 @@ export const useSelectDatesPageLogic = () => {
     endDateLabel,
     removeDates,
     calendarKey,
+    userTokens,
   };
 };
