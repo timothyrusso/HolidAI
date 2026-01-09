@@ -1,7 +1,8 @@
-import { logger } from '@/di/resolve';
-import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
 import { v } from 'convex/values';
-import { type QueryCtx, internalMutation, query } from './_generated/server';
+import { dbKeys } from '../modules/trip/domain/entities/DbKeys';
+import { type QueryCtx, internalMutation, mutation, query } from './_generated/server';
+
+const DEFAULT_TOKENS = 10;
 
 async function userByExternalId(ctx: QueryCtx, externalId: string) {
   return await ctx.db
@@ -31,7 +32,8 @@ export const deleteFromClerk = internalMutation({
     if (user !== null) {
       await ctx.db.delete(user._id);
     } else {
-      logger.error(new Error(`Can't delete user, there is none for Clerk user ID: ${clerkId}`));
+      // biome-ignore lint/suspicious/noConsole: <No logger available here>
+      console.error(new Error(`Can't delete user, there is none for Clerk user ID: ${clerkId}`));
     }
   },
 });
@@ -46,5 +48,36 @@ export const getUserTokens = query({
     }
 
     return user.tokens;
+  },
+});
+
+export const decrementUserTokens = mutation({
+  args: { clerkId: v.string(), amount: v.number() },
+  handler: async (ctx, args) => {
+    const user = await userByExternalId(ctx, args.clerkId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const newTokens = user.tokens - args.amount;
+
+    if (newTokens < 0) {
+      throw new Error('Insufficient tokens');
+    }
+
+    await ctx.db.patch(user._id, { tokens: newTokens });
+
+    return newTokens;
+  },
+});
+
+export const resetAllUserTokens = internalMutation({
+  args: {},
+  handler: async ctx => {
+    const users = await ctx.db.query(dbKeys.users).collect();
+    for (const user of users) {
+      await ctx.db.patch(user._id, { tokens: DEFAULT_TOKENS });
+    }
   },
 });

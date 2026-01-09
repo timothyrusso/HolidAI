@@ -9,6 +9,7 @@ import { Routes } from '@/ui/constants/navigation/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useToast } from '@/ui/hooks/useToast';
 import { useVercelAi } from '@/ui/hooks/useVercelAi';
+import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
 import { useTripState } from '@/ui/state/trip';
 import { useUser } from '@clerk/clerk-expo';
 import { useMutation } from 'convex/react';
@@ -24,19 +25,23 @@ export const useGenerateTripPageLogic = () => {
   const { locale } = useLocale();
   const { showToast } = useToast();
 
+  const { decrementTokens } = useGetUserStatus();
+
   const { generateAiObject } = useVercelAi();
 
   const addTripToDb = useMutation(api.trips.createTrip);
 
+  const totalNoOfDays = tripSelectors.datesInfo().totalNoOfDays;
+
   const PROMPT = ai_prompt
     .replace('{location}', tripSelectors.locationInfo().name)
-    .replace('{days}', tripSelectors.datesInfo().totalNoOfDays.toString())
-    .replace('{nights}', (tripSelectors.datesInfo().totalNoOfDays - 1).toString())
+    .replace('{days}', totalNoOfDays.toString())
+    .replace('{nights}', (totalNoOfDays - 1).toString())
     .replace('{travelersNumber}', tripSelectors.travelersNumber().toString())
     .replace('{travelersType}', tripSelectors.travelerType())
     .replace('{budget}', tripSelectors.budgetInfo)
-    .replace('{days}', tripSelectors.datesInfo().totalNoOfDays.toString())
-    .replace('{nights}', (tripSelectors.datesInfo().totalNoOfDays - 1).toString())
+    .replace('{days}', totalNoOfDays.toString())
+    .replace('{nights}', (totalNoOfDays - 1).toString())
     .replace('{startDate}', translateDate(locale, tripSelectors.datesInfo().startDate))
     .replace('{endDate}', translateDate(locale, tripSelectors.datesInfo().endDate))
     .replace('{locale}', locale);
@@ -60,6 +65,8 @@ export const useGenerateTripPageLogic = () => {
         tripAiResp: output,
         isFavorite: false,
       });
+
+      decrementTokens(totalNoOfDays);
 
       router.push(`/${Routes.MyTrips}`);
     } catch (error) {
