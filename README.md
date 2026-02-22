@@ -45,12 +45,12 @@ The model processes user inputs through a carefully designed prompt engineering 
 
 <table>
    <tr>
-      <td><strong>Home Page</strong><br><img src="wiki/images/home_page.jpeg" alt="Home Page"></td>
-      <td><strong>All Trips Page</strong><br><img src="wiki/images/all_trips_page.jpeg" alt="Trip Detail Page"></td>
+      <td><strong>Home Page</strong><br><img src="wiki/images/home_page.png" alt="Home Page"></td>
+      <td><strong>All Trips Page</strong><br><img src="wiki/images/trip_list_page.png" alt="Trip Detail Page"></td>
    </tr>
    <tr>
-      <td><strong>Profile Page</strong><br><img src="wiki/images/profile_page.jpeg" alt="Home Page"></td>
-      <td><strong>Trip Detail Page</strong><br><img src="wiki/images/trip_detail_page.jpeg" alt="Trip Detail Page"></td>
+      <td><strong>Profile Page</strong><br><img src="wiki/images/profile_page.png" alt="Home Page"></td>
+      <td><strong>Trip Detail Page</strong><br><img src="wiki/images/trip_page.png" alt="Trip Detail Page"></td>
    </tr>
 </table>
 
