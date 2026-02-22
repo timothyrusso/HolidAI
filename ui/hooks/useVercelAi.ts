@@ -1,14 +1,10 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { Output, generateText } from 'ai';
-import Constants from 'expo-constants';
 import type { ZodType, z } from 'zod';
 
-export const useVercelAi = () => {
-  const apiKey = Constants.expoConfig?.extra?.googleGeminiApiKey;
+import { aiClient } from '@/di/resolve';
 
-  const google = createGoogleGenerativeAI({
-    apiKey: apiKey,
-  });
+export const useVercelAi = () => {
+  const { provider: google } = aiClient;
 
   const generateAiObject = async <T extends ZodType>(
     prompt: string,
@@ -37,11 +33,11 @@ export const useVercelAi = () => {
         }),
 
         prompt: `
-          You are a data extraction assistant. 
+          You are a data extraction assistant.
           Use the following context provided from a Google Search to populate the requested data structure.
-          
+
           User Query: ${prompt}
-          
+
           Search Context:
           ${searchResult.text}
         `,
