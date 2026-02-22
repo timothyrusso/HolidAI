@@ -1,17 +1,21 @@
 import { useTripState } from '@/ui/state/trip';
 import { useState } from 'react';
 
-export const useTravelersNumberSliderLogic = () => {
+const TRAVELERS_NUMBER_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+export const useTravelersNumberSelectorLogic = () => {
   const { tripActions } = useTripState();
+
   const [travelersNumber, setTravelersNumber] = useState<number>(1);
 
-  const handleSliderChange = (value: number) => {
+  const handleCardPress = (value: number) => {
     setTravelersNumber(value);
     tripActions.setTravelersNumber(value);
   };
 
-  const MIN_SLIDER_VALUE = 1;
-  const MAX_SLIDER_VALUE = 10;
-
-  return { travelersNumber, handleSliderChange, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE };
+  return {
+    handleCardPress,
+    travelersNumber,
+    data: TRAVELERS_NUMBER_OPTIONS,
+  };
 };
