@@ -8,7 +8,7 @@ export const style = StyleSheet.create({
     fontSize: spacing.Triple,
     fontFamily: fonts.interMedium,
     alignSelf: 'flex-start',
-    paddingHorizontal: spacing.Fourfold,
+    paddingHorizontal: spacing.FourfoldAndHalf,
   },
   separator: {
     height: spacing.TripleAndHalf,

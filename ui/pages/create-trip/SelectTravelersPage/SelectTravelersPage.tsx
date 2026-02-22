@@ -8,7 +8,7 @@ import { colors } from '@/ui/constants/style/colors';
 import { FlatList, View } from 'react-native';
 import { useSelectTravelersPageLogic } from './SelectTravelersPage.logic';
 import { style } from './SelectTravelersPage.style';
-import { TravelersNumberSlider } from './components/TravelersNumberSlider/TravelersNumberSlider';
+import { TravelersNumberSelector } from './components/TravelersNumberSelector/TravelersNumberSelector';
 
 const separatorItem = () => <View style={style.separator} />;
 
@@ -35,8 +35,8 @@ const SelectTravelersPage = () => {
       bottomButtonTitle="SELECT_DATES.TITLE"
       bottomButtonPress={handleButtonPress}
     >
-      <CustomText text="SELECT_TRAVELERS.DESCRIPTION" style={style.subtitle} />
-      <TravelersNumberSlider />
+      <CustomText text="SELECT_TRAVELERS.TRAVELERS_NUMBER" style={style.subtitle} />
+      <TravelersNumberSelector />
       <FlatList
         data={TravelerData}
         numColumns={2}
