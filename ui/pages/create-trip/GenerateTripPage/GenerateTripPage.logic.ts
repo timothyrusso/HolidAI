@@ -53,7 +53,7 @@ export const useGenerateTripPageLogic = () => {
       const output = await generateAiObject<typeof generatedTripSchema>(
         PROMPT,
         generatedTripSchema,
-        AiModels.GEMINI_2_0_FLASH,
+        AiModels.GEMINI_2_5_FLASH,
       );
 
       if (!output) {
