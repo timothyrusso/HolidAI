@@ -38,8 +38,6 @@ export class GeminiClient implements IAiClient {
    */
   async generateObject<T extends ZodType>(prompt: string, schema: T, model: string): Promise<z.infer<T> | undefined> {
     try {
-      // STEP 1: Gather Information (Search Enabled, No Schema)
-      // We ask the model to answer the user's prompt using Google Search.
       const searchResult = await generateText({
         model: this.google(model),
         tools: {
@@ -53,8 +51,6 @@ export class GeminiClient implements IAiClient {
 
       if (!searchResult.text) throw new Error('No search results found for the query.');
 
-      // STEP 2: Structure Data (Schema Enabled, No Search)
-      // We feed the search results into a second call specifically for formatting.
       const { output } = await generateText({
         model: this.google(model),
         output: Output.object({
