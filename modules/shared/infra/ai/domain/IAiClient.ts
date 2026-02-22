@@ -1,5 +1,5 @@
-import type { GoogleGenerativeAIProvider } from '@ai-sdk/google';
+import type { ZodType, z } from 'zod';
 
 export interface IAiClient {
-  readonly provider: GoogleGenerativeAIProvider;
+  generateObject<T extends ZodType>(prompt: string, schema: T, model: string): Promise<z.infer<T> | undefined>;
 }

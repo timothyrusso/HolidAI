@@ -89,12 +89,40 @@ Components in `ui/` follow this pattern:
 
 ### Dependency Injection
 
-The app uses tsyringe for DI. The container is configured in `di/config/index.ts` and dependencies are resolved via `di/resolve/`. Common injected dependencies include:
-- Logger
-- Storage (MMKV with encryption)
-- QueryClient (TanStack Query)
+The app uses tsyringe for DI. The container is configured in `di/config/index.ts` and dependencies are resolved via `di/resolve/`.
 
-Import the container: `import { container } from '@/di/config'`
+#### Registered services
+
+| Token | Class | Pattern |
+|-------|-------|---------|
+| `TYPES.Logger` | `BasicLogger` | singleton |
+| `TYPES.Storage` | `LocalStorage` | singleton |
+| `TYPES.MMKV` | `MMKV` (instance) | instance |
+| `TYPES.QUERY` | `QueryClient` (instance) | instance |
+| `TYPES.AiClient` | `GeminiClient` | singleton |
+
+#### Adding a new injectable service
+
+Follow this checklist in order:
+
+1. **Define the interface** in `modules/<concern>/domain/I<Name>.ts`
+   - Express capability (methods), never concrete SDK types
+   - Consumers must only depend on the interface, never the implementation
+2. **Implement the class** in `modules/<concern>/infra/<Name>.ts`
+   - Decorate with `@singleton()`
+   - Keep all third-party/SDK-specific code private inside this class
+3. **Add a token** in `di/types/infra/<concern>.ts` and re-export from `di/types/infra/index.ts`
+4. **Register** in `di/config/infra/<concern>.ts` using `container.registerSingleton(TYPES.X, XClass)` and re-export from `di/config/infra/index.ts`
+5. **Resolve** in `di/resolve/infra/<concern>.ts` via `container.resolve(TYPES.X)` and re-export from `di/resolve/infra/index.ts`
+6. **Consume** by importing the resolved instance from `@/di/resolve` — never construct the class directly
+
+#### Key rules
+
+- **Interfaces express capability, not provider.** Never expose a third-party type (e.g. a vendor SDK object) on an interface. The interface should only contain the methods the rest of the app needs. Example: `IAiClient` has `generateObject(...)`, not `provider: GoogleGenerativeAIProvider`.
+- **Implementation details stay private.** All vendor-specific logic (SDK calls, API keys, tool configurations) lives inside the implementing class as private members.
+- **Consumers are provider-agnostic.** Hooks, use cases, and components import from `@/di/resolve` and call interface methods. Swapping a provider = write a new class implementing the interface; nothing else changes.
+- **One instance for the app lifetime.** Use `@singleton()` so the client and its configuration (API keys, HTTP connections) are created once at startup.
+- **Don't use `async` on a function that only returns a Promise.** If a function just returns `someService.method()` which itself returns a Promise, omit `async` to avoid the Biome `useAwait` lint error.
 
 ### AI Integration
 
