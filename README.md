@@ -9,7 +9,7 @@ A smart travel planning assistant that leverages Google Gemini AI to create pers
 
 ## AI Model
 
-HolidAI is powered by Google's Gemini 2.0 Flash model, a state-of-the-art large language model specifically optimized for fast, efficient responses while maintaining high-quality outputs. The model is particularly well-suited for travel planning tasks due to its:
+HolidAI is powered by Google's Gemini 2.5 Flash model, a state-of-the-art large language model specifically optimized for fast, efficient responses while maintaining high-quality outputs. The model is particularly well-suited for travel planning tasks due to its:
 
 - **Speed**: The "Flash" variant is optimized for rapid response generation, ensuring quick itinerary creation
 - **Context Understanding**: Advanced natural language processing capabilities to understand complex travel requirements
@@ -30,7 +30,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 ## Tech Stack
 
 - **Frontend**: React Native with Expo
-- **AI Integration**: Google Gemini 2.0 Flash with Vercel AI SDK
+- **AI Integration**: Google Gemini 2.5 Flash with Vercel AI SDK
 - **Maps**: Google Maps API and Apple Maps
 - **Authentication**: Clerk Authentication
 - **Database**: Convex
@@ -45,12 +45,12 @@ The model processes user inputs through a carefully designed prompt engineering 
 
 <table>
    <tr>
-      <td><strong>Home Page</strong><br><img src="wiki/images/home_page.jpeg" alt="Home Page"></td>
-      <td><strong>All Trips Page</strong><br><img src="wiki/images/all_trips_page.jpeg" alt="Trip Detail Page"></td>
+      <td><strong>Home Page</strong><br><img src="wiki/images/home_page.png" alt="Home Page"></td>
+      <td><strong>All Trips Page</strong><br><img src="wiki/images/trip_list_page.png" alt="Trip Detail Page"></td>
    </tr>
    <tr>
-      <td><strong>Profile Page</strong><br><img src="wiki/images/profile_page.jpeg" alt="Home Page"></td>
-      <td><strong>Trip Detail Page</strong><br><img src="wiki/images/trip_detail_page.jpeg" alt="Trip Detail Page"></td>
+      <td><strong>Profile Page</strong><br><img src="wiki/images/profile_page.png" alt="Home Page"></td>
+      <td><strong>Trip Detail Page</strong><br><img src="wiki/images/trip_page.png" alt="Trip Detail Page"></td>
    </tr>
 </table>
 
