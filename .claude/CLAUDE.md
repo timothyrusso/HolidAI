@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-HolidAI is a React Native mobile app that generates personalized travel itineraries using Google Gemini 2.0 Flash AI. Built with Expo, it runs on iOS and Android, featuring trip planning, maps integration, authentication, and trip management.
+HolidAI is a React Native mobile app that generates personalized travel itineraries using Google Gemini 2.5 Flash AI. Built with Expo, it runs on iOS and Android, featuring trip planning, maps integration, authentication, and trip management.
 
 ## Development Commands
 
@@ -66,7 +66,7 @@ npm run web                    # Run on web
 - **State Management**: Zustand (client), TanStack Query (server/cache)
 - **Backend**: Convex (serverless)
 - **Authentication**: Clerk
-- **AI**: Google Gemini 2.0 Flash via Vercel AI SDK
+- **AI**: Google Gemini 2.5 Flash via Vercel AI SDK
 - **Maps**: Google Maps (react-native-maps)
 - **DI Container**: tsyringe with reflect-metadata
 - **Linting**: Biome
@@ -126,8 +126,8 @@ Follow this checklist in order:
 
 ### AI Integration
 
-Trip generation uses Google Gemini 2.0 Flash configured in `configs/ai/`:
-- Model: `gemini-2.0-flash` (defined in `AiModels.ts`)
+Trip generation uses Google Gemini 2.5 Flash configured in `configs/ai/`:
+- Model: `gemini-2.5-flash` (defined in `AiModels.ts`)
 - Prompt template in `prompt.ts` includes placeholders for location, dates, travelers, budget, etc.
 - AI generates structured JSON responses for trip itineraries
 
