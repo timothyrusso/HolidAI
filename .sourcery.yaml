@@ -1,0 +1,345 @@
+rules:
+  # ── Dependency Injection ──────────────────────────────────────────────────
+
+  - id: DI-001
+    description: >
+      An interface in modules/*/domain/ must only declare capability methods.
+      Never expose a third-party or SDK-specific type as a public field or return type.
+      Example: GoogleGenerativeAIProvider must not appear on an interface.
+    paths:
+      include:
+        - modules/**/domain/*.ts
+    tags:
+      - di
+      - architecture
+
+  - id: DI-002
+    description: >
+      All third-party imports, API keys, SDK configuration, and tool setup belong
+      inside the infra/ class as private readonly fields. Consumers must never see
+      or import these details.
+    paths:
+      include:
+        - modules/**/infra/*.ts
+    tags:
+      - di
+      - architecture
+
+  - id: DI-003
+    description: >
+      Every class registered in the DI container must carry the @singleton()
+      decorator from tsyringe. This guarantees one instance for the app lifetime.
+    paths:
+      include:
+        - modules/**/infra/*.ts
+    tags:
+      - di
+
+  - id: DI-004
+    description: >
+      Adding a new injectable service requires all five layers in order: interface
+      in modules/<concern>/domain/, implementation in modules/<concern>/infra/,
+      token in di/types/infra/, registration in di/config/infra/, and resolution
+      in di/resolve/infra/. A PR that adds only some of these layers is incomplete.
+    paths:
+      include:
+        - modules/**/*.ts
+        - di/**/*.ts
+    tags:
+      - di
+      - architecture
+
+  - id: DI-005
+    description: >
+      Hooks, pages, and use cases must obtain services via the resolved singleton
+      from @/di/resolve. Calling new on any injectable class directly is not allowed.
+    pattern: |
+      new ${InjectableClass}()
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - di
+
+  # ── Module Boundaries ─────────────────────────────────────────────────────
+
+  - id: MOD-001
+    description: >
+      Files in app/ are Expo Router route files. They must only render a screen
+      component imported from ui/pages/. Business logic, state, and API calls
+      must not live inside app/ files.
+    paths:
+      include:
+        - app/**/*.tsx
+    tags:
+      - module
+      - architecture
+
+  - id: MOD-002
+    description: >
+      The UI layer in ui/ must only depend on DI-resolved instances from @/di/resolve
+      and domain interfaces from modules/*/domain/. Direct imports of concrete
+      infrastructure classes break the dependency direction and must be flagged.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+    tags:
+      - module
+      - architecture
+
+  - id: MOD-003
+    description: >
+      Files in modules/*/domain/ must never import from modules/*/infra/. The
+      domain layer defines contracts and the infra layer implements them, not the
+      other way around.
+    paths:
+      include:
+        - modules/**/domain/*.ts
+    tags:
+      - module
+      - architecture
+
+  # ── UI Structure ──────────────────────────────────────────────────────────
+
+  - id: UI-001
+    description: >
+      A page component in ui/pages/ that contains non-trivial logic such as state,
+      effects, or API calls must extract that logic into a co-located
+      <PageName>.logic.ts file exporting a use<PageName>Logic hook. The .tsx file
+      renders and the .logic.ts file handles logic.
+    paths:
+      include:
+        - ui/pages/**/*.tsx
+    tags:
+      - ui
+      - architecture
+
+  - id: UI-002
+    description: >
+      Styles must live in a <ComponentName>.style.ts file. Large static data arrays
+      or configuration objects must live in a <ComponentName>.data.ts file. Inline
+      StyleSheet.create calls and large data literals inside .tsx files must be flagged.
+    pattern: |
+      StyleSheet.create(${styles})
+    paths:
+      include:
+        - ui/components/**/*.tsx
+        - ui/pages/**/*.tsx
+    tags:
+      - ui
+
+  - id: UI-003
+    description: >
+      A component that renders a single self-contained element belongs in
+      ui/components/basic/. A component that composes two or more basic components
+      belongs in ui/components/composite/. Adding a composite component to basic/
+      or vice versa must be flagged.
+    paths:
+      include:
+        - ui/components/**/*.tsx
+    tags:
+      - ui
+      - architecture
+
+  - id: UI-004
+    description: >
+      Hard-coded route strings must not appear in PR diffs. All navigation must
+      use the Routes enum from @/ui/constants/navigation/routes.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - ui
+      - navigation
+
+  # ── State Management ──────────────────────────────────────────────────────
+
+  - id: STATE-001
+    description: >
+      Data fetched from Convex or any async source must be managed with a TanStack
+      Query hook in ui/queries/. Local UI state such as selected step, modal
+      visibility, or form drafts belongs in a Zustand store in ui/state/. Storing
+      fetched data manually in Zustand must be flagged.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+    tags:
+      - state
+
+  - id: STATE-002
+    description: >
+      Components and logic hooks must call the wrapper hook such as useTripState()
+      or useAppState(). Direct calls to raw store hooks like useTripStore() outside
+      the wrapper must be flagged.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+    tags:
+      - state
+
+  # ── TypeScript ────────────────────────────────────────────────────────────
+
+  - id: TS-001
+    description: >
+      The use of `any` in new or modified code must be flagged. Use unknown for
+      genuinely unknown values and narrow with type guards, or define a specific
+      Zod schema.
+    pattern: |
+      ${x}: any
+    paths:
+      include:
+        - "**/*.ts"
+        - "**/*.tsx"
+    tags:
+      - typescript
+
+  - id: TS-002
+    description: >
+      Type-only imports must use import type syntax. This is required by the Biome
+      linter and must be enforced in review.
+    paths:
+      include:
+        - "**/*.ts"
+        - "**/*.tsx"
+    tags:
+      - typescript
+
+  - id: TS-003
+    description: >
+      A function that solely returns the result of another async call must not be
+      marked async. Use async/await only when the function itself awaits something,
+      otherwise omit async to avoid the Biome useAwait lint error.
+    paths:
+      include:
+        - "**/*.ts"
+        - "**/*.tsx"
+    tags:
+      - typescript
+
+  # ── AI Integration ────────────────────────────────────────────────────────
+
+  - id: AI-001
+    description: >
+      Hard-coded model strings must never appear in call sites. All references to
+      AI models must use the AiModels enum from @/configs/ai/AiModels.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - ai
+
+  - id: AI-002
+    description: >
+      Free-form prompt strings must not be defined inline in hooks or pages. They
+      belong in configs/ai/prompt.ts with named exports, using {placeholder} tokens
+      for dynamic values.
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - ai
+
+  - id: AI-003
+    description: >
+      Components and logic hooks must call generateAiObject from the useVercelAi
+      hook. Direct calls to aiClient.generateObject or any Vercel AI SDK function
+      outside of GeminiClient must be flagged.
+    pattern: |
+      aiClient.generateObject(${...})
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - ai
+
+  # ── Error Handling ────────────────────────────────────────────────────────
+
+  - id: ERR-001
+    description: >
+      console.error, console.warn, and console.log must not appear in new code
+      except inside infrastructure classes with a biome-ignore comment and a
+      justification. All other logging must use the logger resolved from @/di/resolve.
+    pattern: |
+      console.log(${...})
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+        - modules/**/domain/*.ts
+    tags:
+      - error-handling
+      - logging
+
+  - id: ERR-002
+    description: >
+      New error classes must extend BaseError from
+      modules/shared/infra/error/domain/BaseError.ts and include an ErrorCode.
+      Throwing plain new Error() is acceptable only for unexpected internal guard
+      clauses, not for domain or API errors.
+    pattern: |
+      class ${Name}Error extends Error {
+    paths:
+      include:
+        - modules/**/*.ts
+    tags:
+      - error-handling
+
+  # ── General ───────────────────────────────────────────────────────────────
+
+  - id: GEN-001
+    description: >
+      Imports that cross directory boundaries must use the configured path aliases
+      @/, @configs/, or @ui/. Relative imports with more than one ../ segment
+      must be flagged.
+    pattern: |
+      import ${x} from "../../${path}"
+    paths:
+      include:
+        - "**/*.ts"
+        - "**/*.tsx"
+    tags:
+      - general
+      - imports
+
+  - id: GEN-002
+    description: >
+      Constants.expoConfig?.extra and process.env must only appear inside files
+      in modules/*/infra/ or configs/. Accessing environment variables directly
+      in hooks, pages, or components must be flagged.
+    pattern: |
+      process.env.${VAR}
+    paths:
+      include:
+        - ui/**/*.ts
+        - ui/**/*.tsx
+        - app/**/*.tsx
+    tags:
+      - general
+      - environment
+
+  - id: GEN-003
+    description: >
+      New modules, domain types, and infra classes must be re-exported from the
+      nearest index.ts in their directory. Orphan files with no export path
+      must be flagged.
+    paths:
+      include:
+        - modules/**/*.ts
+        - di/**/*.ts
+    tags:
+      - general
+      - exports
