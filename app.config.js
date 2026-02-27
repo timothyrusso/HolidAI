@@ -1,12 +1,6 @@
 export default ({ config }) => {
   const {
     GOOGLE_PLACES_API_KEY,
-    FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID,
-    FIREBASE_STORAGE_BUCKET,
-    FIREBASE_MESSAGING_SENDER_ID,
-    FIREBASE_APP_ID,
     GOOGLE_MAPS_API_KEY_IOS,
     GOOGLE_MAPS_API_KEY_ANDROID,
     GOOGLE_SERVICES_PLIST,
@@ -27,14 +21,6 @@ export default ({ config }) => {
       ...config.extra,
       googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
       convexUrl: CONVEX_URL,
-      firebaseConfig: {
-        apiKey: FIREBASE_API_KEY,
-        authDomain: FIREBASE_AUTH_DOMAIN,
-        projectId: FIREBASE_PROJECT_ID,
-        storageBucket: FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-        appId: FIREBASE_APP_ID,
-      },
       googleGeminiApiKey: GOOGLE_GEMINI_API_KEY,
       rapidApiKey: RAPID_API_KEY,
       unsplashAccessKey: UNSPLASH_ACCESS_KEY,

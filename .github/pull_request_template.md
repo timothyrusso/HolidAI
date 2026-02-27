@@ -6,14 +6,6 @@ Use "Fixes #<issue_number>" to auto-close the issue on merge.
 -->
 Fixes #
 
-
-## Description
-
-<!--
-Provide a short summary of the changes and the motivation behind them.
-Link related issues if applicable.
--->
-
 ## Changes
 
 - 

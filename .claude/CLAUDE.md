@@ -54,7 +54,6 @@ npm run web                    # Run on web
   - `types/` - TypeScript types for DI tokens
 - **`configs/`** - Application configuration
   - `ai/` - AI model configuration (AiModels.ts, prompt.ts)
-  - `firebaseConfig.ts` - Firebase initialization
 - **`convex/`** - Convex backend (serverless functions, schema, validators)
   - `schema.ts` - Database schema (trips, users tables)
   - `trips.ts` - Server functions for trip operations
@@ -134,7 +133,6 @@ Trip generation uses Google Gemini 2.5 Flash configured in `configs/ai/`:
 ## Environment Variables
 
 Required variables (see `.env.sample`):
-- Firebase config (API_KEY, PROJECT_ID, etc.)
 - Google services (PLACES_API_KEY, MAPS_API_KEY_IOS/ANDROID, GEMINI_API_KEY)
 - Clerk authentication (CLERK_PUBLISHABLE_KEY)
 - Convex backend (CONVEX_URL)
