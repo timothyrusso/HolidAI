@@ -69,7 +69,7 @@ export const DetailsBox: FC<DetailsBoxProps> = ({
         title="MY_TRIP.TRIP_DETAILS"
         onPress={handlePress}
         style={styles.detailsButton}
-        buttonType={ButtonType.Main}
+        buttonType={ButtonType.Secondary}
       />
     </BlurView>
   );

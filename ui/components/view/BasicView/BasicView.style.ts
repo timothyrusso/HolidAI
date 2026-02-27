@@ -11,7 +11,7 @@ export const styles = (paddingTop: number, paddingBottom: number) =>
       width: '100%',
       position: 'absolute',
       alignItems: 'center',
-      paddingHorizontal: spacing.Fourfold,
+      paddingHorizontal: spacing.separator80,
       bottom: spacing.Quintuple,
     },
     gradient: {
