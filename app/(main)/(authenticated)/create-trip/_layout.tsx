@@ -11,7 +11,8 @@ export default function CreateTripLayout() {
       <Stack.Screen
         name={Routes.GenerateTrip}
         options={{
-          header: () => <CustomHeader title="GENERATE_TRIP.TITLE" />,
+          gestureEnabled: false,
+          headerShown: false,
         }}
       />
       <Stack.Screen

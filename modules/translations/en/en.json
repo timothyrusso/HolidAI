@@ -136,8 +136,6 @@
     "TRAVELERS_TYPE": "Travelers Type:"
   },
   "GENERATE_TRIP": {
-    "TITLE": "Generating Trip",
-    "DESCRIPTION": "We are working to generate your dream trip based on your preferences!",
     "ERROR": "Error generating AI trip, try again"
   },
   "SHOW_ALL_TRIPS": {
