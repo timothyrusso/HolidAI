@@ -1,7 +1,7 @@
 import type { FC, ReactElement } from 'react';
 import { Animated, Image, View, type ViewStyle } from 'react-native';
 
-import { images } from '@/ui/constants/style/dimensions/images';
+import { images } from '@/ui/style/dimensions/images';
 
 import { BaseSkeleton } from '../../basic/BaseSkeleton/BaseSkeleton';
 import CustomText from '../../basic/CustomText/CustomText';

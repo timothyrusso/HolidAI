@@ -1,6 +1,6 @@
 import { match } from 'ts-pattern';
 
-import { colors } from '@/ui/constants/style/colors';
+import { colors } from '@/ui/style/colors';
 
 // Define button states
 export const ButtonState = { Active: 'active', Disabled: 'disabled' } as const;

@@ -1,4 +1,4 @@
-import { Routes } from '@/ui/constants/navigation/routes';
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { Redirect } from 'expo-router';
 
 export default function Index() {

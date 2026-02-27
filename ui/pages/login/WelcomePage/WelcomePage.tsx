@@ -1,9 +1,9 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { Image, View } from 'react-native';
 import { useWelcomePageLogic } from './WelcomePage.logic';
 import { styles } from './WelcomePage.style';

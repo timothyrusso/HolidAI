@@ -1,5 +1,5 @@
+import { PlatformOS } from '@/ui/device/PlatformOS';
 import { Platform } from 'react-native';
-import { PlatformOS } from '../../PlatformOS';
 
 export const components = {
   tripImageHeight: 320,

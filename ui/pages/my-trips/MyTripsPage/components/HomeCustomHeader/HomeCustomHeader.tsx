@@ -1,9 +1,9 @@
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { blur } from '@/ui/constants/style/blur';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { blur } from '@/ui/style/blur';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 import { BlurView } from 'expo-blur';
 import { Pressable, View } from 'react-native';
 import { useHomeCustomHeaderLogic } from './HomeCustomHeader.logic';

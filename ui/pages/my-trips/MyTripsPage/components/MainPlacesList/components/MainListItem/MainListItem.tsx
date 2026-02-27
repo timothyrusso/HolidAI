@@ -1,7 +1,7 @@
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
 import { Image, View } from 'react-native';
 import { useMainListItemLogic } from './MainListItem.logic';

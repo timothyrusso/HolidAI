@@ -1,7 +1,7 @@
-import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
+import { Routes } from '@/modules/navigation/domain/entities/routes';
+import type { UserTrips } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import type { UniqueItem } from '@/ui/hooks/useUniqueItems';
 import { FlatList } from 'react-native';
 import { useShowAllTripsPageLogic } from './ShowAllTripsPage.logic';

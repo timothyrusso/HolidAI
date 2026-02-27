@@ -1,5 +1,5 @@
-import type { ScheduleItem } from '@/modules/trip/domain/dto/UserTripsDTO';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import type { ScheduleItem } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';

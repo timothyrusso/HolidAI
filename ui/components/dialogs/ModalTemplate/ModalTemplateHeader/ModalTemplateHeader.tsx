@@ -3,8 +3,8 @@ import { View } from 'react-native';
 
 import { CustomIconButtonSmall } from '@/ui/components/basic/CustomIconButton/CustomIconButtonSmall';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { styles } from './ModalTemplateHeader.style';

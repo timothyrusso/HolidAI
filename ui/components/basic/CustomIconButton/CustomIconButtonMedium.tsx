@@ -1,5 +1,5 @@
-import { components } from '@/ui/constants/style/dimensions/components';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { components } from '@/ui/style/dimensions/components';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { BaseIconButton, type CustomIconButtonProps } from './BaseIconButton';
 
 export function CustomIconButtonMedium(props: CustomIconButtonProps) {

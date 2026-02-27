@@ -1,5 +1,5 @@
 import { logger } from '@/di/resolve';
-import { Routes } from '@/ui/constants/navigation/routes';
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { useSignUp } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';

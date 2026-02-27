@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { opacity } from '@/ui/constants/style/opacity';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { opacity } from '@/ui/style/opacity';
 import type { CustomCardStyle } from './CustomCard.logic';
 
 export const styles = ({ backgroundColor, borderColor, borderWidth }: CustomCardStyle) =>

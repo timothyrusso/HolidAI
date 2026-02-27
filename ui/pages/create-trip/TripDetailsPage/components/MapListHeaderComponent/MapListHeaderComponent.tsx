@@ -1,6 +1,6 @@
-import { PlatformOS } from '@/ui/constants/PlatformOS';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { PlatformOS } from '@/ui/device/PlatformOS';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { Platform, View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
 import type { AllCoordinates } from '../../TripDetailsPage.logic';

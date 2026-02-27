@@ -1,4 +1,4 @@
-import { Languages } from './Languages';
+import { Languages } from '../../translations/domain/entities/Languages';
 
 /**
  * Represents a collection of app keys.

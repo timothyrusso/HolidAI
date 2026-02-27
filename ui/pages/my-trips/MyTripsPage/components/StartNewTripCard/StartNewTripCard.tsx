@@ -1,10 +1,10 @@
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 import { style } from './StartNewTripCard.style';

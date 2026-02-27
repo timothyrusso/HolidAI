@@ -1,5 +1,5 @@
+import { dbKeys } from '@/modules/trips/domain/entities/DbKeys';
 import { v } from 'convex/values';
-import { dbKeys } from '../modules/trip/domain/entities/DbKeys';
 import { type QueryCtx, internalMutation, mutation, query } from './_generated/server';
 
 const DEFAULT_TOKENS = 10;

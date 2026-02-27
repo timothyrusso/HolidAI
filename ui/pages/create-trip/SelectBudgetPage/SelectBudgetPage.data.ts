@@ -1,5 +1,5 @@
-import type { BudgetInfo } from '@/modules/trip/domain/entities/BudgetInfo';
-import { icons } from '@/ui/constants/style/icons';
+import type { BudgetInfo } from '@/modules/trips/domain/entities/BudgetInfo';
+import { icons } from '@/ui/style/icons';
 
 export const BudgetData: BudgetInfo[] = [
   {

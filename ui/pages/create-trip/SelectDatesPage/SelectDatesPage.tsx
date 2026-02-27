@@ -1,8 +1,8 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
-import { colors } from '@/ui/constants/style/colors';
+import { colors } from '@/ui/style/colors';
 import { View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { useSelectDatesPageLogic } from './SelectDatesPage.logic';

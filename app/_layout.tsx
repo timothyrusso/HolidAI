@@ -6,10 +6,10 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 }
 
 import { queryClient } from '@/di/resolve';
-import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
-import { Stacks } from '@/ui/constants/navigation/routes';
-import { fontsConfig } from '@/ui/constants/style/fonts';
-import i18n from '@/ui/translations/i18n';
+import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
+import { Stacks } from '@/modules/navigation/domain/entities/routes';
+import i18n from '@/modules/translations/i18n';
+import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';

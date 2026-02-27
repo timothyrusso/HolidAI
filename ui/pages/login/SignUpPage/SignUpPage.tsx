@@ -1,3 +1,4 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
@@ -6,7 +7,6 @@ import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInp
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import Toast from 'react-native-toast-message';

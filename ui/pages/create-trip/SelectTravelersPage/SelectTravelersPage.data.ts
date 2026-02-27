@@ -1,5 +1,5 @@
-import type { TravelerInfoMap } from '@/modules/trip/domain/entities/TravelerInfoMap';
-import { icons } from '@/ui/constants/style/icons';
+import type { TravelerInfoMap } from '@/modules/trips/domain/entities/TravelerInfoMap';
+import { icons } from '@/ui/style/icons';
 
 export const TravelerData: TravelerInfoMap[] = [
   {

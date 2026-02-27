@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { ActivityIndicator, Pressable, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { match } from 'ts-pattern';
 
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
 import CustomText from '../CustomText/CustomText';
 import { ButtonState, ButtonType, useCustomButtonLogic } from './CustomButton.logic';

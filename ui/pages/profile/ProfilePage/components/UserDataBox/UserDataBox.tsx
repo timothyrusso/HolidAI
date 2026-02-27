@@ -1,4 +1,4 @@
-import type { UserTrips } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { UserTrips } from '@/modules/trips/domain/dto/UserTripsDTO';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { type FC, Fragment } from 'react';
 import { Pressable, View } from 'react-native';

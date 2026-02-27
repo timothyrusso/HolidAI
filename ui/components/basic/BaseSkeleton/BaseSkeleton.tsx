@@ -1,4 +1,4 @@
-import { colors } from '@/ui/constants/style/colors';
+import { colors } from '@/ui/style/colors';
 import { type ReactElement, useEffect } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, {

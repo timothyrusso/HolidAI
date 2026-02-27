@@ -1,5 +1,5 @@
-import { screenOptions } from '@/ui/constants/navigation/ScreenOptions';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Stack } from 'expo-router';
 

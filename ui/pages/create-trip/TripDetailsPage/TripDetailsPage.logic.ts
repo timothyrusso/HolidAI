@@ -1,5 +1,5 @@
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import type { TripDetails } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { TripDetails } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';

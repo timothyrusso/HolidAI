@@ -1,5 +1,5 @@
 import { AppKeys } from '@/modules/shared/domain/AppKeys';
-import type { Language } from '@/modules/shared/domain/Languages';
+import type { Language } from '@/modules/translations/domain/entities/Languages';
 import { useChangeLanguage } from '@/ui/hooks/useChangeLanguage';
 import { useEffect, useState } from 'react';
 

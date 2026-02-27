@@ -1,5 +1,5 @@
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import type { Ionicons } from '@expo/vector-icons';
 import type { FC } from 'react';
 import { View } from 'react-native';

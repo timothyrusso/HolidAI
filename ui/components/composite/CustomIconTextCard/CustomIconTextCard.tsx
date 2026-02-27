@@ -1,4 +1,4 @@
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import type { StyleProp, ViewStyle } from 'react-native';
 import { CustomCard, type CustomCardProps } from '../../basic/CustomCard/CustomCard';
 import { CustomIcon, type IoniconsName } from '../../basic/CustomIcon/CustomIcon';

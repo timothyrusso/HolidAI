@@ -1,4 +1,4 @@
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useTripState } from '@/ui/state/trip';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';

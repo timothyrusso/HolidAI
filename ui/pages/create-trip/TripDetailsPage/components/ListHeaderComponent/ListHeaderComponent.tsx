@@ -1,6 +1,6 @@
-import type { Food, TripDetails, Weather } from '@/modules/trip/domain/dto/UserTripsDTO';
-import { colors } from '@/ui/constants/style/colors';
-import { icons } from '@/ui/constants/style/icons';
+import type { Food, TripDetails, Weather } from '@/modules/trips/domain/dto/UserTripsDTO';
+import { colors } from '@/ui/style/colors';
+import { icons } from '@/ui/style/icons';
 import { type FC, memo } from 'react';
 import { View } from 'react-native';
 import type { Region } from 'react-native-maps';

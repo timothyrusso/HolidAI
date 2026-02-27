@@ -1,11 +1,11 @@
+import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Stacks } from '@/ui/constants/navigation/routes';
-import { components } from '@/ui/constants/style/dimensions/components';
+import { components } from '@/ui/style/dimensions/components';
 
-import { icons } from '@/ui/constants/style/icons';
+import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { useProfilePageLogic } from './ProfilePage.logic';
