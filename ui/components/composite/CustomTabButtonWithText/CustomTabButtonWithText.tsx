@@ -1,5 +1,5 @@
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import type { TabTriggerSlotProps } from 'expo-router/ui';
 import { type PropsWithChildren, forwardRef } from 'react';
 import { Pressable, type View } from 'react-native';

@@ -1,5 +1,5 @@
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';

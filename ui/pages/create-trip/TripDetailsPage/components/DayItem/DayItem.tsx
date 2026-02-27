@@ -1,4 +1,4 @@
-import type { DayPlan } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { DayPlan } from '@/modules/trips/domain/dto/UserTripsDTO';
 import type { FC } from 'react';
 import { FlatList, View } from 'react-native';
 import { ActivityItem } from '../ActivityItem/ActivityItem';

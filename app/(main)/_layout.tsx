@@ -1,4 +1,4 @@
-import { Stacks } from '@/ui/constants/navigation/routes';
+import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import { Stack } from 'expo-router';
 
 export default function AppLayout() {

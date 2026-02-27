@@ -1,10 +1,10 @@
-import type { TravelerInfoMap } from '@/modules/trip/domain/entities/TravelerInfoMap';
+import { Routes } from '@/modules/navigation/domain/entities/routes';
+import type { TravelerInfoMap } from '@/modules/trips/domain/entities/TravelerInfoMap';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
-import { colors } from '@/ui/constants/style/colors';
+import { colors } from '@/ui/style/colors';
 import { FlatList, View } from 'react-native';
 import { useSelectTravelersPageLogic } from './SelectTravelersPage.logic';
 import { style } from './SelectTravelersPage.style';

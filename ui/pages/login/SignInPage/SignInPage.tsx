@@ -1,3 +1,4 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
@@ -8,7 +9,6 @@ import { ActionModal } from '@/ui/components/dialogs/ActionModal/ActionModal';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useSignInPageLogic } from './SignInPage.logic';

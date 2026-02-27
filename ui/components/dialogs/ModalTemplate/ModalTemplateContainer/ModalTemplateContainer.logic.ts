@@ -3,9 +3,9 @@ import { Animated, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { match } from 'ts-pattern';
 
-import { PlatformOS } from '@/ui/constants/PlatformOS';
-import { SCREEN_HEIGHT } from '@/ui/constants/style/dimensions/spacing';
+import { PlatformOS } from '@/ui/device/PlatformOS';
 import useKeyboardEffect from '@/ui/hooks/useKeyboardEffect';
+import { SCREEN_HEIGHT } from '@/ui/style/dimensions/spacing';
 import { DefaultAnimationDurationMs } from '../../animations';
 
 export const useModalTemplateContainerLogic = (maxHeight?: number) => {

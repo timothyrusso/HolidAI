@@ -1,6 +1,6 @@
-import { components } from '@/ui/constants/style/dimensions/components';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { fonts } from '@/ui/constants/style/fonts';
+import { components } from '@/ui/style/dimensions/components';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { fonts } from '@/ui/style/fonts';
 import { StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
 
 export const styles = (labelColor: TextStyle['color'], iconBackgroundColor: ViewStyle['backgroundColor']) =>

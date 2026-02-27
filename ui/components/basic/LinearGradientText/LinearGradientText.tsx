@@ -1,4 +1,4 @@
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import MaskedView from '@react-native-masked-view/masked-view';
 import type { FC } from 'react';
 import type { ImageSourcePropType, StyleProp, TextStyle } from 'react-native';

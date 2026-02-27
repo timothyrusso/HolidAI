@@ -1,4 +1,4 @@
-import { dbKeys } from '@/modules/trip/domain/entities/DbKeys';
+import { dbKeys } from '@/modules/trips/domain/entities/DbKeys';
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { TripAiResp } from './validators/Trips';

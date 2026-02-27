@@ -1,7 +1,7 @@
-import { colors } from '@/ui/constants/style/colors';
-import { images } from '@/ui/constants/style/dimensions/images';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { fonts } from '@/ui/constants/style/fonts';
+import { colors } from '@/ui/style/colors';
+import { images } from '@/ui/style/dimensions/images';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { fonts } from '@/ui/style/fonts';
 import type { Animated, ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
 

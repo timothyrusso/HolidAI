@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import type { ModalProps } from 'react-native-modal';
 import Modal from 'react-native-modal';
 
-import { opacity } from '@/ui/constants/style/opacity';
+import { opacity } from '@/ui/style/opacity';
 import { styles } from './ModalTemplate.style';
 import ModalBody from './ModalTemplateBody';
 import ModalContainer from './ModalTemplateContainer/ModalTemplateContainer';

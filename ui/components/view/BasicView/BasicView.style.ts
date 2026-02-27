@@ -1,5 +1,5 @@
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
 export const styles = (paddingTop: number, paddingBottom: number) =>

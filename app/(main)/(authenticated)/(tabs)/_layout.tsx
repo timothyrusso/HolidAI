@@ -1,9 +1,9 @@
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { CustomTabButton } from '@/ui/components/composite/CustomTabButton/CustomTabButton';
 import { CustomTabButtonWithText } from '@/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';

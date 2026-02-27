@@ -1,7 +1,7 @@
-import { PlatformOS } from '@/ui/constants/PlatformOS';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { fonts } from '@/ui/constants/style/fonts';
+import { PlatformOS } from '@/ui/device/PlatformOS';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { fonts } from '@/ui/style/fonts';
 import { Platform, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({

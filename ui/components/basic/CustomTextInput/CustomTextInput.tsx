@@ -1,5 +1,5 @@
-import { colors } from '@/ui/constants/style/colors';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
 import { TextInput, type TextInputProps, View } from 'react-native';
 import { ButtonType } from '../CustomButton/CustomButton.logic';

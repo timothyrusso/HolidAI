@@ -1,4 +1,4 @@
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { styles as headerStyles } from './HomeCustomHeader.style';

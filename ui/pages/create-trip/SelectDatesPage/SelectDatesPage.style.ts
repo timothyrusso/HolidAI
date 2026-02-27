@@ -1,7 +1,7 @@
-import { colors } from '@/ui/constants/style/colors';
-import { components } from '@/ui/constants/style/dimensions/components';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { fonts } from '@/ui/constants/style/fonts';
+import { colors } from '@/ui/style/colors';
+import { components } from '@/ui/style/dimensions/components';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { fonts } from '@/ui/style/fonts';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({

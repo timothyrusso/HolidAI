@@ -1,8 +1,8 @@
 import { logger } from '@/di/resolve';
 import { AppKeys } from '@/modules/shared/domain/AppKeys';
-import type { LocationInfo } from '@/modules/trip/domain/entities/LocationInfo';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import type { LocationInfo } from '@/modules/trips/domain/entities/LocationInfo';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import Constants from 'expo-constants';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';

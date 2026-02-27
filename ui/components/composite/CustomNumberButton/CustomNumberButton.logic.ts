@@ -1,4 +1,4 @@
-import { colors } from '@/ui/constants/style/colors';
+import { colors } from '@/ui/style/colors';
 import { styles } from './CustomNumberButton.style';
 
 export type CustomNumberButtonLogicProps = {

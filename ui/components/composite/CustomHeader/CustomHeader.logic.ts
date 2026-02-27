@@ -1,5 +1,5 @@
-import { PlatformOS } from '@/ui/constants/PlatformOS';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { PlatformOS } from '@/ui/device/PlatformOS';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { match } from 'ts-pattern';

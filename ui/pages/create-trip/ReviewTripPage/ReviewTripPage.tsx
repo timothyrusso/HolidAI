@@ -1,8 +1,8 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { View } from 'react-native';
 import { useReviewTripPageLogic } from './ReviewTripPage.logic';
 import { style } from './ReviewTripPage.style';

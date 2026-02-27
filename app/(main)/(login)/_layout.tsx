@@ -1,6 +1,6 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import CustomHeader from '@/ui/components/composite/CustomHeader/CustomHeader';
-import { Routes } from '@/ui/constants/navigation/routes';
-import { icons } from '@/ui/constants/style/icons';
+import { icons } from '@/ui/style/icons';
 import { Stack, useRouter } from 'expo-router';
 
 export default function LoginLayout() {

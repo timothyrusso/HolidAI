@@ -1,8 +1,8 @@
 import type { ViewStyle } from 'react-native';
 import { match } from 'ts-pattern';
 
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 
 import { styles } from './CustomCard.style';
 

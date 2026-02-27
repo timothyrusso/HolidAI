@@ -1,10 +1,10 @@
-import type { ScheduleItem } from '@/modules/trip/domain/dto/UserTripsDTO';
+import type { ScheduleItem } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
+import { icons } from '@/ui/style/icons';
 import { type FC, Fragment, memo } from 'react';
 import { Image, Pressable, View } from 'react-native';
 import { NumberedMarker } from '../NumberedMarker/NumberedMarker';

@@ -1,6 +1,6 @@
 import { Cheap } from '@/ui/components/basic/Cheap/Cheap';
-import { colors } from '@/ui/constants/style/colors';
-import { icons } from '@/ui/constants/style/icons';
+import { colors } from '@/ui/style/colors';
+import { icons } from '@/ui/style/icons';
 import { type FC, Fragment } from 'react';
 
 type HeaderChipsProps = {

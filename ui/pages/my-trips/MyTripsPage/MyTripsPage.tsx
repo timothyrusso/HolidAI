@@ -1,5 +1,5 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { Image, View } from 'react-native';
 import { useMyTripsPageLogic } from './MyTripsPage.logic';
 import { styles } from './MyTripsPage.style';

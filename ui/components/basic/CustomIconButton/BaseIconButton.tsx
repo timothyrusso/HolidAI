@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, type StyleProp, type ViewStyle } from 'react-native';
 
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import { ButtonState, ButtonType, useCustomButtonLogic } from '../CustomButton/CustomButton.logic';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
 import { styleButton } from './CustomIconButton.style';

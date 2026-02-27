@@ -1,8 +1,8 @@
+import { components } from '@/ui/style/dimensions/components';
 import { useEffect, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';
 import { match } from 'ts-pattern';
-import { PlatformOS } from '../constants/PlatformOS';
-import { components } from '../constants/style/dimensions/components';
+import { PlatformOS } from '../device/PlatformOS';
 
 /**
  * Custom hook that detects the visibility of the keyboard and provides the padding height for adjusting the UI.

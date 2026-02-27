@@ -1,5 +1,5 @@
-import { colors } from '@/ui/constants/style/colors';
-import { spacing } from '@/ui/constants/style/dimensions/spacing';
+import { colors } from '@/ui/style/colors';
+import { spacing } from '@/ui/style/dimensions/spacing';
 import type { FC } from 'react';
 import { View } from 'react-native';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';

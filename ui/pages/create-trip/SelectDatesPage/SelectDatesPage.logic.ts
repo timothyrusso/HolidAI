@@ -1,7 +1,7 @@
 import { getTimezoneFormattedDateUseCase } from '@/modules/dates/application/getTimezoneFormattedDateUseCase';
 import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getTodayInLocalTimezoneUseCase';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import { Routes, Stacks } from '@/ui/constants/navigation/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/ui/hooks/useLocale';
 import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
 import { useTripState } from '@/ui/state/trip';

@@ -1,8 +1,8 @@
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import PlacesAutocomplete from '@/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Routes } from '@/ui/constants/navigation/routes';
 import { View } from 'react-native';
 import { useSearchPageLogic } from './SearchPlacePage.logic';
 import { styles } from './SearchPlacePage.style';
