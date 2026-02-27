@@ -71,7 +71,7 @@
         }
       ]
     ],
-    "experiments": { "typedRoutes": true },
+    "experiments": { "typedRoutes": true, "reactCompiler": true },
     "newArchEnabled": true,
     "extra": {
       "router": { "origin": false },
