@@ -1,4 +1,4 @@
-import type { AiModels } from '@/configs/ai/AiModels';
+import type { AiModels } from '@/modules/ai/domain/entities/AiModels';
 import type { ZodType, z } from 'zod';
 
 export interface IAiClient {

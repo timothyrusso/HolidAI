@@ -1,8 +1,8 @@
-import { ai_prompt } from '@/configs/ai/prompt';
 import { logger } from '@/di/resolve';
+import { ai_prompt } from '@/modules/ai/domain/entities/prompt';
 
-import { AiModels } from '@/configs/ai/AiModels';
 import { api } from '@/convex/_generated/api';
+import { AiModels } from '@/modules/ai/domain/entities/AiModels';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
 import { generatedTripSchema } from '@/modules/trip/domain/entities/GenerateTripSchema';
 import { Routes } from '@/ui/constants/navigation/routes';
