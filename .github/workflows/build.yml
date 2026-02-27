@@ -74,6 +74,10 @@ jobs:
           GOOGLE_MAPS_API_KEY_ANDROID: ${{ secrets.GOOGLE_MAPS_API_KEY_ANDROID }}
           OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
           MMKV_ENCRYPTION_KEY: ${{ secrets.MMKV_ENCRYPTION_KEY }}
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.CLERK_PUBLISHABLE_KEY }}
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CLERK_JWT_ISSUER_DOMAIN: ${{ secrets.CLERK_JWT_ISSUER_DOMAIN }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
         run: |
           # Create google-services.json from base64
           mkdir -p /home/runner/work/HolidAI/HolidAI/android/app
