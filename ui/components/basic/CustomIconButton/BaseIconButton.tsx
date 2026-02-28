@@ -1,4 +1,5 @@
 import { ActivityIndicator, Pressable, type StyleProp, type ViewStyle } from 'react-native';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { ButtonState, ButtonType, useCustomButtonLogic } from '../CustomButton/CustomButton.logic';
@@ -15,6 +16,7 @@ export type CustomIconButtonProps = {
   iconSize?: number;
   iconStyle?: StyleProp<ViewStyle>;
   isLoading?: boolean;
+  animatedIconStyle?: StyleProp<AnimatedStyle<ViewStyle>>;
 };
 
 export function BaseIconButton({
@@ -27,6 +29,7 @@ export function BaseIconButton({
   iconSize = spacing.TripleAndHalf,
   iconStyle,
   isLoading = false,
+  animatedIconStyle,
 }: CustomIconButtonProps) {
   const buttonState = isDisabled ? ButtonState.Disabled : ButtonState.Active;
 
@@ -34,6 +37,8 @@ export function BaseIconButton({
 
   const styles = styleButton(buttonType, buttonState, getButtonStyles, size);
   const iconColor = styleIconColor(buttonType, buttonState);
+
+  const icon = <CustomIcon name={iconName} size={iconSize} style={iconStyle} color={iconColor} />;
 
   return (
     <Pressable
@@ -43,8 +48,10 @@ export function BaseIconButton({
     >
       {isLoading ? (
         <ActivityIndicator color={iconColor} size={iconSize} />
+      ) : animatedIconStyle !== undefined ? (
+        <Animated.View style={animatedIconStyle}>{icon}</Animated.View>
       ) : (
-        <CustomIcon name={iconName} size={iconSize} style={iconStyle} color={iconColor} />
+        icon
       )}
     </Pressable>
   );

@@ -13,12 +13,14 @@ export const useHeaderIconsLogic = () => {
   const trip = getTripById(id as string);
 
   const [isFavorite, setIsFavorite] = useState(trip?.isFavorite);
+  const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
 
   const removeTripMutation = useMutation(api.trips.deleteTrip);
   const toggleFavoriteTripMutation = useMutation(api.trips.toggleFavoriteTrip);
 
   const addToFavoritesHandler = useCallback(() => {
     if (!trip) return;
+    setShouldAnimate(!isFavorite);
     setIsFavorite(prev => !prev);
     toggleFavoriteTripMutation({ id: trip._id, isFavorite: !isFavorite });
   }, [isFavorite]);
@@ -31,5 +33,5 @@ export const useHeaderIconsLogic = () => {
 
   const goBackHandler = () => router.back();
 
-  return { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite };
+  return { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite, shouldAnimate };
 };
