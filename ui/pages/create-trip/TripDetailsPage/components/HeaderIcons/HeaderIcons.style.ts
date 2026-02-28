@@ -1,3 +1,4 @@
+import { heartPulse } from '@/ui/style/animations';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
@@ -26,3 +27,10 @@ export const styles = StyleSheet.create({
     top: spacing.TripleAndHalf + spacing.separator40,
   },
 });
+
+export const heartPulseStyle = {
+  animationName: heartPulse,
+  animationDuration: '0.4s',
+  animationIterationCount: 1,
+  animationTimingFunction: 'ease-in-out',
+} as const;

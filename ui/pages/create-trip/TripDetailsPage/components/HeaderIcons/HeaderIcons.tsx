@@ -4,10 +4,10 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
 import { useHeaderIconsLogic } from './HeaderIcons.logic';
-import { styles } from './HeaderIcons.style';
+import { heartPulseStyle, styles } from './HeaderIcons.style';
 
 export const HeaderIcons = () => {
-  const { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite } = useHeaderIconsLogic();
+  const { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite, shouldAnimate } = useHeaderIconsLogic();
 
   return (
     <View style={styles.container}>
@@ -24,6 +24,7 @@ export const HeaderIcons = () => {
         onPress={addToFavoritesHandler}
         style={styles.favoriteIcon}
         buttonType={ButtonType.Tertiary}
+        animatedIconStyle={shouldAnimate ? heartPulseStyle : undefined}
       />
       <CustomIconButtonLarge
         iconName={icons.remove}
