@@ -23,7 +23,7 @@ app/
 └── (main)/
     ├── (login)/           # Public screens: welcome, sign-in, sign-up
     └── (authenticated)/   # Protected screens (requires auth)
-        ├── (tabs)/        # Tab navigator: my-trips, profile
+        ├── (tabs)/        # Tab navigator: my-trips, profile, create-trip
         ├── create-trip/   # Multi-step trip creation wizard
         ├── my-trips/      # Show all trips
         └── profile/       # Profile settings
