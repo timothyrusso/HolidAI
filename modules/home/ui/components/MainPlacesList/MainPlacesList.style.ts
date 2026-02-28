@@ -5,9 +5,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'absolute',
-    top: spacing.Sextuple + spacing.Triple,
-    right: spacing.Double,
+    left: spacing.SingleAndHalf + spacing.Minimal,
   },
   skeleton: {
     flex: 1,

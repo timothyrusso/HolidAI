@@ -8,8 +8,7 @@ import { useMyTripsPageLogic } from './MyTripsPage.logic';
 import { styles } from './MyTripsPage.style';
 
 const MyTripsPage = () => {
-  const { lastCreatedTrip, isLoading, image, location, days, budget, travelers, tripId, tripStartDate, totalTrips } =
-    useMyTripsPageLogic();
+  const { lastCreatedTrip, isLoading, image, location, tripId, tripStartDate, totalTrips } = useMyTripsPageLogic();
 
   return (
     <BasicView nameView={Routes.MyTrips} isFullScreen isMenuVisible statusBarStyle="light">
@@ -20,9 +19,6 @@ const MyTripsPage = () => {
           <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
           <DetailsBox
             location={location}
-            days={days}
-            budget={budget}
-            travelers={travelers}
             tripId={tripId}
             tripStartDate={tripStartDate}
             style={styles.detailsBox}
