@@ -9,11 +9,9 @@ export const styles = StyleSheet.create({
   },
   skeleton: {
     flex: 1,
-    position: 'absolute',
-    top: spacing.Sextuple + spacing.Triple,
-    right: spacing.Fourfold,
+    bottom: spacing.Minimal,
     backgroundColor: colors.primaryBlack,
-    borderRadius: spacing.Double,
+    borderRadius: spacing.Quintuple,
     height: spacing.separator40,
     width: spacing.separator120 + spacing.SingleAndHalf,
   },
