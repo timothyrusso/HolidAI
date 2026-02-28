@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
   },
   skeleton: {
     flex: 1,
-    bottom: spacing.Minimal,
     backgroundColor: colors.primaryBlack,
     borderRadius: spacing.Quintuple,
     height: spacing.separator40,

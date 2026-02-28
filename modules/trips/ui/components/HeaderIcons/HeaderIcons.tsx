@@ -25,6 +25,7 @@ export const HeaderIcons = () => {
         style={styles.favoriteIcon}
         buttonType={ButtonType.Tertiary}
         animatedIconStyle={shouldAnimate ? heartPulseStyle : undefined}
+        noPressedStyle
       />
       <CustomIconButtonLarge
         iconName={icons.remove}
