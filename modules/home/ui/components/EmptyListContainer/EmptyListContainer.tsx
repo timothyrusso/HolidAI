@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import StartNewTripCard from '../StartNewTripCard/StartNewTripCard';
 import { styles } from './EmptyListContainer.style';
 
-const animation = require('../../../../../ui/assets/lottie/trip_animation.json');
+const animation = require('@/ui/assets/lottie/trip_animation.json');
 
 export const EmptyListContainer = () => {
   return (

@@ -7,7 +7,7 @@ import { useGenerateTripPageLogic } from './GenerateTripPage.logic';
 import { style } from './GenerateTripPage.style';
 
 const GenerateTripPage = () => {
-  const animation = require('../../../../../ui/assets/lottie/loading_animation.json');
+  const animation = require('@/ui/assets/lottie/loading_animation.json');
   const { generateAiTrip } = useGenerateTripPageLogic();
 
   logger.log(generateAiTrip);

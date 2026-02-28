@@ -44,7 +44,7 @@ modules/
 ├── authentication/ # Login, sign-up, welcome
 ├── profile/        # Profile & language settings
 ├── ai/             # AI client (Gemini integration)
-├── shared/         # Cross-module utilities (hooks, storage, logger, error)
+├── shared/         # Cross-module utilities (hooks, storage, logger, error, platform)
 ├── navigation/     # Route constants and screen options
 ├── dates/          # Date formatting use cases
 ├── translations/   # i18n setup (react-i18next)
@@ -60,6 +60,15 @@ modules/<feature>/
 └── ui/
     ├── pages/     # Full-screen components + their .logic.ts and .style.ts
     └── components/ # Feature-specific components
+```
+
+`modules/shared/` is special: it holds cross-cutting concerns used by multiple modules.
+
+```
+modules/shared/
+├── domain/        # PlatformOS, Languages, AppKeys (storage key constants)
+├── infra/         # logger/, storage/, error/ — infrastructure interfaces + implementations
+└── hooks/         # Shared React hooks (useLocale, useChangeLanguage, useToast, useKeyboardEffect…)
 ```
 
 **Rule:** `domain/` never imports from `infra/`. Consumers depend on interfaces, never on concrete classes.
@@ -79,7 +88,8 @@ ui/
 │   └── view/       # Page wrappers: BasicView
 ├── queries/        # TanStack Query hooks (server state): trips, user, images…
 ├── state/          # Zustand stores (client state): app, trip, modal
-└── style/          # Design tokens: colors, fonts, spacing, shadows, animations
+├── style/          # Design tokens: colors, fonts, spacing, shadows, animations
+└── assets/         # Static files: images/, lottie/ — import via @/ui/assets/…
 ```
 
 **Page component pattern:**

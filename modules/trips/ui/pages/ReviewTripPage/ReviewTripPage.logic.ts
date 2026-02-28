@@ -24,7 +24,7 @@ export const useReviewTripPageLogic = () => {
     router.replace(`/${Stacks.CreateTrip}/${Routes.GenerateTrip}`);
   };
 
-  const animation = require('../../../../../ui/assets/lottie/photo_animation.json');
+  const animation = require('@/ui/assets/lottie/photo_animation.json');
 
   return {
     handleButtonPress,

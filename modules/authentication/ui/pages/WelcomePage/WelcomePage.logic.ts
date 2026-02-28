@@ -6,7 +6,7 @@ export const useWelcomePageLogic = () => {
 
   const handlePress = () => router.push(`/${Routes.SignIn}`);
 
-  const welcomePageImage = require('../../../../../ui/assets/images/welcome_intro.jpg');
+  const welcomePageImage = require('@/ui/assets/images/welcome_intro.jpg');
 
   return { handlePress, welcomePageImage };
 };
