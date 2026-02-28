@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { opacity } from '@/ui/style/opacity';
-import type { ButtonState, ButtonType } from './BaseIconButton';
+import type { ButtonState, ButtonType } from '../CustomButton/CustomButton.logic';
 
 export type ButtonStyles = {
   backgroundColor: string;
