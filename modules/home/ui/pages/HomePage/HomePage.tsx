@@ -4,14 +4,14 @@ import { Image, View } from 'react-native';
 import { DetailsBox } from '../../components/DetailsBox/DetailsBox';
 import { EmptyListContainer } from '../../components/EmptyListContainer/EmptyListContainer';
 import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
-import { useMyTripsPageLogic } from './MyTripsPage.logic';
-import { styles } from './MyTripsPage.style';
+import { useHomePageLogic } from './HomePage.logic';
+import { styles } from './HomePage.style';
 
-const MyTripsPage = () => {
-  const { lastCreatedTrip, isLoading, image, location, tripId, tripStartDate, totalTrips } = useMyTripsPageLogic();
+const HomePage = () => {
+  const { lastCreatedTrip, isLoading, image, location, tripId, tripStartDate, totalTrips } = useHomePageLogic();
 
   return (
-    <BasicView nameView={Routes.MyTrips} isFullScreen isMenuVisible statusBarStyle="light">
+    <BasicView nameView={Routes.HomePage} isFullScreen isMenuVisible statusBarStyle="light">
       {isLoading ? (
         <HomeSkeleton />
       ) : lastCreatedTrip ? (
@@ -32,4 +32,4 @@ const MyTripsPage = () => {
   );
 };
 
-export default MyTripsPage;
+export default HomePage;

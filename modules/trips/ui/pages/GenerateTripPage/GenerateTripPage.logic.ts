@@ -68,9 +68,9 @@ export const useGenerateTripPageLogic = () => {
 
       decrementTokens(totalNoOfDays);
 
-      router.push(`/${Routes.MyTrips}`);
+      router.push(`/${Routes.HomePage}`);
     } catch (error) {
-      router.replace(`/${Routes.MyTrips}`);
+      router.replace(`/${Routes.HomePage}`);
       showToast('GENERATE_TRIP.ERROR');
       logger.error(new Error('Error generating AI trip:'), error);
     } finally {

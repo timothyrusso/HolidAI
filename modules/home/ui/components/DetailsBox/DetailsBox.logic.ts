@@ -16,7 +16,7 @@ export const useDetailsBoxLogic = (tripId: string, tripStartDate: string) => {
 
   const dateLabel = translateDate(locale, tripStartDate);
 
-  const handleShowAllTripsButton = () => router.push({ pathname: `/${Stacks.MyTrips}/${Routes.ShowAllTrips}` });
+  const handleShowAllTripsButton = () => router.push({ pathname: `/${Stacks.HomePage}/${Routes.ShowAllTrips}` });
 
   return { handlePress, dateLabel, handleShowAllTripsButton };
 };

@@ -1,7 +1,7 @@
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 
-export const useMyTripsPageLogic = () => {
+export const useHomePageLogic = () => {
   const { isLoading, getLastCreatedTrip, getTotalTrips } = useGetUserTrips();
 
   const lastCreatedTrip = getLastCreatedTrip();

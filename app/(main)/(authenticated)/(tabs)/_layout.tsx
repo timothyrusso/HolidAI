@@ -23,7 +23,7 @@ const TabLayout = () => {
     <Tabs>
       <TabSlot />
       <TabList style={tabsStyle.tabList}>
-        <TabTrigger name="home" href="/my-trips" style={tabsStyle.tabTrigger} asChild>
+        <TabTrigger name="home" href="/home-page" style={tabsStyle.tabTrigger} asChild>
           <CustomTabButtonWithText icon={icons.location}>{t('MY_TRIP.MY_TRIPS')}</CustomTabButtonWithText>
         </TabTrigger>
         <CustomTabButton icon={icons.add} onPress={handlePress} />

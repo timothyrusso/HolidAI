@@ -61,7 +61,7 @@ export const useSignUpPageLogic = () => {
       if (signUpAttempt.status === 'complete') {
         await setActive({ session: signUpAttempt.createdSessionId });
 
-        router.replace(`/${Routes.MyTrips}`);
+        router.replace(`/${Routes.HomePage}`);
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
