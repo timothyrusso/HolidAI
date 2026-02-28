@@ -1,5 +1,5 @@
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
+import { CustomButtonMedium } from '@/ui/components/basic/CustomButton/CustomButtonMedium';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { blur } from '@/ui/style/blur';
@@ -19,6 +19,7 @@ type DetailsBoxProps = {
   travelers: number;
   tripId: string;
   tripStartDate: string;
+  totalTrips: number;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -29,15 +30,11 @@ export const DetailsBox: FC<DetailsBoxProps> = ({
   travelers,
   tripId,
   tripStartDate,
+  totalTrips,
   style,
 }) => {
-  const { handlePress, budgetLabel, travelersLabel, daysLabel, dateLabel } = useDetailsBoxLogic(
-    tripId,
-    tripStartDate,
-    budget,
-    travelers,
-    days,
-  );
+  const { handlePress, budgetLabel, travelersLabel, daysLabel, dateLabel, handleShowAllTripsButton } =
+    useDetailsBoxLogic(tripId, tripStartDate, budget, travelers, days);
 
   return (
     <BlurView
@@ -65,12 +62,22 @@ export const DetailsBox: FC<DetailsBoxProps> = ({
       </View>
       <CustomText text={dateLabel} style={styles.date} />
       <MainPlacesList />
-      <CustomButtonLarge
-        title="MY_TRIP.TRIP_DETAILS"
-        onPress={handlePress}
-        style={styles.detailsButton}
-        buttonType={ButtonType.Secondary}
-      />
+      <View style={styles.buttonsContainer}>
+        <CustomButtonMedium
+          title="MY_TRIP.TRIP_DETAILS"
+          onPress={handlePress}
+          style={styles.detailsButton}
+          buttonType={ButtonType.Primary}
+        />
+        {totalTrips > 0 && (
+          <CustomButtonMedium
+            title="MY_TRIP.SHOW_ALL_TRIPS"
+            onPress={handleShowAllTripsButton}
+            style={styles.showAllButton}
+            buttonType={ButtonType.Secondary}
+          />
+        )}
+      </View>
     </BlurView>
   );
 };

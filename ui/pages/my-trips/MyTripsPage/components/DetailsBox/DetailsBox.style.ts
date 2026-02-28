@@ -28,8 +28,13 @@ export const styles = StyleSheet.create({
   },
   detailsButton: {
     marginTop: spacing.Triple,
-    width: '70%',
     alignSelf: 'center',
+    flex: 2,
+  },
+  showAllButton: {
+    marginTop: spacing.Triple,
+    alignSelf: 'center',
+    flex: 1,
   },
   label: {
     color: colors.primaryWhite,
@@ -52,5 +57,10 @@ export const styles = StyleSheet.create({
   },
   detailsBoxContainer: {
     rowGap: spacing.Single,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.Double,
   },
 });

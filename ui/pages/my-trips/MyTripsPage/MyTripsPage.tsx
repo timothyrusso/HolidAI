@@ -5,7 +5,6 @@ import { useMyTripsPageLogic } from './MyTripsPage.logic';
 import { styles } from './MyTripsPage.style';
 import { DetailsBox } from './components/DetailsBox/DetailsBox';
 import { EmptyListContainer } from './components/EmptyListContainer/EmptyListContainer';
-import { HomeCustomHeader } from './components/HomeCustomHeader/HomeCustomHeader';
 import { HomeSkeleton } from './components/HomeSkeleton/HomeSkeleton';
 
 const MyTripsPage = () => {
@@ -18,7 +17,6 @@ const MyTripsPage = () => {
         <HomeSkeleton />
       ) : lastCreatedTrip ? (
         <View style={styles.container}>
-          {totalTrips > 0 && <HomeCustomHeader />}
           <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
           <DetailsBox
             location={location}
@@ -28,6 +26,7 @@ const MyTripsPage = () => {
             tripId={tripId}
             tripStartDate={tripStartDate}
             style={styles.detailsBox}
+            totalTrips={totalTrips}
           />
         </View>
       ) : (
