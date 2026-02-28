@@ -1,4 +1,4 @@
-import { PlatformOS } from '@/ui/device/PlatformOS';
+import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
 import { Platform } from 'react-native';
 
 export const components = {

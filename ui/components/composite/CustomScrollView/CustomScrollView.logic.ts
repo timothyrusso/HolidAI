@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import type { ScrollView } from 'react-native';
 
-import { useGradualKeyboardAnimation } from '@/ui/hooks/useGradualKeyboardAnimation';
+import { useGradualKeyboardAnimation } from '@/modules/shared/hooks/useGradualKeyboardAnimation';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

@@ -1,4 +1,4 @@
-import { PlatformOS } from '@/ui/device/PlatformOS';
+import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
 import { colors } from '@/ui/style/colors';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';

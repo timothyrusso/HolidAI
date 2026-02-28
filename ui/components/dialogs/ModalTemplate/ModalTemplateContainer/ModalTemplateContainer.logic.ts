@@ -3,8 +3,8 @@ import { Animated, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { match } from 'ts-pattern';
 
-import { PlatformOS } from '@/ui/device/PlatformOS';
-import useKeyboardEffect from '@/ui/hooks/useKeyboardEffect';
+import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
+import useKeyboardEffect from '@/modules/shared/hooks/useKeyboardEffect';
 import { SCREEN_HEIGHT } from '@/ui/style/dimensions/spacing';
 import { DefaultAnimationDurationMs } from '../../animations';
 
