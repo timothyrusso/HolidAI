@@ -1,4 +1,4 @@
-import GenerateTripPage from '@/ui/pages/create-trip/GenerateTripPage/GenerateTripPage';
+import GenerateTripPage from '@/modules/trips/ui/pages/GenerateTripPage/GenerateTripPage';
 
 const GenerateTrip = () => {
   return <GenerateTripPage />;

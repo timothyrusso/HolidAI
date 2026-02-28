@@ -1,4 +1,4 @@
-import { ActivityDetailsPage } from '@/ui/pages/create-trip/ActivityDetailsPage/ActivityDetailsPage';
+import { ActivityDetailsPage } from '@/modules/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage';
 
 const ActivityDetails = () => {
   return <ActivityDetailsPage />;

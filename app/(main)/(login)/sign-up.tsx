@@ -1,4 +1,4 @@
-import SignUpPage from '@/ui/pages/login/SignUpPage/SignUpPage';
+import SignUpPage from '@/modules/authentication/ui/pages/SignUpPage/SignUpPage';
 
 export default function SignUp() {
   return <SignUpPage />;

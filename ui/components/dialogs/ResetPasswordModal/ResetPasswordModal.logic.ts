@@ -1,5 +1,5 @@
 import { logger } from '@/di/resolve';
-import { ToastType, useToast } from '@/ui/hooks/useToast';
+import { ToastType, useToast } from '@/modules/shared/hooks/useToast';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import { useClerk, useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
