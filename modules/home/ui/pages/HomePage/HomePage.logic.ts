@@ -2,9 +2,9 @@ import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 
 export const useHomePageLogic = () => {
-  const { isLoading, getLastCreatedTrip, getTotalTrips } = useGetUserTrips();
+  const { isLoading, getUpcomingTrip, getTotalTrips } = useGetUserTrips();
 
-  const lastCreatedTrip = getLastCreatedTrip();
+  const lastCreatedTrip = getUpcomingTrip();
 
   const location = lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 

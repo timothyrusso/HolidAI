@@ -1,3 +1,4 @@
+import { normalizeDateToISOUseCase } from '@/modules/dates/application/normalizeDateToISOUseCase';
 import { type ZodSchema, z } from 'zod';
 import type { TripAiResp } from '../dto/UserTripsDTO';
 
@@ -8,8 +9,8 @@ export const generatedTripSchema = z.object({
     travelers: z.number(),
     durationDays: z.number(),
     durationNights: z.number(),
-    startDate: z.string(),
-    endDate: z.string(),
+    startDate: z.string().describe('Date in ISO format YYYY-MM-DD').transform(normalizeDateToISOUseCase),
+    endDate: z.string().describe('Date in ISO format YYYY-MM-DD').transform(normalizeDateToISOUseCase),
     locale: z.string(),
   }),
   dayPlans: z.array(

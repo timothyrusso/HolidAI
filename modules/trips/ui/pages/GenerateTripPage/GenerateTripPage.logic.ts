@@ -3,7 +3,7 @@ import { ai_prompt } from '@/modules/ai/domain/entities/prompt';
 
 import { api } from '@/convex/_generated/api';
 import { AiModels } from '@/modules/ai/domain/entities/AiModels';
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import { formatDateForPromptUseCase } from '@/modules/dates/application/formatDateForPromptUseCase';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useToast } from '@/modules/shared/hooks/useToast';
@@ -42,8 +42,8 @@ export const useGenerateTripPageLogic = () => {
     .replace('{budget}', tripSelectors.budgetInfo)
     .replace('{days}', totalNoOfDays.toString())
     .replace('{nights}', (totalNoOfDays - 1).toString())
-    .replace('{startDate}', translateDate(locale, tripSelectors.datesInfo().startDate))
-    .replace('{endDate}', translateDate(locale, tripSelectors.datesInfo().endDate))
+    .replace('{startDate}', formatDateForPromptUseCase(tripSelectors.datesInfo().startDate))
+    .replace('{endDate}', formatDateForPromptUseCase(tripSelectors.datesInfo().endDate))
     .replace('{locale}', locale);
 
   const generateAiTrip = async () => {

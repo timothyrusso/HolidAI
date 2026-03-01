@@ -1,4 +1,5 @@
 import { api } from '@/convex/_generated/api';
+import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getTodayInLocalTimezoneUseCase';
 import { useUser } from '@clerk/clerk-expo';
 import { useQuery } from 'convex/react';
 
@@ -24,13 +25,12 @@ export const useGetUserTrips = () => {
     return userTrips?.filter(trip => trip.isFavorite) ?? [];
   };
 
-  const getLastCreatedTrip = () => {
-    return userTrips?.sort((a, b) => {
-      const dateA = new Date(a.tripAiResp.tripDetails.startDate);
-      const dateB = new Date(b.tripAiResp.tripDetails.startDate);
+  const getUpcomingTrip = () => {
+    const todayStr = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
 
-      return dateA.getTime() - dateB.getTime();
-    })[0];
+    return userTrips
+      ?.filter(trip => trip.tripAiResp.tripDetails.startDate >= todayStr)
+      .sort((a, b) => a.tripAiResp.tripDetails.startDate.localeCompare(b.tripAiResp.tripDetails.startDate))[0];
   };
 
   const getActivityById = (tripId: string, activityId: number) => {
@@ -48,7 +48,7 @@ export const useGetUserTrips = () => {
     getUserTrips,
     getTotalTrips,
     getFavouriteTrips,
-    getLastCreatedTrip,
+    getUpcomingTrip,
     getActivityById,
     getTripById,
     isLoading,

@@ -135,6 +135,64 @@ convex/
 
 ---
 
+## Date Handling
+
+### Storage convention
+
+All trip dates (`startDate`, `endDate`) are stored in Convex as **`YYYY-MM-DD` strings** (ISO 8601 date-only, no time component).
+
+### Full pipeline
+
+```
+CalendarPicker (react-native-calendar-picker)
+  → Date object (midnight UTC)
+  → getTimezoneFormattedDateUseCase()     adjusts to local timezone (timezone correction happens here)
+  → tripStore.datesInfo                   stored as Date | null
+  → formatDateForPromptUseCase()          extracts "YYYY-MM-DD" via .toISOString().split('T')[0]
+  → AI model (Gemini)                     receives unambiguous ISO date, instructed via schema .describe()
+  → generatedTripSchema (Zod)             .transform(normalizeDateToISOUseCase) as safety net
+  → Convex DB                             always stored as "YYYY-MM-DD"
+  → translateDate(locale, "YYYY-MM-DD")   formats for display (locale-specific)
+  → UI
+```
+
+### Utilities (`modules/dates/application/`)
+
+| File | Purpose | Input → Output |
+|---|---|---|
+| `getTodayInLocalTimezoneUseCase` | Current date in local timezone. **Module-level constant** (evaluated once at import time, not a function). | — → `Date` |
+| `getTimezoneFormattedDateUseCase` | Adjusts a `Date` by subtracting the timezone offset so it represents local time correctly. Applied to CalendarPicker output. | `Date` → `Date` |
+| `convertFromUTCToLocaleUseCase` | Formats full UTC datetime strings (e.g. `2024-01-01T09:00:00Z`) into `"DD MMMM YYYY"`. **Not used for trip date strings.** | `string (datetime)` → `string` |
+| `getTranslatedDate` (`translateDate`) | Parses a `Date` or date string (supports 6 formats) and returns a locale-specific display string via `toLocaleDateString(locale)`. Used everywhere for display. | `Date \| string` → `string` |
+| `normalizeDateToISOUseCase` | Converts `DD/MM/YYYY` → `YYYY-MM-DD`. Pass-through for already-correct formats. Used as a Zod transform in `generatedTripSchema`. | `string` → `string` |
+| `formatDateForPromptUseCase` | Extracts `YYYY-MM-DD` from a timezone-adjusted `Date` object (from tripStore) for use in AI prompt placeholders. Does not modify the date — timezone correction already happened upstream via `getTimezoneFormattedDateUseCase`. | `Date \| null` → `string` |
+
+### Why normalization is needed
+
+The AI prompt now receives dates already in `YYYY-MM-DD` via `formatDateForPromptUseCase`, so the model gets an unambiguous input. Two safeguards still exist as a safety net in `generatedTripSchema`:
+
+1. **Schema description** — `z.string().describe('Date in ISO format YYYY-MM-DD')` instructs the model explicitly.
+2. **Zod transform** — `.transform(normalizeDateToISOUseCase)` normalizes at parse time in case the model still returns a different format.
+
+### Comparing dates
+
+`getUpcomingTrip()` in `useGetUserTrips` compares dates as plain strings:
+
+```ts
+const todayStr = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
+userTrips?.filter(trip => trip.tripAiResp.tripDetails.startDate >= todayStr)
+```
+
+ISO date strings are lexicographically sortable, so string comparison is correct and avoids timezone/time-of-day issues. Today's trips are included because `"2026-03-01" >= "2026-03-01"` is `true`.
+
+### Caveats
+
+- `getTodayInLocalTimezoneUseCase` is a **module-level constant**. If the app runs past midnight without reloading the module, the "today" value will be stale.
+- `getTranslatedDate` tries 6 formats sequentially (`dd/MM/yyyy` first). Safe for `YYYY-MM-DD` strings because the `-` separator never matches the `/`-based formats, so it always falls through to `yyyy-MM-dd`.
+- `normalizeDateToISOUseCase` assumes all `/`-delimited dates are `DD/MM/YYYY`. For `MM/DD/YYYY` (US locale) this would produce wrong results, but the schema `.describe()` prevents the model from returning that format in practice.
+
+---
+
 ## How a Screen Works (End to End)
 
 ```
