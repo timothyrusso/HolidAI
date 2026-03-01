@@ -3,8 +3,8 @@ import { ai_prompt } from '@/modules/ai/domain/entities/prompt';
 
 import { api } from '@/convex/_generated/api';
 import { AiModels } from '@/modules/ai/domain/entities/AiModels';
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { formatDateForPromptUseCase } from '@/modules/dates/application/formatDateForPromptUseCase';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useToast } from '@/modules/shared/hooks/useToast';
 import { useVercelAi } from '@/modules/shared/hooks/useVercelAi';
@@ -42,8 +42,8 @@ export const useGenerateTripPageLogic = () => {
     .replace('{budget}', tripSelectors.budgetInfo)
     .replace('{days}', totalNoOfDays.toString())
     .replace('{nights}', (totalNoOfDays - 1).toString())
-    .replace('{startDate}', translateDate(locale, tripSelectors.datesInfo().startDate))
-    .replace('{endDate}', translateDate(locale, tripSelectors.datesInfo().endDate))
+    .replace('{startDate}', formatDateForPromptUseCase(tripSelectors.datesInfo().startDate))
+    .replace('{endDate}', formatDateForPromptUseCase(tripSelectors.datesInfo().endDate))
     .replace('{locale}', locale);
 
   const generateAiTrip = async () => {
@@ -60,7 +60,7 @@ export const useGenerateTripPageLogic = () => {
         throw new Error('Failed to generate trip plan');
       }
 
-      await addTripToDb({
+      const tripId = await addTripToDb({
         userId: userId || 'unknown_user',
         tripAiResp: output,
         isFavorite: false,
@@ -68,9 +68,12 @@ export const useGenerateTripPageLogic = () => {
 
       decrementTokens(totalNoOfDays);
 
-      router.push(`/${Routes.MyTrips}`);
+      router.push({
+        pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`,
+        params: { id: tripId, fromGenerate: 'true' },
+      });
     } catch (error) {
-      router.replace(`/${Routes.MyTrips}`);
+      router.replace(`/${Routes.HomePage}`);
       showToast('GENERATE_TRIP.ERROR');
       logger.error(new Error('Error generating AI trip:'), error);
     } finally {

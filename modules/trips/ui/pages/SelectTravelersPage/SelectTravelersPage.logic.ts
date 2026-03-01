@@ -1,7 +1,7 @@
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useTripState } from '@/ui/state/trip';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TravelerData } from './SelectTravelersPage.data';
 
@@ -11,6 +11,10 @@ export const useSelectTravelersPageLogic = () => {
   const { t } = useTranslation();
 
   const [selectedTravelers, setSelectedTravelers] = useState<number>(0);
+
+  useEffect(() => {
+    tripActions.setTravelerType(t(TravelerData[0].title));
+  }, []);
 
   const handleCardPress = (id: number) => {
     setSelectedTravelers(id);

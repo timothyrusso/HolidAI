@@ -5,17 +5,12 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'absolute',
-    top: spacing.Sextuple + spacing.Triple,
-    right: spacing.Double,
+    left: spacing.SingleAndHalf + spacing.Minimal,
   },
   skeleton: {
     flex: 1,
-    position: 'absolute',
-    top: spacing.Sextuple + spacing.Triple,
-    right: spacing.Fourfold,
     backgroundColor: colors.primaryBlack,
-    borderRadius: spacing.Double,
+    borderRadius: spacing.Quintuple,
     height: spacing.separator40,
     width: spacing.separator120 + spacing.SingleAndHalf,
   },
