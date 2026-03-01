@@ -8,6 +8,7 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { MainPlacesList } from '../MainPlacesList/MainPlacesList';
 import { useDetailsBoxLogic } from './DetailsBox.logic';
 import { styles } from './DetailsBox.style';
+
 type DetailsBoxProps = {
   location: string;
   tripId: string;

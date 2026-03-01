@@ -26,10 +26,10 @@ export const useGetUserTrips = () => {
 
   const getLastCreatedTrip = () => {
     return userTrips?.sort((a, b) => {
-      const dateA = new Date(a._creationTime);
-      const dateB = new Date(b._creationTime);
+      const dateA = new Date(a.tripAiResp.tripDetails.startDate);
+      const dateB = new Date(b.tripAiResp.tripDetails.startDate);
 
-      return dateB.getTime() - dateA.getTime();
+      return dateA.getTime() - dateB.getTime();
     })[0];
   };
 

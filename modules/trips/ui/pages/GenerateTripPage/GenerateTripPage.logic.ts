@@ -4,7 +4,7 @@ import { ai_prompt } from '@/modules/ai/domain/entities/prompt';
 import { api } from '@/convex/_generated/api';
 import { AiModels } from '@/modules/ai/domain/entities/AiModels';
 import { translateDate } from '@/modules/dates/application/getTranslatedDate';
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useToast } from '@/modules/shared/hooks/useToast';
 import { useVercelAi } from '@/modules/shared/hooks/useVercelAi';
@@ -60,7 +60,7 @@ export const useGenerateTripPageLogic = () => {
         throw new Error('Failed to generate trip plan');
       }
 
-      await addTripToDb({
+      const tripId = await addTripToDb({
         userId: userId || 'unknown_user',
         tripAiResp: output,
         isFavorite: false,
@@ -68,7 +68,10 @@ export const useGenerateTripPageLogic = () => {
 
       decrementTokens(totalNoOfDays);
 
-      router.push(`/${Routes.HomePage}`);
+      router.push({
+        pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`,
+        params: { id: tripId, fromGenerate: 'true' },
+      });
     } catch (error) {
       router.replace(`/${Routes.HomePage}`);
       showToast('GENERATE_TRIP.ERROR');
