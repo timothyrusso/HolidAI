@@ -11,7 +11,7 @@ export const style = (headerPaddingTop: number) =>
       alignItems: 'center',
       paddingTop: headerPaddingTop,
       backgroundColor: colors.primaryWhite,
-      paddingBottom: spacing.Double,
+      paddingBottom: spacing.TripleAndHalf,
     },
     title: {
       fontSize: spacing.Fourfold,
