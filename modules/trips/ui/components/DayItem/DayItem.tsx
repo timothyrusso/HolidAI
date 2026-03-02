@@ -17,7 +17,7 @@ export const DayItem: FC<DayItemProps> = ({ dayPlan, location, tripId }) => {
     <View style={styles.container}>
       <FlatList
         data={dayPlan.schedule}
-        keyExtractor={(item, index) => `${item.placeName}-${index}-${item.activity}`}
+        keyExtractor={(item, index) => `${item.placeName}-${index}-${item.geoCoordinates.latitude}`}
         renderItem={({ item }) => (
           <ActivityItem scheduleItem={item} day={dayPlan.day} location={location} tripId={tripId} />
         )}
