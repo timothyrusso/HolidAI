@@ -18,12 +18,14 @@ export const createTrip = mutation({
     tripAiResp: TripAiResp,
     isFavorite: v.boolean(),
   },
+  returns: v.id(dbKeys.trips),
   handler: async (ctx, args) => {
-    await ctx.db.insert(dbKeys.trips, {
+    const tripId = await ctx.db.insert(dbKeys.trips, {
       userId: args.userId,
       tripAiResp: args.tripAiResp,
       isFavorite: args.isFavorite,
     });
+    return tripId;
   },
 });
 

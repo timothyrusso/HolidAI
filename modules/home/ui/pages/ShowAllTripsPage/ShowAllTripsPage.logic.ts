@@ -18,7 +18,7 @@ export const useShowAllTripsPageLogic = () => {
 
   useEffect(() => {
     if (totalTrips === 0) {
-      router.push(`/${Routes.MyTrips}`);
+      router.push(`/${Routes.HomePage}`);
     }
   }, []);
 

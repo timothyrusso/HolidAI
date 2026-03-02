@@ -26,4 +26,5 @@ export const components = {
   welcomeLogoHeight: 150,
   customInputHeight: 40,
   buttonNumberHeight: 30,
+  animatedWordsHeight: 30,
 };

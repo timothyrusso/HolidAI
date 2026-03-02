@@ -17,6 +17,7 @@ export type CustomIconButtonProps = {
   iconStyle?: StyleProp<ViewStyle>;
   isLoading?: boolean;
   animatedIconStyle?: StyleProp<AnimatedStyle<ViewStyle>>;
+  noPressedStyle?: boolean;
 };
 
 export function BaseIconButton({
@@ -30,6 +31,7 @@ export function BaseIconButton({
   iconStyle,
   isLoading = false,
   animatedIconStyle,
+  noPressedStyle = false,
 }: CustomIconButtonProps) {
   const buttonState = isDisabled ? ButtonState.Disabled : ButtonState.Active;
 
@@ -43,7 +45,7 @@ export function BaseIconButton({
   return (
     <Pressable
       disabled={isDisabled || isLoading}
-      style={({ pressed }) => [styles.button, style, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.button, style, pressed && !noPressedStyle && styles.pressed]}
       onPress={onPress}
     >
       {isLoading ? (

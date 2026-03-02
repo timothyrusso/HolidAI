@@ -2,7 +2,7 @@ export enum Routes {
   Welcome = 'welcome',
   SignUp = 'sign-up',
   SignIn = 'sign-in',
-  MyTrips = 'my-trips',
+  HomePage = 'home-page',
   Search = 'search-place',
   SelectTraveler = 'select-traveler',
   SelectDates = 'select-dates',
@@ -22,5 +22,5 @@ export enum Stacks {
   Login = '(login)',
   Authenticated = '(authenticated)',
   CreateTrip = 'create-trip',
-  MyTrips = 'my-trips',
+  HomePage = 'home-page',
 }

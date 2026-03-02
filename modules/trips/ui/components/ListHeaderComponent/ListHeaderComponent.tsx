@@ -4,7 +4,7 @@ import { icons } from '@/ui/style/icons';
 import { type FC, memo } from 'react';
 import { View } from 'react-native';
 import type { Region } from 'react-native-maps';
-import type { AllCoordinates } from '../../TripDetailsPage.logic';
+import type { AllCoordinates } from '../../pages/TripDetailsPage/TripDetailsPage.logic';
 import { FoodCard } from '../FoodCard/FoodCard';
 import { MapListHeaderComponent } from '../MapListHeaderComponent/MapListHeaderComponent';
 import { NotesCard } from '../NotesCard/NotesCard';

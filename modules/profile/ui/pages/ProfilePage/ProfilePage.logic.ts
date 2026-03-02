@@ -69,7 +69,7 @@ export const useProfilePageLogic = () => {
   };
 
   const goToShowAllTrips = () => {
-    router.push(`/${Stacks.MyTrips}/${Routes.ShowAllTrips}`);
+    router.push(`/${Stacks.HomePage}/${Routes.ShowAllTrips}`);
   };
 
   return {

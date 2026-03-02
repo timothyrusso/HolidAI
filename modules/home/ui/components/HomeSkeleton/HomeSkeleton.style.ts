@@ -20,11 +20,4 @@ export const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingBottom: spacing.Fourfold,
   },
-  button: {
-    height: components.buttonLargeHeight,
-    borderRadius: spacing.Double,
-    backgroundColor: colors.primaryBlack,
-    width: '60%',
-    alignSelf: 'center',
-  },
 });

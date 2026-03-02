@@ -1,11 +1,12 @@
 import { api } from '@/convex/_generated/api';
+import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { useMutation } from 'convex/react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
-  const { id } = useLocalSearchParams();
+  const { id, fromGenerate } = useLocalSearchParams();
   const router = useRouter();
 
   const { getTripById } = useGetUserTrips();
@@ -31,7 +32,13 @@ export const useHeaderIconsLogic = () => {
     router.back();
   };
 
-  const goBackHandler = () => router.back();
+  const goBackHandler = () => {
+    if (fromGenerate === 'true') {
+      router.replace(`/${Routes.HomePage}`);
+    } else {
+      router.back();
+    }
+  };
 
   return { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite, shouldAnimate };
 };

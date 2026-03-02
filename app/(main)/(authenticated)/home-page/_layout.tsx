@@ -3,7 +3,7 @@ import CustomHeader from '@/ui/components/composite/CustomHeader/CustomHeader';
 import { icons } from '@/ui/style/icons';
 import { Stack, useRouter } from 'expo-router';
 
-export default function MyTripLayout() {
+export default function HomePageLayout() {
   const router = useRouter();
 
   return (

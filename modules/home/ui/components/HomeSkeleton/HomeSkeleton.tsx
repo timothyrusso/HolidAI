@@ -5,9 +5,7 @@ import { styles } from './HomeSkeleton.style';
 export const HomeSkeleton = () => {
   return (
     <BaseSkeleton style={styles.container}>
-      <View style={styles.box}>
-        <View style={styles.button} />
-      </View>
+      <View style={styles.box} />
     </BaseSkeleton>
   );
 };
