@@ -55,7 +55,7 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
               />
             </View>
           </View>
-          <CustomText text={scheduleItem.activity} style={styles.place} />
+          <CustomText text={scheduleItem.placeName} style={styles.place} />
           <CustomText text={scheduleItem.placeDetails} style={styles.description} />
           <View style={styles.priceContainer}>
             <CustomIcon name={icons.card} size={spacing.Fourfold} color={colors.primaryBlack} />
