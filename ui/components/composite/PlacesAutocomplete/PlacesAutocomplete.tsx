@@ -76,7 +76,7 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
       predefinedPlacesAlwaysVisible={false}
       suppressDefaultStyles={false}
       textInputHide={false}
-      textInputProps={{}}
+      textInputProps={{ placeholderTextColor: colors.primaryGrey }}
       timeout={20000}
     />
   );
