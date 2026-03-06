@@ -1,5 +1,16 @@
 # Architecture
 
+## Guiding Principles
+
+- **Feature-first** — code is grouped by business capability, not by technical layer. Open a feature folder and understand its full scope end to end.
+- **Inward dependencies** — outer layers depend on inner ones, never the reverse. `ui` → `facades/hooks/state` → `useCases` → `domain`.
+- **Abstraction over coupling** — feature code depends on interfaces, not concrete implementations. Swapping a library only affects its wrapper, not any feature.
+- **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories for reactive backends that require React lifecycle and auth context.
+- **Feature isolation** — features communicate only through `features/shared/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features.
+- **Start simple, promote when needed** — components, facades, and hooks start local. They move to a shared location only when a second consumer appears.
+
+---
+
 ## Philosophy
 
 This project follows a **feature-first Clean Architecture**. Each self-contained piece of functionality lives in its own feature folder with a consistent internal structure. Dependencies always point inward: `ui` → `facades` / `hooks` / `state` → `useCases` → `domain`. Nothing in `domain` ever imports from `data`, `facades`, `hooks`, `state`, or `ui`.
@@ -757,6 +768,78 @@ ISO date strings are lexicographically sortable — string comparison is correct
 const todayStr = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
 trips.filter(trip => trip.startDate >= todayStr);
 ```
+
+---
+
+## Naming Conventions
+
+| Thing | Convention | Example |
+|---|---|---|
+| Components / screens | `PascalCase.tsx` | `TripCard.tsx`, `HomeScreen.tsx` |
+| All other files | `camelCase.ts` | `tripAdapter.ts`, `tripStore.ts` |
+| Hooks (any hook) | `useXxx.ts` | `useTripStore.ts`, `useGetUserTrips.ts` |
+| Domain entities | `Noun.ts` | `Trip.ts`, `Airport.ts` |
+| Interfaces | `IXxx.ts` | `ITripRepository.ts`, `ILogger.ts` |
+| Class repositories | `XxxRepository.ts` | `ImageRepository.ts` |
+| Hook repositories | `useXxxRepository.ts` | `useTripRepository.ts` |
+| Use cases | `XxxUseCase.ts` | `GetUpcomingTripUseCase.ts` |
+| DTOs | `XxxResponseDTO.ts` | `TripResponseDTO.ts` |
+| Adapters | `xxxAdapter.ts` | `tripAdapter.ts` |
+| Schemas | `XxxSchema.ts` | `GenerateTripSchema.ts` |
+| Page files | `PageName.tsx` / `.logic.ts` / `.style.ts` | `HomePage.tsx` |
+
+---
+
+## Testing Strategy
+
+Tests live next to the files they test in a `__tests__/` folder:
+
+```
+features/trips/useCases/__tests__/GetUpcomingTripUseCase.test.ts
+features/trips/facades/__tests__/useGetUserTrips.test.ts
+features/trips/ui/pages/HomePage/__tests__/HomePage.test.tsx
+```
+
+### Unit tests — use cases and pure domain logic
+
+Class use cases have no React dependency — inject mock interfaces directly via the constructor. Fast, no test utilities needed.
+
+```ts
+// GetUpcomingTripUseCase.test.ts
+const useCase = new GetUpcomingTripUseCase();
+const result = useCase.execute(mockTrips);
+expect(result?.destination).toBe('Rome');
+```
+
+For use cases with injected services, pass mock implementations:
+
+```ts
+const mockAiService = { generateObject: jest.fn().mockResolvedValue(mockTrip) };
+const mockLogger = { error: jest.fn() };
+const useCase = new GenerateTripUseCase(mockAiService, mockLogger);
+```
+
+### Hook tests — facades and hooks
+
+Use `renderHook` from React Native Testing Library. Mock hook-based repositories and `di/resolve` at the module level.
+
+```ts
+// useGetUserTrips.test.ts
+jest.mock('@/features/trips/data/repositories/useTripRepository', () => ({
+  useTripRepository: () => ({ getUserTrips: () => mockTrips }),
+}));
+
+const { result } = renderHook(() => useGetUserTrips());
+expect(result.current.totalTrips).toBe(3);
+```
+
+### Integration tests — screens
+
+Test full screens with minimal mocking — only mock network calls. Use React Native Testing Library.
+
+### E2E tests
+
+Validate key user flows (e.g. create trip, sign in). Minimal coverage, maximum confidence.
 
 ---
 
