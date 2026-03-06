@@ -64,21 +64,61 @@ Every other feature is **isolated**: `features/trips/` cannot reach into `featur
 - Move into `features/shared/`
 - Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
 
-```ts
-// features/user/index.ts — public surface of the user feature
-export { useGetUserStatus } from './facades/useGetUserStatus';
-export type { User } from './domain/entities/User';
-```
+Not every feature needs an `index.ts` — only create one when another feature actually needs to import from it.
+
+### What belongs in a feature's public API (`index.ts`)
+
+| Can export | Why |
+|---|---|
+| Domain entities and types | Consumers need them to type-check data received from this feature |
+| Facades | Ready-to-use hooks that expose data and actions cleanly |
+| Utility hooks | Reusable hooks that are genuinely useful to other features |
+
+| Must NOT export | Why |
+|---|---|
+| Hook-based repositories | Internal data access — consumers must never call these directly |
+| Class use cases | Internal business logic — resolved via DI, not consumed cross-feature |
+| DTOs | Internal wire format — domain types are the shared language |
+| Adapters | Internal transformation — no consumer ever needs these |
+| `di/resolve.ts` exports | DI internals — resolution is always local to the owning feature |
+| UI components | These are promoted to global `ui/components/` when shared, not exported from a feature |
 
 ```ts
-// ✅ features/trips/ imports from user's public API
+// features/user/index.ts
+export type { User } from './domain/entities/User';           // ✅ domain type
+export { useGetUserStatus } from './facades/useGetUserStatus'; // ✅ facade
+
+// never exported:
+// export { useTripRepository } from './data/repositories/...' ❌
+// export { getUserUseCase } from './di/resolve'              ❌
+// export { UserResponseDTO } from './data/dto/...'           ❌
+```
+
+### What a consuming feature can import
+
+```ts
+// ✅ Import domain types from another feature's public API
+import type { User } from '@/features/user';
+
+// ✅ Import facades from another feature's public API
 import { useGetUserStatus } from '@/features/user';
 
-// ❌ features/trips/ never reaches into user internals
-import { useConvexUserRepository } from '@/features/user/data/repositories/useConvexUserRepository';
+// ✅ Import anything from shared freely
+import { useUnsplashImages } from '@/features/shared/hooks/useUnsplashImages';
+import { logger } from '@/features/shared/di/resolve';
+
+// ❌ Never reach into another feature's internal folders
+import { useTripRepository } from '@/features/user/data/repositories/useConvexUserRepository';
 ```
 
-Not every feature needs an `index.ts` — only create one when another feature actually needs to import from it.
+### When to use `shared/` vs `index.ts`
+
+| Scenario | Solution |
+|---|---|
+| Logic or type needed by many features | Move to `features/shared/` |
+| Logic or type needed by one specific feature | Expose via `index.ts` of the owning feature |
+| UI component needed by many features | Promote to global `ui/components/` |
+| UI component needed by one other feature | Keep in the owning feature — check if truly needed or if the data can be passed as props |
 
 ---
 
