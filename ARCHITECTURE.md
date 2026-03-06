@@ -6,8 +6,8 @@ This project follows a **feature-first Clean Architecture**. Each self-contained
 
 The app uses two complementary dependency injection patterns:
 
-- **tsyringe** for stateless singletons: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
-- **Hook-based repositories** for Convex data access. Convex is reactive by design — `useQuery`/`useMutation` are hooks that subscribe to real-time updates and depend on Clerk auth context. Forcing them into a class singleton would lose reactivity and break auth. Repository interfaces are defined in `domain/` and implemented as hooks in `data/repositories/`.
+- **IoC container singletons** (e.g. tsyringe) for stateless services: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
+- **Hook-based repositories** for reactive backend data access (e.g. Convex). The backend client exposes reactive hooks that subscribe to real-time updates and depend on the auth context provided by the app's auth provider (e.g. Clerk). Forcing them into a class singleton would lose reactivity and break auth. Repository interfaces are defined in `domain/` and implemented as hooks in `data/repositories/`.
 
 ---
 
@@ -74,7 +74,7 @@ export interface ITripRepository {
   getUserTrips(): Trip[] | undefined;
   createTrip(data: CreateTripData): Promise<void>;
   toggleFavorite(tripId: string): Promise<void>;
-  deletTrip(tripId: string): Promise<void>;
+  deleteTrip(tripId: string): Promise<void>;
 }
 ```
 
@@ -82,7 +82,7 @@ export interface ITripRepository {
 
 Service interfaces. While repository interfaces define contracts for **data access** (how to read and write domain data), service interfaces define contracts for **capabilities** — cross-cutting concerns that a feature needs but doesn't own the implementation of.
 
-A feature declares "I need to be able to log things" or "I need to generate AI content" without caring how it works. The interface is the contract; `data/services/` provides the implementation and the DI container wires them together. This means the implementation can change (e.g. swap `BasicLogger` for a remote logging service) without touching any feature code.
+A feature declares "I need to be able to log things" or "I need to generate AI content" without caring how it works. The interface is the contract; `data/services/` provides the implementation and the IoC container wires them together. This means the implementation can change (e.g. swap a console logger for a remote logging service) without touching any feature code.
 
 ```ts
 // features/shared/domain/entities/services/ILogger.ts
@@ -97,14 +97,15 @@ export interface ILogger {
 
 #### `domain/schemas/`
 
-Zod schema definitions. Schemas are a domain concern because they describe what valid data looks like for this feature. They serve as the single source of truth for both runtime validation and TypeScript types via `z.infer<>`.
+Schema definitions. Schemas are a domain concern because they describe what valid data looks like for this feature. They serve as the single source of truth for both runtime validation and TypeScript types derived via type inference.
 
 `data/validators/` uses these schemas to execute validation. The schema itself does not run validation — it only defines the rules.
 
-**Why not abstract Zod behind an interface?** Zod acts as a type-system extension for TypeScript rather than a swappable infrastructure dependency. `z.infer<>` is the mechanism that derives static types from schema definitions — abstracting it away would mean duplicating every type definition separately, which defeats the purpose. The separation that matters is already in place: schemas *define* rules here in `domain/schemas/`, validators *run* them in `data/validators/`. If the validation library ever changes, only those two locations need updating — no feature code is affected.
+**Why not abstract the schema library behind an interface?** The schema library (e.g. Zod) acts as a type-system extension for TypeScript rather than a swappable infrastructure dependency. Type inference from schemas (e.g. `z.infer<>`) is the mechanism that derives static types from schema definitions — abstracting it away would mean duplicating every type definition separately, which defeats the purpose. The separation that matters is already in place: schemas *define* rules here in `domain/schemas/`, validators *run* them in `data/validators/`. If the schema library ever changes, only those two locations need updating — no feature code is affected.
 
 ```ts
 // features/trips/domain/schemas/GenerateTripSchema.ts
+// e.g. using Zod
 export const generateTripSchema = z.object({
   tripDetails: z.object({
     destination: z.string(),
@@ -121,11 +122,11 @@ export type GeneratedTrip = z.infer<typeof generateTripSchema>;
 
 ### `data/`
 
-Concrete implementations of everything defined in `domain/`. This layer knows about external systems — Convex, HTTP APIs, device storage, SDKs. It imports from `domain/` but `domain/` never imports from `data/`.
+Concrete implementations of everything defined in `domain/`. This layer knows about external systems — reactive backends (e.g. Convex), HTTP APIs, device storage, SDKs. It imports from `domain/` but `domain/` never imports from `data/`.
 
 #### `data/dto/`
 
-Data Transfer Objects. Raw data shapes that come from external sources — HTTP responses, Convex query results, third-party APIs. DTOs live in `data/` because they represent the external world's format, not the app's domain language. The domain layer is completely unaware of them — only `data/adapters/` consumes DTOs to transform them into domain entities.
+Data Transfer Objects. Raw data shapes that come from external sources — HTTP responses, backend query results (e.g. Convex), third-party APIs. DTOs live in `data/` because they represent the external world's format, not the app's domain language. The domain layer is completely unaware of them — only `data/adapters/` consumes DTOs to transform them into domain entities.
 
 ```ts
 // features/trips/data/dto/TripResponseDTO.ts
@@ -141,15 +142,16 @@ export type TripResponseDTO = {
 
 Implementations of repository interfaces from `domain/entities/repositories/`.
 
-For **Convex** (reactive data), repositories are implemented as hooks — not classes. This preserves real-time subscriptions and Clerk auth context, which would be lost in a class singleton:
+For **reactive backends** (e.g. Convex), repositories are implemented as hooks — not classes. This preserves real-time subscriptions and auth context, which would be lost in a class singleton:
 
 ```ts
-// features/trips/data/repositories/useConvexTripRepository.ts
-export const useConvexTripRepository = (): ITripRepository => {
-  const { user } = useUser();
-  const trips = useQuery(api.trips.getAllTripsbyUserId, { userId: user?.id ?? '' });
-  const createMutation = useMutation(api.trips.createTrip);
-  const toggleMutation = useMutation(api.trips.toggleFavoriteTrip);
+// features/trips/data/repositories/useTripRepository.ts
+// e.g. using Convex + Clerk
+export const useTripRepository = (): ITripRepository => {
+  const { user } = useAuthUser();
+  const trips = useReactiveQuery(api.trips.getAllByUserId, { userId: user?.id ?? '' });
+  const createMutation = useMutation(api.trips.create);
+  const toggleMutation = useMutation(api.trips.toggleFavorite);
 
   return {
     getUserTrips: () => trips,
@@ -159,16 +161,16 @@ export const useConvexTripRepository = (): ITripRepository => {
 };
 ```
 
-For **HTTP APIs** (non-reactive), repositories are `@singleton()` classes registered in the DI container:
+For **HTTP APIs** (non-reactive), repositories are singleton classes registered in the IoC container:
 
 ```ts
-// features/shared/data/repositories/UnsplashImageRepository.ts
-@singleton()
-export class UnsplashImageRepository implements IImageRepository {
-  constructor(@inject(TYPES.HttpClient) private http: IHttpClient) {}
+// features/shared/data/repositories/ImageRepository.ts
+// registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
+export class ImageRepository implements IImageRepository {
+  constructor(private http: IHttpClient) {}
 
   async getImage(placeName: string, urlType: UrlType): Promise<string> {
-    const data = await this.http.get('https://api.unsplash.com/search/photos', { ... }).json();
+    const data = await this.http.get('/search/photos', { query: placeName }).json();
     return data.results[0]?.urls[urlType] ?? noImage;
   }
 }
@@ -176,12 +178,12 @@ export class UnsplashImageRepository implements IImageRepository {
 
 #### `data/services/`
 
-Implementations of service interfaces from `domain/entities/services/`. These are stateless, decorated with `@singleton()`, and registered in the DI container. They may use `libraries/` wrappers internally.
+Implementations of service interfaces from `domain/entities/services/`. These are stateless, registered as singletons in the IoC container, and may use `libraries/` wrappers internally.
 
 ```ts
-// features/shared/data/services/BasicLogger.ts
-@singleton()
-export class BasicLogger implements ILogger {
+// features/shared/data/services/Logger.ts
+// registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
+export class Logger implements ILogger {
   log(message: string, ...args: unknown[]) { console.log(message, ...args); }
   error(error: Error, ...args: unknown[]) { console.error(error, ...args); }
   warning(message: string, ...args: unknown[]) { console.warn(message, ...args); }
@@ -208,7 +210,7 @@ export const toTrip = (dto: TripResponseDTO): Trip => ({
 
 #### `data/validators/`
 
-Functions that execute validation — running Zod schemas against untrusted input, checking business rules, sanitizing data. Validators use schemas from `domain/schemas/` as their rules.
+Functions that execute validation — running schemas (e.g. Zod `.parse()`) against untrusted input, checking business rules, sanitizing data. Validators use schemas from `domain/schemas/` as their rules.
 
 ```ts
 // features/trips/data/validators/validateGeneratedTrip.ts
@@ -221,14 +223,13 @@ export const validateGeneratedTrip = (data: unknown): GeneratedTrip => {
 
 ### `libraries/`
 
-Thin wrappers around external libraries. No business logic — only API normalization and simplification. The goal is to isolate the app from third-party library APIs so that swapping a library (e.g. `ky` → `axios`) only requires changing its wrapper, not every file that uses it.
+Thin wrappers around external libraries. No business logic — only API normalization and simplification. The goal is to isolate the app from third-party library APIs so that swapping a library only requires changing its wrapper, not every file that uses it.
 
 `data/services/` and `data/repositories/` always use library wrappers, never raw libraries directly.
 
 ```ts
 // features/shared/libraries/httpClient.ts
-import ky from 'ky';
-
+// e.g. wrapping ky
 export const httpClient = ky.create({
   timeout: 10_000,
   retry: 1,
@@ -237,9 +238,11 @@ export const httpClient = ky.create({
 
 ```ts
 // features/shared/libraries/storageClient.ts
-import { MMKV } from 'react-native-mmkv';
-
-export const storageClient = new MMKV({ id: 'app-storage', encryptionKey: '...' });
+// e.g. wrapping MMKV
+export const storageClient = new MMKV({
+  id: 'app-storage',
+  encryptionKey: '...',
+});
 ```
 
 ---
@@ -248,50 +251,118 @@ export const storageClient = new MMKV({ id: 'app-storage', encryptionKey: '...' 
 
 Application logic that orchestrates domain entities, repositories, and services to perform a specific action or compute a specific result. Use cases contain business rules that don't belong to any single entity.
 
-Pure utility functions that have no side effects and don't require DI also live here.
+**All use cases are classes**, registered in the feature's `di/` folder. This ensures consistency — adding a dependency later only requires updating the constructor and DI config, not the calling code.
+
+Use cases can depend on both **repository interfaces** (data access) and **service interfaces** (capabilities) — both are infrastructure concerns injected via their interfaces.
+
+Use cases with no external dependencies have an empty constructor. They still receive runtime data as method parameters:
 
 ```ts
-// features/trips/useCases/getUpcomingTripUseCase.ts
-export const getUpcomingTripUseCase = (trips: Trip[]): Trip | undefined => {
-  const today = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
-  return trips
-    .filter(trip => trip.startDate >= today)
-    .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+// features/trips/useCases/GetUpcomingTripUseCase.ts
+// registered in di/config.ts
+export class GetUpcomingTripUseCase {
+  execute(trips: Trip[]): Trip | undefined {
+    const today = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
+    return trips
+      .filter(trip => trip.startDate >= today)
+      .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+  }
+}
+```
+
+Use cases that need services inject them via the constructor:
+
+```ts
+// features/trips/useCases/GenerateTripUseCase.ts
+// registered in di/config.ts
+export class GenerateTripUseCase {
+  constructor(
+    private aiService: IAiService,  // service
+    private logger: ILogger,        // service
+  ) {}
+
+  async execute(formData: TripFormData): Promise<GeneratedTrip> {
+    try {
+      const prompt = buildPromptUseCase(formData);
+      return await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
+    } catch (error) {
+      this.logger.error(ensureError(error));
+      throw error;
+    }
+  }
+}
+```
+
+Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the **hook layer**:
+
+```ts
+// features/trips/hooks/useGenerateTrip.ts
+import { generateTripUseCase, getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+
+export const useGenerateTrip = () => {
+  const repo = useTripRepository();                       // reactive backend hook
+
+  const generate = async (formData: TripFormData) => {
+    const generated = await generateTripUseCase.execute(formData);  // IoC use case
+    await repo.createTrip(generated);                               // reactive repo
+  };
+
+  return { generate };
 };
 ```
+
+This keeps each layer focused: use cases handle business logic, repositories handle data persistence, hooks coordinate them.
 
 ---
 
 ### `hooks/`
 
-React integration layer. Hooks connect components to use cases, repositories, and DI-resolved services. They handle React-specific concerns — lifecycle, derived state, memoization — and are the only layer that components directly interact with.
+Feature hooks exist for **reusable composition** — they follow the same promotion rule as components: start logic local in `.logic.ts`, and promote it to a feature hook only when the same combination of repositories, use cases, or data is needed in more than one page, or when the composition is complex enough to justify naming it.
 
-For **hook-based repositories** (Convex), hooks compose the repository hook with use case logic:
+Feature hooks can import hook-based repositories, IoC-resolved use cases and services, and other feature hooks.
 
 ```ts
 // features/trips/hooks/useGetUserTrips.ts
+import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+
 export const useGetUserTrips = () => {
-  const repo = useConvexTripRepository();
+  const repo = useTripRepository();
   const trips = repo.getUserTrips();
 
   return {
     isLoading: trips === undefined,
-    getUpcomingTrip: () => trips ? getUpcomingTripUseCase(trips) : undefined,
-    getTotalTrips: () => trips?.length ?? 0,
-    getFavouriteTrips: () => trips?.filter(t => t.isFavorite) ?? [],
+    upcomingTrip: trips ? getUpcomingTripUseCase.execute(trips) : undefined,
+    totalTrips: trips?.length ?? 0,
+    favouriteTrips: trips?.filter(t => t.isFavorite) ?? [],
     getTripById: (id: string) => trips?.find(t => t.id === id),
   };
 };
 ```
 
-For **DI-resolved services** (tsyringe), hooks resolve the singleton from the container:
+```ts
+// features/trips/hooks/useGenerateTrip.ts
+import { generateTripUseCase } from '@/features/trips/di/resolve';
+
+export const useGenerateTrip = () => {
+  const repo = useTripRepository();
+
+  const generate = async (formData: TripFormData) => {
+    const generated = await generateTripUseCase.execute(formData);
+    await repo.createTrip(generated);
+  };
+
+  return { generate };
+};
+```
+
+For **IoC-resolved services** consumed directly in hooks (without a repository):
 
 ```ts
-// features/shared/hooks/useVercelAi.ts
+// features/shared/hooks/useAiGeneration.ts
 import { aiClient } from '@/features/ai/di/resolve';
 
-export const useVercelAi = () => ({
-  generateAiObject: (prompt: string, schema: ZodType, model: AiModels) =>
+export const useAiGeneration = () => ({
+  generateObject: (prompt: string, schema: Schema, model: AiModel) =>
     aiClient.generateObject(prompt, schema, model),
 });
 ```
@@ -300,11 +371,11 @@ export const useVercelAi = () => ({
 
 ### `state/`
 
-Zustand stores for UI state that belongs to this feature. Only domain-specific state lives here — wizard steps, selected options, local UI flags. Cross-cutting global state (app theme, modal visibility, store utilities) lives in `features/shared/state/`.
+State stores (e.g. Zustand) for UI state that belongs to this feature. Only domain-specific state lives here — wizard steps, selected options, local UI flags. Cross-cutting global state (app theme, modal visibility, store utilities) lives in `features/shared/state/`.
 
 ```ts
 // features/trips/state/tripStore.ts
-export const useTripStore = create<TripState & TripActions>()(set => ({
+export const useTripStore = createStore<TripState & TripActions>(set => ({
   locationInfo: { name: '', coordinates: undefined },
   datesInfo: { startDate: null, endDate: null, totalNoOfDays: 0 },
   budgetInfo: 'Cheap',
@@ -321,11 +392,11 @@ export const useTripStore = create<TripState & TripActions>()(set => ({
 
 ### `ui/`
 
-React Native components and pages for this feature. This layer only imports from `hooks/`, `state/`, and the global `ui/` — never directly from `domain/`, `data/`, or `useCases/`.
+React Native components and pages for this feature. `.tsx` files only import from `hooks/`, `state/`, and the global `ui/` — never directly from `domain/`, `data/`, or `useCases/`.
 
 #### `ui/components/`
 
-Feature-specific React Native components. Not intended for reuse across features — if a component is needed by multiple features, it moves to the global `ui/components/`.
+Feature-specific React Native components. They follow a **promotion rule**: a component always starts in the feature that needs it. The moment a second feature needs the same component, it gets promoted to the global `ui/components/`. This prevents premature abstraction while keeping duplication visible — before building a new component, check `ui/components/` first, then the feature you're drawing inspiration from.
 
 #### `ui/pages/`
 
@@ -338,6 +409,46 @@ PageName/
 └── PageName.style.ts   → StyleSheet definitions
 ```
 
+`PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which acts as the page's **ViewModel**. It can import:
+- **Feature hooks** (`features/<name>/hooks/`) — for reused data and actions
+- **Hook-based repositories** (`features/<name>/data/repositories/`) — for page-specific reactive data (when not shared across pages)
+- **IoC-resolved use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not shared across pages)
+- **State** (`features/<name>/state/`) — for local UI state
+
+When the same combination of repositories + use cases appears in more than one page, promote it to a feature hook in `hooks/`.
+
+```ts
+// ✅ PageName.logic.ts — using a feature hook (logic shared across pages)
+import { useGetUserTrips } from '@/features/trips/hooks/useGetUserTrips';
+import { useTripStore } from '@/features/trips/state/tripStore';
+
+export const usePageNameLogic = () => {
+  const { upcomingTrip, isLoading } = useGetUserTrips();  // reused → promoted to feature hook
+  const { actions } = useTripStore();                     // local UI state
+
+  return { upcomingTrip, isLoading, actions };
+};
+```
+
+```ts
+// ✅ PageName.logic.ts — using a hook-based repo directly (page-specific logic)
+import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+
+export const usePageNameLogic = () => {
+  const repo = useTripRepository();
+  const trips = repo.getUserTrips();
+  const upcoming = trips ? getUpcomingTripUseCase.execute(trips) : undefined;
+
+  return { upcoming, isLoading: trips === undefined };
+};
+```
+
+```ts
+// ❌ PageName.logic.ts — never imports IoC repositories directly
+import { imageRepository } from '@/features/shared/di/resolve';
+```
+
 ---
 
 ## DI Container
@@ -348,7 +459,7 @@ Each feature that has injectable singletons owns its DI configuration. There is 
 features/shared/
 └── di/
     ├── types.ts    → SHARED_TYPES = { Logger: Symbol.for('Logger'), Storage: Symbol.for('Storage'), … }
-    ├── config.ts   → container.registerSingleton(SHARED_TYPES.Logger, BasicLogger)
+    ├── config.ts   → container.registerSingleton(SHARED_TYPES.Logger, Logger)
     └── resolve.ts  → export const logger = container.resolve<ILogger>(SHARED_TYPES.Logger)
 
 features/ai/
@@ -364,13 +475,13 @@ features/flights/
     └── resolve.ts
 ```
 
-Features that use only hook-based repositories (trips, user) have no `di/` folder — they don't need one.
+Features that use only hook-based repositories (e.g. trips, user) have no `di/` folder — they don't need one.
 
 **Bootstrap** — all `config.ts` files are imported once at app startup in the correct order:
 
 ```ts
 // app/_layout.tsx
-import 'reflect-metadata';
+import 'reflect-metadata'; // e.g. required by tsyringe
 import '@/features/shared/di/config';
 import '@/features/ai/di/config';
 import '@/features/flights/di/config';
@@ -389,34 +500,49 @@ Never instantiate services directly — always import from the feature's `di/res
 
 ## DI Patterns
 
-### Pattern 1 — tsyringe singletons
+### Pattern 1 — IoC container singletons (e.g. tsyringe)
 
-Used for: Logger, Storage, AI client, HTTP client, image repositories.
+Used for: services, HTTP-based repositories, and use cases. Stateless, no React lifecycle dependency, safe to resolve once at startup.
 
-Stateless, no React lifecycle dependency, safe to resolve once at startup.
+All three follow the same three-file DI pattern inside the owning feature's `di/` folder:
+
+**Services** (e.g. Logger, Storage, AI client):
 
 | Layer | Location |
 |---|---|
 | Interface | `features/<name>/domain/entities/services/IXxx.ts` |
-| Implementation | `features/<name>/data/services/Xxx.ts` (`@singleton()`) |
+| Implementation | `features/<name>/data/services/Xxx.ts` |
 | Library wrapper | `features/<name>/libraries/xxxClient.ts` |
-| DI types | `features/<name>/di/types.ts` |
-| DI config | `features/<name>/di/config.ts` |
-| DI resolve | `features/<name>/di/resolve.ts` |
+| DI types / config / resolve | `features/<name>/di/` |
 
-### Pattern 2 — Hook-based repositories
-
-Used for: all Convex queries and mutations (trips, user).
-
-Convex is reactive by design. `useQuery` establishes a real-time subscription and depends on Clerk auth context from `ConvexProviderWithClerk`. This cannot be replicated in a class singleton without losing reactivity and breaking auth.
+**HTTP-based repositories**:
 
 | Layer | Location |
 |---|---|
 | Interface | `features/<name>/domain/entities/repositories/IXxxRepository.ts` |
-| Implementation | `features/<name>/data/repositories/useConvexXxxRepository.ts` (hook) |
-| Consumed by | `features/<name>/hooks/useXxx.ts` |
+| Implementation | `features/<name>/data/repositories/XxxRepository.ts` |
+| DI types / config / resolve | `features/<name>/di/` |
 
-No DI container entry needed — the hook is the injection mechanism.
+**Use cases**:
+
+| Layer | Location |
+|---|---|
+| Class | `features/<name>/useCases/XxxUseCase.ts` |
+| DI types / config / resolve | `features/<name>/di/` |
+
+### Pattern 2 — Hook-based repositories (e.g. Convex)
+
+Used for: reactive backend data access (queries and mutations).
+
+The reactive backend client (e.g. Convex) exposes hooks that establish real-time subscriptions tied to the auth provider context (e.g. Clerk). This cannot be replicated in a class singleton without losing reactivity and breaking auth.
+
+| Layer | Location |
+|---|---|
+| Interface | `features/<name>/domain/entities/repositories/IXxxRepository.ts` |
+| Implementation | `features/<name>/data/repositories/useXxxRepository.ts` (hook) |
+| Consumed by | `features/<name>/hooks/useXxx.ts` or `PageName.logic.ts` (page-specific) |
+
+No IoC container entry needed — the hook is the injection mechanism.
 
 ---
 
@@ -427,10 +553,10 @@ Reusable building blocks shared across multiple features.
 ```
 ui/
 ├── components/
-│   ├── basic/      → Atomic: CustomButton, CustomText, CustomIcon, CustomTextInput…
-│   ├── composite/  → Composed: CustomHeader, CustomScrollView, PlacesAutocomplete…
-│   ├── dialogs/    → Modals: ActionModal, InfoModal, ResetPasswordModal…
-│   └── view/       → Page wrappers: BasicView
+│   ├── basic/      → Atomic: buttons, text, icons, inputs…
+│   ├── composite/  → Composed: headers, scroll views, autocomplete…
+│   ├── dialogs/    → Modals and overlays
+│   └── view/       → Page wrapper components
 ├── style/          → Design tokens: colors, fonts, spacing, shadows, animations
 └── assets/         → Static files: images/, fonts/, lottie/
 ```
@@ -439,13 +565,13 @@ ui/
 
 ## `app/` — Routing
 
-Expo Router uses file-based routing. Route files are **thin entry points** — they import and render a `Page` component from `features/`.
+File-based routing. Route files are **thin entry points** — they import and render a `Page` component from `features/`.
 
 ```
 app/
 └── (main)/
     ├── (login)/           → Public screens: welcome, sign-in, sign-up
-    └── (authenticated)/   → Protected screens (requires Clerk auth)
+    └── (authenticated)/   → Protected screens (requires auth)
         ├── (tabs)/        → Tab navigator: home, profile
         ├── create-trip/   → Multi-step trip creation wizard
         ├── home-page/     → Show all trips
@@ -454,9 +580,9 @@ app/
 
 ---
 
-## `convex/` — Backend
+## Backend (`/convex`)
 
-Serverless backend using Convex.
+Serverless backend functions and database schema.
 
 ```
 convex/
@@ -464,7 +590,7 @@ convex/
 ├── users.ts        → User queries and mutations
 ├── trips.ts        → Trip queries and mutations
 ├── validators/     → Input validation
-└── auth.config.ts  → Clerk authentication integration
+└── auth.config.ts  → Auth provider integration
 ```
 
 ---
@@ -477,7 +603,7 @@ app/(authenticated)/create-trip/search-place.tsx
         ├── uses useSearchPlacePageLogic()                ← SearchPlacePage.logic.ts
         │     ├── reads/writes useTripStore()             ← features/trips/state/
         │     └── calls useGooglePlaceImages()            ← features/shared/hooks/
-        │           └── googlePlacesRepository.getImage() ← features/shared/di/resolve (tsyringe)
+        │           └── imageRepository.getImage()        ← features/shared/di/resolve (IoC container)
         └── renders <PlacesAutocomplete />                ← ui/components/composite/
 ```
 
@@ -487,19 +613,19 @@ app/(authenticated)/create-trip/search-place.tsx
 
 ### Storage convention
 
-All trip dates (`startDate`, `endDate`) are stored in Convex as **`YYYY-MM-DD` strings** (ISO 8601 date-only, no time component).
+All trip dates (`startDate`, `endDate`) are stored as **`YYYY-MM-DD` strings** (ISO 8601 date-only, no time component).
 
 ### Full pipeline
 
 ```
-CalendarPicker (react-native-calendar-picker)
+Date picker
   → Date object (midnight UTC)
   → getTimezoneFormattedDateUseCase()     adjusts to local timezone
   → tripStore.datesInfo                   stored as Date | null
   → formatDateForPromptUseCase()          extracts "YYYY-MM-DD"
-  → AI model (Gemini)                     receives unambiguous ISO date
-  → generateTripSchema (Zod)              .transform(normalizeDateToISOUseCase) as safety net
-  → Convex DB                             always stored as "YYYY-MM-DD"
+  → AI model                              receives unambiguous ISO date
+  → generateTripSchema                    schema transform as safety net
+  → Database                              always stored as "YYYY-MM-DD"
   → translateDate(locale, "YYYY-MM-DD")   formats for display
   → UI
 ```
@@ -512,7 +638,7 @@ CalendarPicker (react-native-calendar-picker)
 | `getTimezoneFormattedDateUseCase` | Adjusts a `Date` by subtracting the timezone offset so it represents local time correctly. | `Date` → `Date` |
 | `convertFromUTCToLocaleUseCase` | Formats full UTC datetime strings into `"DD MMMM YYYY"`. Not used for trip date strings. | `string (datetime)` → `string` |
 | `getTranslatedDate` (`translateDate`) | Parses a `Date` or date string and returns a locale-specific display string. | `Date \| string` → `string` |
-| `normalizeDateToISOUseCase` | Converts `DD/MM/YYYY` → `YYYY-MM-DD`. Pass-through for already-correct formats. Used as Zod transform. | `string` → `string` |
+| `normalizeDateToISOUseCase` | Converts `DD/MM/YYYY` → `YYYY-MM-DD`. Pass-through for already-correct formats. Used as schema transform. | `string` → `string` |
 | `formatDateForPromptUseCase` | Extracts `YYYY-MM-DD` from a timezone-adjusted `Date` for AI prompt placeholders. | `Date \| null` → `string` |
 
 ### Comparing dates
@@ -528,22 +654,23 @@ trips.filter(trip => trip.startDate >= todayStr);
 
 ## Rules
 
-1. **Dependencies point inward.** `ui` → `hooks` / `state` → `useCases` → `domain`. Never the reverse.
+1. **Dependencies point inward.** `ui` → `hooks` / `state` → `useCases` → `domain`. Never the reverse. See import rules below.
+
+   | Layer | Can import |
+   |---|---|
+   | `.tsx` | feature hooks, state |
+   | `.logic.ts` (ViewModel) | feature hooks, hook-based repos, IoC use cases, state |
+   | `features/<name>/hooks/` | hook-based repos, IoC use cases, IoC services, other feature hooks |
+   | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities |
+   | `data/repositories/` | domain interfaces, DTOs, adapters |
+
+   **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `hooks/`, or anywhere in `ui/`.**
 2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
-3. **`data/` owns external systems.** Only `data/` imports from Convex, ky, MMKV, SDKs.
+3. **`data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
 4. **`libraries/` isolates third-party APIs.** `data/` uses library wrappers, never raw libraries directly.
-5. **Schemas in `domain/schemas/`.** Zod schemas define domain rules — they are not infra concerns.
+5. **Schemas in `domain/schemas/`.** Schemas (e.g. Zod) define domain rules — they are not infrastructure concerns.
 6. **Adapters transform, validators execute.** Adapters convert DTOs to entities; validators run schemas against data.
 7. **Pages are thin.** All logic in `.logic.ts` hooks, all styles in `.style.ts` files.
 8. **Feature state in `state/`.** Global state (store utils, app state, modal state) in `features/shared/state/`.
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
-10. **Convex = hook-based repositories.** Never wrap Convex hooks in a class singleton.
-
----
-
-## Path Aliases
-
-| Alias | Resolves to |
-|---|---|
-| `@/*` | project root |
-| `@ui/*` | `ui/` |
+10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
