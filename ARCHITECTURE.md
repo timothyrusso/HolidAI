@@ -2,7 +2,7 @@
 
 ## Philosophy
 
-This project follows a **feature-first Clean Architecture**. Each self-contained piece of functionality lives in its own feature folder with a consistent internal structure. Dependencies always point inward: `ui` → `hooks` / `state` → `useCases` → `domain`. Nothing in `domain` ever imports from `data`, `hooks`, `state`, or `ui`.
+This project follows a **feature-first Clean Architecture**. Each self-contained piece of functionality lives in its own feature folder with a consistent internal structure. Dependencies always point inward: `ui` → `facades` / `hooks` / `state` → `useCases` → `domain`. Nothing in `domain` ever imports from `data`, `facades`, `hooks`, `state`, or `ui`.
 
 The app uses two complementary dependency injection patterns:
 
@@ -34,6 +34,7 @@ features/<name>/
 │   └── resolve.ts
 ├── libraries/
 ├── useCases/
+├── facades/
 ├── hooks/
 ├── state/
 └── ui/
@@ -160,6 +161,8 @@ export const useTripRepository = (): ITripRepository => {
   };
 };
 ```
+
+**Naming convention:** class-based repositories are named `XxxRepository.ts`; hook-based repositories are prefixed with `use` following the React convention: `useXxxRepository.ts`. This makes the pattern immediately visible without needing a subfolder — a feature rarely has both types simultaneously.
 
 For **HTTP APIs** (non-reactive), repositories are singleton classes registered in the IoC container:
 
@@ -293,10 +296,10 @@ export class GenerateTripUseCase {
 }
 ```
 
-Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the **hook layer**:
+Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the **facade layer**:
 
 ```ts
-// features/trips/hooks/useGenerateTrip.ts
+// features/trips/facades/useGenerateTrip.ts
 import { generateTripUseCase, getUpcomingTripUseCase } from '@/features/trips/di/resolve';
 
 export const useGenerateTrip = () => {
@@ -311,18 +314,77 @@ export const useGenerateTrip = () => {
 };
 ```
 
-This keeps each layer focused: use cases handle business logic, repositories handle data persistence, hooks coordinate them.
+This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them.
+
+#### IoC repositories — full consumption chain
+
+An IoC (class-based) repository is injected into a use case and never escapes that boundary. This is how it flows end to end:
+
+```ts
+// 1. Interface — features/shared/domain/entities/repositories/IImageRepository.ts
+export interface IImageRepository {
+  getImage(placeName: string, urlType: UrlType): Promise<string>;
+}
+
+// 2. Use case — features/shared/useCases/GetPlaceImageUseCase.ts
+// registered in di/config.ts (e.g. using tsyringe @injectable())
+export class GetPlaceImageUseCase {
+  constructor(private imageRepository: IImageRepository) {}  // IoC repo injected
+
+  async execute(placeName: string, urlType: UrlType): Promise<string> {
+    return this.imageRepository.getImage(placeName, urlType);
+  }
+}
+
+// 3. Resolved — features/shared/di/resolve.ts
+export const getPlaceImageUseCase =
+  container.resolve<GetPlaceImageUseCase>(SHARED_TYPES.GetPlaceImageUseCase);
+
+// 4a. Consumed via facade (when reused across pages)
+// features/shared/facades/useGetPlaceImage.ts
+import { getPlaceImageUseCase } from '@/features/shared/di/resolve';
+
+export const useGetPlaceImage = (placeName: string) => {
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    getPlaceImageUseCase.execute(placeName, 'regular').then(setUrl);
+  }, [placeName]);
+
+  return url;
+};
+
+// 4b. Or consumed directly in .logic.ts (page-specific)
+import { getPlaceImageUseCase } from '@/features/shared/di/resolve';
+
+export const useSearchPlaceLogic = () => {
+  const handleSelect = async (place: string) => {
+    const url = await getPlaceImageUseCase.execute(place, 'regular');
+    // ...
+  };
+  return { handleSelect };
+};
+```
+
+```ts
+// ❌ Never import an IoC repository directly in a facade, hook, or .logic.ts
+import { imageRepository } from '@/features/shared/di/resolve';  // breaks the rule
+```
+
+The key distinction from hook-based repositories: an IoC repository is a class singleton resolved once at startup. It has no React lifecycle and can be called anywhere — but it must always be called through a use case, never directly. A hook-based repository (e.g. Convex) is different: it is a React hook itself and can be called directly in facades or `.logic.ts`.
 
 ---
 
-### `hooks/`
+### `facades/`
 
-Feature hooks exist for **reusable composition** — they follow the same promotion rule as components: start logic local in `.logic.ts`, and promote it to a feature hook only when the same combination of repositories, use cases, or data is needed in more than one page, or when the composition is complex enough to justify naming it.
+Facades are **coordination hooks** — they combine hook-based repositories and class use cases into a single, named React hook. The name comes from the Facade design pattern: a simplified interface over a complex subsystem. Callers don't need to know that getting upcoming trips requires both a Convex subscription and a filtering use case — the facade handles it.
 
-Feature hooks can import hook-based repositories, IoC-resolved use cases and services, and other feature hooks.
+Follow the same **promotion rule** as components: start coordination logic locally in `.logic.ts`, and promote it to a facade only when the same combination is needed in more than one page, or when the composition is complex enough to justify naming it.
+
+Facades can import hook-based repositories, class use cases from `di/resolve.ts`, IoC services, and other facades.
 
 ```ts
-// features/trips/hooks/useGetUserTrips.ts
+// features/trips/facades/useGetUserTrips.ts
 import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
 
 export const useGetUserTrips = () => {
@@ -340,31 +402,39 @@ export const useGetUserTrips = () => {
 ```
 
 ```ts
-// features/trips/hooks/useGenerateTrip.ts
+// features/trips/facades/useGenerateTrip.ts — coordinates AI use case + reactive repo
 import { generateTripUseCase } from '@/features/trips/di/resolve';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
 
   const generate = async (formData: TripFormData) => {
-    const generated = await generateTripUseCase.execute(formData);
-    await repo.createTrip(generated);
+    const generated = await generateTripUseCase.execute(formData);  // class use case
+    await repo.createTrip(generated);                               // hook-based repo
   };
 
   return { generate };
 };
 ```
 
-For **IoC-resolved services** consumed directly in hooks (without a repository):
+---
+
+### `hooks/`
+
+Utility hooks — feature-specific stateful or derived logic that is reused across multiple pages within this feature, but does **not** coordinate repositories or use cases. If a utility hook is needed by more than one feature, promote it to `features/shared/hooks/`.
+
+Hooks in this folder do not import from `data/repositories/`, `useCases/`, or `di/resolve.ts`. They may import domain types, state stores, and external library hooks.
 
 ```ts
-// features/shared/hooks/useAiGeneration.ts
-import { aiClient } from '@/features/ai/di/resolve';
+// features/trips/hooks/useTripSearchFilters.ts
+export const useTripSearchFilters = () => {
+  const [query, setQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
-export const useAiGeneration = () => ({
-  generateObject: (prompt: string, schema: Schema, model: AiModel) =>
-    aiClient.generateObject(prompt, schema, model),
-});
+  const clearFilters = () => { setQuery(''); setActiveFilter('all'); };
+
+  return { query, setQuery, activeFilter, setActiveFilter, clearFilters };
+};
 ```
 
 ---
@@ -409,21 +479,25 @@ PageName/
 └── PageName.style.ts   → StyleSheet definitions
 ```
 
-`PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which acts as the page's **ViewModel**. It can import:
-- **Feature hooks** (`features/<name>/hooks/`) — for reused data and actions
-- **Hook-based repositories** (`features/<name>/data/repositories/`) — for page-specific reactive data (when not shared across pages)
-- **IoC-resolved use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not shared across pages)
+`PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers.
+
+It can import:
+- **Facades** (`features/<name>/facades/`) — for reused coordination of repos + use cases
+- **Hooks** (`features/<name>/hooks/`) — for reused utility logic
+- **Shared hooks** (`features/shared/hooks/`) — for cross-feature utilities (images, formatting…)
+- **Hook-based repositories** (`features/<name>/data/repositories/`) — for page-specific reactive data (when not reused)
+- **Class use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not reused)
 - **State** (`features/<name>/state/`) — for local UI state
 
-When the same combination of repositories + use cases appears in more than one page, promote it to a feature hook in `hooks/`.
+When the same combination of repositories + use cases appears in more than one page, promote it to a facade in `facades/`.
 
 ```ts
-// ✅ PageName.logic.ts — using a feature hook (logic shared across pages)
-import { useGetUserTrips } from '@/features/trips/hooks/useGetUserTrips';
+// ✅ PageName.logic.ts — using a facade (coordination reused across pages)
+import { useGetUserTrips } from '@/features/trips/facades/useGetUserTrips';
 import { useTripStore } from '@/features/trips/state/tripStore';
 
 export const usePageNameLogic = () => {
-  const { upcomingTrip, isLoading } = useGetUserTrips();  // reused → promoted to feature hook
+  const { upcomingTrip, isLoading } = useGetUserTrips();  // reused → promoted to facade
   const { actions } = useTripStore();                     // local UI state
 
   return { upcomingTrip, isLoading, actions };
@@ -431,7 +505,7 @@ export const usePageNameLogic = () => {
 ```
 
 ```ts
-// ✅ PageName.logic.ts — using a hook-based repo directly (page-specific logic)
+// ✅ PageName.logic.ts — page-specific coordination (not yet promoted to facade)
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
 import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
 
@@ -540,7 +614,7 @@ The reactive backend client (e.g. Convex) exposes hooks that establish real-time
 |---|---|
 | Interface | `features/<name>/domain/entities/repositories/IXxxRepository.ts` |
 | Implementation | `features/<name>/data/repositories/useXxxRepository.ts` (hook) |
-| Consumed by | `features/<name>/hooks/useXxx.ts` or `PageName.logic.ts` (page-specific) |
+| Consumed by | `features/<name>/facades/useXxx.ts` or `PageName.logic.ts` (page-specific) |
 
 No IoC container entry needed — the hook is the injection mechanism.
 
@@ -600,9 +674,9 @@ convex/
 ```
 app/(authenticated)/create-trip/search-place.tsx
   └── renders <SearchPlacePage />                         ← features/trips/ui/pages/
-        ├── uses useSearchPlacePageLogic()                ← SearchPlacePage.logic.ts
+        ├── uses useSearchPlacePageLogic()                ← SearchPlacePage.logic.ts (ViewModel)
         │     ├── reads/writes useTripStore()             ← features/trips/state/
-        │     └── calls useGooglePlaceImages()            ← features/shared/hooks/
+        │     └── calls useGooglePlaceImages()            ← features/shared/hooks/ (shared utility)
         │           └── imageRepository.getImage()        ← features/shared/di/resolve (IoC container)
         └── renders <PlacesAutocomplete />                ← ui/components/composite/
 ```
@@ -654,17 +728,18 @@ trips.filter(trip => trip.startDate >= todayStr);
 
 ## Rules
 
-1. **Dependencies point inward.** `ui` → `hooks` / `state` → `useCases` → `domain`. Never the reverse. See import rules below.
+1. **Dependencies point inward.** `ui` → `facades` / `hooks` / `state` → `useCases` → `domain`. Never the reverse. See import rules below.
 
    | Layer | Can import |
    |---|---|
-   | `.tsx` | feature hooks, state |
-   | `.logic.ts` (ViewModel) | feature hooks, hook-based repos, IoC use cases, state |
-   | `features/<name>/hooks/` | hook-based repos, IoC use cases, IoC services, other feature hooks |
+   | `.tsx` | facades, hooks, state |
+   | `.logic.ts` (ViewModel) | facades, hooks, shared hooks, hook-based repos (page-specific), class use cases via `di/resolve` (page-specific), state |
+   | `facades/` | hook-based repos, class use cases via `di/resolve`, IoC services, other facades |
+   | `hooks/` | domain types, state, external library hooks — **not** repos or use cases |
    | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities |
    | `data/repositories/` | domain interfaces, DTOs, adapters |
 
-   **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `hooks/`, or anywhere in `ui/`.**
+   **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `facades/`, `hooks/`, or anywhere in `ui/`.**
 2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
 3. **`data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
 4. **`libraries/` isolates third-party APIs.** `data/` uses library wrappers, never raw libraries directly.
