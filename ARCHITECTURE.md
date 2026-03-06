@@ -44,6 +44,33 @@ features/<name>/
 
 ---
 
+## `features/shared/`
+
+`features/shared/` is the **one feature all other features are allowed to import from freely**. It owns cross-cutting infrastructure — logger, storage, HTTP client, image repositories — and shared utilities like `createStore`, global state, and shared hooks. Its sub-paths are imported directly (no `index.ts` gating needed).
+
+Every other feature is **isolated**: `features/trips/` cannot reach into `features/user/` internals. If logic or types are needed across features, they either:
+
+- Move into `features/shared/`
+- Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
+
+```ts
+// features/user/index.ts — public surface of the user feature
+export { useGetUserStatus } from './facades/useGetUserStatus';
+export type { User } from './domain/entities/User';
+```
+
+```ts
+// ✅ features/trips/ imports from user's public API
+import { useGetUserStatus } from '@/features/user';
+
+// ❌ features/trips/ never reaches into user internals
+import { useConvexUserRepository } from '@/features/user/data/repositories/useConvexUserRepository';
+```
+
+Not every feature needs an `index.ts` — only create one when another feature actually needs to import from it.
+
+---
+
 ## Folder Purposes
 
 ### `domain/`
@@ -527,38 +554,45 @@ import { imageRepository } from '@/features/shared/di/resolve';
 
 ## DI Container
 
-Each feature that has injectable singletons owns its DI configuration. There is no global `di/` folder — configuration lives alongside the code it belongs to.
+Each feature that has injectable singletons owns its DI configuration. Configuration lives alongside the code it belongs to.
 
 ```
-features/shared/
-└── di/
-    ├── types.ts    → SHARED_TYPES = { Logger: Symbol.for('Logger'), Storage: Symbol.for('Storage'), … }
-    ├── config.ts   → container.registerSingleton(SHARED_TYPES.Logger, Logger)
-    └── resolve.ts  → export const logger = container.resolve<ILogger>(SHARED_TYPES.Logger)
+features/
+├── shared/
+│   └── di/
+│       ├── types.ts    → SHARED_TYPES = { Logger: Symbol.for('Logger'), … }
+│       ├── config.ts   → container.registerSingleton(SHARED_TYPES.Logger, Logger)
+│       └── resolve.ts  → export const logger = container.resolve<ILogger>(SHARED_TYPES.Logger)
+├── ai/
+│   └── di/
+│       ├── types.ts
+│       ├── config.ts
+│       └── resolve.ts
+└── flights/
+    └── di/
+        ├── types.ts
+        ├── config.ts
+        └── resolve.ts
 
-features/ai/
-└── di/
-    ├── types.ts
-    ├── config.ts
-    └── resolve.ts
-
-features/flights/
-└── di/
-    ├── types.ts
-    ├── config.ts
-    └── resolve.ts
+bootstrap.ts             ← project root — collects all feature DI registrations
 ```
 
 Features that use only hook-based repositories (e.g. trips, user) have no `di/` folder — they don't need one.
 
-**Bootstrap** — all `config.ts` files are imported once at app startup in the correct order:
+**Bootstrap** — all feature `config.ts` files are collected in a single root-level file and imported once at app startup. `bootstrap.ts` is the **only file to update** when adding a new feature with injectable singletons:
 
 ```ts
-// app/_layout.tsx
+// bootstrap.ts (project root)
 import 'reflect-metadata'; // e.g. required by tsyringe
 import '@/features/shared/di/config';
 import '@/features/ai/di/config';
 import '@/features/flights/di/config';
+// adding a new feature with IoC singletons? register it here
+```
+
+```ts
+// app/_layout.tsx — stays clean
+import '@/bootstrap';
 ```
 
 **Usage** — import from the owning feature's `resolve.ts`. The import path makes ownership explicit:
@@ -749,3 +783,4 @@ trips.filter(trip => trip.startDate >= todayStr);
 8. **Feature state in `state/`.** Global state (store utils, app state, modal state) in `features/shared/state/`.
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
+11. **Feature isolation.** Features only import from `features/shared/` or from another feature's public API (`index.ts`). Never reach into another feature's internal folders (`data/`, `domain/`, `facades/`, etc.).
