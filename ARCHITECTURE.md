@@ -20,6 +20,14 @@ The app uses two complementary dependency injection patterns:
 - **IoC container singletons** (e.g. tsyringe) for stateless services: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
 - **Hook-based repositories** for reactive backend data access (e.g. Convex). The backend client exposes reactive hooks that subscribe to real-time updates and depend on the auth context provided by the app's auth provider (e.g. Clerk). Forcing them into a class singleton would lose reactivity and break auth. Repository interfaces are defined in `domain/` and implemented as hooks in `data/repositories/`.
 
+### What is an IoC container?
+
+An **IoC (Inversion of Control) container** is a tool that manages the creation and wiring of class dependencies automatically. Without it, a class that needs a Logger and an HTTP client would have to create them itself (`new Logger()`, `new HttpClient()`) — tightly coupling it to concrete implementations. With an IoC container, the class simply declares what it needs in its constructor (typed to interfaces), and the container resolves and injects the right implementations at startup. This means:
+
+- Classes never call `new` on their dependencies
+- Swapping an implementation (e.g. a remote logger replacing the console logger) requires changing only the DI registration, not the class
+- Testing becomes trivial — pass mock implementations directly to the constructor, no container needed
+
 ---
 
 ## Feature Module Structure
@@ -57,9 +65,9 @@ features/<name>/
 
 ## `features/shared/`
 
-`features/shared/` is the **one feature all other features are allowed to import from freely**. It owns cross-cutting infrastructure — logger, storage, HTTP client, image repositories — and shared utilities like `createStore`, global state, and shared hooks. Its sub-paths are imported directly (no `index.ts` gating needed).
+`features/shared/` is the **designated shared feature** — it owns cross-cutting infrastructure (logger, storage, HTTP client, image repositories) and shared utilities (`createStore`, global state, shared hooks). Like every other feature, it exposes a public `index.ts`. Consumers always import from `@/features/shared`, never from its internal sub-paths directly.
 
-Every other feature is **isolated**: `features/trips/` cannot reach into `features/user/` internals. If logic or types are needed across features, they either:
+Every feature is **isolated**: `features/trips/` cannot reach into `features/user/` internals. If logic or types are needed across features, they either:
 
 - Move into `features/shared/`
 - Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
@@ -76,12 +84,17 @@ Not every feature needs an `index.ts` — only create one when another feature a
 
 | Must NOT export | Why |
 |---|---|
-| Hook-based repositories | Internal data access — consumers must never call these directly |
-| Class use cases | Internal business logic — resolved via DI, not consumed cross-feature |
-| DTOs | Internal wire format — domain types are the shared language |
-| Adapters | Internal transformation — no consumer ever needs these |
-| `di/resolve.ts` exports | DI internals — resolution is always local to the owning feature |
-| UI components | These are promoted to global `ui/components/` when shared, not exported from a feature |
+| Hook-based repositories | Internal data access — consumers must go through facades, never call repos directly |
+| Class use cases | Internal business logic — resolved via the feature's own DI container, not consumed cross-feature |
+| DTOs | Internal wire format — domain entity types are the shared language, not API shapes |
+| Adapters | Internal transformation — no consumer ever needs to transform another feature's data |
+| Validators | Internal data validation — consumers receive already-validated domain entities |
+| Schemas | Internal domain rules — consumers work with types, not schema definitions |
+| `di/resolve.ts` exports | DI internals — IoC resolution is always local to the owning feature |
+| State stores | Internal UI state — other features have no business reading or writing another feature's state |
+| `libraries/` wrappers | Internal infrastructure — third-party library wrappers are an implementation detail |
+| UI components | Promoted to global `ui/components/` when truly shared — never exported from a feature's public API |
+| Repository interfaces (`IXxxRepository`) | Internal contracts — the consuming feature needs the facade, not the plumbing behind it |
 
 ```ts
 // features/user/index.ts
@@ -103,9 +116,8 @@ import type { User } from '@/features/user';
 // ✅ Import facades from another feature's public API
 import { useGetUserStatus } from '@/features/user';
 
-// ✅ Import anything from shared freely
-import { useUnsplashImages } from '@/features/shared/hooks/useUnsplashImages';
-import { logger } from '@/features/shared/di/resolve';
+// ✅ Import from shared via its public API
+import { useUnsplashImages, logger } from '@/features/shared';
 
 // ❌ Never reach into another feature's internal folders
 import { useTripRepository } from '@/features/user/data/repositories/useConvexUserRepository';
@@ -130,7 +142,35 @@ The core of the feature. Contains only pure TypeScript — no external library i
 
 #### `domain/entities/`
 
-Pure domain models — TypeScript interfaces, types, const and enums that represent the concepts of this feature in the app's own language, not in an external API's language.
+Pure domain models — TypeScript interfaces, types, constants, and enums that represent the concepts of this feature in the app's own language, not in an external API's language.
+
+**`interface` vs `type`**
+- Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
+- Use `type` for unions, aliases, or intersections — anything that is not a plain object shape.
+
+```ts
+interface Trip { id: string; destination: string; }  // ✅ entity shape → interface
+type TripStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
+type TripWithStatus = Trip & { status: TripStatus };  // ✅ intersection → type
+```
+
+**`enum` vs `const`**
+Avoid TypeScript `enum` — it generates unexpected runtime code, behaves differently between regular and `const enum`, and does not tree-shake well. Use a `const` object with `as const` instead:
+
+```ts
+// ❌ Avoid
+enum BudgetLevel { Cheap = 'Cheap', Moderate = 'Moderate', Luxury = 'Luxury' }
+
+// ✅ Prefer
+export const BudgetLevel = {
+  Cheap: 'Cheap',
+  Moderate: 'Moderate',
+  Luxury: 'Luxury',
+} as const;
+export type BudgetLevel = typeof BudgetLevel[keyof typeof BudgetLevel];
+```
+
+This gives you the same autocompletion and exhaustive checks, with plain string values and zero runtime surprises.
 
 ```ts
 // features/trips/domain/entities/Trip.ts
@@ -293,12 +333,28 @@ export const toTrip = (dto: TripResponseDTO): Trip => ({
 
 #### `data/validators/`
 
-Functions that execute validation — running schemas (e.g. Zod `.parse()`) against untrusted input, checking business rules, sanitizing data. Validators use schemas from `domain/schemas/` as their rules.
+Plain functions that execute validation — running schemas against untrusted input, checking business rules, or sanitizing data. Always plain functions, never classes.
+
+When validation is based on a schema (e.g. Zod):
 
 ```ts
 // features/trips/data/validators/validateGeneratedTrip.ts
 export const validateGeneratedTrip = (data: unknown): GeneratedTrip => {
   return generateTripSchema.parse(data);
+};
+```
+
+When validation is pure TypeScript business logic with no schema:
+
+```ts
+// features/trips/data/validators/validateTripDates.ts
+export const validateTripDates = (startDate: string, endDate: string): boolean => {
+  return startDate <= endDate;
+};
+
+// features/trips/data/validators/validateTravelersCount.ts
+export const validateTravelersCount = (count: number): boolean => {
+  return count >= 1 && count <= 20;
 };
 ```
 
@@ -471,6 +527,8 @@ The key distinction from hook-based repositories: an IoC repository is a class s
 
 Facades are **coordination hooks** — they combine hook-based repositories and class use cases into a single, named React hook. The name comes from the Facade design pattern: a simplified interface over a complex subsystem. Callers don't need to know that getting upcoming trips requires both a Convex subscription and a filtering use case — the facade handles it.
 
+**Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
+
 **What facades can import:** hook-based repositories, class use cases from `di/resolve.ts`, other facades.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
@@ -576,22 +634,82 @@ export const useTripSearchFilters = () => {
 
 ### `state/`
 
-State stores (e.g. Zustand) for UI state that belongs to this feature. Only domain-specific state lives here — wizard steps, selected options, local UI flags. Cross-cutting global state (app theme, modal visibility, store utilities) lives in `features/shared/state/`.
+Client-side state stores (e.g. Zustand) for UI state that belongs to this feature. State is for data that lives on the client only — wizard form inputs, selected filters, modal visibility, UI flags. It is not a cache for server data: server/backend data is owned by hook-based repositories.
+
+**When to use state vs a facade**
+
+| Use state when | Use a facade when |
+|---|---|
+| Data is client-only (form inputs, UI selection, wizard step) | Data comes from the server/backend |
+| Data outlives a single screen but has no server representation | Data needs to be fetched, subscribed to, or mutated on the backend |
+| You need to reset or clear the data on user action | The "source of truth" is the database, not the client |
+
+**Store structure — state + actions pattern**
+
+All stores follow the same pattern: a typed state slice plus an `actions` object. Actions are always nested under `actions` to keep the store shape clean and make it obvious what is state vs what is a setter.
 
 ```ts
 // features/trips/state/tripStore.ts
-export const useTripStore = createStore<TripState & TripActions>(set => ({
+interface TripState {
+  locationInfo: { name: string; coordinates?: Coordinates; };
+  datesInfo: { startDate: Date | null; endDate: Date | null; totalNoOfDays: number; };
+  budgetInfo: BudgetLevel;
+}
+
+interface TripActions {
+  actions: {
+    setLocationInfo: (info: TripState['locationInfo']) => void;
+    setDatesInfo: (info: TripState['datesInfo']) => void;
+    setBudgetInfo: (budget: BudgetLevel) => void;
+    resetTripState: () => void;
+  };
+}
+
+const initialState: TripState = {
   locationInfo: { name: '', coordinates: undefined },
   datesInfo: { startDate: null, endDate: null, totalNoOfDays: 0 },
-  budgetInfo: 'Cheap',
+  budgetInfo: BudgetLevel.Cheap,
+};
+
+export const useTripStore = createStore<TripState & TripActions>(set => ({
+  ...initialState,
   actions: {
-    setLocationInfo: (info) => set({ locationInfo: info }),
+    setLocationInfo: (locationInfo) => set({ locationInfo }),
+    setDatesInfo: (datesInfo) => set({ datesInfo }),
+    setBudgetInfo: (budgetInfo) => set({ budgetInfo }),
     resetTripState: () => set(initialState),
   },
 }));
 ```
 
-`features/shared/state/` also holds the `createStore` and `createSelectors` utilities used by all stores across the app.
+**Selectors — avoid unnecessary re-renders**
+
+Import only the slice of state you need. Using `createSelectors` (from `features/shared/state/`) generates fine-grained selectors so a component only re-renders when its specific slice changes:
+
+```ts
+// ✅ Only re-renders when locationInfo changes
+const locationInfo = useTripStore(state => state.locationInfo);
+
+// ✅ Always access actions via the actions key — actions never change reference
+const { setLocationInfo, resetTripState } = useTripStore(state => state.actions);
+
+// ❌ Subscribes to the entire store — re-renders on any state change
+const store = useTripStore();
+```
+
+**Feature state vs global state**
+
+| State | Location |
+|---|---|
+| Trip wizard inputs | `features/trips/state/` |
+| Feature-specific UI flags | `features/<name>/state/` |
+| App-wide theme, language | `features/shared/state/app/` |
+| Modal visibility (shared modals) | `features/shared/state/modal/` |
+| `createStore` / `createSelectors` utilities | `features/shared/state/` |
+
+**Persistence**
+
+Only persist state that cannot be reconstructed cheaply. Wizard form inputs that survive app restart are a valid use case. Derived data, cached server responses, and anything easily re-fetched should never be persisted.
 
 ---
 
@@ -646,20 +764,24 @@ export const usePageNameLogic = () => {
 ```
 
 ```ts
-// ✅ PageName.logic.ts — page-specific coordination (not yet promoted to facade)
-import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+// ✅ PageName.logic.ts — using a class use case directly (page-specific, not yet promoted)
 import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+import { useGetUserTrips } from '@/features/trips/facades/useGetUserTrips';
+import { useTripStore } from '@/features/trips/state/tripStore';
 
 export const usePageNameLogic = () => {
-  const repo = useTripRepository();
-  const trips = repo.getUserTrips();
-  const upcoming = trips ? getUpcomingTripUseCase.execute(trips) : undefined;
+  const { trips } = useGetUserTrips();                             // data via facade
+  const upcoming = trips ? getUpcomingTripUseCase.execute(trips) : undefined; // page-specific logic
+  const { actions } = useTripStore();
 
-  return { upcoming, isLoading: trips === undefined };
+  return { upcoming, actions };
 };
 ```
 
 ```ts
+// ❌ PageName.logic.ts — never imports hook-based repositories
+import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+
 // ❌ PageName.logic.ts — never imports IoC repositories directly
 import { imageRepository } from '@/features/shared/di/resolve';
 ```
