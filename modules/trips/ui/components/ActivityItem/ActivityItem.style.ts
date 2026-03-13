@@ -2,21 +2,23 @@ import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fonts } from '@/ui/style/fonts';
-import { opacity } from '@/ui/style/opacity';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: components.activityImageHeight,
-    borderTopStartRadius: spacing.Triple,
-    borderTopEndRadius: spacing.Triple,
   },
   container: {
-    backgroundColor: colors.primaryGreen,
     borderRadius: spacing.Triple,
     width: '100%',
+    borderWidth: spacing.MinimalDouble,
+    borderColor: colors.primary,
+  },
+  innerContainer: {
     overflow: 'hidden',
+    borderTopStartRadius: spacing.Double,
+    borderTopEndRadius: spacing.Double,
   },
   content: {
     padding: spacing.Triple,
@@ -60,15 +62,19 @@ export const styles = StyleSheet.create({
   },
   marker: {
     position: 'absolute',
-    top: spacing.Double,
-    left: spacing.Double,
+    top: -spacing.Fourfold,
+    alignSelf: 'center',
+    zIndex: 1,
+    width: spacing.Sextuple,
+    height: spacing.Sextuple,
+    borderColor: colors.primary,
+    borderWidth: spacing.MinimalDouble,
   },
   skeleton: {
     width: '100%',
     height: components.activityImageHeight,
-    borderTopStartRadius: spacing.Triple,
-    borderTopEndRadius: spacing.Triple,
-    borderRadius: spacing.Triple,
+    borderTopStartRadius: spacing.Double,
+    borderTopEndRadius: spacing.Double,
   },
   timeContainer: {
     flexDirection: 'row',
@@ -79,6 +85,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.Single,
+    flexWrap: 'wrap',
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -98,6 +105,6 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.Minimal,
   },
   pressed: {
-    opacity: opacity.default,
+    borderColor: colors.primaryBlack,
   },
 });

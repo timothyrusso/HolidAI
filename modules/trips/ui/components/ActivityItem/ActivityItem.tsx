@@ -24,15 +24,17 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
 
     return (
       <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]} onPress={handlePress}>
-        {isLoading ? (
-          <BaseSkeleton style={styles.skeleton} />
-        ) : (
-          <Fragment>
-            <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
-            <CustomText text={`${t('MY_TRIP.DAY')} ${day}`} style={styles.day} />
-            <NumberedMarker number={scheduleItem.placeNumberID} style={styles.marker} />
-          </Fragment>
-        )}
+        <NumberedMarker number={scheduleItem.placeNumberID} style={styles.marker} />
+        <View style={styles.innerContainer}>
+          {isLoading ? (
+            <BaseSkeleton style={styles.skeleton} />
+          ) : (
+            <Fragment>
+              <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
+              <CustomText text={`${t('MY_TRIP.DAY')} ${day}`} style={styles.day} />
+            </Fragment>
+          )}
+        </View>
 
         <View style={styles.content}>
           <View style={styles.headerContainer}>

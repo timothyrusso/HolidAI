@@ -1,14 +1,18 @@
+import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   separator: {
-    height: spacing.TripleAndHalf,
+    height: spacing.separator40,
+    width: spacing.MinimalDouble,
+    backgroundColor: colors.primary,
+    alignSelf: 'center',
   },
   container: {
     width: '100%',
     paddingHorizontal: spacing.Fourfold,
-    paddingVertical: spacing.Double,
+    zIndex: 2,
   },
   list: {
     width: '100%',

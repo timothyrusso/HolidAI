@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   basicViewContainer: {
-    padding: 0,
+    padding: spacing.Zero,
     position: 'relative',
   },
   dayPlans: {
@@ -22,7 +22,25 @@ export const styles = StyleSheet.create({
       Platform.OS === PlatformOS.ios ? spacing.FourfoldAndHalf : images.fullScreenImageHeight + spacing.FourfoldAndHalf,
   },
   separator: {
-    height: spacing.Triple,
+    height: spacing.separator40,
+    backgroundColor: colors.primary,
+    zIndex: 2,
+    width: spacing.MinimalDouble,
+    alignSelf: 'center',
+  },
+  firstSeparatorOfTheSection: {
+    width: spacing.TripleAndHalf,
+    height: spacing.TripleAndHalf,
+    borderRadius: spacing.TripleAndHalf,
+    backgroundColor: colors.primary,
+    alignSelf: 'center',
+  },
+  longSeparator: {
+    height: spacing.Sextuple,
+    backgroundColor: colors.primary,
+    zIndex: 2,
+    width: spacing.MinimalDouble,
+    alignSelf: 'center',
   },
   sectionList: {
     paddingTop: images.fullScreenImageHeight,
