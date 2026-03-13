@@ -142,7 +142,7 @@ The core of the feature. Contains only pure TypeScript — no external library i
 
 #### `domain/entities/`
 
-Pure domain models — TypeScript interfaces, types, constants, and enums that represent the concepts of this feature in the app's own language, not in an external API's language.
+Pure domain models — TypeScript interfaces, types, and constants that represent the concepts of this feature in the app's own language, not in an external API's language.
 
 **`interface` vs `type`**
 - Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
