@@ -1,37 +1,37 @@
 flowchart TD
     subgraph UI["UI layer"]
         subgraph Components["components/"]
-            CT["Component.tsx\nJSX only"]
-            CST["Component.style.ts\nStyleSheet"]
-            CLT["Component.logic.ts\nViewModel hook"]
+            CT["Component.tsx JSX only"]
+            CST["Component.style.ts StyleSheet"]
+            CLT["Component.logic.ts ViewModel hook"]
             CT -->|"imports"| CST
             CT -->|"imports"| CLT
         end
     end
 
     subgraph FHS["Facades / hooks / state"]
-        FAC["facade\nCoordinates repo + useCase"]
-        HOK["hook\nStateful utility, no repo"]
-        STA["state\nZustand, client-only"]
+        FAC["facade Coordinates repo + useCase"]
+        HOK["hook Stateful utility, no repo"]
+        STA["state Zustand, client-only"]
     end
 
     subgraph UC["useCases"]
-        USE["XxxUseCase\nBusiness logic"]
+        USE["XxxUseCase Business logic"]
     end
 
     subgraph DOM["Domain — pure TypeScript"]
-        ENT["entities\nInterfaces, types"]
-        IREP["IXxxRepository\nData access contract"]
-        ISVC["IXxxService\nCapability contract"]
-        SCH["schemas\nZod, type inference"]
+        ENT["entities Interfaces, types"]
+        IREP["IXxxRepository Data access contract"]
+        ISVC["IXxxService Capability contract"]
+        SCH["schemas Zod, type inference"]
     end
 
     subgraph DAT["Data — external world"]
-        HREP["useXxxRepository\nHook-based, Convex"]
-        CREP["XxxRepository\nIoC singleton, HTTP"]
-        ADA["Adapter\nDTO to entity"]
-        SVC["XxxService\nIoC singleton, AI/logger"]
-        LIB["libraries/\n3rd-party wrappers"]
+        HREP["useXxxRepository Hook-based, Convex"]
+        CREP["XxxRepository IoC singleton, HTTP"]
+        ADA["Adapter DTO to entity"]
+        SVC["XxxService IoC singleton, AI/logger"]
+        LIB["libraries/ 3rd-party wrappers"]
     end
 
     CLT -->|"imports"| FAC
