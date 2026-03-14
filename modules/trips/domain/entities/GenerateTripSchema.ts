@@ -27,7 +27,7 @@ export const generatedTripSchema = z.object({
           bestTimeToVisit: z.string(),
           rating: z.number(),
           ticketPricing: z.string().describe('Price of the ticket, can be a number or text like "Free" or "Varies"'),
-          placeDetails: z.string(),
+          placeDetails: z.string().describe('Maximum 20 words. A brief description of the place.'),
           placeDetailsLongDescription: z.string(),
           placeSecretsAndInsights: z.string(),
           geoCoordinates: z.object({

@@ -3,7 +3,7 @@ import type { DayPlan } from '@/modules/trips/domain/dto/UserTripsDTO';
 import AnimatedHeaderImage from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Fragment } from 'react';
-import { SectionList, View } from 'react-native';
+import { SectionList, type SectionListData, View } from 'react-native';
 import { DayItem } from '../../components/DayItem/DayItem';
 import { HeaderIcons } from '../../components/HeaderIcons/HeaderIcons';
 import { ListHeaderComponent } from '../../components/ListHeaderComponent/ListHeaderComponent';
@@ -27,7 +27,18 @@ export const TripDetailsPage = () => {
     food,
   } = useTripDetailsPageLogic();
 
-  const separator = () => <View style={styles.separator} />;
+  const separator = ({
+    trailingSection,
+    leadingItem,
+    trailingItem,
+  }: {
+    trailingSection: SectionListData<DayPlan> | null;
+    leadingItem: DayPlan | null;
+    trailingItem: DayPlan | null;
+  }) => {
+    const isFirstItemOfSection = !leadingItem && !!trailingItem;
+    return trailingSection || isFirstItemOfSection ? <View style={styles.separator} /> : null;
+  };
 
   const renderItem = ({ item }: { item: DayPlan }) => <DayItem dayPlan={item} location={title} tripId={id} />;
 
@@ -40,7 +51,7 @@ export const TripDetailsPage = () => {
           keyExtractor={item => item.day.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.dayPlans}
-          ItemSeparatorComponent={separator}
+          SectionSeparatorComponent={separator}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
           style={styles.sectionList}
