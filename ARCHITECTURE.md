@@ -299,14 +299,20 @@ export type TripResponseDTO = {
 
 Implementations of repository interfaces from `domain/entities/repositories/`.
 
-For **reactive backends** (e.g. Convex), repositories are implemented as hooks — not classes. This preserves real-time subscriptions and auth context, which would be lost in a class singleton:
+**Naming convention:** class-based repositories are named `XxxRepository.ts`; hook-based repositories are prefixed with `use` following the React convention: `useXxxRepository.ts`. This makes the pattern immediately visible without needing a subfolder — a feature rarely has both types simultaneously.
+
+---
+
+**Hook-based repositories** (e.g. Convex) are implemented as React hooks — not classes. This preserves real-time subscriptions and auth context, which would be lost in a class singleton.
+
+**Documented exception — direct library imports:** Hook-based repositories are the only place in `data/` that may import reactive library hooks directly — specifically the Convex client hooks (`useQuery`, `useMutation`) and the auth context hook (e.g. Clerk's `useAuth`). These are React hooks that require the React lifecycle and an auth provider context to function. They cannot be wrapped in a `data/services/` class singleton without losing reactivity or breaking auth. This is not a layering shortcut — it is a structural necessity of the hook-based repository pattern.
 
 ```ts
 // features/trips/data/repositories/useTripRepository.ts
 // e.g. using Convex + Clerk
 export const useTripRepository = (): ITripRepository => {
-  const { user } = useAuthUser();
-  const trips = useReactiveQuery(api.trips.getAllByUserId, { userId: user?.id ?? '' });
+  const { user } = useAuthUser();                                                    // auth hook — direct import, documented exception
+  const trips = useReactiveQuery(api.trips.getAllByUserId, { userId: user?.id ?? '' }); // Convex hook — direct import, documented exception
   const createMutation = useMutation(api.trips.create);
   const toggleMutation = useMutation(api.trips.toggleFavorite);
 
@@ -318,19 +324,23 @@ export const useTripRepository = (): ITripRepository => {
 };
 ```
 
-**Naming convention:** class-based repositories are named `XxxRepository.ts`; hook-based repositories are prefixed with `use` following the React convention: `useXxxRepository.ts`. This makes the pattern immediately visible without needing a subfolder — a feature rarely has both types simultaneously.
+---
 
-For **HTTP APIs** (non-reactive), repositories are singleton classes registered in the IoC container:
+**Class-based repositories** (e.g. HTTP APIs) are singleton classes registered in the IoC container. They never import from `libraries/` directly. When a class-based repository needs external I/O (HTTP, storage), it declares a dependency on a **service interface** injected via constructor. The service implementation handles the `libraries/` call internally. This keeps the repository isolated from library-level details.
 
 ```ts
 // features/core/images/data/repositories/ImageRepository.ts
 // registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
 export class ImageRepository implements IImageRepository {
-  constructor(private http: IHttpClient) {}
+  constructor(private http: IHttpClient) {}  // service interface injected — never imports httpClient from libraries/ directly
 
-  async getImage(placeName: string, urlType: UrlType): Promise<string> {
-    const data = await this.http.get('/search/photos', { query: placeName }).json();
-    return data.results[0]?.urls[urlType] ?? noImage;
+  async getImage(placeName: string, urlType: UrlType): Promise<Result<string>> {
+    try {
+      const data = await this.http.get('/search/photos', { query: placeName }).json();
+      return ok(data.results[0]?.urls[urlType] ?? noImage);
+    } catch (err) {
+      return fail(ensureError(err));
+    }
   }
 }
 ```
@@ -400,7 +410,7 @@ export const validateTravelersCount = (count: number): boolean => {
 
 Thin wrappers around external libraries. No business logic — only API normalization and simplification. The goal is to isolate the app from third-party library APIs so that swapping a library only requires changing its wrapper, not every file that uses it.
 
-`data/services/` and `data/repositories/` always use library wrappers, never raw libraries directly.
+`data/services/` implementations are the **exclusive consumers** of library wrappers in the class-based pattern. Class-based repositories never import from `libraries/` directly — they receive service interfaces via constructor injection, and the service implementation calls the library wrapper internally. The only exception is hook-based repositories, which import Convex and auth hooks directly as a documented structural necessity (see `data/repositories/`).
 
 **How to decide if a library needs a wrapper:** ask "if I swap this library for another, how many files change?" If the answer is more than one file, the library needs a wrapper. That wrapper becomes the only file to update on swap.
 
@@ -457,24 +467,26 @@ export class GetUpcomingTripUseCase {
 }
 ```
 
-Use cases that need services inject them via the constructor:
+Use cases that need capabilities inject them via the constructor — both repository interfaces (data access) and service interfaces (capabilities like AI or logging) are valid dependencies. Both are pure TypeScript interfaces defined in `domain/` and neither exposes a concrete implementation:
 
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
 // registered in di/config.ts
 export class GenerateTripUseCase {
   constructor(
-    private aiService: IAiService,  // service
-    private logger: ILogger,        // service
+    private aiService: IAiService,  // service interface — capability
+    private logger: ILogger,        // service interface — capability
   ) {}
 
-  async execute(formData: TripFormData): Promise<GeneratedTrip> {
+  async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
       const prompt = buildPromptUseCase(formData);
-      return await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
-    } catch (error) {
-      this.logger.error(ensureError(error));
-      throw error;
+      const trip = await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
+      return ok(trip);
+    } catch (err) {
+      const error = ensureError(err);
+      this.logger.error(error);
+      return fail(error);
     }
   }
 }
@@ -1067,16 +1079,18 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
    | Layer | Can import | Error responsibility |
    |---|---|---|
    | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
-   | `.logic.ts` (ViewModel) | facades, hooks, shared hooks, class use cases via `di/resolve` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
+   | `.logic.ts` (ViewModel) | facades, hooks, core hooks, class use cases via `di/resolve` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
    | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
    | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
-   | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities | Catches, logs via `ILogger`, returns `Result<T>` |
-   | `data/repositories/` | domain interfaces, DTOs, adapters | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |
+   | `useCases/` | domain entities, repository interfaces (`IXxxRepository`), service interfaces (`IXxxService`) — all from `domain/`; never `libraries/` or concrete implementations | Catches, logs via `ILogger`, returns `Result<T>` |
+   | `data/repositories/` (class-based) | domain interfaces, service interfaces via constructor injection — **never** `libraries/` directly | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |
+   | `data/repositories/` (hook-based) | Convex client hooks (`useQuery`, `useMutation`), auth context hook — direct import, documented exception | Catches mutations with `ensureError`, returns `Result<T>` — never logs |
+   | `data/services/` | `libraries/` wrappers, domain service interfaces | Wraps library calls; no error handling beyond what the library surface requires |
 
    **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `facades/`, `hooks/`, or anywhere in `ui/`.**
 2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
 3. **`data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
-4. **`libraries/` isolates third-party APIs.** `data/` uses library wrappers, never raw libraries directly.
+4. **`libraries/` is consumed exclusively by `data/services/`.** Class-based repositories never import from `libraries/` — they receive service interfaces via constructor injection. Hook-based repositories are the sole documented exception: they import Convex and auth hooks directly because those hooks require the React lifecycle and cannot be wrapped in a class singleton.
 5. **Schemas in `domain/schemas/`.** Schemas (e.g. Zod) define domain rules — they are not infrastructure concerns.
 6. **Adapters transform, validators execute.** Adapters convert DTOs to entities; validators run schemas against data.
 7. **Pages are thin.** All logic in `.logic.ts` hooks, all styles in `.style.ts` files.
