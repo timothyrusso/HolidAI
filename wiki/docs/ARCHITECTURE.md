@@ -226,10 +226,10 @@ Repository interfaces. Define the contract for data access without specifying ho
 ```ts
 // features/trips/domain/entities/repositories/ITripRepository.ts
 export interface ITripRepository {
-  getUserTrips(): Trip[] | undefined;
-  createTrip(data: CreateTripData): Promise<void>;
-  toggleFavorite(tripId: string): Promise<void>;
-  deleteTrip(tripId: string): Promise<void>;
+  getUserTrips(): Trip[] | undefined;           // reactive query — undefined while loading, no Result needed
+  createTrip(data: CreateTripData): Promise<Result<void>>;
+  toggleFavorite(tripId: string): Promise<Result<void>>;
+  deleteTrip(tripId: string): Promise<Result<void>>;
 }
 ```
 
@@ -317,9 +317,25 @@ export const useTripRepository = (): ITripRepository => {
   const toggleMutation = useMutation(api.trips.toggleFavorite);
 
   return {
-    getUserTrips: () => trips,
-    createTrip: (data) => createMutation(data),
-    toggleFavorite: (tripId) => toggleMutation({ tripId }),
+    getUserTrips: () => trips,                                  // reactive query — returns undefined while loading
+
+    createTrip: async (data) => {
+      try {
+        await createMutation(data);
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
+
+    toggleFavorite: async (tripId) => {
+      try {
+        await toggleMutation({ tripId });
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
   };
 };
 ```
@@ -496,21 +512,29 @@ Note that `GenerateTripUseCase` handles AI generation but knows nothing about th
 
 ```ts
 // features/trips/facades/useGenerateTrip.ts
-import { generateTripUseCase, getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+import { generateTripUseCase } from '@/features/trips/di/resolve';
 
 export const useGenerateTrip = () => {
-  const repo = useTripRepository();                       // reactive backend hook
+  const repo = useTripRepository();
+  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
 
   const generate = async (formData: TripFormData) => {
-    const generated = await generateTripUseCase.execute(formData);  // IoC use case
-    await repo.createTrip(generated);                               // reactive repo
+    const result = await generateTripUseCase.execute(formData);   // returns Result<GeneratedTrip>
+    if (!result.success) {
+      showErrorToast(result.error);
+      return;
+    }
+    const saveResult = await repo.createTrip(result.data);        // returns Result<void>
+    if (!saveResult.success) {
+      showErrorToast(saveResult.error);
+    }
   };
 
   return { generate };
 };
 ```
 
-This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them.
+This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them and decide how to surface failures.
 
 #### IoC repositories — full consumption chain
 
@@ -519,16 +543,21 @@ An IoC (class-based) repository is injected into a use case and never escapes th
 ```ts
 // 1. Interface — features/core/images/domain/entities/repositories/IImageRepository.ts
 export interface IImageRepository {
-  getImage(placeName: string, urlType: UrlType): Promise<string>;
+  getImage(placeName: string, urlType: UrlType): Promise<Result<string>>;
 }
 
 // 2. Use case — features/core/images/useCases/GetPlaceImageUseCase.ts
 // registered in di/config.ts (e.g. using tsyringe @injectable())
 export class GetPlaceImageUseCase {
-  constructor(private imageRepository: IImageRepository) {}  // IoC repo injected
+  constructor(
+    private imageRepository: IImageRepository,
+    private logger: ILogger,
+  ) {}
 
-  async execute(placeName: string, urlType: UrlType): Promise<string> {
-    return this.imageRepository.getImage(placeName, urlType);
+  async execute(placeName: string, urlType: UrlType): Promise<Result<string>> {
+    const result = await this.imageRepository.getImage(placeName, urlType);
+    if (!result.success) this.logger.error(result.error);
+    return result;
   }
 }
 
@@ -544,7 +573,9 @@ export const useGetPlaceImage = (placeName: string) => {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    getPlaceImageUseCase.execute(placeName, 'regular').then(setUrl);
+    getPlaceImageUseCase.execute(placeName, 'regular').then(result => {
+      if (result.success) setUrl(result.data);
+    });
   }, [placeName]);
 
   return url;
@@ -555,7 +586,9 @@ import { getPlaceImageUseCase } from '@/features/core/images/di/resolve';
 
 export const useSearchPlaceLogic = () => {
   const handleSelect = async (place: string) => {
-    const url = await getPlaceImageUseCase.execute(place, 'regular');
+    const result = await getPlaceImageUseCase.execute(place, 'regular');
+    if (!result.success) return;
+    const url = result.data;
     // ...
   };
   return { handleSelect };
@@ -648,10 +681,18 @@ import { generateTripUseCase } from '@/features/trips/di/resolve';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
+  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
 
   const generate = async (formData: TripFormData) => {
-    const generated = await generateTripUseCase.execute(formData);  // class use case
-    await repo.createTrip(generated);                               // hook-based repo
+    const result = await generateTripUseCase.execute(formData);   // returns Result<GeneratedTrip>
+    if (!result.success) {
+      showErrorToast(result.error);
+      return;
+    }
+    const saveResult = await repo.createTrip(result.data);        // returns Result<void>
+    if (!saveResult.success) {
+      showErrorToast(saveResult.error);
+    }
   };
 
   return { generate };
