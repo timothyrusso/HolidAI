@@ -907,6 +907,24 @@ ui/
 
 ---
 
+## Error Handling
+
+Error handling follows a dedicated strategy documented in **[ERROR_HANDLING.md](./ERROR_HANDLING.md)**. Read that document before writing any code that can fail.
+
+The key rules that integrate with this architecture:
+
+- Functions that can fail return `Result<T>` (`features/shared/domain/entities/Result.ts`) — a discriminated union of `{ success: true; data: T }` or `{ success: false; error: BaseError }`.
+- Use the `ok(data)` and `fail(error)` helpers to construct results without boilerplate.
+- **`data/repositories/`** — catch, wrap with `ensureError`, return `Result`.
+- **`useCases/`** — receive `Result` from repos, log on failure via injected `ILogger`, return `Result`.
+- **`facades/`** — receive `Result` from use cases, decide how to surface failure (toast, inline state, or throw for the error boundary).
+- **`.logic.ts`** — consumes facades, maps failure to view state. No `try/catch`, no logging.
+- **`.tsx`** — renders error state from the ViewModel. Never handles raw errors.
+- Logging: `BasicLogger` in dev, `SentryLogger` in prod — always injected via `ILogger`, never `console.error`.
+- Error boundaries: root boundary in `app/_layout.tsx`, route-level boundaries for high-risk screens.
+
+---
+
 ## `app/` — Routing
 
 File-based routing. Route files are **thin entry points** — they import and render a `Page` component from `features/`.
@@ -994,14 +1012,14 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 
 1. **Dependencies point inward.** `ui` → `facades` / `hooks` / `state` → `useCases` → `domain`. Never the reverse. See import rules below.
 
-   | Layer | Can import |
-   |---|---|
-   | `.tsx` | ViewModel |
-   | `.logic.ts` (ViewModel) | facades, hooks, shared hooks, class use cases via `di/resolve` (page-specific), state |
-   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades |
-   | `hooks/` | domain types, state, external library hooks — **not** repos or use cases |
-   | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities |
-   | `data/repositories/` | domain interfaces, DTOs, adapters |
+   | Layer | Can import | Error responsibility |
+   |---|---|---|
+   | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
+   | `.logic.ts` (ViewModel) | facades, hooks, shared hooks, class use cases via `di/resolve` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
+   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
+   | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
+   | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities | Catches, logs via `ILogger`, returns `Result<T>` |
+   | `data/repositories/` | domain interfaces, DTOs, adapters | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |
 
    **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `facades/`, `hooks/`, or anywhere in `ui/`.**
 2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
@@ -1015,6 +1033,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
 11. **Feature isolation.** Features only import from `features/shared/` or from another feature's public API (`index.ts`). Never reach into another feature's internal folders (`data/`, `domain/`, `facades/`, etc.).
 12. **Always use `@/` path aliases.** Never use relative paths (`../`) anywhere in the project.
+13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
 
 ---
 
