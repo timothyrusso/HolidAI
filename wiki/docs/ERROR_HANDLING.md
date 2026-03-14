@@ -8,7 +8,7 @@ This document is the authoritative reference for error handling in HolidAI. Ever
 
 **Errors are values, not surprises.** Functions that can fail return a `Result<T>` instead of throwing. This makes the failure path visible in the type signature, forces callers to handle it, and prevents unexpected crashes from propagating unchecked across layer boundaries.
 
-**Throwing is allowed in one place only: use cases.** If a use case cannot recover from an error (e.g. an AI service is unavailable), it throws. The facade catches it and decides how to surface it to the UI. Nothing below the facade boundary — repositories, adapters, validators — throws across a layer boundary.
+**No layer throws across a boundary.** Use cases always return `Result<T>` — they never throw. The only place a `throw` is acceptable is inside a facade, and only for unrecoverable errors that should terminate the current screen by triggering the Expo Router `ErrorBoundary`. For all other failures, facades handle the `Result<T>` directly (toast or inline state).
 
 **Logging happens once, at the layer where the error is first caught.** Do not log the same error multiple times as it propagates. The use case logs it; the facade does not log it again.
 
