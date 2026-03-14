@@ -178,19 +178,19 @@ Facades coordinate repositories and use cases. They receive `Result<T>` and deci
 // features/trips/facades/useGenerateTrip.ts
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
-  const { showToast } = useToast();
+  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
 
   const generate = async (formData: TripFormData) => {
     const result = await generateTripUseCase.execute(formData);
 
     if (!result.success) {
-      showToast(mapErrorToMessage(result.error));
+      showErrorToast(result.error);
       return;
     }
 
     const saveResult = await repo.createTrip(result.data);
     if (!saveResult.success) {
-      showToast(mapErrorToMessage(saveResult.error));
+      showErrorToast(saveResult.error);
     }
   };
 
