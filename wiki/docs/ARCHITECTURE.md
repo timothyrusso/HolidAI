@@ -1,5 +1,7 @@
 # Architecture
 
+> **Diagram:** [Architecture overview](diagrams/architecture.mermaid)
+
 ## Guiding Principles
 
 - **Feature-first** — code is grouped by business capability, not by technical layer. Open a feature folder and understand its full scope end to end.
