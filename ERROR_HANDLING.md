@@ -18,7 +18,7 @@ This document is the authoritative reference for error handling in HolidAI. Ever
 
 ## Core Types
 
-### `Result<T>` — `features/shared/domain/entities/Result.ts`
+### `Result<T>` — `features/core/error/domain/entities/Result.ts`
 
 A discriminated union that represents either a successful value or a `BaseError`. It is a pure domain type — no external dependencies.
 
@@ -37,7 +37,7 @@ export const fail = (error: BaseError): Result<never> => ({ success: false, erro
 
 `ok(data)` and `fail(error)` reduce boilerplate at every call site. `fail` returns `Result<never>`, which is assignable to any `Result<T>` — so a function can return `fail(error)` regardless of its `T`.
 
-### `BaseError` — `features/shared/domain/entities/BaseError.ts`
+### `BaseError` — `features/core/error/domain/entities/BaseError.ts`
 
 Extends the native `Error` with a typed code, optional context, and an optional cause chain. Always use `BaseError` (or a subclass) — never pass raw `Error` to the logger.
 
@@ -56,7 +56,7 @@ export class BaseError extends Error {
 }
 ```
 
-### `ErrorCode` — `features/shared/domain/entities/ErrorCode.ts`
+### `ErrorCode` — `features/core/error/domain/entities/ErrorCode.ts`
 
 A `const` object (never an `enum`) of typed string codes. Add new codes here when a failure mode is domain-specific and needs to be handled differently by the UI.
 
@@ -73,7 +73,7 @@ export const ErrorCode = {
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
 ```
 
-### `ensureError` — `features/shared/domain/entities/ensureError.ts`
+### `ensureError` — `features/core/error/domain/entities/ensureError.ts`
 
 Converts any unknown caught value into a `BaseError`. Use this in every `catch` block — never cast with `error as Error`.
 
@@ -119,7 +119,7 @@ export const useTripRepository = (): ITripRepository => {
 **Class-based repositories** (HTTP): wrap every request in try/catch and return `Result<T>`.
 
 ```ts
-// features/shared/data/repositories/ImageRepository.ts
+// features/core/images/data/repositories/ImageRepository.ts
 async getImage(placeName: string, urlType: UrlType): Promise<Result<string>> {
   try {
     const data = await this.http.get('/search/photos', { query: placeName }).json();
@@ -257,7 +257,7 @@ export const GenerateTripPage = () => {
 
 ### The logger interface
 
-`ILogger` is defined in `features/shared/domain/entities/services/ILogger.ts`. All use cases, repositories, and services depend on this interface — never on a concrete implementation.
+`ILogger` is defined in `features/core/error/domain/entities/services/ILogger.ts`. All use cases, repositories, and services depend on this interface — never on a concrete implementation.
 
 ```ts
 export interface ILogger {
@@ -273,24 +273,24 @@ export interface ILogger {
 
 | Environment | Implementation | Location |
 |---|---|---|
-| Development | `BasicLogger` | `features/shared/data/services/BasicLogger.ts` |
-| Production | `SentryLogger` | `features/shared/data/services/SentryLogger.ts` |
+| Development | `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
+| Production | `SentryLogger` | `features/core/error/data/services/SentryLogger.ts` |
 
 The DI config selects the right implementation at startup:
 
 ```ts
-// features/shared/di/config.ts
+// features/core/error/di/config.ts
 if (__DEV__) {
-  container.registerSingleton<ILogger>(SHARED_TYPES.Logger, BasicLogger);
+  container.registerSingleton<ILogger>(ERROR_TYPES.Logger, BasicLogger);
 } else {
-  container.registerSingleton<ILogger>(SHARED_TYPES.Logger, SentryLogger);
+  container.registerSingleton<ILogger>(ERROR_TYPES.Logger, SentryLogger);
 }
 ```
 
-**`SentryLogger`** wraps Sentry's `captureException` and enriches errors with breadcrumbs. It lives in `features/shared/data/services/SentryLogger.ts` and uses the Sentry library wrapper at `features/shared/libraries/sentryClient.ts`.
+**`SentryLogger`** wraps Sentry's `captureException` and enriches errors with breadcrumbs. It lives in `features/core/error/data/services/SentryLogger.ts` and uses the Sentry library wrapper at `features/core/error/libraries/sentryClient.ts`.
 
 ```ts
-// features/shared/data/services/SentryLogger.ts
+// features/core/error/data/services/SentryLogger.ts
 export class SentryLogger implements ILogger {
   error(error: Error, context?: Record<string, unknown>): void {
     sentryClient.captureException(error, { extra: context });
@@ -364,12 +364,12 @@ Lives in `ui/components/errors/AppCrashView/`. Follows the same three-file conve
 
 ## Error-to-UI Mapping
 
-### `useErrorMessage` — `features/shared/hooks/useErrorMessage.ts`
+### `useErrorMessage` — `features/core/error/hooks/useErrorMessage.ts`
 
 A utility hook that translates a `BaseError` into a localized user-facing string. The view never renders `error.message` directly — it always goes through this hook.
 
 ```ts
-// features/shared/hooks/useErrorMessage.ts
+// features/core/error/hooks/useErrorMessage.ts
 export const useErrorMessage = (error: BaseError | null): string | null => {
   const { t } = useTranslation();
   if (!error) return null;
@@ -382,7 +382,7 @@ export const useErrorMessage = (error: BaseError | null): string | null => {
 The mapping object lives alongside the hook:
 
 ```ts
-// features/shared/hooks/errorCodeToMessageKey.ts
+// features/core/error/hooks/errorCodeToMessageKey.ts
 export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.NetworkFailure]:    'ERRORS.NETWORK',
   [ErrorCode.Unauthorized]:      'ERRORS.UNAUTHORIZED',
@@ -407,16 +407,17 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 
 | File | Location |
 |---|---|
-| `Result<T>`, `ok()`, `fail()` | `features/shared/domain/entities/Result.ts` |
-| `BaseError` | `features/shared/domain/entities/BaseError.ts` |
-| `ErrorCode` | `features/shared/domain/entities/ErrorCode.ts` |
-| `ensureError` | `features/shared/domain/entities/ensureError.ts` |
-| `ILogger` interface | `features/shared/domain/entities/services/ILogger.ts` |
-| `BasicLogger` | `features/shared/data/services/BasicLogger.ts` |
-| `SentryLogger` | `features/shared/data/services/SentryLogger.ts` |
-| Sentry library wrapper | `features/shared/libraries/sentryClient.ts` |
-| `useErrorMessage` | `features/shared/hooks/useErrorMessage.ts` |
-| `errorCodeToMessageKey` | `features/shared/hooks/errorCodeToMessageKey.ts` |
+| `Result<T>`, `ok()`, `fail()` | `features/core/error/domain/entities/Result.ts` |
+| `BaseError` | `features/core/error/domain/entities/BaseError.ts` |
+| `ErrorCode` | `features/core/error/domain/entities/ErrorCode.ts` |
+| `ensureError` | `features/core/error/domain/entities/ensureError.ts` |
+| `ILogger` interface | `features/core/error/domain/entities/services/ILogger.ts` |
+| `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
+| `SentryLogger` | `features/core/error/data/services/SentryLogger.ts` |
+| Sentry library wrapper | `features/core/error/libraries/sentryClient.ts` |
+| Error DI types / config / resolve | `features/core/error/di/` |
+| `useErrorMessage` | `features/core/error/hooks/useErrorMessage.ts` |
+| `errorCodeToMessageKey` | `features/core/error/hooks/errorCodeToMessageKey.ts` |
 | `AppCrashView` component | `ui/components/errors/AppCrashView/` |
 | Root `ErrorBoundary` | `app/_layout.tsx` (exported function) |
 | Route `ErrorBoundary` | Individual route files (exported function, as needed) |

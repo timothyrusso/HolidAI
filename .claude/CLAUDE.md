@@ -9,9 +9,13 @@ Follow these rules on every task that involves writing or modifying code. If a s
 - Hook-based repositories → only inside `facades/`. Never in `.logic.ts` or UI.
 - `.tsx` files → only import the ViewModel (`.logic.ts`), UI components, and styles.
 - `domain/` → pure TypeScript only. No external library imports, no framework code, no side effects.
-- Never reach into another feature's internal folders. Only import from its `index.ts` or from `features/shared`.
+- Never reach into another feature's internal folders. Only import from its `index.ts` or from a `features/core/<sub-module>` via its `index.ts`.
 - Never use `new` to instantiate IoC classes. Always resolve from the feature's `di/resolve.ts`.
 - Never use `enum`. Use `const` objects with `as const` instead.
+- Functions that can fail must return `Result<T>` from `features/core/error/domain/entities/Result.ts`. Use `ok()` / `fail()` helpers.
+- Always use `ensureError()` in catch blocks. Never cast `error as Error`.
+- Never use `console.error`. Always use the injected `ILogger`.
+- Log errors only in `useCases/`. Facades and `.logic.ts` do not log.
 - If a rule must be broken, stop and explain the conflict to the user before writing any code.
 
 ## Import rules
