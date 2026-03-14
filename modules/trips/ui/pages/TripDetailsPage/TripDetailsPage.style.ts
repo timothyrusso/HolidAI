@@ -28,20 +28,6 @@ export const styles = StyleSheet.create({
     width: spacing.MinimalDouble,
     alignSelf: 'center',
   },
-  firstSeparatorOfTheSection: {
-    width: spacing.TripleAndHalf,
-    height: spacing.TripleAndHalf,
-    borderRadius: spacing.TripleAndHalf,
-    backgroundColor: colors.primary,
-    alignSelf: 'center',
-  },
-  longSeparator: {
-    height: spacing.Sextuple,
-    backgroundColor: colors.primary,
-    zIndex: 2,
-    width: spacing.MinimalDouble,
-    alignSelf: 'center',
-  },
   sectionList: {
     paddingTop: images.fullScreenImageHeight,
     backgroundColor: colors.primaryWhite,
