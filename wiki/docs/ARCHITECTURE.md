@@ -70,7 +70,7 @@ features/<name>/
 ```
 features/core/
 ├── error/           → BaseError, ErrorCode, Result, ok/fail helpers, ensureError, ILogger, BasicLogger, SentryLogger
-├── storage/         → IStorage, LocalStorage, MMKV wrapper
+├── storage/         → IStorage, LocalStorage, MMKV wrapper, zustandStorage adapter
 ├── http/            → IHttpClient, HttpClient, ky wrapper
 ├── images/          → IImageRepository, ImageRepository, GetPlaceImageUseCase, useGetPlaceImage facade
 ├── state/           → createStore, createSelectors utilities; app-wide and modal state stores
@@ -733,6 +733,8 @@ Client-side state stores (e.g. Zustand) for UI state that belongs to this featur
 | Data outlives a single screen but has no server representation | Data needs to be fetched, subscribed to, or mutated on the backend |
 | You need to reset or clear the data on user action | The "source of truth" is the database, not the client |
 
+---
+
 **Store structure — state + actions pattern**
 
 All stores follow the same pattern: a typed state slice plus an `actions` object. Actions are always nested under `actions` to keep the store shape clean and make it obvious what is state vs what is a setter.
@@ -760,7 +762,7 @@ const initialState: TripState = {
   budgetInfo: BudgetLevel.Cheap,
 };
 
-export const useTripStore = createStore<TripState & TripActions>(set => ({
+export const useTripStore = createStore<TripState & TripActions>()(set => ({
   ...initialState,
   actions: {
     setLocationInfo: (locationInfo) => set({ locationInfo }),
@@ -770,6 +772,41 @@ export const useTripStore = createStore<TripState & TripActions>(set => ({
   },
 }));
 ```
+
+**The one rule that governs actions: a store action contains exactly one `set()` call — nothing else.**
+
+Any conditional, transformation, filter, sort, or computation does not belong in a store action. It belongs in a use case. The flow when a mutation requires logic:
+
+```ts
+// ✅ Correct — use case computes, facade writes result via setter
+// features/trips/facades/useAddRecentSearch.ts
+export const useAddRecentSearch = () => {
+  const { actions } = useTripStore(); // at hook level — stable reference, no re-render cost
+  const { showErrorToast } = useToast();
+
+  const add = async (input: TripInput) => {
+    const result = await addRecentSearchUseCase.execute(input); // business logic lives here
+    if (!result.success) {
+      showErrorToast(result.error);
+      return;
+    }
+    actions.setData(result.data); // store only receives the final value
+  };
+
+  return { add };
+};
+
+// ❌ Wrong — logic inside a store action
+actions: {
+  addItem: (item) => set(state => ({
+    items: [...state.items.filter(i => i.id !== item.id), item]  // filtering logic — belongs in a use case
+      .sort((a, b) => b.createdAt - a.createdAt)                 // sorting logic — belongs in a use case
+      .slice(0, MAX_ITEMS),                                       // capping logic — belongs in a use case
+  })),
+}
+```
+
+---
 
 **Selectors — avoid unnecessary re-renders**
 
@@ -786,6 +823,8 @@ const { setLocationInfo, resetTripState } = useTripStore(state => state.actions)
 const store = useTripStore();
 ```
 
+---
+
 **Feature state vs global state**
 
 | State | Location |
@@ -796,9 +835,57 @@ const store = useTripStore();
 | Modal visibility (shared modals) | `features/core/state/modal/` |
 | `createStore` / `createSelectors` utilities | `features/core/state/` |
 
+---
+
 **Persistence**
 
 Only persist state that cannot be reconstructed cheaply. Wizard form inputs that survive app restart are a valid use case. Derived data, cached server responses, and anything easily re-fetched should never be persisted.
+
+Every persisted store **must** use Zustand's `persist` middleware with an explicit `version`, a `migrate` function, and a versioned `name`. Without this, any change to the store shape silently corrupts data on existing devices.
+
+```ts
+// features/trips/state/tripWizardStore.ts
+import { zustandStorage } from '@/features/core/storage'; // public API — never import storageClient from libraries/ directly
+
+export const useTripWizardStore = createStore<TripState & TripActions>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      actions: {
+        setLocationInfo: (locationInfo) => set({ locationInfo }),
+        setDatesInfo: (datesInfo) => set({ datesInfo }),
+        resetTripState: () => set(initialState),
+      },
+    }),
+    {
+      name: 'trip-wizard-store-v1',              // bump suffix on every breaking shape change
+      version: 1,
+      migrate: () => initialState,               // breaking change → reset to initial state
+      storage: createJSONStorage(() => zustandStorage),
+    },
+  ),
+);
+```
+
+**`zustandStorage`** is a thin adapter exposed by `features/core/storage/` that wraps the MMKV instance to match Zustand's `StateStorage` interface. It lives in `features/core/storage/data/services/zustandStorage.ts` and is exported from `features/core/storage/index.ts`. Stores import it from the sub-module's public API — never from `libraries/` directly, which would violate the rule that `libraries/` is exclusively consumed by `data/services/`.
+
+```ts
+// features/core/storage/data/services/zustandStorage.ts
+export const zustandStorage: StateStorage = {
+  getItem:    (key) => storageClient.getString(key) ?? null,
+  setItem:    (key, value) => storageClient.set(key, value),
+  removeItem: (key) => storageClient.delete(key),
+};
+
+// features/core/storage/index.ts
+export { zustandStorage } from './data/services/zustandStorage';
+```
+
+Rules for persisted stores:
+- **`name`** must include a version suffix (`-v1`, `-v2`, …). Bump it on every breaking shape change.
+- **`version`** must be incremented on every breaking change.
+- **`migrate`** defaults to resetting to `initialState`. A real field-level migration is only warranted when preserving existing user data matters more than starting clean — rare for UI state.
+- **`storage`** always uses `zustandStorage` from `@/features/core/storage` — never raw `AsyncStorage` or `storageClient` directly.
 
 ---
 
