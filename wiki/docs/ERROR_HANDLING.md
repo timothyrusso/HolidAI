@@ -144,7 +144,7 @@ Use cases receive results from repositories, apply business logic, log on failur
 
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
-import { buildPromptUseCase } from '@/features/ai/di/resolve';
+import { buildPromptUseCase } from '@/features/ai';
 
 export class GenerateTripUseCase {
   constructor(
@@ -154,7 +154,7 @@ export class GenerateTripUseCase {
 
   async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
-      const prompt = buildPromptUseCase(formData);
+      const prompt = buildPromptUseCase.execute(formData);
       const trip = await this.aiService.generateObject(prompt, generateTripSchema);
       return ok(trip);
     } catch (err) {

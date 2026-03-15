@@ -507,7 +507,7 @@ Use cases that need capabilities inject them via the constructor — both reposi
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
 // registered in di/config.ts
-import { buildPromptUseCase } from '@/features/ai/di/resolve';
+import { buildPromptUseCase } from '@/features/ai';
 
 export class GenerateTripUseCase {
   constructor(
@@ -517,7 +517,7 @@ export class GenerateTripUseCase {
 
   async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
-      const prompt = buildPromptUseCase(formData);
+      const prompt = buildPromptUseCase.execute(formData);
       const trip = await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
       return ok(trip);
     } catch (err) {
@@ -780,6 +780,10 @@ Any conditional, transformation, filter, sort, or computation does not belong in
 ```ts
 // ✅ Correct — use case computes, facade writes result via setter
 // features/trips/facades/useAddRecentSearch.ts
+import { addRecentSearchUseCase } from '@/features/trips/di/resolve';
+import { useToast } from '@/features/core/utils/hooks';
+import { useTripStore } from '@/features/trips/state/tripStore';
+
 export const useAddRecentSearch = () => {
   const { actions } = useTripStore(); // at hook level — stable reference, no re-render cost
   const { showErrorToast } = useToast();
