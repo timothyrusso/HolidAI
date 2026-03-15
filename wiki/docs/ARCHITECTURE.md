@@ -524,7 +524,7 @@ export class GenerateTripUseCase {
       return ok(trip);
     } catch (err) {
       const error = ensureError(err);
-      this.logger.error(error);
+      this.logger.error(error, { context: 'GenerateTripUseCase', formData });
       return fail(error);
     }
   }
@@ -609,7 +609,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
 
-**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils/hooks/`, same-feature state stores.
+**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
 
@@ -679,7 +679,7 @@ export const useGetUserTrips = () => {
 ```ts
 // features/trips/facades/useGenerateTrip.ts — coordinates AI use case + reactive repo
 import { generateTripUseCase } from '@/features/trips/di/resolve';
-import { useToast } from '@/features/core/utils/hooks';
+import { useToast } from '@/features/core/utils';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
@@ -800,7 +800,7 @@ Any conditional, transformation, filter, sort, or computation does not belong in
 // ✅ Correct — use case computes, facade writes result via setter
 // features/trips/facades/useAddRecentSearch.ts
 import { addRecentSearchUseCase } from '@/features/trips/di/resolve';
-import { useToast } from '@/features/core/utils/hooks';
+import { useToast } from '@/features/core/utils';
 import { useTripStore } from '@/features/trips/state/tripStore';
 
 export const useAddRecentSearch = () => {
@@ -943,7 +943,7 @@ PageName/
 It can import:
 - **Facades** (`features/<name>/facades/`) — for reused coordination of repos + use cases
 - **Hooks** (`features/<name>/hooks/`) — for reused utility logic
-- **Core hooks** (`features/core/utils/hooks/`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images` via its `index.ts`)
+- **Core hooks** (`features/core/utils` via `index.ts`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images` via its `index.ts`)
 - **Class use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not reused)
 - **State** (`features/<name>/state/`) — for local UI state
 
@@ -1246,7 +1246,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
    |---|---|---|
    | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
    | `.logic.ts` (ViewModel) | facades, hooks, core hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
-   | `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils/hooks/`, same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
+   | `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
    | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
    | `useCases/` | domain entities, repository interfaces (`IXxxRepository`), service interfaces (`IXxxService`) — all from `domain/`; never `libraries/` or concrete implementations | Catches, logs via `ILogger`, returns `Result<T>` |
    | `data/repositories/` (class-based) | domain interfaces, service interfaces via constructor injection — **never** `libraries/` directly | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |

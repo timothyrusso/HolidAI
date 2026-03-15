@@ -155,7 +155,7 @@ export class GenerateTripUseCase {
   async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
       const prompt = buildPromptUseCase.execute(formData);
-      const trip = await this.aiService.generateObject(prompt, generateTripSchema);
+      const trip = await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
       return ok(trip);
     } catch (err) {
       const error = ensureError(err);
@@ -180,7 +180,7 @@ Facades coordinate repositories and use cases. They receive `Result<T>` and deci
 ```ts
 // features/trips/facades/useGenerateTrip.ts
 import { generateTripUseCase } from '@/features/trips/di/resolve';
-import { useToast } from '@/features/core/utils/hooks';
+import { useToast } from '@/features/core/utils';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
