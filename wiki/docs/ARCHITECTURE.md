@@ -1197,6 +1197,28 @@ app/(authenticated)/create-trip/search-place.tsx
 
 ---
 
+## Documentation
+
+All public methods must have a TSDoc comment. This includes every `execute()` method on use cases, every method on repository and service interfaces, and any public facade or hook return value that is not self-evident from its name and type.
+
+Private methods must be documented when their behaviour is not immediately obvious from the name and signature — for example, when they throw, apply non-trivial transformations, or have constraints that callers must respect. Straightforward private helpers with self-explanatory names do not require a comment.
+
+TSDoc format:
+
+```ts
+/**
+ * Brief description of what the method does.
+ *
+ * @param paramName - Description. Include constraints or accepted formats if relevant.
+ * @returns Description of the return value, including edge cases (e.g. returns '' on invalid input).
+ * @throws Description of when and why the method throws, if applicable.
+ * @example
+ * myUseCase.execute('input') // "output"
+ */
+```
+
+---
+
 ## Naming Conventions
 
 | Thing | Convention | Example |
