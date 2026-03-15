@@ -141,6 +141,8 @@ export { useGetUserStatus } from './facades/useGetUserStatus'; // ✅ facade
 // export { UserResponseDTO } from './data/dtos/...'          ❌
 ```
 
+> **Exception — `features/core/` sub-modules:** Core sub-modules are foundational infrastructure shared across the whole app, not feature boundaries. Their `index.ts` may re-export IoC singletons and use cases when other features need to call them directly (e.g. `logger`, `getPlaceImageUseCase`). This is the deliberate exception to the "Class use cases" and "`di/resolve.ts` exports" rows above. Regular features (`trips`, `user`, etc.) follow the strict rule — use cases are internal, only facades cross the boundary.
+
 ### What a consuming feature can import
 
 ```ts
@@ -607,7 +609,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
 
-**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils/hooks/`.
+**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils/hooks/`, same-feature state stores.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
 
@@ -732,6 +734,23 @@ Client-side state stores (e.g. Zustand) for UI state that belongs to this featur
 | Data is client-only (form inputs, UI selection, wizard step) | Data comes from the server/backend |
 | Data outlives a single screen but has no server representation | Data needs to be fetched, subscribed to, or mutated on the backend |
 | You need to reset or clear the data on user action | The "source of truth" is the database, not the client |
+
+**Where state is accessed — facade vs `.logic.ts`**
+
+State stores can be imported at both the facade and `.logic.ts` layers. The layer that owns the **decision driving the state change** is where state access belongs:
+
+- **Facade** — when the state write is the result of an operation (use case executed → write outcome to state). The facade owns the full flow: execute → handle error → persist result. Keeping the write in the facade means `.logic.ts` calls a single function and has nothing left to do.
+- **`.logic.ts`** — when the state is pure UI state with no operation behind it (form fields, active filter, wizard step). No use case involved — just local UI management.
+
+A `.logic.ts` can do both simultaneously — call a facade for complex operations and manage local UI state directly:
+
+```ts
+export const useSearchPageLogic = () => {
+  const { add } = useAddRecentSearch();            // facade — operation + state write
+  const { query, setQuery } = useSearchStore(...); // direct state — pure UI
+  return { add, query, setQuery };
+};
+```
 
 ---
 
@@ -924,7 +943,7 @@ PageName/
 It can import:
 - **Facades** (`features/<name>/facades/`) — for reused coordination of repos + use cases
 - **Hooks** (`features/<name>/hooks/`) — for reused utility logic
-- **Core hooks** (`features/core/utils/hooks/`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images/facades/useGetPlaceImage`)
+- **Core hooks** (`features/core/utils/hooks/`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images` via its `index.ts`)
 - **Class use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not reused)
 - **State** (`features/<name>/state/`) — for local UI state
 
@@ -1205,9 +1224,9 @@ Always use the `@/` path alias — never relative paths. This applies to every f
 
 ```ts
 // ✅ Always
-import { logger } from '@/features/core/error/di/resolve';
+import { logger } from '@/features/core/error';
 import { useGetUserTrips } from '@/features/trips/facades/useGetUserTrips';
-import { useGetPlaceImage } from '@/features/core/images/facades/useGetPlaceImage';
+import { useGetPlaceImage } from '@/features/core/images';
 
 // ❌ Never
 import { logger } from '../../../core/error/di/resolve';
@@ -1226,8 +1245,8 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
    | Layer | Can import | Error responsibility |
    |---|---|---|
    | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
-   | `.logic.ts` (ViewModel) | facades, hooks, core hooks, class use cases via `di/resolve` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
-   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades, utility hooks from `features/core/utils/hooks/` | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
+   | `.logic.ts` (ViewModel) | facades, hooks, core hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
+   | `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils/hooks/`, same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
    | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
    | `useCases/` | domain entities, repository interfaces (`IXxxRepository`), service interfaces (`IXxxService`) — all from `domain/`; never `libraries/` or concrete implementations | Catches, logs via `ILogger`, returns `Result<T>` |
    | `data/repositories/` (class-based) | domain interfaces, service interfaces via constructor injection — **never** `libraries/` directly | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |
