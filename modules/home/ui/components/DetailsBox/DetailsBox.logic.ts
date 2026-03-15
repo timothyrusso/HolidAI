@@ -1,4 +1,4 @@
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import { translateDateUseCase } from '@/features/core/dates';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useRouter } from 'expo-router';
@@ -14,7 +14,7 @@ export const useDetailsBoxLogic = (tripId: string, tripStartDate: string) => {
     });
   };
 
-  const dateLabel = translateDate(locale, tripStartDate);
+  const dateLabel = translateDateUseCase.execute(locale, tripStartDate);
 
   const handleShowAllTripsButton = () => router.push({ pathname: `/${Stacks.HomePage}/${Routes.ShowAllTrips}` });
 

@@ -1020,29 +1020,25 @@ features/
 │       ├── config.ts
 │       └── resolve.ts
 └── trips/              ← (hook-based repos only — no di/ needed)
-
-bootstrap.ts             ← project root — collects all feature DI registrations
 ```
 
 Features that use only hook-based repositories (e.g. trips, user) have no `di/` folder — they don't need one.
 
-**Bootstrap** — all feature `config.ts` files are collected in a single root-level file and imported once at app startup. `bootstrap.ts` is the **only file to update** when adding a new feature with injectable singletons:
+**Self-bootstrapping** — each feature's `resolve.ts` imports its own `config.ts` as the first import. This creates a hard dependency edge in the module graph: the bundler is forced to evaluate `config.ts` before `resolve.ts`'s body runs, regardless of what any other file does. No central orchestrator file is needed or used.
 
 ```ts
-// bootstrap.ts (project root)
-import 'reflect-metadata'; // e.g. required by tsyringe
-import '@/features/core/error/di/config';
-import '@/features/core/storage/di/config';
-import '@/features/core/http/di/config';
-import '@/features/core/images/di/config';
-import '@/features/ai/di/config';
-// adding a new feature with IoC singletons? register it here
+// features/core/dates/di/resolve.ts
+import 'reflect-metadata';
+import './config'; // ← guarantees registrations run before any container.resolve() call
+
+import { container } from 'tsyringe';
+// ...
+export const getTodayInLocalTimezoneUseCase = container.resolve<GetTodayInLocalTimezoneUseCase>(
+  DATES_TYPES.GetTodayInLocalTimezoneUseCase,
+);
 ```
 
-```ts
-// app/_layout.tsx — stays clean
-import '@/bootstrap';
-```
+This keeps DI fully scoped inside the owning feature. Adding a new feature with injectable singletons requires no changes outside that feature's own `di/` folder.
 
 **Usage** — two access patterns depending on whether you are inside or outside the owning feature:
 
@@ -1198,6 +1194,28 @@ app/(authenticated)/create-trip/search-place.tsx
         └── renders <PlacesAutocomplete />                ← ui/components/composite/
 ```
 
+
+---
+
+## Documentation
+
+All public methods must have a TSDoc comment. This includes every `execute()` method on use cases, every method on repository and service interfaces, and any public facade or hook return value that is not self-evident from its name and type.
+
+Private methods must be documented when their behaviour is not immediately obvious from the name and signature — for example, when they throw, apply non-trivial transformations, or have constraints that callers must respect. Straightforward private helpers with self-explanatory names do not require a comment.
+
+TSDoc format:
+
+```ts
+/**
+ * Brief description of what the method does.
+ *
+ * @param paramName - Description. Include constraints or accepted formats if relevant.
+ * @returns Description of the return value, including edge cases (e.g. returns '' on invalid input).
+ * @throws Description of when and why the method throws, if applicable.
+ * @example
+ * myUseCase.execute('input') // "output"
+ */
+```
 
 ---
 

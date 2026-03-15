@@ -11,7 +11,8 @@
     "RNFB",
     "statsig",
     "tsyringe",
-    "zustand"
+    "zustand",
+    "sourcery"
   ],
   "flagWords": [
     "hte"

@@ -1,6 +1,8 @@
-import { getTimezoneFormattedDateUseCase } from '@/modules/dates/application/getTimezoneFormattedDateUseCase';
-import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getTodayInLocalTimezoneUseCase';
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import {
+  getTimezoneFormattedDateUseCase,
+  getTodayInLocalTimezoneUseCase,
+  translateDateUseCase,
+} from '@/features/core/dates';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
@@ -16,10 +18,10 @@ export const useSelectDatesPageLogic = () => {
 
   const { tripActions } = useTripState();
   const router = useRouter();
-  const todayInLocalTimezone = getTodayInLocalTimezoneUseCase;
+  const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
 
   const handleDateChange = (date: Date, type: string) => {
-    const timezoneFormattedDate = getTimezoneFormattedDateUseCase(date);
+    const timezoneFormattedDate = getTimezoneFormattedDateUseCase.execute(date);
 
     if (type === 'START_DATE') {
       setStartDate(timezoneFormattedDate);
@@ -49,8 +51,8 @@ export const useSelectDatesPageLogic = () => {
 
   const userTokens = getUserTokens();
 
-  const startDateLabel = `${translateDate(locale, startDate)}`;
-  const endDateLabel = `${translateDate(locale, endDate)}`;
+  const startDateLabel = `${translateDateUseCase.execute(locale, startDate)}`;
+  const endDateLabel = `${translateDateUseCase.execute(locale, endDate)}`;
 
   const removeDates = () => {
     setStartDate(null);

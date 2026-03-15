@@ -1,4 +1,4 @@
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import { translateDateUseCase } from '@/features/core/dates';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
@@ -16,7 +16,10 @@ export const useReviewTripPageLogic = () => {
 
   const getTripDates = () => {
     const { startDate, endDate } = tripSelectors.datesInfo();
-    return startDate && `${translateDate(locale, startDate)}${endDate ? ` - ${translateDate(locale, endDate)}` : ''}`;
+    return (
+      startDate &&
+      `${translateDateUseCase.execute(locale, startDate)}${endDate ? ` - ${translateDateUseCase.execute(locale, endDate)}` : ''}`
+    );
   };
 
   const handleButtonPress = () => {
