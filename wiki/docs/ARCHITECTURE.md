@@ -150,15 +150,29 @@ import type { User } from '@/features/user';
 // ✅ Import facades from another feature's public API
 import { useGetUserStatus } from '@/features/user';
 
-// ✅ Import from a core sub-module via its public API
+// ✅ Import from a core sub-module via its public API (index.ts) — hooks, types, AND IoC singletons
 import { useGetPlaceImage } from '@/features/core/images';
-import { logger } from '@/features/core/error/di/resolve';
+import { logger } from '@/features/core/error';
 
 // ❌ Never reach into another feature's internal folders
 import { useTripRepository } from '@/features/user/data/repositories/useConvexUserRepository';
 
-// ❌ Never reach into a core sub-module's internal folders
+// ❌ Never reach into a core sub-module's internal folders — di/resolve.ts is internal to the owning feature
+import { logger } from '@/features/core/error/di/resolve';
 import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
+```
+
+**`di/resolve.ts` is internal to its feature.** Within a feature, files import their own resolved singletons via `di/resolve.ts` directly. Outside the feature, consumers always go through the sub-module's `index.ts`. Core sub-modules re-export their public IoC singletons from `index.ts`:
+
+```ts
+// features/core/error/index.ts
+export { logger } from './di/resolve';                          // IoC singleton — re-exported for cross-feature use
+export type { ILogger } from './domain/entities/services/ILogger';
+export { BaseError, ErrorCode, ensureError, ok, fail } from './domain/entities/Result';
+
+// features/core/images/index.ts
+export { getPlaceImageUseCase } from './di/resolve';            // IoC singleton — re-exported for cross-feature use
+export { useGetPlaceImage } from './facades/useGetPlaceImage';  // facade
 ```
 
 ### When to use `core/` vs `index.ts`
@@ -560,7 +574,7 @@ export const useGetPlaceImage = (placeName: string) => {
 };
 
 // 4b. Or consumed directly in .logic.ts (page-specific)
-import { getPlaceImageUseCase } from '@/features/core/images/di/resolve';
+import { getPlaceImageUseCase } from '@/features/core/images'; // cross-feature — always via index.ts
 
 export const useSearchPlaceLogic = () => {
   const handleSelect = async (place: string) => {
@@ -588,7 +602,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
 
-**What facades can import:** hook-based repositories, class use cases from `di/resolve.ts`, other facades.
+**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
 
@@ -999,15 +1013,20 @@ import '@/features/ai/di/config';
 import '@/bootstrap';
 ```
 
-**Usage** — import from the owning feature's `resolve.ts`. The import path makes ownership explicit:
+**Usage** — two access patterns depending on whether you are inside or outside the owning feature:
 
 ```ts
-import { logger } from '@/features/core/error/di/resolve';
+// Within the same feature — import directly from di/resolve.ts
+// features/core/images/facades/useGetPlaceImage.ts
 import { getPlaceImageUseCase } from '@/features/core/images/di/resolve';
-import { aiClient } from '@/features/ai/di/resolve';
+
+// From another feature — always import via the sub-module's index.ts
+import { logger } from '@/features/core/error';
+import { getPlaceImageUseCase } from '@/features/core/images';
+import { aiClient } from '@/features/ai';
 ```
 
-Never instantiate services directly — always import from the feature's `di/resolve.ts`.
+Never instantiate services directly — always import from `di/resolve.ts` (internally) or `index.ts` (cross-feature).
 
 ---
 

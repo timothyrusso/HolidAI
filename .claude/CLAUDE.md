@@ -23,8 +23,8 @@ Follow these rules on every task that involves writing or modifying code. If a s
 | Layer | Can import |
 |---|---|
 | `.tsx` | ViewModel (`.logic.ts`), UI components, styles |
-| `.logic.ts` (ViewModel) | facades, hooks, shared hooks, class use cases via `di/resolve`, state |
-| `facades/` | hook-based repos, class use cases via `di/resolve`, other facades |
+| `.logic.ts` (ViewModel) | facades, hooks, shared hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, state |
+| `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades |
 | `hooks/` | domain types, state, external library hooks only |
 | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities |
 | `data/repositories/` | domain interfaces, DTOs, adapters |
