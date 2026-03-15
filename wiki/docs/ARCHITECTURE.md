@@ -1115,6 +1115,49 @@ No IoC container entry needed — the hook is the injection mechanism.
 
 ---
 
+## tsyringe Reference
+
+This section documents the tsyringe mechanisms used in this project, with verified definitions and the rules for how each is applied.
+
+> **Official docs:** https://github.com/microsoft/tsyringe
+
+### Mechanism table
+
+| Mechanism | What it does | When it is required |
+|---|---|---|
+| `reflect-metadata` | Enables the TypeScript decorator metadata needed by tsyringe to read constructor parameter types at runtime | Must be imported **once**, before any DI code runs. In this project it is imported at the top of every `di/config.ts` and `di/resolve.ts`. |
+| `@injectable()` | Marks a class so tsyringe can read its constructor parameter metadata. Without it, tsyringe cannot inject constructor dependencies. | Required on any class whose constructor receives injected parameters. **Not needed** on classes with no constructor dependencies (e.g. pure stateless use cases). |
+| `@singleton()` | Shorthand decorator that combines `@injectable()` + singleton lifetime registration. | **Not used in this project.** Explicit `container.registerSingleton()` in `di/config.ts` is preferred for clarity and consistency. Combining both is redundant — `registerSingleton()` documentation states it is the "Alternative to the `@singleton()` decorator". |
+| `@inject(token)` | Tells tsyringe which token to use when resolving a specific constructor parameter. | Required when a constructor parameter is typed as an interface (interfaces are erased at runtime — tsyringe cannot infer the token automatically). Always used alongside `@injectable()`. |
+| `container.registerSingleton(token, Class)` | Registers `Class` under `token` with singleton lifetime (one instance for the entire app). | Used in every `di/config.ts` for services and use cases. Replaces the `@singleton()` decorator. |
+| `container.registerInstance(token, instance)` | Registers a pre-created object instance under `token`. | Used when the object needs constructor arguments that are not themselves injected (e.g. `new MMKV({ id: 'app-storage' })`). The instance is created inline in `config.ts` and handed to the container. |
+| `container.resolve<T>(token)` | Resolves and returns the registered instance for `token`. | Called in `di/resolve.ts` to obtain the singleton and export it as a plain constant. Never called outside `di/resolve.ts`. |
+
+### Lifetime note: singleton vs transient
+
+tsyringe supports two main lifetimes:
+
+- **Singleton** — one instance is created on first resolution and reused forever. Used for all services and use cases in this project (all are stateless).
+- **Transient** — a new instance is created on every `container.resolve()` call. Not currently used. If a class ever held mutable internal state between calls it would need transient registration, but no such class exists.
+
+### `reflect-metadata` import order rule
+
+`reflect-metadata` must be imported **before** any class decorated with `@injectable()` or `@inject()` is evaluated, and before any `container.resolve()` call. In this project the rule is enforced structurally:
+
+1. `di/config.ts` starts with `import 'reflect-metadata'` and registers all classes.
+2. `di/resolve.ts` starts with `import 'reflect-metadata'` and `import './config'` — the `./config` import is a hard module-graph dependency that forces the bundler to evaluate `config.ts` (and therefore run all registrations) before the `resolve.ts` body runs.
+
+This eliminates any runtime ordering risk without a central bootstrap file.
+
+### Project rules
+
+- **Never use `@singleton()`** — use `container.registerSingleton()` in `di/config.ts` instead.
+- **Use `@injectable()` only when needed** — pure stateless use cases with no constructor parameters do not need it. Add it as soon as a constructor parameter is introduced.
+- **Always pair `@injectable()` with `@inject(token)`** when the parameter type is an interface. Forgetting `@inject()` causes a silent resolution failure at runtime.
+- **Never call `container.resolve()` outside `di/resolve.ts`** — resolution happens once, the result is exported as a plain constant and consumed everywhere else.
+
+---
+
 ## Global UI (`/ui`)
 
 Reusable building blocks shared across multiple features.
