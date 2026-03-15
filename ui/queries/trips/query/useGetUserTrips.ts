@@ -1,5 +1,5 @@
 import { api } from '@/convex/_generated/api';
-import { getTodayInLocalTimezoneUseCase } from '@/modules/dates/application/getTodayInLocalTimezoneUseCase';
+import { getTodayInLocalTimezoneUseCase } from '@/features/core/dates';
 import { useUser } from '@clerk/clerk-expo';
 import { useQuery } from 'convex/react';
 
@@ -26,7 +26,7 @@ export const useGetUserTrips = () => {
   };
 
   const getUpcomingTrip = () => {
-    const todayStr = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
+    const todayStr = getTodayInLocalTimezoneUseCase.execute().toISOString().split('T')[0];
 
     return userTrips
       ?.filter(trip => trip.tripAiResp.tripDetails.startDate >= todayStr)

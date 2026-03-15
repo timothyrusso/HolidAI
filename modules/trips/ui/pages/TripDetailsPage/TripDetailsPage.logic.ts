@@ -1,4 +1,4 @@
-import { translateDate } from '@/modules/dates/application/getTranslatedDate';
+import { translateDateUseCase } from '@/features/core/dates';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import type { TripDetails } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
@@ -109,8 +109,8 @@ export const useTripDetailsPageLogic = () => {
     travelers: travelers ?? 0,
     durationDays: durationDays ?? 0,
     durationNights: durationNights ?? 0,
-    startDate: translateDate(locale, trip?.tripAiResp.tripDetails.startDate),
-    endDate: translateDate(locale, trip?.tripAiResp.tripDetails.endDate),
+    startDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.startDate),
+    endDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.endDate),
   };
 
   return {
