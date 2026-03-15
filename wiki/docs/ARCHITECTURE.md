@@ -510,31 +510,7 @@ export class GenerateTripUseCase {
 }
 ```
 
-Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the **facade layer**:
-
-```ts
-// features/trips/facades/useGenerateTrip.ts
-import { generateTripUseCase } from '@/features/trips/di/resolve';
-
-export const useGenerateTrip = () => {
-  const repo = useTripRepository();
-  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
-
-  const generate = async (formData: TripFormData) => {
-    const result = await generateTripUseCase.execute(formData);   // returns Result<GeneratedTrip>
-    if (!result.success) {
-      showErrorToast(result.error);
-      return;
-    }
-    const saveResult = await repo.createTrip(result.data);        // returns Result<void>
-    if (!saveResult.success) {
-      showErrorToast(saveResult.error);
-    }
-  };
-
-  return { generate };
-};
-```
+Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the facade layer — see the [`facades/` section](#facades) for the full example.
 
 This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them and decide how to surface failures.
 
