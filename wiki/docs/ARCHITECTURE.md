@@ -1,12 +1,14 @@
 # Architecture
 
+> **Diagram:** [Architecture overview](diagrams/architecture.mermaid)
+
 ## Guiding Principles
 
 - **Feature-first** — code is grouped by business capability, not by technical layer. Open a feature folder and understand its full scope end to end.
 - **Inward dependencies** — outer layers depend on inner ones, never the reverse. `ui` → `facades/hooks/state` → `useCases` → `domain`.
 - **Abstraction over coupling** — feature code depends on interfaces, not concrete implementations. Swapping a library only affects its wrapper, not any feature.
 - **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories for reactive backends that require React lifecycle and auth context.
-- **Feature isolation** — features communicate only through `features/shared/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features.
+- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features.
 - **Start simple, promote when needed** — components, facades, and hooks start local. They move to a shared location only when a second consumer appears.
 
 ---
@@ -63,13 +65,45 @@ features/<name>/
 
 ---
 
-## `features/shared/`
+## `features/core/`
 
-`features/shared/` is the **designated shared feature** — it owns cross-cutting infrastructure (logger, storage, HTTP client, image repositories) and shared utilities (`createStore`, global state, shared hooks). Like every other feature, it exposes a public `index.ts`. Consumers always import from `@/features/shared`, never from its internal sub-paths directly.
+`features/core/` is the **foundational infrastructure module** — it owns all cross-cutting concerns: error handling, logging, storage, HTTP, image fetching, global state utilities, and generic utility hooks. Unlike other features, `core` is not organised by technical layer at the top level. It is organised by **concern** — each concern is a self-contained sub-module with its own internal layers.
+
+```
+features/core/
+├── error/           → BaseError, ErrorCode, Result, ok/fail helpers, ensureError, ILogger, BasicLogger, SentryLogger
+├── storage/         → IStorage, LocalStorage, MMKV wrapper, zustandStorage adapter
+├── http/            → IHttpClient, HttpClient, ky wrapper
+├── images/          → IImageRepository, ImageRepository, GetPlaceImageUseCase, useGetPlaceImage facade
+├── state/           → createStore, createSelectors utilities; app-wide and modal state stores
+└── utils/           → generic utility hooks (useDebounce, etc.) and pure utility functions
+```
+
+Each sub-module follows the same internal layer structure as any other feature — only the layers it actually needs:
+
+```
+features/core/<sub-module>/
+├── domain/
+│   └── entities/
+│       ├── SomeType.ts
+│       ├── repositories/    (if the sub-module defines a repository interface)
+│       └── services/        (if the sub-module defines a service interface)
+├── data/
+│   ├── repositories/
+│   └── services/
+├── libraries/               (third-party wrappers)
+├── di/
+│   ├── types.ts
+│   ├── config.ts
+│   └── resolve.ts
+├── facades/                 (if the sub-module exposes reactive hooks)
+├── hooks/                   (sub-module-specific utility hooks)
+└── index.ts                 (public API of the sub-module)
+```
 
 Every feature is **isolated**: `features/trips/` cannot reach into `features/user/` internals. If logic or types are needed across features, they either:
 
-- Move into `features/shared/`
+- Move into `features/core/` (foundational infrastructure) or the relevant `core` sub-module
 - Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
 
 Not every feature needs an `index.ts` — only create one when another feature actually needs to import from it.
@@ -107,6 +141,8 @@ export { useGetUserStatus } from './facades/useGetUserStatus'; // ✅ facade
 // export { UserResponseDTO } from './data/dtos/...'          ❌
 ```
 
+> **Exception — `features/core/` sub-modules:** Core sub-modules are foundational infrastructure shared across the whole app, not feature boundaries. Their `index.ts` may re-export IoC singletons and use cases when other features need to call them directly (e.g. `logger`, `getPlaceImageUseCase`). This is the deliberate exception to the "Class use cases" and "`di/resolve.ts` exports" rows above. Regular features (`trips`, `user`, etc.) follow the strict rule — use cases are internal, only facades cross the boundary.
+
 ### What a consuming feature can import
 
 ```ts
@@ -116,18 +152,36 @@ import type { User } from '@/features/user';
 // ✅ Import facades from another feature's public API
 import { useGetUserStatus } from '@/features/user';
 
-// ✅ Import from shared via its public API
-import { useUnsplashImages, logger } from '@/features/shared';
+// ✅ Import from a core sub-module via its public API (index.ts) — hooks, types, AND IoC singletons
+import { useGetPlaceImage } from '@/features/core/images';
+import { logger } from '@/features/core/error';
 
 // ❌ Never reach into another feature's internal folders
 import { useTripRepository } from '@/features/user/data/repositories/useConvexUserRepository';
+
+// ❌ Never reach into a core sub-module's internal folders — di/resolve.ts is internal to the owning feature
+import { logger } from '@/features/core/error/di/resolve';
+import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
 ```
 
-### When to use `shared/` vs `index.ts`
+**`di/resolve.ts` is internal to its feature.** Within a feature, files import their own resolved singletons via `di/resolve.ts` directly. Outside the feature, consumers always go through the sub-module's `index.ts`. Core sub-modules re-export their public IoC singletons from `index.ts`:
+
+```ts
+// features/core/error/index.ts
+export { logger } from './di/resolve';                          // IoC singleton — re-exported for cross-feature use
+export type { ILogger } from './domain/entities/services/ILogger';
+export { BaseError, ErrorCode, ensureError, ok, fail } from './domain/entities/Result';
+
+// features/core/images/index.ts
+export { getPlaceImageUseCase } from './di/resolve';            // IoC singleton — re-exported for cross-feature use
+export { useGetPlaceImage } from './facades/useGetPlaceImage';  // facade
+```
+
+### When to use `core/` vs `index.ts`
 
 | Scenario | Solution |
 |---|---|
-| Logic or type needed by many features | Move to `features/shared/` |
+| Foundational infrastructure needed by many features (logging, storage, HTTP, error types) | Move to the relevant `features/core/<sub-module>/` |
 | Logic or type needed by one specific feature | Expose via `index.ts` of the owning feature |
 | UI component needed by many features | Promote to global `ui/components/` |
 | UI component needed by one other feature | Before sharing, ask: does the other feature need the component itself, or just the data? If it just needs the data, it can build its own version. If the component is truly needed as-is, promote it to global `ui/components/` — never export UI components via `index.ts` |
@@ -190,10 +244,10 @@ Repository interfaces. Define the contract for data access without specifying ho
 ```ts
 // features/trips/domain/entities/repositories/ITripRepository.ts
 export interface ITripRepository {
-  getUserTrips(): Trip[] | undefined;
-  createTrip(data: CreateTripData): Promise<void>;
-  toggleFavorite(tripId: string): Promise<void>;
-  deleteTrip(tripId: string): Promise<void>;
+  getUserTrips(): Trip[] | undefined;           // reactive query — undefined while loading, no Result needed
+  createTrip(data: CreateTripData): Promise<Result<void>>;
+  toggleFavorite(tripId: string): Promise<Result<void>>;
+  deleteTrip(tripId: string): Promise<Result<void>>;
 }
 ```
 
@@ -204,10 +258,10 @@ Service interfaces. While repository interfaces define contracts for **data acce
 A feature declares "I need to be able to log things" or "I need to generate AI content" without caring how it works. The interface is the contract; `data/services/` provides the implementation and the IoC container wires them together. This means the implementation can change (e.g. swap a console logger for a remote logging service) without touching any feature code.
 
 ```ts
-// features/shared/domain/entities/services/ILogger.ts
+// features/core/error/domain/entities/services/ILogger.ts
 export interface ILogger {
   log(message: string, ...args: unknown[]): void;
-  error(error: Error, ...args: unknown[]): void;
+  error(error: Error, context?: Record<string, unknown>): void;
   warning(message: string, ...args: unknown[]): void;
   info(message: string, ...args: unknown[]): void;
   debug(message: string, ...args: unknown[]): void;
@@ -263,38 +317,65 @@ export type TripResponseDTO = {
 
 Implementations of repository interfaces from `domain/entities/repositories/`.
 
-For **reactive backends** (e.g. Convex), repositories are implemented as hooks — not classes. This preserves real-time subscriptions and auth context, which would be lost in a class singleton:
+**Naming convention:** class-based repositories are named `XxxRepository.ts`; hook-based repositories are prefixed with `use` following the React convention: `useXxxRepository.ts`. This makes the pattern immediately visible without needing a subfolder — a feature rarely has both types simultaneously.
+
+---
+
+**Hook-based repositories** (e.g. Convex) are implemented as React hooks — not classes. This preserves real-time subscriptions and auth context, which would be lost in a class singleton.
+
+**Documented exception — direct library imports:** Hook-based repositories are the only place in `data/` that may import reactive library hooks directly — specifically the Convex client hooks (`useQuery`, `useMutation`) and the auth context hook (e.g. Clerk's `useAuth`). These are React hooks that require the React lifecycle and an auth provider context to function. They cannot be wrapped in a `data/services/` class singleton without losing reactivity or breaking auth. This is not a layering shortcut — it is a structural necessity of the hook-based repository pattern.
+
 
 ```ts
 // features/trips/data/repositories/useTripRepository.ts
 // e.g. using Convex + Clerk
 export const useTripRepository = (): ITripRepository => {
-  const { user } = useAuthUser();
-  const trips = useReactiveQuery(api.trips.getAllByUserId, { userId: user?.id ?? '' });
+  const { userId } = useAuth();                                                    // auth hook — direct import, documented exception
+  const trips = useQuery(api.trips.getAllByUserId, { userId: userId ?? '' }); // Convex hook — direct import, documented exception
   const createMutation = useMutation(api.trips.create);
   const toggleMutation = useMutation(api.trips.toggleFavorite);
 
   return {
-    getUserTrips: () => trips,
-    createTrip: (data) => createMutation(data),
-    toggleFavorite: (tripId) => toggleMutation({ tripId }),
+    getUserTrips: () => trips,                                  // reactive query — returns undefined while loading
+
+    createTrip: async (data) => {
+      try {
+        await createMutation(data);
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
+
+    toggleFavorite: async (tripId) => {
+      try {
+        await toggleMutation({ tripId });
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
   };
 };
 ```
 
-**Naming convention:** class-based repositories are named `XxxRepository.ts`; hook-based repositories are prefixed with `use` following the React convention: `useXxxRepository.ts`. This makes the pattern immediately visible without needing a subfolder — a feature rarely has both types simultaneously.
+---
 
-For **HTTP APIs** (non-reactive), repositories are singleton classes registered in the IoC container:
+**Class-based repositories** (e.g. HTTP APIs) are singleton classes registered in the IoC container. They never import from `libraries/` directly. When a class-based repository needs external I/O (HTTP, storage), it declares a dependency on a **service interface** injected via constructor. The service implementation handles the `libraries/` call internally. This keeps the repository isolated from library-level details.
 
 ```ts
-// features/shared/data/repositories/ImageRepository.ts
+// features/core/images/data/repositories/ImageRepository.ts
 // registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
 export class ImageRepository implements IImageRepository {
-  constructor(private http: IHttpClient) {}
+  constructor(private http: IHttpClient) {}  // service interface injected — never imports httpClient from libraries/ directly
 
-  async getImage(placeName: string, urlType: UrlType): Promise<string> {
-    const data = await this.http.get('/search/photos', { query: placeName }).json();
-    return data.results[0]?.urls[urlType] ?? noImage;
+  async getImage(placeName: string, urlType: UrlType): Promise<Result<string>> {
+    try {
+      const data = await this.http.get('/search/photos', { query: placeName }).json();
+      return ok(data.results[0]?.urls[urlType] ?? noImage);
+    } catch (err) {
+      return fail(ensureError(err));
+    }
   }
 }
 ```
@@ -304,11 +385,11 @@ export class ImageRepository implements IImageRepository {
 Implementations of service interfaces from `domain/entities/services/`. These are stateless, registered as singletons in the IoC container, and may use `libraries/` wrappers internally.
 
 ```ts
-// features/shared/data/services/Logger.ts
+// features/core/error/data/services/BasicLogger.ts
 // registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
-export class Logger implements ILogger {
+export class BasicLogger implements ILogger {
   log(message: string, ...args: unknown[]) { console.log(message, ...args); }
-  error(error: Error, ...args: unknown[]) { console.error(error, ...args); }
+  error(error: Error, context?: Record<string, unknown>) { console.error(error, context); }
   warning(message: string, ...args: unknown[]) { console.warn(message, ...args); }
 }
 ```
@@ -364,7 +445,7 @@ export const validateTravelersCount = (count: number): boolean => {
 
 Thin wrappers around external libraries. No business logic — only API normalization and simplification. The goal is to isolate the app from third-party library APIs so that swapping a library only requires changing its wrapper, not every file that uses it.
 
-`data/services/` and `data/repositories/` always use library wrappers, never raw libraries directly.
+`data/services/` implementations are the **exclusive consumers** of library wrappers in the class-based pattern. Class-based repositories never import from `libraries/` directly — they receive service interfaces via constructor injection, and the service implementation calls the library wrapper internally. The only exception is hook-based repositories, which import Convex and auth hooks directly as a documented structural necessity (see `data/repositories/`).
 
 **How to decide if a library needs a wrapper:** ask "if I swap this library for another, how many files change?" If the answer is more than one file, the library needs a wrapper. That wrapper becomes the only file to update on swap.
 
@@ -379,7 +460,7 @@ Do **not** wrap:
 - Libraries that are already abstractions by design (e.g. React Query's `useQuery` is itself the abstraction layer — wrapping it adds nothing)
 
 ```ts
-// features/shared/libraries/httpClient.ts
+// features/core/http/libraries/httpClient.ts
 // e.g. wrapping ky
 export const httpClient = ky.create({
   timeout: 10_000,
@@ -388,7 +469,7 @@ export const httpClient = ky.create({
 ```
 
 ```ts
-// features/shared/libraries/storageClient.ts
+// features/core/storage/libraries/storageClient.ts
 // e.g. wrapping MMKV
 export const storageClient = new MMKV({
   id: 'app-storage',
@@ -411,9 +492,11 @@ Use cases with no external dependencies have an empty constructor. They still re
 ```ts
 // features/trips/useCases/GetUpcomingTripUseCase.ts
 // registered in di/config.ts
+import { getTodayInLocalTimezoneUseCase } from '@/features/core/dates';
+
 export class GetUpcomingTripUseCase {
   execute(trips: Trip[]): Trip | undefined {
-    const today = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
+    const today = getTodayInLocalTimezoneUseCase.execute().toISOString().split('T')[0];
     return trips
       .filter(trip => trip.startDate >= today)
       .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
@@ -421,93 +504,90 @@ export class GetUpcomingTripUseCase {
 }
 ```
 
-Use cases that need services inject them via the constructor:
+Use cases that need capabilities inject them via the constructor — both repository interfaces (data access) and service interfaces (capabilities like AI or logging) are valid dependencies. Both are pure TypeScript interfaces defined in `domain/` and neither exposes a concrete implementation:
 
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
 // registered in di/config.ts
+import { buildPromptUseCase } from '@/features/ai';
+
 export class GenerateTripUseCase {
   constructor(
-    private aiService: IAiService,  // service
-    private logger: ILogger,        // service
+    private aiService: IAiService,  // service interface — capability
+    private logger: ILogger,        // service interface — capability
   ) {}
 
-  async execute(formData: TripFormData): Promise<GeneratedTrip> {
+  async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
-      const prompt = buildPromptUseCase(formData);
-      return await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
-    } catch (error) {
-      this.logger.error(ensureError(error));
-      throw error;
+      const prompt = buildPromptUseCase.execute(formData);
+      const trip = await this.aiService.generateObject(prompt, generateTripSchema, AiModel.Default);
+      return ok(trip);
+    } catch (err) {
+      const error = ensureError(err);
+      this.logger.error(error, { context: 'GenerateTripUseCase', formData });
+      return fail(error);
     }
   }
 }
 ```
 
-Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the **facade layer**:
+Note that `GenerateTripUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the facade layer — see the [`facades/` section](#facades) for the full example.
 
-```ts
-// features/trips/facades/useGenerateTrip.ts
-import { generateTripUseCase, getUpcomingTripUseCase } from '@/features/trips/di/resolve';
-
-export const useGenerateTrip = () => {
-  const repo = useTripRepository();                       // reactive backend hook
-
-  const generate = async (formData: TripFormData) => {
-    const generated = await generateTripUseCase.execute(formData);  // IoC use case
-    await repo.createTrip(generated);                               // reactive repo
-  };
-
-  return { generate };
-};
-```
-
-This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them.
+This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them and decide how to surface failures.
 
 #### IoC repositories — full consumption chain
 
 An IoC (class-based) repository is injected into a use case and never escapes that boundary. This is how it flows end to end:
 
 ```ts
-// 1. Interface — features/shared/domain/entities/repositories/IImageRepository.ts
+// 1. Interface — features/core/images/domain/entities/repositories/IImageRepository.ts
 export interface IImageRepository {
-  getImage(placeName: string, urlType: UrlType): Promise<string>;
+  getImage(placeName: string, urlType: UrlType): Promise<Result<string>>;
 }
 
-// 2. Use case — features/shared/useCases/GetPlaceImageUseCase.ts
+// 2. Use case — features/core/images/useCases/GetPlaceImageUseCase.ts
 // registered in di/config.ts (e.g. using tsyringe @injectable())
 export class GetPlaceImageUseCase {
-  constructor(private imageRepository: IImageRepository) {}  // IoC repo injected
+  constructor(
+    private imageRepository: IImageRepository,
+    private logger: ILogger,
+  ) {}
 
-  async execute(placeName: string, urlType: UrlType): Promise<string> {
-    return this.imageRepository.getImage(placeName, urlType);
+  async execute(placeName: string, urlType: UrlType): Promise<Result<string>> {
+    const result = await this.imageRepository.getImage(placeName, urlType);
+    if (!result.success) this.logger.error(result.error);
+    return result;
   }
 }
 
-// 3. Resolved — features/shared/di/resolve.ts
+// 3. Resolved — features/core/images/di/resolve.ts
 export const getPlaceImageUseCase =
-  container.resolve<GetPlaceImageUseCase>(SHARED_TYPES.GetPlaceImageUseCase);
+  container.resolve<GetPlaceImageUseCase>(IMAGES_TYPES.GetPlaceImageUseCase);
 
 // 4a. Consumed via facade (when reused across pages)
-// features/shared/facades/useGetPlaceImage.ts
-import { getPlaceImageUseCase } from '@/features/shared/di/resolve';
+// features/core/images/facades/useGetPlaceImage.ts
+import { getPlaceImageUseCase } from '@/features/core/images/di/resolve';
 
 export const useGetPlaceImage = (placeName: string) => {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    getPlaceImageUseCase.execute(placeName, 'regular').then(setUrl);
+    getPlaceImageUseCase.execute(placeName, 'regular').then(result => {
+      if (result.success) setUrl(result.data);
+    });
   }, [placeName]);
 
   return url;
 };
 
 // 4b. Or consumed directly in .logic.ts (page-specific)
-import { getPlaceImageUseCase } from '@/features/shared/di/resolve';
+import { getPlaceImageUseCase } from '@/features/core/images'; // cross-feature — always via index.ts
 
 export const useSearchPlaceLogic = () => {
   const handleSelect = async (place: string) => {
-    const url = await getPlaceImageUseCase.execute(place, 'regular');
+    const result = await getPlaceImageUseCase.execute(place, 'regular');
+    if (!result.success) return;
+    const url = result.data;
     // ...
   };
   return { handleSelect };
@@ -516,7 +596,7 @@ export const useSearchPlaceLogic = () => {
 
 ```ts
 // ❌ Never import an IoC repository directly in a facade, hook, or .logic.ts
-import { imageRepository } from '@/features/shared/di/resolve';  // breaks the rule
+import { imageRepository } from '@/features/core/images/di/resolve';  // breaks the rule
 ```
 
 The key distinction from hook-based repositories: an IoC repository is a class singleton resolved once at startup. It has no React lifecycle and can be called anywhere — but it must always be called through a use case, never directly. A hook-based repository (e.g. Convex) is different: it is a React hook itself and can be called directly in facades.
@@ -529,7 +609,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
 
-**What facades can import:** hook-based repositories, class use cases from `di/resolve.ts`, other facades.
+**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
 
@@ -537,7 +617,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Where does a facade live?**
 - Logic specific to one feature → `features/<name>/facades/`
-- Logic reused across multiple features → `features/shared/facades/`
+- Logic reused across multiple features → promote to the relevant `features/core/<sub-module>/facades/`
 
 **Promotion rule:** every hook-based repository access lives in a facade — even for page-specific logic. The promotion question is about the facade itself: if the same facade would be duplicated across two pages, extract it to `facades/` and import it from both. If it's new logic, write it directly in `facades/` from the start.
 
@@ -557,6 +637,8 @@ Promote to `facades/` when logic is reused across pages:
 ```ts
 // HomePageLogic and ProfilePageLogic both need upcoming trip + totals
 // → extract to features/trips/facades/useGetUserTrips.ts
+import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+
 export const useGetUserTrips = () => {
   const repo = useTripRepository();
   const trips = repo.getUserTrips();
@@ -597,13 +679,22 @@ export const useGetUserTrips = () => {
 ```ts
 // features/trips/facades/useGenerateTrip.ts — coordinates AI use case + reactive repo
 import { generateTripUseCase } from '@/features/trips/di/resolve';
+import { useToast } from '@/features/core/utils';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
+  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
 
   const generate = async (formData: TripFormData) => {
-    const generated = await generateTripUseCase.execute(formData);  // class use case
-    await repo.createTrip(generated);                               // hook-based repo
+    const result = await generateTripUseCase.execute(formData);   // returns Result<GeneratedTrip>
+    if (!result.success) {
+      showErrorToast(result.error);
+      return;
+    }
+    const saveResult = await repo.createTrip(result.data);        // returns Result<void>
+    if (!saveResult.success) {
+      showErrorToast(saveResult.error);
+    }
   };
 
   return { generate };
@@ -614,7 +705,7 @@ export const useGenerateTrip = () => {
 
 ### `hooks/`
 
-Utility hooks — feature-specific stateful or derived logic that is reused across multiple pages within this feature, but does **not** coordinate repositories or use cases. If a utility hook is needed by more than one feature, promote it to `features/shared/hooks/`.
+Utility hooks — feature-specific stateful or derived logic that is reused across multiple pages within this feature, but does **not** coordinate repositories or use cases. If a utility hook is needed by more than one feature, promote it to `features/core/utils/hooks/`.
 
 Hooks in this folder do not import from `data/repositories/`, `useCases/`, or `di/resolve.ts`. They may import domain types, state stores, and external library hooks.
 
@@ -644,6 +735,25 @@ Client-side state stores (e.g. Zustand) for UI state that belongs to this featur
 | Data outlives a single screen but has no server representation | Data needs to be fetched, subscribed to, or mutated on the backend |
 | You need to reset or clear the data on user action | The "source of truth" is the database, not the client |
 
+**Where state is accessed — facade vs `.logic.ts`**
+
+State stores can be imported at both the facade and `.logic.ts` layers. The layer that owns the **decision driving the state change** is where state access belongs:
+
+- **Facade** — when the state write is the result of an operation (use case executed → write outcome to state). The facade owns the full flow: execute → handle error → persist result. Keeping the write in the facade means `.logic.ts` calls a single function and has nothing left to do.
+- **`.logic.ts`** — when the state is pure UI state with no operation behind it (form fields, active filter, wizard step). No use case involved — just local UI management.
+
+A `.logic.ts` can do both simultaneously — call a facade for complex operations and manage local UI state directly:
+
+```ts
+export const useSearchPageLogic = () => {
+  const { add } = useAddRecentSearch();            // facade — operation + state write
+  const { query, setQuery } = useSearchStore(...); // direct state — pure UI
+  return { add, query, setQuery };
+};
+```
+
+---
+
 **Store structure — state + actions pattern**
 
 All stores follow the same pattern: a typed state slice plus an `actions` object. Actions are always nested under `actions` to keep the store shape clean and make it obvious what is state vs what is a setter.
@@ -671,7 +781,7 @@ const initialState: TripState = {
   budgetInfo: BudgetLevel.Cheap,
 };
 
-export const useTripStore = createStore<TripState & TripActions>(set => ({
+export const useTripStore = createStore<TripState & TripActions>()(set => ({
   ...initialState,
   actions: {
     setLocationInfo: (locationInfo) => set({ locationInfo }),
@@ -682,9 +792,48 @@ export const useTripStore = createStore<TripState & TripActions>(set => ({
 }));
 ```
 
+**The one rule that governs actions: a store action contains exactly one `set()` call — nothing else.**
+
+Any conditional, transformation, filter, sort, or computation does not belong in a store action. It belongs in a use case. The flow when a mutation requires logic:
+
+```ts
+// ✅ Correct — use case computes, facade writes result via setter
+// features/trips/facades/useAddRecentSearch.ts
+import { addRecentSearchUseCase } from '@/features/trips/di/resolve';
+import { useToast } from '@/features/core/utils';
+import { useTripStore } from '@/features/trips/state/tripStore';
+
+export const useAddRecentSearch = () => {
+  const { actions } = useTripStore(); // at hook level — stable reference, no re-render cost
+  const { showErrorToast } = useToast();
+
+  const add = async (input: TripInput) => {
+    const result = await addRecentSearchUseCase.execute(input); // business logic lives here
+    if (!result.success) {
+      showErrorToast(result.error);
+      return;
+    }
+    actions.setData(result.data); // store only receives the final value
+  };
+
+  return { add };
+};
+
+// ❌ Wrong — logic inside a store action
+actions: {
+  addItem: (item) => set(state => ({
+    items: [...state.items.filter(i => i.id !== item.id), item]  // filtering logic — belongs in a use case
+      .sort((a, b) => b.createdAt - a.createdAt)                 // sorting logic — belongs in a use case
+      .slice(0, MAX_ITEMS),                                       // capping logic — belongs in a use case
+  })),
+}
+```
+
+---
+
 **Selectors — avoid unnecessary re-renders**
 
-Import only the slice of state you need. Using `createSelectors` (from `features/shared/state/`) generates fine-grained selectors so a component only re-renders when its specific slice changes:
+Import only the slice of state you need. Using `createSelectors` (from `features/core/state/`) generates fine-grained selectors so a component only re-renders when its specific slice changes:
 
 ```ts
 // ✅ Only re-renders when locationInfo changes
@@ -697,19 +846,69 @@ const { setLocationInfo, resetTripState } = useTripStore(state => state.actions)
 const store = useTripStore();
 ```
 
+---
+
 **Feature state vs global state**
 
 | State | Location |
 |---|---|
 | Trip wizard inputs | `features/trips/state/` |
 | Feature-specific UI flags | `features/<name>/state/` |
-| App-wide theme, language | `features/shared/state/app/` |
-| Modal visibility (shared modals) | `features/shared/state/modal/` |
-| `createStore` / `createSelectors` utilities | `features/shared/state/` |
+| App-wide theme, language | `features/core/state/app/` |
+| Modal visibility (shared modals) | `features/core/state/modal/` |
+| `createStore` / `createSelectors` utilities | `features/core/state/` |
+
+---
 
 **Persistence**
 
 Only persist state that cannot be reconstructed cheaply. Wizard form inputs that survive app restart are a valid use case. Derived data, cached server responses, and anything easily re-fetched should never be persisted.
+
+Every persisted store **must** use Zustand's `persist` middleware with an explicit `version`, a `migrate` function, and a versioned `name`. Without this, any change to the store shape silently corrupts data on existing devices.
+
+```ts
+// features/trips/state/tripWizardStore.ts
+import { zustandStorage } from '@/features/core/storage'; // public API — never import storageClient from libraries/ directly
+
+export const useTripWizardStore = createStore<TripState & TripActions>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      actions: {
+        setLocationInfo: (locationInfo) => set({ locationInfo }),
+        setDatesInfo: (datesInfo) => set({ datesInfo }),
+        resetTripState: () => set(initialState),
+      },
+    }),
+    {
+      name: 'trip-wizard-store-v1',              // bump suffix on every breaking shape change
+      version: 1,
+      migrate: () => initialState,               // breaking change → reset to initial state
+      storage: createJSONStorage(() => zustandStorage),
+    },
+  ),
+);
+```
+
+**`zustandStorage`** is a thin adapter exposed by `features/core/storage/` that wraps the MMKV instance to match Zustand's `StateStorage` interface. It lives in `features/core/storage/data/services/zustandStorage.ts` and is exported from `features/core/storage/index.ts`. Stores import it from the sub-module's public API — never from `libraries/` directly, which would violate the rule that `libraries/` is exclusively consumed by `data/services/`.
+
+```ts
+// features/core/storage/data/services/zustandStorage.ts
+export const zustandStorage: StateStorage = {
+  getItem:    (key) => storageClient.getString(key) ?? null,
+  setItem:    (key, value) => storageClient.set(key, value),
+  removeItem: (key) => storageClient.delete(key),
+};
+
+// features/core/storage/index.ts
+export { zustandStorage } from './data/services/zustandStorage';
+```
+
+Rules for persisted stores:
+- **`name`** must include a version suffix (`-v1`, `-v2`, …). Bump it on every breaking shape change.
+- **`version`** must be incremented on every breaking change.
+- **`migrate`** defaults to resetting to `initialState`. A real field-level migration is only warranted when preserving existing user data matters more than starting clean — rare for UI state.
+- **`storage`** always uses `zustandStorage` from `@/features/core/storage` — never raw `AsyncStorage` or `storageClient` directly.
 
 ---
 
@@ -744,7 +943,7 @@ PageName/
 It can import:
 - **Facades** (`features/<name>/facades/`) — for reused coordination of repos + use cases
 - **Hooks** (`features/<name>/hooks/`) — for reused utility logic
-- **Shared hooks** (`features/shared/hooks/`) — for cross-feature utilities (images, formatting…)
+- **Core hooks** (`features/core/utils` via `index.ts`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images` via its `index.ts`)
 - **Class use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not reused)
 - **State** (`features/<name>/state/`) — for local UI state
 
@@ -783,7 +982,7 @@ export const usePageNameLogic = () => {
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
 
 // ❌ PageName.logic.ts — never imports IoC repositories directly
-import { imageRepository } from '@/features/shared/di/resolve';
+import { imageRepository } from '@/features/core/images/di/resolve';
 ```
 
 ---
@@ -794,21 +993,33 @@ Each feature that has injectable singletons owns its DI configuration. Configura
 
 ```
 features/
-├── shared/
-│   └── di/
-│       ├── types.ts    → SHARED_TYPES = { Logger: Symbol.for('Logger'), … }
-│       ├── config.ts   → container.registerSingleton(SHARED_TYPES.Logger, Logger)
-│       └── resolve.ts  → export const logger = container.resolve<ILogger>(SHARED_TYPES.Logger)
+├── core/
+│   ├── error/
+│   │   └── di/
+│   │       ├── types.ts    → ERROR_TYPES = { Logger: Symbol.for('Logger'), … }
+│   │       ├── config.ts   → registers BasicLogger or SentryLogger based on __DEV__
+│   │       └── resolve.ts  → export const logger = container.resolve<ILogger>(ERROR_TYPES.Logger)
+│   ├── storage/
+│   │   └── di/
+│   │       ├── types.ts
+│   │       ├── config.ts
+│   │       └── resolve.ts
+│   ├── http/
+│   │   └── di/
+│   │       ├── types.ts
+│   │       ├── config.ts
+│   │       └── resolve.ts
+│   └── images/
+│       └── di/
+│           ├── types.ts
+│           ├── config.ts
+│           └── resolve.ts
 ├── ai/
 │   └── di/
 │       ├── types.ts
 │       ├── config.ts
 │       └── resolve.ts
-└── flights/
-    └── di/
-        ├── types.ts
-        ├── config.ts
-        └── resolve.ts
+└── trips/              ← (hook-based repos only — no di/ needed)
 
 bootstrap.ts             ← project root — collects all feature DI registrations
 ```
@@ -820,9 +1031,11 @@ Features that use only hook-based repositories (e.g. trips, user) have no `di/` 
 ```ts
 // bootstrap.ts (project root)
 import 'reflect-metadata'; // e.g. required by tsyringe
-import '@/features/shared/di/config';
+import '@/features/core/error/di/config';
+import '@/features/core/storage/di/config';
+import '@/features/core/http/di/config';
+import '@/features/core/images/di/config';
 import '@/features/ai/di/config';
-import '@/features/flights/di/config';
 // adding a new feature with IoC singletons? register it here
 ```
 
@@ -831,14 +1044,30 @@ import '@/features/flights/di/config';
 import '@/bootstrap';
 ```
 
-**Usage** — import from the owning feature's `resolve.ts`. The import path makes ownership explicit:
+**Usage** — two access patterns depending on whether you are inside or outside the owning feature:
 
 ```ts
-import { logger } from '@/features/shared/di/resolve';
-import { aiClient } from '@/features/ai/di/resolve';
+// Within the same feature — import directly from di/resolve.ts
+// features/core/images/facades/useGetPlaceImage.ts
+import { getPlaceImageUseCase } from '@/features/core/images/di/resolve';
+
+// From another feature — always import via the sub-module's index.ts
+import { logger } from '@/features/core/error';
+import { getPlaceImageUseCase } from '@/features/core/images';
+import { aiClient } from '@/features/ai';
 ```
 
-Never instantiate services directly — always import from the feature's `di/resolve.ts`.
+Never instantiate services directly — always import from `di/resolve.ts` (internally) or `index.ts` (cross-feature).
+
+**Quick-reference: allowed import patterns**
+
+| Caller | Target | Import from |
+|---|---|---|
+| Same-feature `facades/` or `.logic.ts` | Own use case or singleton | `@/features/<name>/di/resolve` |
+| Same-feature `facades/` or `.logic.ts` | Core sub-module singleton | `@/features/core/<sub-module>` (`index.ts`) |
+| Any file | Core hook, type, or facade | `@/features/core/<sub-module>` (`index.ts`) |
+| Any file | Another feature's type or facade | `@/features/<name>` (`index.ts`) |
+| Any file | Another feature's internal folder | ❌ never |
 
 ---
 
@@ -907,6 +1136,24 @@ ui/
 
 ---
 
+## Error Handling
+
+Error handling follows a dedicated strategy documented in **[ERROR_HANDLING.md](./ERROR_HANDLING.md)**. Read that document before writing any code that can fail.
+
+The key rules that integrate with this architecture:
+
+- Functions that can fail return `Result<T>` (`features/core/error/domain/entities/Result.ts`) — a discriminated union of `{ success: true; data: T }` or `{ success: false; error: BaseError }`.
+- Use the `ok(data)` and `fail(error)` helpers to construct results without boilerplate.
+- **`data/repositories/`** — catch, wrap with `ensureError`, return `Result`.
+- **`useCases/`** — receive `Result` from repos, log on failure via injected `ILogger`, return `Result`.
+- **`facades/`** — receive `Result` from use cases, decide how to surface failure (toast, inline state, or throw for the error boundary).
+- **`.logic.ts`** — consumes facades, maps failure to view state. No `try/catch`, no logging.
+- **`.tsx`** — renders error state from the ViewModel. Never handles raw errors.
+- Logging: `BasicLogger` in dev, `SentryLogger` in prod — always injected via `ILogger`, never `console.error`.
+- Error boundaries: root boundary in `app/_layout.tsx`, route-level boundaries for high-risk screens.
+
+---
+
 ## `app/` — Routing
 
 File-based routing. Route files are **thin entry points** — they import and render a `Page` component from `features/`.
@@ -946,8 +1193,8 @@ app/(authenticated)/create-trip/search-place.tsx
   └── renders <SearchPlacePage />                         ← features/trips/ui/pages/
         ├── uses useSearchPlacePageLogic()                ← SearchPlacePage.logic.ts (ViewModel)
         │     ├── reads/writes useTripStore()             ← features/trips/state/
-        │     └── calls useGooglePlaceImages()            ← features/shared/hooks/ (shared utility)
-        │           └── imageRepository.getImage()        ← features/shared/di/resolve (IoC container)
+        │     └── calls useGetPlaceImage()                ← features/core/images/facades/ (core facade)
+        │           └── getPlaceImageUseCase.execute()    ← features/core/images/di/resolve (IoC container)
         └── renders <PlacesAutocomplete />                ← ui/components/composite/
 ```
 
@@ -977,11 +1224,12 @@ Always use the `@/` path alias — never relative paths. This applies to every f
 
 ```ts
 // ✅ Always
-import { logger } from '@/features/shared/di/resolve';
+import { logger } from '@/features/core/error';
 import { useGetUserTrips } from '@/features/trips/facades/useGetUserTrips';
+import { useGetPlaceImage } from '@/features/core/images';
 
 // ❌ Never
-import { logger } from '../../../shared/di/resolve';
+import { logger } from '../../../core/error/di/resolve';
 import { useGetUserTrips } from '../../facades/useGetUserTrips';
 ```
 
@@ -994,27 +1242,30 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 
 1. **Dependencies point inward.** `ui` → `facades` / `hooks` / `state` → `useCases` → `domain`. Never the reverse. See import rules below.
 
-   | Layer | Can import |
-   |---|---|
-   | `.tsx` | ViewModel |
-   | `.logic.ts` (ViewModel) | facades, hooks, shared hooks, class use cases via `di/resolve` (page-specific), state |
-   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades |
-   | `hooks/` | domain types, state, external library hooks — **not** repos or use cases |
-   | `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities |
-   | `data/repositories/` | domain interfaces, DTOs, adapters |
+   | Layer | Can import | Error responsibility |
+   |---|---|---|
+   | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
+   | `.logic.ts` (ViewModel) | facades, hooks, core hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
+   | `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
+   | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
+   | `useCases/` | domain entities, repository interfaces (`IXxxRepository`), service interfaces (`IXxxService`) — all from `domain/`; never `libraries/` or concrete implementations | Catches, logs via `ILogger`, returns `Result<T>` |
+   | `data/repositories/` (class-based) | domain interfaces, service interfaces via constructor injection — **never** `libraries/` directly | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |
+   | `data/repositories/` (hook-based) | Convex client hooks (`useQuery`, `useMutation`), auth context hook — direct import, documented exception | Catches mutations with `ensureError`, returns `Result<T>` — never logs |
+   | `data/services/` | `libraries/` wrappers, domain service interfaces | Wraps library calls; no error handling beyond what the library surface requires |
 
    **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `facades/`, `hooks/`, or anywhere in `ui/`.**
 2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
 3. **`data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
-4. **`libraries/` isolates third-party APIs.** `data/` uses library wrappers, never raw libraries directly.
+4. **`libraries/` is consumed exclusively by `data/services/`.** Class-based repositories never import from `libraries/` — they receive service interfaces via constructor injection. Hook-based repositories are the sole documented exception: they import Convex and auth hooks directly because those hooks require the React lifecycle and cannot be wrapped in a class singleton.
 5. **Schemas in `domain/schemas/`.** Schemas (e.g. Zod) define domain rules — they are not infrastructure concerns.
 6. **Adapters transform, validators execute.** Adapters convert DTOs to entities; validators run schemas against data.
 7. **Pages are thin.** All logic in `.logic.ts` hooks, all styles in `.style.ts` files.
-8. **Feature state in `state/`.** Global state (store utils, app state, modal state) in `features/shared/state/`.
+8. **Feature state in `state/`.** Global state (store utils, app state, modal state) in `features/core/state/`.
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
-11. **Feature isolation.** Features only import from `features/shared/` or from another feature's public API (`index.ts`). Never reach into another feature's internal folders (`data/`, `domain/`, `facades/`, etc.).
+11. **Feature isolation.** Features only import from `features/core/<sub-module>` (via its `index.ts`) or from another feature's public API (`index.ts`). Never reach into another feature's or core sub-module's internal folders (`data/`, `domain/`, `facades/`, etc.).
 12. **Always use `@/` path aliases.** Never use relative paths (`../`) anywhere in the project.
+13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
 
 ---
 

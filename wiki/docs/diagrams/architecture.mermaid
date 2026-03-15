@@ -1,0 +1,68 @@
+%% Preview options:
+%% - VS Code extension : https://github.com/Mermaid-Chart/vscode-mermaid-chart
+%% - Online viewer     : https://mermaid.live/
+
+flowchart TD
+    classDef ui       fill:#4A90D9,stroke:#2171B5,color:#fff
+    classDef facade   fill:#7B68EE,stroke:#5A4FCF,color:#fff
+    classDef usecase  fill:#48C9B0,stroke:#1ABC9C,color:#fff
+    classDef domain   fill:#F5A623,stroke:#D4891A,color:#fff
+    classDef data     fill:#E74C3C,stroke:#C0392B,color:#fff
+    classDef core     fill:#7F8C8D,stroke:#616A6B,color:#fff
+
+    subgraph UI["UI layer"]
+        subgraph Components["components/"]
+            TSX["Name.tsx — JSX only"]:::ui
+            STY["Name.style.ts — StyleSheet"]:::ui
+            LOG["Name.logic.ts — ViewModel hook"]:::ui
+            TSX -->|"imports"| STY
+            TSX -->|"imports"| LOG
+        end
+    end
+
+    subgraph FHS["Facades / hooks / state"]
+        FAC["facade — coordinates repo + useCase"]:::facade
+        HOK["hook — stateful utility, no repo"]:::facade
+        STA["state — Zustand, client-only"]:::facade
+    end
+
+    subgraph UC["useCases"]
+        USE["XxxUseCase — business logic"]:::usecase
+    end
+
+    subgraph DOM["Domain — pure TypeScript"]
+        ENT["entities — interfaces, types"]:::domain
+        IREP["IXxxRepository — data access contract"]:::domain
+        ISVC["IXxxService — capability contract"]:::domain
+        SCH["schemas — Zod, type inference"]:::domain
+    end
+
+    subgraph DAT["Data — external world"]
+        HREP["useXxxRepository — hook-based, Convex"]:::data
+        CREP["XxxRepository — IoC singleton, HTTP"]:::data
+        ADA["Adapter — DTO to entity"]:::data
+        SVC["XxxService — IoC singleton, AI/logger"]:::data
+        LIB["libraries/ — 3rd-party wrappers"]:::data
+    end
+
+    LOG -->|"imports"| FAC
+    LOG -->|"imports"| HOK
+    LOG -->|"imports"| STA
+    LOG -.->|"page-specific, not yet promoted"| USE
+
+    FAC -->|"calls"| USE
+    FAC -.->|"direct · documented exception"| HREP
+
+    USE -->|"depends on"| ENT
+    USE -->|"depends on"| IREP
+    USE -->|"depends on"| ISVC
+    USE -->|"depends on"| SCH
+
+    IREP -.->|"implemented by"| HREP
+    IREP -.->|"implemented by"| CREP
+    ISVC -.->|"implemented by"| SVC
+
+    CREP -->|"depends on"| ISVC
+    CREP -->|"uses"| ADA
+    HREP -->|"uses"| ADA
+    SVC -->|"uses"| LIB

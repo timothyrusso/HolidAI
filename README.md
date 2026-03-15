@@ -115,6 +115,15 @@ To obtain these values:
     npm run start
    ```
 
+## Documentation
+
+Architecture, error handling, and coding conventions are documented in [`wiki/docs/`](wiki/docs/).
+
+- [Architecture](wiki/docs/ARCHITECTURE.md)
+- [Error Handling](wiki/docs/ERROR_HANDLING.md)
+
+---
+
 ## Contributing
 
 We welcome contributions to HolidAI! Here's how you can help:
