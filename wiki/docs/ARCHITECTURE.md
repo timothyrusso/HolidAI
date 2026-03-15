@@ -259,7 +259,7 @@ A feature declares "I need to be able to log things" or "I need to generate AI c
 // features/core/error/domain/entities/services/ILogger.ts
 export interface ILogger {
   log(message: string, ...args: unknown[]): void;
-  error(error: Error, ...args: unknown[]): void;
+  error(error: Error, context?: Record<string, unknown>): void;
   warning(message: string, ...args: unknown[]): void;
   info(message: string, ...args: unknown[]): void;
   debug(message: string, ...args: unknown[]): void;
@@ -323,12 +323,13 @@ Implementations of repository interfaces from `domain/entities/repositories/`.
 
 **Documented exception — direct library imports:** Hook-based repositories are the only place in `data/` that may import reactive library hooks directly — specifically the Convex client hooks (`useQuery`, `useMutation`) and the auth context hook (e.g. Clerk's `useAuth`). These are React hooks that require the React lifecycle and an auth provider context to function. They cannot be wrapped in a `data/services/` class singleton without losing reactivity or breaking auth. This is not a layering shortcut — it is a structural necessity of the hook-based repository pattern.
 
+
 ```ts
 // features/trips/data/repositories/useTripRepository.ts
 // e.g. using Convex + Clerk
 export const useTripRepository = (): ITripRepository => {
-  const { user } = useAuthUser();                                                    // auth hook — direct import, documented exception
-  const trips = useReactiveQuery(api.trips.getAllByUserId, { userId: user?.id ?? '' }); // Convex hook — direct import, documented exception
+  const { userId } = useAuth();                                                    // auth hook — direct import, documented exception
+  const trips = useQuery(api.trips.getAllByUserId, { userId: userId ?? '' }); // Convex hook — direct import, documented exception
   const createMutation = useMutation(api.trips.create);
   const toggleMutation = useMutation(api.trips.toggleFavorite);
 
@@ -386,7 +387,7 @@ Implementations of service interfaces from `domain/entities/services/`. These ar
 // registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
 export class BasicLogger implements ILogger {
   log(message: string, ...args: unknown[]) { console.log(message, ...args); }
-  error(error: Error, ...args: unknown[]) { console.error(error, ...args); }
+  error(error: Error, context?: Record<string, unknown>) { console.error(error, context); }
   warning(message: string, ...args: unknown[]) { console.warn(message, ...args); }
 }
 ```
@@ -489,9 +490,11 @@ Use cases with no external dependencies have an empty constructor. They still re
 ```ts
 // features/trips/useCases/GetUpcomingTripUseCase.ts
 // registered in di/config.ts
+import { getTodayInLocalTimezoneUseCase } from '@/features/core/dates';
+
 export class GetUpcomingTripUseCase {
   execute(trips: Trip[]): Trip | undefined {
-    const today = getTodayInLocalTimezoneUseCase.toISOString().split('T')[0];
+    const today = getTodayInLocalTimezoneUseCase.execute().toISOString().split('T')[0];
     return trips
       .filter(trip => trip.startDate >= today)
       .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
@@ -504,6 +507,8 @@ Use cases that need capabilities inject them via the constructor — both reposi
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
 // registered in di/config.ts
+import { buildPromptUseCase } from '@/features/ai/di/resolve';
+
 export class GenerateTripUseCase {
   constructor(
     private aiService: IAiService,  // service interface — capability
@@ -602,7 +607,7 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Naming:** facades follow the standard React hook naming convention — `useXxx`. The `facades/` folder is the distinguisher, not the name. Adding a suffix like `useXxxFacade` would be verbose and redundant. Other projects (e.g. NX feature libraries, Angular service facades) use the folder or module boundary to signal the pattern, not the name itself.
 
-**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades.
+**What facades can import:** hook-based repositories, class use cases from the same feature's `di/resolve.ts`, other facades, utility hooks from `features/core/utils/hooks/`.
 
 **Why not IoC services?** If a facade needs a service (e.g. logging), that service call belongs inside a use case — not the facade. The facade's only job is coordination: it calls use cases for business logic and hook-based repos for reactive data. Mixing service calls in a facade blurs that boundary.
 
@@ -630,6 +635,8 @@ Promote to `facades/` when logic is reused across pages:
 ```ts
 // HomePageLogic and ProfilePageLogic both need upcoming trip + totals
 // → extract to features/trips/facades/useGetUserTrips.ts
+import { getUpcomingTripUseCase } from '@/features/trips/di/resolve';
+
 export const useGetUserTrips = () => {
   const repo = useTripRepository();
   const trips = repo.getUserTrips();
@@ -670,6 +677,7 @@ export const useGetUserTrips = () => {
 ```ts
 // features/trips/facades/useGenerateTrip.ts — coordinates AI use case + reactive repo
 import { generateTripUseCase } from '@/features/trips/di/resolve';
+import { useToast } from '@/features/core/utils/hooks';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
@@ -1028,6 +1036,16 @@ import { aiClient } from '@/features/ai';
 
 Never instantiate services directly — always import from `di/resolve.ts` (internally) or `index.ts` (cross-feature).
 
+**Quick-reference: allowed import patterns**
+
+| Caller | Target | Import from |
+|---|---|---|
+| Same-feature `facades/` or `.logic.ts` | Own use case or singleton | `@/features/<name>/di/resolve` |
+| Same-feature `facades/` or `.logic.ts` | Core sub-module singleton | `@/features/core/<sub-module>` (`index.ts`) |
+| Any file | Core hook, type, or facade | `@/features/core/<sub-module>` (`index.ts`) |
+| Any file | Another feature's type or facade | `@/features/<name>` (`index.ts`) |
+| Any file | Another feature's internal folder | ❌ never |
+
 ---
 
 ## DI Patterns
@@ -1205,7 +1223,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
    |---|---|---|
    | `.tsx` | ViewModel | Renders error state from ViewModel — no raw error handling |
    | `.logic.ts` (ViewModel) | facades, hooks, core hooks, class use cases via `di/resolve` (page-specific), state | Maps facade failure to view state — no `try/catch`, no logging |
-   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
+   | `facades/` | hook-based repos, class use cases via `di/resolve`, other facades, utility hooks from `features/core/utils/hooks/` | Receives `Result<T>`, decides surface: toast / inline / boundary throw |
    | `hooks/` | domain types, state, external library hooks — **not** repos or use cases | No error handling — hooks do not fail |
    | `useCases/` | domain entities, repository interfaces (`IXxxRepository`), service interfaces (`IXxxService`) — all from `domain/`; never `libraries/` or concrete implementations | Catches, logs via `ILogger`, returns `Result<T>` |
    | `data/repositories/` (class-based) | domain interfaces, service interfaces via constructor injection — **never** `libraries/` directly | Catches, wraps with `ensureError`, returns `Result<T>` — never logs |

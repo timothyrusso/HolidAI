@@ -99,10 +99,11 @@ Repositories interact with external systems (Convex, HTTP APIs). They catch low-
 ```ts
 // features/trips/data/repositories/useTripRepository.ts
 export const useTripRepository = (): ITripRepository => {
+  const trips = useQuery(api.trips.getAll);           // called at hook top level — undefined while loading
   const createMutation = useMutation(api.trips.create);
 
   return {
-    getUserTrips: () => useQuery(api.trips.getAll), // undefined while loading
+    getUserTrips: () => trips,
 
     createTrip: async (data): Promise<Result<void>> => {
       try {
@@ -143,6 +144,8 @@ Use cases receive results from repositories, apply business logic, log on failur
 
 ```ts
 // features/trips/useCases/GenerateTripUseCase.ts
+import { buildPromptUseCase } from '@/features/ai/di/resolve';
+
 export class GenerateTripUseCase {
   constructor(
     private aiService: IAiService,
@@ -151,7 +154,7 @@ export class GenerateTripUseCase {
 
   async execute(formData: TripFormData): Promise<Result<GeneratedTrip>> {
     try {
-      const prompt = buildPrompt(formData);
+      const prompt = buildPromptUseCase(formData);
       const trip = await this.aiService.generateObject(prompt, generateTripSchema);
       return ok(trip);
     } catch (err) {
@@ -176,6 +179,9 @@ Facades coordinate repositories and use cases. They receive `Result<T>` and deci
 
 ```ts
 // features/trips/facades/useGenerateTrip.ts
+import { generateTripUseCase } from '@/features/trips/di/resolve';
+import { useToast } from '@/features/core/utils/hooks';
+
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
   const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks

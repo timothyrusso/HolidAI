@@ -37,12 +37,6 @@ flowchart TD
         SCH["schemas — Zod, type inference"]:::domain
     end
 
-    subgraph CORE["features/core/"]
-        ERR["error/ — Result, BaseError, ILogger"]:::core
-        STOR["storage/ — MMKV, zustandStorage"]:::core
-        HTTP["http/ — Ky client"]:::core
-    end
-
     subgraph DAT["Data — external world"]
         HREP["useXxxRepository — hook-based, Convex"]:::data
         CREP["XxxRepository — IoC singleton, HTTP"]:::data
@@ -72,5 +66,3 @@ flowchart TD
     CREP -->|"uses"| ADA
     HREP -->|"uses"| ADA
     SVC -->|"uses"| LIB
-
-    CORE -.->|"consumed by"| DAT
