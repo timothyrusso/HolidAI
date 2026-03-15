@@ -1,7 +1,6 @@
 import type { ZodType, z } from 'zod';
 
-import { aiClient } from '@/di/resolve';
-import type { AiModels } from '@/modules/ai/domain/entities/AiModels';
+import { type AiModels, aiClient } from '@/features/ai';
 
 export const useVercelAi = () => {
   const generateAiObject = <T extends ZodType>(

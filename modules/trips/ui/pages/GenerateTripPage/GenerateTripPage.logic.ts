@@ -1,9 +1,7 @@
-import { logger } from '@/di/resolve';
-import { ai_prompt } from '@/modules/ai/domain/entities/prompt';
-
 import { api } from '@/convex/_generated/api';
+import { logger } from '@/di/resolve';
+import { AiModels, travelPlanPrompt } from '@/features/ai';
 import { formatDateForPromptUseCase } from '@/features/core/dates';
-import { AiModels } from '@/modules/ai/domain/entities/AiModels';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useToast } from '@/modules/shared/hooks/useToast';
@@ -33,7 +31,7 @@ export const useGenerateTripPageLogic = () => {
 
   const totalNoOfDays = tripSelectors.datesInfo().totalNoOfDays;
 
-  const PROMPT = ai_prompt
+  const PROMPT = travelPlanPrompt
     .replace('{location}', tripSelectors.locationInfo().name)
     .replace('{days}', totalNoOfDays.toString())
     .replace('{nights}', (totalNoOfDays - 1).toString())
