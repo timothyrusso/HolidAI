@@ -1,17 +1,15 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import type { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { Output, generateText } from 'ai';
-import Constants from 'expo-constants';
+import { inject, injectable } from 'tsyringe';
 import type { ZodType, z } from 'zod';
 
+import { AI_TYPES } from '@/features/ai/di/types';
+import type { AiModels } from '@/features/ai/domain/entities/AiModels';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
 
+@injectable()
 export class GeminiClient implements IAiClient {
-  private readonly google: ReturnType<typeof createGoogleGenerativeAI>;
-
-  constructor() {
-    const apiKey = Constants.expoConfig?.extra?.googleGeminiApiKey;
-    this.google = createGoogleGenerativeAI({ apiKey });
-  }
+  constructor(@inject(AI_TYPES.GoogleClient) private readonly google: ReturnType<typeof createGoogleGenerativeAI>) {}
 
   /**
    * Generates a structured object from a natural language prompt using a two-step pipeline:
@@ -26,10 +24,10 @@ export class GeminiClient implements IAiClient {
    *
    * @param prompt - The natural language query describing what data to generate.
    * @param schema - A Zod schema that defines the shape of the returned object.
-   * @param model - The Gemini model identifier to use (e.g. `AiModels.GEMINI_2_5_FLASH`).
+   * @param model - The model to use. Must be a value from the `AiModels` const (e.g. `AiModels.GEMINI_2_5_FLASH`).
    * @returns The generated object typed to the schema, or `undefined` if the output is empty.
    */
-  async generateObject<T extends ZodType>(prompt: string, schema: T, model: string): Promise<z.infer<T> | undefined> {
+  async generateObject<T extends ZodType>(prompt: string, schema: T, model: AiModels): Promise<z.infer<T> | undefined> {
     const searchResult = await generateText({
       model: this.google(model),
       tools: {

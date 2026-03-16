@@ -1155,6 +1155,35 @@ This eliminates any runtime ordering risk without a central bootstrap file.
 - **Use `@injectable()` only when needed** — pure stateless use cases with no constructor parameters do not need it. Add it as soon as a constructor parameter is introduced.
 - **Always pair `@injectable()` with `@inject(token)`** when the parameter type is an interface. Forgetting `@inject()` causes a silent resolution failure at runtime.
 - **Never call `container.resolve()` outside `di/resolve.ts`** — resolution happens once, the result is exported as a plain constant and consumed everywhere else.
+- **Constructors in IoC classes must be empty** — the body is always `{}`. The constructor only declares `@inject()`-decorated parameters, which TypeScript automatically assigns to private fields. No object creation, no validation, no logic, no side effects of any kind. All setup belongs in `di/config.ts`. Use `private readonly` on a parameter when the value is needed by class methods.
+- **All client/object creation belongs in `di/config.ts`** — if a dependency requires construction from a config value (e.g. an API key), build it in the composition root and register the result via `container.registerInstance()`. The class then receives the ready-to-use object directly.
+
+  This rule exists for three reasons:
+  1. **Testability** — when everything enters via injection, any dependency can be swapped in a test without touching the class. If the constructor builds dependencies internally, they cannot be intercepted without mocking at the module level, which is fragile and couples tests to implementation details.
+  2. **Single responsibility** — the class has one job: implement its interface. Deciding how to configure and build its dependencies is a different job that belongs to the composition root. Mixing both makes the class know too much about its own wiring.
+  3. **Explicit dependency graph** — the constructor signature becomes a complete, honest declaration of what the class needs. No hidden reads from `Constants`, no internal `new Something()` buried in the body. The full dependency surface is visible at a glance.
+
+```ts
+// di/config.ts — validation, construction, and registration in the composition root
+const apiKey = Constants.expoConfig?.extra?.googleGeminiApiKey;
+if (!apiKey) throw new Error('Missing API key.');
+const client = new SomeClient({ apiKey });  // built here, not in the class
+container.registerInstance(FEATURE_TYPES.SomeClient, client);
+container.registerSingleton<IService>(FEATURE_TYPES.Service, ConcreteService);
+
+// data/services/ConcreteService.ts — constructor body is always empty
+@injectable()
+export class ConcreteService implements IService {
+  constructor(
+    @inject(FEATURE_TYPES.SomeClient) private readonly client: SomeClient,
+    @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
+  ) {}
+
+  doSomething(): void {
+    this.client.call();
+  }
+}
+```
 
 ---
 
