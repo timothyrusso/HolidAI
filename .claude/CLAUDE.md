@@ -16,6 +16,7 @@ Follow these rules on every task that involves writing or modifying code. If a s
 - Always use `ensureError()` in catch blocks. Never cast `error as Error`.
 - Never use `console.error`. Always use the injected `ILogger`.
 - Log errors only in `useCases/`. Facades and `.logic.ts` do not log.
+- IoC class constructors must have an empty body `{}`. Only declare `@inject()`-decorated parameters (TypeScript assigns them to fields automatically). No object creation, no validation, no logic. All construction and setup belongs in `di/config.ts`; register ready-to-use objects via `container.registerInstance()`.
 - If a rule must be broken, stop and explain the conflict to the user before writing any code.
 
 ## Import rules

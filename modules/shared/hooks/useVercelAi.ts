@@ -1,15 +1,10 @@
 import type { ZodType, z } from 'zod';
 
-import { aiClient } from '@/di/resolve';
-import type { AiModels } from '@/modules/ai/domain/entities/AiModels';
+import { type AiModels, geminiAiClient } from '@/features/ai';
 
 export const useVercelAi = () => {
-  const generateAiObject = <T extends ZodType>(
-    prompt: string,
-    schema: T,
-    model: AiModels,
-  ): Promise<z.infer<T> | undefined> => {
-    return aiClient.generateObject(prompt, schema, model);
+  const generateAiObject = <T extends ZodType>(prompt: string, schema: T, model: AiModels): Promise<z.infer<T>> => {
+    return geminiAiClient.generateObject(prompt, schema, model);
   };
 
   return { generateAiObject };

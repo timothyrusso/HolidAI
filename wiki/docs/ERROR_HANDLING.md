@@ -88,6 +88,62 @@ export const ensureError = (value: unknown): BaseError => {
 
 ---
 
+## Feature-Specific Errors
+
+When a feature has failure modes that benefit from a named type — for logging clarity, programmatic discrimination, or consistent message phrasing — create a dedicated error class in the feature's `domain/entities/errors/` folder.
+
+### Convention
+
+```ts
+// features/<name>/domain/entities/errors/XxxError.ts
+import { BaseError, ErrorCode } from '@/features/core/error';
+
+export class XxxError extends BaseError {
+  constructor(cause?: Error) {
+    super('Developer-facing description for logs.', ErrorCode.SomeCode, { cause });
+  }
+}
+```
+
+**Rules:**
+- Extend `BaseError` — never extend the native `Error` directly.
+- The constructor `message` is for **logging and debugging only** — the UI never reads it. User-facing text always goes through `useErrorMessage` → `errorCodeToMessageKey` → localized string.
+- Use an **existing `ErrorCode`** when the failure category is already represented (e.g. `AiGenerationFailed` for any AI pipeline failure). Add a new code to `ErrorCode` only when the UI needs to handle it differently from all existing codes.
+- Pass `cause` when wrapping a lower-level error — this preserves the full stack trace chain.
+
+### When to create a feature-specific error class
+
+- The failure has a meaningful name that aids debugging (e.g. `GeminiSearchError` vs a generic `BaseError`)
+- The same failure mode appears in multiple places within the feature and a shared class avoids duplication
+- The caller may need type discrimination (`error instanceof GeminiSearchError`)
+
+### When NOT to create one
+
+- The failure is a one-off and a plain `new BaseError(message, ErrorCode.UnexpectedError)` is sufficient
+- The error is only ever logged and never discriminated on
+
+### Example — `features/ai`
+
+```ts
+// features/ai/domain/entities/errors/GeminiSearchError.ts
+export class GeminiSearchError extends BaseError {
+  constructor(cause?: Error) {
+    super('Google Search grounding returned no results.', ErrorCode.AiGenerationFailed, { cause });
+  }
+}
+
+// features/ai/domain/entities/errors/GeminiExtractionError.ts
+export class GeminiExtractionError extends BaseError {
+  constructor(cause?: Error) {
+    super('Failed to extract structured output from search context.', ErrorCode.AiGenerationFailed, { cause });
+  }
+}
+```
+
+Both use `ErrorCode.AiGenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
+
+---
+
 ## Layer-by-Layer Rules
 
 ### `data/repositories/`
@@ -416,6 +472,7 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 | `Result<T>`, `ok()`, `fail()` | `features/core/error/domain/entities/Result.ts` |
 | `BaseError` | `features/core/error/domain/entities/BaseError.ts` |
 | `ErrorCode` | `features/core/error/domain/entities/ErrorCode.ts` |
+| Feature-specific error classes | `features/<name>/domain/entities/errors/XxxError.ts` |
 | `ensureError` | `features/core/error/domain/entities/ensureError.ts` |
 | `ILogger` interface | `features/core/error/domain/entities/services/ILogger.ts` |
 | `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
