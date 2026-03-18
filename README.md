@@ -161,6 +161,10 @@ Feel free to pick up any issue that interests you. If you're new to the project,
 5. Push to your fork
 6. Create a Pull Request
 
+### AI-Assisted Code Review
+
+Pull requests are automatically reviewed by 🧙‍♂️ [Sourcery](https://sourcery.ai), an AI-powered code review tool that helps catch issues and suggest improvements before human review.
+
 ### Pull Request Guidelines
 
 - Ensure your PR description clearly describes the changes

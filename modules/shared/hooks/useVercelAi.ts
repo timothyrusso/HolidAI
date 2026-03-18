@@ -7,7 +7,7 @@ export const useVercelAi = () => {
     prompt: string,
     schema: T,
     model: AiModels,
-  ): Promise<z.infer<T> | undefined> => {
+  ): Promise<z.infer<T>> => {
     return geminiAiClient.generateObject(prompt, schema, model);
   };
 
