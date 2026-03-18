@@ -54,10 +54,6 @@ export const useGenerateTripPageLogic = () => {
         AiModels.GEMINI_2_5_FLASH,
       );
 
-      if (!output) {
-        throw new Error('Failed to generate trip plan');
-      }
-
       const tripId = await addTripToDb({
         userId: userId || 'unknown_user',
         tripAiResp: output,
