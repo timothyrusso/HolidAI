@@ -1,4 +1,4 @@
 export const AI_TYPES = {
-  AiClient: Symbol.for('AiClient'),
-  GoogleClient: Symbol.for('GoogleClient'),
+  GeminiAiClient: Symbol.for('GeminiAiClient'),
+  GeminiProvider: Symbol.for('GeminiProvider'),
 } as const;

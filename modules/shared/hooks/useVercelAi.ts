@@ -1,6 +1,6 @@
 import type { ZodType, z } from 'zod';
 
-import { type AiModels, aiClient } from '@/features/ai';
+import { type AiModels, geminiAiClient } from '@/features/ai';
 
 export const useVercelAi = () => {
   const generateAiObject = <T extends ZodType>(
@@ -8,7 +8,7 @@ export const useVercelAi = () => {
     schema: T,
     model: AiModels,
   ): Promise<z.infer<T> | undefined> => {
-    return aiClient.generateObject(prompt, schema, model);
+    return geminiAiClient.generateObject(prompt, schema, model);
   };
 
   return { generateAiObject };

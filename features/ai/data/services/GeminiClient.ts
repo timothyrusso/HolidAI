@@ -9,7 +9,7 @@ import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient
 
 @injectable()
 export class GeminiClient implements IAiClient {
-  constructor(@inject(AI_TYPES.GoogleClient) private readonly google: ReturnType<typeof createGoogleGenerativeAI>) {}
+  constructor(@inject(AI_TYPES.GeminiProvider) private readonly google: ReturnType<typeof createGoogleGenerativeAI>) {}
 
   /**
    * Generates a structured object from a natural language prompt using a two-step pipeline:

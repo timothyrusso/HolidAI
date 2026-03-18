@@ -1018,11 +1018,27 @@ features/
 │   └── di/
 │       ├── types.ts
 │       ├── config.ts
+│       ├── factories/     ← optional: one file per instance that needs non-trivial setup
+│       │   └── gemini.ts
 │       └── resolve.ts
 └── trips/              ← (hook-based repos only — no di/ needed)
 ```
 
 Features that use only hook-based repositories (e.g. trips, user) have no `di/` folder — they don't need one.
+
+**`factories/` subfolder** — optional, used when creating a dependency requires non-trivial setup (e.g. reading a config value, calling an SDK factory function). Each factory file is a pure module: it creates and exports one instance with no tsyringe imports and no `container` calls. `config.ts` imports from `factories/` and is the only file that registers with the container. This keeps factory logic testable in isolation and keeps all DI registrations visible in one place.
+
+```ts
+// di/factories/gemini.ts — pure factory, no tsyringe
+const apiKey = Constants.expoConfig?.extra?.googleGeminiApiKey;
+if (!apiKey) throw new Error('Missing Google Gemini API key.');
+export const geminiProvider = createGoogleGenerativeAI({ apiKey });
+
+// di/config.ts — only file that touches the container
+import { geminiProvider } from './factories/gemini';
+container.registerInstance(AI_TYPES.GeminiProvider, geminiProvider);
+container.registerSingleton<IAiClient>(AI_TYPES.GeminiAiClient, GeminiClient);
+```
 
 **Self-bootstrapping** — each feature's `resolve.ts` imports its own `config.ts` as the first import. This creates a hard dependency edge in the module graph: the bundler is forced to evaluate `config.ts` before `resolve.ts`'s body runs, regardless of what any other file does. No central orchestrator file is needed or used.
 

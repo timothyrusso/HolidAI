@@ -6,4 +6,4 @@ import { container } from 'tsyringe';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
 import { AI_TYPES } from './types';
 
-export const aiClient = container.resolve<IAiClient>(AI_TYPES.AiClient);
+export const geminiAiClient = container.resolve<IAiClient>(AI_TYPES.GeminiAiClient);
