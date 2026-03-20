@@ -27,27 +27,31 @@ export const DetailsBox: FC<DetailsBoxProps> = ({ location, tripId, tripStartDat
       experimentalBlurMethod="dimezisBlurView"
       tint="dark"
     >
-      <View style={styles.labelContainer}>
-        <CustomText text={'MY_TRIP.UPCOMING_TRIP'} style={styles.title} />
-        <CustomText text={location} style={styles.location} numberOfLines={1} ellipsizeMode="tail" />
-        <CustomText text={dateLabel} style={styles.date} />
-      </View>
-      <View style={styles.buttonsContainer}>
-        <CustomButtonMedium
-          title="MY_TRIP.TRIP_DETAILS"
-          onPress={handlePress}
-          buttonType={ButtonType.Primary}
-          textStyle={styles.buttonsText}
-        />
-        <MainPlacesList />
-        {totalTrips > 0 && (
+      <View style={styles.contentContainer}>
+        <View style={styles.titleContainer}>
+          <MainPlacesList />
           <CustomButtonMedium
-            title="MY_TRIP.SHOW_ALL_TRIPS"
-            onPress={handleShowAllTripsButton}
-            buttonType={ButtonType.Secondary}
+            title="MY_TRIP.TRIP_DETAILS"
+            onPress={handlePress}
+            buttonType={ButtonType.Primary}
             textStyle={styles.buttonsText}
+            style={styles.titleButton}
           />
-        )}
+        </View>
+        <CustomText text={location} style={styles.location} numberOfLines={1} ellipsizeMode="tail" />
+
+        <View style={styles.footerContainer}>
+          <CustomText text={dateLabel} style={styles.date} />
+          {totalTrips > 0 && (
+            <CustomButtonMedium
+              title="MY_TRIP.SHOW_ALL_TRIPS"
+              onPress={handleShowAllTripsButton}
+              buttonType={ButtonType.Secondary}
+              textStyle={styles.buttonsText}
+              style={styles.footerButton}
+            />
+          )}
+        </View>
       </View>
     </BlurView>
   );

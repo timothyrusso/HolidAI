@@ -40,6 +40,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
 - **Push Notifications**: WIP - Expo Push Notifications
+- **Error Monitoring**: Sentry
 
 ## Screenshots
 
