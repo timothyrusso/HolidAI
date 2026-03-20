@@ -41,7 +41,7 @@ export const DetailsBox: FC<DetailsBoxProps> = ({ location, tripId, tripStartDat
         <CustomText text={location} style={styles.location} numberOfLines={1} ellipsizeMode="tail" />
 
         <View style={styles.footerContainer}>
-          <CustomText text={dateLabel} style={styles.date} />
+          <CustomText text={dateLabel} style={styles.date} numberOfLines={1} ellipsizeMode="tail" />
           {totalTrips > 0 && (
             <CustomButtonMedium
               title="MY_TRIP.SHOW_ALL_TRIPS"

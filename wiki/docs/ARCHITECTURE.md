@@ -541,7 +541,7 @@ export class GenerateItemUseCase {
 }
 ```
 
-Note that `GenerateItemUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the facade layer — see the `[facades/` section](#facades) for the full example.
+Note that `GenerateItemUseCase` handles AI generation but knows nothing about the reactive backend. Saving the result is handled by the repository, coordinated at the facade layer — see the `[facades section](#facades) for the full example.
 
 This keeps each layer focused: use cases handle business logic, repositories handle data persistence, facades coordinate them and decide how to surface failures.
 
