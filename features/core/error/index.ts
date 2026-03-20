@@ -1,0 +1,9 @@
+export { logger } from './di/resolve';
+export { BaseError } from './domain/entities/BaseError';
+export { ensureError } from './domain/entities/ensureError';
+export { ErrorCode } from './domain/entities/ErrorCode';
+export { fail, ok } from './domain/entities/Result';
+export type { Result } from './domain/entities/Result';
+export type { ILogger } from './domain/entities/services/ILogger';
+export { errorCodeToMessageKey } from './hooks/errorCodeToMessageKey';
+export { useErrorMessage } from './hooks/useErrorMessage';

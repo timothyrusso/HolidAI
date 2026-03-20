@@ -66,7 +66,7 @@ export const ErrorCode = {
   NotFound:         'NotFound',
   Unauthorized:     'Unauthorized',
   NetworkFailure:   'NetworkFailure',
-  AiGenerationFailed: 'AiGenerationFailed',
+  GenerationFailed: 'GenerationFailed',
   // add more as needed
 } as const;
 
@@ -108,7 +108,7 @@ export class XxxError extends BaseError {
 **Rules:**
 - Extend `BaseError` — never extend the native `Error` directly.
 - The constructor `message` is for **logging and debugging only** — the UI never reads it. User-facing text always goes through `useErrorMessage` → `errorCodeToMessageKey` → localized string.
-- Use an **existing `ErrorCode`** when the failure category is already represented (e.g. `AiGenerationFailed` for any AI pipeline failure). Add a new code to `ErrorCode` only when the UI needs to handle it differently from all existing codes.
+- Use an **existing `ErrorCode`** when the failure category is already represented (e.g. `GenerationFailed` for any AI pipeline failure). Add a new code to `ErrorCode` only when the UI needs to handle it differently from all existing codes.
 - Pass `cause` when wrapping a lower-level error — this preserves the full stack trace chain.
 
 ### When to create a feature-specific error class
@@ -128,19 +128,19 @@ export class XxxError extends BaseError {
 // features/ai/domain/entities/errors/GeminiSearchError.ts
 export class GeminiSearchError extends BaseError {
   constructor(cause?: Error) {
-    super('Google Search grounding returned no results.', ErrorCode.AiGenerationFailed, { cause });
+    super('Google Search grounding returned no results.', ErrorCode.GenerationFailed, { cause });
   }
 }
 
 // features/ai/domain/entities/errors/GeminiExtractionError.ts
 export class GeminiExtractionError extends BaseError {
   constructor(cause?: Error) {
-    super('Failed to extract structured output from search context.', ErrorCode.AiGenerationFailed, { cause });
+    super('Failed to extract structured output from search context.', ErrorCode.GenerationFailed, { cause });
   }
 }
 ```
 
-Both use `ErrorCode.AiGenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
+Both use `ErrorCode.GenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
 
 ---
 
@@ -448,7 +448,7 @@ The mapping object lives alongside the hook:
 export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.NetworkFailure]:    'ERRORS.NETWORK',
   [ErrorCode.Unauthorized]:      'ERRORS.UNAUTHORIZED',
-  [ErrorCode.AiGenerationFailed]: 'ERRORS.AI_GENERATION',
+  [ErrorCode.GenerationFailed]: 'ERRORS.GENERATION',
   [ErrorCode.NotFound]:          'ERRORS.NOT_FOUND',
 };
 // Unmapped codes fall back to 'ERRORS.GENERIC'

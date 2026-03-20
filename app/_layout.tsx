@@ -9,6 +9,7 @@ import { queryClient } from '@/di/resolve';
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import i18n from '@/modules/translations/i18n';
+import { AppCrashView } from '@/ui/components/errors/AppCrashView/AppCrashView';
 import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
@@ -19,7 +20,7 @@ import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { isRunningInExpoGo } from 'expo';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
+import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
@@ -50,6 +51,10 @@ const InitialLayout = () => {
     </Stack>
   );
 };
+
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  return <AppCrashView error={error} retry={retry} />;
+}
 
 export default Sentry.wrap(function RootLayout() {
   const ref = useNavigationContainerRef();

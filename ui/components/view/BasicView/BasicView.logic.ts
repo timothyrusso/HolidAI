@@ -1,7 +1,7 @@
 import { Platform, StatusBar } from 'react-native';
 import { match } from 'ts-pattern';
 
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { BasicViewProps } from './BasicView';

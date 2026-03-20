@@ -2,9 +2,9 @@ import type { MMKV } from 'react-native-mmkv';
 import { inject, singleton } from 'tsyringe';
 
 import { TYPES } from '@/di/types';
+import { type ILogger, ensureError } from '@/features/core/error';
+import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { IStorage } from '@/modules/shared/infra/storage';
-import { ensureError } from '../../error/infra/ensureError';
-import type { ILogger } from '../../logger';
 
 /**
  * The `LocalStorage` class is an implementation of the `IStorage` interface.
@@ -20,7 +20,7 @@ export class LocalStorage implements IStorage {
    */
   constructor(
     @inject(TYPES.MMKV) private storage: MMKV,
-    @inject(TYPES.Logger) private logger: ILogger,
+    @inject(ERROR_TYPES.Logger) private logger: ILogger,
   ) {}
 
   /**

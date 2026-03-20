@@ -1,4 +1,4 @@
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import { useSignIn } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';

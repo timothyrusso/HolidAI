@@ -1,4 +1,4 @@
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { useSignUp } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';

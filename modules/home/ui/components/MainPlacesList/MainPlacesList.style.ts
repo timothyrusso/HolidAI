@@ -11,6 +11,6 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primaryBlack,
     borderRadius: spacing.Quintuple,
     height: spacing.separator40,
-    width: spacing.separator120 + spacing.SingleAndHalf,
+    maxWidth: spacing.separator120 + spacing.MinimalDouble,
   },
 });

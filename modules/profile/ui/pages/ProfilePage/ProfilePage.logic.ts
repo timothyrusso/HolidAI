@@ -1,5 +1,5 @@
 import { api } from '@/convex/_generated/api';
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';

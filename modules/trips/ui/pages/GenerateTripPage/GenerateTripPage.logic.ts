@@ -1,7 +1,7 @@
 import { api } from '@/convex/_generated/api';
-import { logger } from '@/di/resolve';
 import { AiModels, travelPlanPrompt } from '@/features/ai';
 import { formatDateForPromptUseCase } from '@/features/core/dates';
+import { logger } from '@/features/core/error';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useToast } from '@/modules/shared/hooks/useToast';

@@ -1,4 +1,4 @@
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { Routes } from '@/modules/navigation/domain/entities/routes';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
@@ -13,7 +13,7 @@ const GenerateTripPage = () => {
   const animation = require('@/ui/assets/lottie/loading_animation.json');
   const { generateAiTrip } = useGenerateTripPageLogic();
 
-  logger.log(generateAiTrip);
+  logger.log('generateAiTrip', generateAiTrip);
 
   return (
     <BasicView nameView={Routes.GenerateTrip} statusBarStyle="dark">
