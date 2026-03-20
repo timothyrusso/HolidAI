@@ -24,34 +24,43 @@ export const styles = StyleSheet.create({
   location: {
     color: colors.primaryWhite,
     fontFamily: fonts.interBold,
-    fontSize: spacing.Quintuple + spacing.Single,
+    fontSize: spacing.Quintuple,
     alignSelf: 'flex-start',
-  },
-  labelContainer: {
-    alignItems: 'center',
-    columnGap: spacing.Single,
-    rowGap: spacing.Fourfold,
-    width: '100%',
-    flex: 1.7,
   },
   date: {
     color: colors.primaryWhite,
     fontFamily: fonts.interBold,
     fontSize: spacing.Triple,
-    alignSelf: 'flex-start',
   },
   labelDetailsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     columnGap: spacing.Single,
   },
-  buttonsContainer: {
-    justifyContent: 'space-between',
-    gap: spacing.Double,
-    alignItems: 'flex-end',
-    flex: 1.3,
-  },
   buttonsText: {
     fontSize: spacing.Double,
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+    rowGap: spacing.Double,
+  },
+  footerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleButton: {
+    maxWidth: '50%',
+  },
+  footerButton: {
+    maxWidth: '50%',
   },
 });

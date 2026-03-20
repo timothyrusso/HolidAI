@@ -40,6 +40,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
 - **Push Notifications**: WIP - Expo Push Notifications
+- **Error Monitoring**: Sentry
 
 ## Screenshots
 
@@ -94,6 +95,7 @@ To obtain these values:
 - `MMKV_ENCRYPTION_KEY`: A secure random string for encrypting local storage
   - Generate a secure random string (at least 32 characters)
 - `CLERK_PUBLISHABLE_KEY`: API key for Clerk authentication
+- `SENTRY_DSN`: Sentry DSN for error monitoring/session replay
 
 ## Get started with the development build
 

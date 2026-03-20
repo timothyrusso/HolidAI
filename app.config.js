@@ -13,6 +13,7 @@ export default ({ config }) => {
     MMKV_ENCRYPTION_KEY,
     CLERK_PUBLISHABLE_KEY,
     CONVEX_URL,
+    SENTRY_DSN,
   } = process.env;
 
   return {
@@ -21,6 +22,7 @@ export default ({ config }) => {
       ...config.extra,
       googlePlacesApiKey: GOOGLE_PLACES_API_KEY,
       convexUrl: CONVEX_URL,
+      sentryDsn: SENTRY_DSN,
       googleGeminiApiKey: GOOGLE_GEMINI_API_KEY,
       rapidApiKey: RAPID_API_KEY,
       unsplashAccessKey: UNSPLASH_ACCESS_KEY,

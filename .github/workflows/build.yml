@@ -78,6 +78,7 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CLERK_JWT_ISSUER_DOMAIN: ${{ secrets.CLERK_JWT_ISSUER_DOMAIN }}
           CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           # Create google-services.json from base64
           mkdir -p /home/runner/work/HolidAI/HolidAI/android/app
