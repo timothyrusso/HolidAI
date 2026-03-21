@@ -1,6 +1,6 @@
+import type { BaseError } from '@/features/core/error/domain/entities/BaseError';
+import { errorCodeToMessageKey } from '@/features/core/error/hooks/errorCodeToMessageKey';
 import { useTranslation } from 'react-i18next';
-import type { BaseError } from '../domain/entities/BaseError';
-import { errorCodeToMessageKey } from './errorCodeToMessageKey';
 
 export const useErrorMessage = (error: BaseError | null): string | null => {
   const { t } = useTranslation();

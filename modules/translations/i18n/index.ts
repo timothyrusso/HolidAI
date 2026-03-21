@@ -1,4 +1,4 @@
-import { storage } from '@/di/resolve';
+import { storage } from '@/features/core/storage';
 import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import * as Localization from 'expo-localization';
 import i18n from 'i18next';

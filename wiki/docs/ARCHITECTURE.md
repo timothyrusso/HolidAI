@@ -479,13 +479,24 @@ export const httpClient = ky.create({
 ```
 
 ```ts
-// features/core/storage/libraries/storageClient.ts
-// e.g. wrapping MMKV
-export const storageClient = new MMKV({
-  id: 'app-storage',
-  encryptionKey: '...',
+// features/core/storage/di/factories/mmkvClient.ts
+import Constants from 'expo-constants';
+import { MMKV } from 'react-native-mmkv';
+
+export const mmkvClient = new MMKV({
+  id: 'holidai.expo.storage',
+  encryptionKey: Constants.expoConfig?.extra?.mmkvEncryptionKey,
 });
 ```
+
+**`libraries/` vs `di/factories/` — the deciding question is how the instance reaches its consumer:**
+
+| How the instance is consumed | Where it belongs |
+| --- | --- |
+| `data/services/` imports it directly via module path | `libraries/` |
+| Registered with the IoC container and injected via `@inject` | `di/factories/` |
+
+A library wrapper that feeds the container via `registerInstance` is functioning as a factory — it belongs in `di/factories/` alongside other factory files, keeping all container-registered instances in one place. A wrapper that is consumed directly by a single `data/services/` file with no need for swappability can stay in `libraries/`. When in doubt, prefer `di/factories/` — it gives you free swappability at the DI boundary.
 
 ---
 

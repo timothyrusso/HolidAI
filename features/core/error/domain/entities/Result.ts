@@ -1,4 +1,4 @@
-import type { BaseError } from './BaseError';
+import type { BaseError } from '@/features/core/error/domain/entities/BaseError';
 
 export type Result<T> = { success: true; data: T } | { success: false; error: BaseError };
 
