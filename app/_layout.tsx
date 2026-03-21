@@ -22,6 +22,7 @@ import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import Toast from 'react-native-toast-message';
 
 initSentry();
 
@@ -76,6 +77,7 @@ export default sentryClient.wrap(function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <KeyboardProvider>
               <InitialLayout />
+              <Toast />
             </KeyboardProvider>
           </QueryClientProvider>
         </ConvexProviderWithClerk>

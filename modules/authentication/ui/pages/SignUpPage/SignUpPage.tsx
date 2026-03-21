@@ -9,7 +9,6 @@ import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import Toast from 'react-native-toast-message';
 import { useSignUpPageLogic } from './SignUpPage.logic';
 import { styles } from './SignUpPage.style';
 
@@ -95,7 +94,6 @@ const SignUpPage = () => {
             </View>
           </View>
         </View>
-        <Toast />
         <InfoModal />
       </CustomScrollView>
     </BasicView>
