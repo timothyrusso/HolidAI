@@ -73,7 +73,7 @@ export const ErrorCode = {
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
 ```
 
-### `ensureError` — `features/core/error/domain/entities/ensureError.ts`
+### `ensureError` — `features/core/error/domain/utils/ensureError.ts`
 
 Converts any unknown caught value into a `BaseError`. Use this in every `catch` block — never cast with `error as Error`.
 
@@ -236,7 +236,7 @@ Facades coordinate repositories and use cases. They receive `Result<T>` and deci
 ```ts
 // features/trips/facades/useGenerateTrip.ts
 import { generateTripUseCase } from '@/features/trips/di/resolve';
-import { useToast } from '@/features/core/utils';
+import { useToast } from '@/features/core/toast';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
@@ -441,10 +441,10 @@ export const useErrorMessage = (error: BaseError | null): string | null => {
 };
 ```
 
-The mapping object lives alongside the hook:
+The mapping object lives in `mappers/` — it translates domain `ErrorCode` values into i18n key strings, which is a presentation concern and cannot live in `domain/`:
 
 ```ts
-// features/core/error/hooks/errorCodeToMessageKey.ts
+// features/core/error/mappers/errorCodeToMessageKey.ts
 export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.NetworkFailure]:    'ERRORS.NETWORK',
   [ErrorCode.Unauthorized]:      'ERRORS.UNAUTHORIZED',
@@ -473,14 +473,14 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 | `BaseError` | `features/core/error/domain/entities/BaseError.ts` |
 | `ErrorCode` | `features/core/error/domain/entities/ErrorCode.ts` |
 | Feature-specific error classes | `features/<name>/domain/entities/errors/XxxError.ts` |
-| `ensureError` | `features/core/error/domain/entities/ensureError.ts` |
+| `ensureError` | `features/core/error/domain/utils/ensureError.ts` |
 | `ILogger` interface | `features/core/error/domain/entities/services/ILogger.ts` |
 | `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
 | `SentryLogger` | `features/core/error/data/services/SentryLogger.ts` |
 | Sentry library wrapper | `features/core/error/libraries/sentryClient.ts` |
 | Error DI types / config / resolve | `features/core/error/di/` |
 | `useErrorMessage` | `features/core/error/hooks/useErrorMessage.ts` |
-| `errorCodeToMessageKey` | `features/core/error/hooks/errorCodeToMessageKey.ts` |
+| `errorCodeToMessageKey` | `features/core/error/mappers/errorCodeToMessageKey.ts` |
 | `AppCrashView` component | `ui/components/errors/AppCrashView/` |
 | Root `ErrorBoundary` | `app/_layout.tsx` (exported function) |
 | Route `ErrorBoundary` | Individual route files (exported function, as needed) |

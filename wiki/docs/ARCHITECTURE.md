@@ -401,7 +401,7 @@ export const useItemRepository = (): IItemRepository => {
 
 ```ts
 // features/core/images/data/repositories/ImageRepository.ts
-// registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
+// registered as singleton in di/config.ts via container.registerSingleton()
 export class ImageRepository implements IImageRepository {
   constructor(private http: IHttpClient) {}  // service interface injected — never imports httpClient from libraries/ directly
 
@@ -422,7 +422,7 @@ Implementations of service interfaces from `domain/entities/services/`. These ar
 
 ```ts
 // features/core/error/data/services/BasicLogger.ts
-// registered as singleton in di/config.ts (e.g. using tsyringe @singleton())
+// registered as singleton in di/config.ts via container.registerSingleton()
 export class BasicLogger implements ILogger {
   log(message: string, ...args: unknown[]) { console.log(message, ...args); }
   error(error: Error, context?: Record<string, unknown>) { console.error(error, context); }
