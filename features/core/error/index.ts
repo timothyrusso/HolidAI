@@ -1,4 +1,5 @@
 export { logger } from './di/resolve';
+export { initSentry, sentryNavigationIntegration, sentryClient } from './libraries/sentryClient';
 export { BaseError } from './domain/entities/BaseError';
 export { ensureError } from './domain/entities/ensureError';
 export { ErrorCode } from './domain/entities/ErrorCode';

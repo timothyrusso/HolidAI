@@ -6,6 +6,7 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 }
 
 import { queryClient } from '@/di/resolve';
+import { initSentry, sentryClient, sentryNavigationIntegration } from '@/features/core/error';
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import i18n from '@/modules/translations/i18n';
@@ -13,36 +14,16 @@ import { AppCrashView } from '@/ui/components/errors/AppCrashView/AppCrashView';
 import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
-import * as Sentry from '@sentry/react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
-import { isRunningInExpoGo } from 'expo';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
-const navigationIntegration = Sentry.reactNavigationIntegration({
-  enableTimeToInitialDisplay: true,
-  routeChangeTimeoutMs: 1000,
-  ignoreEmptyBackNavigationTransactions: true,
-});
-
-Sentry.init({
-  dsn: Constants.expoConfig?.extra?.sentryDsn,
-
-  // Adds more context data to events (IP address, cookies, user, etc.)
-  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
-  sendDefaultPii: __DEV__,
-  enableLogs: __DEV__,
-  // Configure Session Replay
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1,
-  integrations: [Sentry.mobileReplayIntegration(), navigationIntegration],
-  enableNativeFramesTracking: !isRunningInExpoGo(),
-});
+initSentry();
 
 const InitialLayout = () => {
   return (
@@ -56,11 +37,11 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <AppCrashView error={error} retry={retry} />;
 }
 
-export default Sentry.wrap(function RootLayout() {
+export default sentryClient.wrap(function RootLayout() {
   const ref = useNavigationContainerRef();
   useEffect(() => {
     if (ref) {
-      navigationIntegration.registerNavigationContainer(ref);
+      sentryNavigationIntegration.registerNavigationContainer(ref);
     }
   }, [ref]);
 
