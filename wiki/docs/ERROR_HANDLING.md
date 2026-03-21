@@ -497,3 +497,22 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 6. **Root boundary always present.** `app/_layout.tsx` always exports an `ErrorBoundary`.
 7. **Route boundaries for high-risk operations.** Add one when the feature can fail without taking down the rest of the app.
 8. **Toast for mutations, inline for forms, boundary for screens.** Match the error surface to the interaction model.
+
+---
+
+## Exceptions
+
+These are deliberate, documented deviations from the rules above. Each must have a comment at the call site referencing this section.
+
+### `AppCrashView` — logging outside a use case (exception to rule 2)
+
+`useAppCrashViewLogic` calls `logger.error()` directly, which violates the "log only in `useCases/`" rule. This is intentional for two reasons:
+
+1. **No use case involved.** The root error boundary receives a raw `Error` from the React render tree — there is no use case, facade, or repository in this path. The normal logging chain does not apply.
+2. **Dev console visibility.** `Sentry.wrap()` in `app/_layout.tsx` already captures the error and sends it to Sentry automatically. The `logger.error()` call here is purely for the development console, so crashes are visible during local debugging without opening Sentry.
+
+The log is called inline (not in a `useEffect`) because the error boundary only renders on a crash and stays mounted until `retry()` is called — re-render risk is negligible.
+
+### `AppCrashView` — rendering `error.message` (exception to rule 5)
+
+`AppCrashView` previously rendered `error.message` directly. It now shows a generic localized string (`ERRORS.GENERIC`) to the user, which is the correct approach. The raw `error` is passed to `logger.error()` instead, where it belongs.
