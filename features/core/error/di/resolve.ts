@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import './config';
+import '@/features/core/error/di/config';
 
+import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
 import { container } from 'tsyringe';
-import { ERROR_TYPES } from './types';
 
 export const logger = container.resolve<ILogger>(ERROR_TYPES.Logger);

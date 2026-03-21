@@ -44,13 +44,15 @@ features/<name>/
 │   ├── entities/
 │   │   ├── repositories/
 │   │   └── services/
-│   └── schemas/
+│   ├── schemas/
+│   └── utils/            (pure domain utility functions — no external imports)
 ├── data/
 │   ├── dtos/
 │   ├── adapters/
 │   ├── validators/
 │   ├── repositories/
 │   └── services/
+├── mappers/              (pure functions: domain type → presentation concern)
 ├── di/               (only in features with injectable singletons)
 │   ├── types.ts
 │   ├── config.ts
@@ -86,13 +88,15 @@ Each sub-module follows the same internal layer structure as any other feature �
 ```
 features/core/<sub-module>/
 ├── domain/
-│   └── entities/
-│       ├── SomeType.ts
-│       ├── repositories/    (if the sub-module defines a repository interface)
-│       └── services/        (if the sub-module defines a service interface)
+│   ├── entities/
+│   │   ├── SomeType.ts
+│   │   ├── repositories/    (if the sub-module defines a repository interface)
+│   │   └── services/        (if the sub-module defines a service interface)
+│   └── utils/               (pure domain utility functions — no external imports)
 ├── data/
 │   ├── repositories/
 │   └── services/
+├── mappers/                 (pure functions: domain type → presentation concern)
 ├── libraries/               (third-party wrappers)
 ├── di/
 │   ├── types.ts
@@ -285,6 +289,8 @@ Schema definitions. Schemas are a domain concern because they describe what vali
 
 **Why not abstract the schema library behind an interface?** The schema library (e.g. Zod) acts as a type-system extension for TypeScript rather than a swappable infrastructure dependency. Type inference from schemas (e.g. `z.infer<>`) is the mechanism that derives static types from schema definitions — abstracting it away would mean duplicating every type definition separately, which defeats the purpose. The separation that matters is already in place: schemas *define* rules here in `domain/schemas/`, validators *run* them in `data/validators/`. If the schema library ever changes, only those two locations need updating — no feature code is affected.
 
+**This exception extends to service interfaces that use Zod purely as a type constraint.** A service interface method typed as `generateObject<T extends ZodType>(schema: T): Promise<z.infer<T>>` uses Zod exclusively for TypeScript type inference — the import is `import type`, there is zero runtime coupling, and no Zod method is called in the interface itself. This is the same category as schema type inference: Zod as a type-system extension, not a swappable runtime dependency. The rule to watch is that the import must be `import type` only; any runtime Zod call in `domain/` is a violation.
+
 ```ts
 // features/items/domain/schemas/GenerateItemSchema.ts
 // e.g. using Zod
@@ -298,6 +304,28 @@ export const generateItemSchema = z.object({
 });
 
 export type GeneratedItem = z.infer<typeof generateItemSchema>;
+```
+
+#### `domain/utils/`
+
+Pure utility functions that operate exclusively on domain types. Like everything else in `domain/`, these files must be pure TypeScript — no external library imports, no framework code, no side effects.
+
+The distinction from `domain/entities/` is structural: entities define **what things are** (types, interfaces, constants, schemas); utils define **what you can do with them** (pure functions that transform or guard domain values).
+
+A function belongs in `domain/utils/` when:
+- It takes and returns only domain types (or primitives)
+- It has no dependencies outside `domain/`
+- It is consumed by multiple layers (use cases, data, hooks) — if only one layer uses it, it can live there directly
+
+```ts
+// features/core/error/domain/utils/ensureError.ts
+// Converts any unknown caught value into a typed BaseError.
+// Called in every catch block across all layers — must live in domain/ so all layers can import it.
+export const ensureError = (value: unknown): BaseError => {
+  if (value instanceof BaseError) return value;
+  if (value instanceof Error) return new BaseError(value.message, ErrorCode.UnexpectedError, { cause: value });
+  // ...
+};
 ```
 
 ---
@@ -449,11 +477,46 @@ export const validateTravelersCount = (count: number): boolean => {
 
 ---
 
+### `mappers/`
+
+Pure functions that translate **domain types into presentation concerns** — typically a domain value into a string key, label, color, or other UI-facing representation. Mappers live at the feature level (not under `data/`) because they do not touch DTOs, repositories, or any infrastructure — they bridge domain and UI.
+
+**Why not `domain/`?** The output of a mapper is a presentation concern (e.g. an i18n key string). If a mapper lived in `domain/`, the domain layer would gain knowledge of UI naming conventions — backwards coupling. Renaming a translation key would force a change in a domain file.
+
+**Why not `data/adapters/`?** `data/adapters/` transforms external data shapes (DTOs) into domain entities — always **inward** (external → domain). Mappers go the other direction: **outward** (domain → presentation). Different direction, different layer.
+
+**Import rule:** mappers may only import from `domain/`. Hooks, facades, and `.logic.ts` files may import from `mappers/`.
+
+```ts
+// features/core/error/mappers/errorCodeToMessageKey.ts
+// Maps domain ErrorCode values to i18n message keys for display in the UI.
+// Lives in mappers/ because the output values ('ERRORS.NETWORK' etc.) are presentation-layer
+// naming conventions — having them in domain/ would couple domain to UI concerns.
+import type { ErrorCode as ErrorCodeType } from '@/features/core/error/domain/entities/ErrorCode';
+import { ErrorCode } from '@/features/core/error/domain/entities/ErrorCode';
+
+export const errorCodeToMessageKey: Partial<Record<ErrorCodeType, string>> = {
+  [ErrorCode.NetworkFailure]: 'ERRORS.NETWORK',
+  [ErrorCode.Unauthorized]: 'ERRORS.UNAUTHORIZED',
+  [ErrorCode.GenerationFailed]: 'ERRORS.GENERATION',
+  [ErrorCode.NotFound]: 'ERRORS.NOT_FOUND',
+};
+// Unmapped codes fall back to 'ERRORS.GENERIC' at the call site
+```
+
+---
+
 ### `libraries/`
 
 Thin wrappers around external libraries. No business logic — only API normalization and simplification. The goal is to isolate the app from third-party library APIs so that swapping a library only requires changing its wrapper, not every file that uses it.
 
-`data/services/` implementations are the **exclusive consumers** of library wrappers in the class-based pattern. Class-based repositories never import from `libraries/` directly — they receive service interfaces via constructor injection, and the service implementation calls the library wrapper internally. The only exception is hook-based repositories, which import Convex and auth hooks directly as a documented structural necessity (see `data/repositories/`).
+`data/services/` implementations are the **exclusive consumers** of library wrappers in the class-based pattern. Class-based repositories never import from `libraries/` directly — they receive service interfaces via constructor injection, and the service implementation calls the library wrapper internally.
+
+**Two documented exceptions:**
+
+1. **Hook-based repositories** import Convex and auth hooks directly — a structural necessity of the hook-based repository pattern (see `data/repositories/`).
+
+2. **Hook-based service layers** — when a feature has no class-based service (because the functionality is inherently React lifecycle-bound), the hook that wraps the library *is* the service layer. In this case the hook may import from `libraries/` directly. The condition is strict: there must be no meaningful service interface to extract — the hook IS the entire service. Example: `useToast` in `features/core/toast/` wraps `toastClient` from `libraries/` because toast display is a UI-only concern with no swappable implementation interface. Adding a class-based `IToastService` would be pure ceremony with no architectural benefit.
 
 **How to decide if a library needs a wrapper:** ask "if I swap this library for another, how many files change?" If the answer is more than one file, the library needs a wrapper. That wrapper becomes the only file to update on swap.
 
@@ -479,13 +542,24 @@ export const httpClient = ky.create({
 ```
 
 ```ts
-// features/core/storage/libraries/storageClient.ts
-// e.g. wrapping MMKV
-export const storageClient = new MMKV({
-  id: 'app-storage',
-  encryptionKey: '...',
+// features/core/storage/di/factories/mmkvClient.ts
+import Constants from 'expo-constants';
+import { MMKV } from 'react-native-mmkv';
+
+export const mmkvClient = new MMKV({
+  id: 'holidai.expo.storage',
+  encryptionKey: Constants.expoConfig?.extra?.mmkvEncryptionKey,
 });
 ```
+
+**`libraries/` vs `di/factories/` — the deciding question is how the instance reaches its consumer:**
+
+| How the instance is consumed | Where it belongs |
+| --- | --- |
+| `data/services/` imports it directly via module path | `libraries/` |
+| Registered with the IoC container and injected via `@inject` | `di/factories/` |
+
+A library wrapper that feeds the container via `registerInstance` is functioning as a factory — it belongs in `di/factories/` alongside other factory files, keeping all container-registered instances in one place. A wrapper that is consumed directly by a single `data/services/` file with no need for swappability can stay in `libraries/`. When in doubt, prefer `di/factories/` — it gives you free swappability at the DI boundary.
 
 ---
 

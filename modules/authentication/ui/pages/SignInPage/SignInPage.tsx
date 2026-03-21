@@ -10,7 +10,6 @@ import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import Toast from 'react-native-toast-message';
 import { useSignInPageLogic } from './SignInPage.logic';
 import { styles } from './SignInPage.style';
 
@@ -62,7 +61,6 @@ const SignInPage = () => {
             </View>
           </View>
         </View>
-        <Toast />
         <ResetPasswordModal />
         <InfoModal />
         <ActionModal />

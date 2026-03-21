@@ -1,11 +1,7 @@
-import { TYPES } from '@/di/types';
 import Constants from 'expo-constants';
 import { MMKV } from 'react-native-mmkv';
-import { container } from 'tsyringe';
 
-const mmkvInstance = new MMKV({
+export const mmkvClient = new MMKV({
   id: 'holidai.expo.storage',
   encryptionKey: Constants.expoConfig?.extra?.mmkvEncryptionKey,
 });
-
-container.registerInstance(TYPES.MMKV, mmkvInstance);

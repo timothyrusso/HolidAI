@@ -1,5 +1,5 @@
-import type { ErrorCode as ErrorCodeType } from '../domain/entities/ErrorCode';
-import { ErrorCode } from '../domain/entities/ErrorCode';
+import type { ErrorCode as ErrorCodeType } from '@/features/core/error/domain/entities/ErrorCode';
+import { ErrorCode } from '@/features/core/error/domain/entities/ErrorCode';
 
 export const errorCodeToMessageKey: Partial<Record<ErrorCodeType, string>> = {
   [ErrorCode.NetworkFailure]: 'ERRORS.NETWORK',
