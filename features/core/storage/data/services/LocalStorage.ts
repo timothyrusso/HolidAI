@@ -1,5 +1,5 @@
 import type { MMKV } from 'react-native-mmkv';
-import { inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 import { type Result, ensureError, fail, ok } from '@/features/core/error';
 import { STORAGE_TYPES } from '@/features/core/storage/di/types';
@@ -11,6 +11,7 @@ import type { IStorage } from '@/features/core/storage/domain/entities/IStorage'
  * The MMKV instance is injected via the IoC container — swapping the storage
  * library only requires updating `di/factories/` and `di/config.ts`.
  */
+@injectable()
 export class LocalStorage implements IStorage {
   constructor(@inject(STORAGE_TYPES.MMKV) private storage: MMKV) {}
 
@@ -105,7 +106,6 @@ export class LocalStorage implements IStorage {
    * Callers that need to distinguish between "absent" and "corrupted" should use {@link getObj} directly.
    */
   getStore<T>(key: string): T | null {
-    if (!this.exist(key)) return null;
     const result = this.getObj<{ state: T }>(key);
     if (!result.success) return null;
     return result.data?.state ?? null;
