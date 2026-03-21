@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import '@/features/core/error/di/config';
 import '@/features/core/storage/di/config';
 
 import { STORAGE_TYPES } from '@/features/core/storage/di/types';
