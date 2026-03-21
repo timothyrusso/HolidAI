@@ -66,7 +66,7 @@ export const ErrorCode = {
   NotFound:         'NotFound',
   Unauthorized:     'Unauthorized',
   NetworkFailure:   'NetworkFailure',
-  AiGenerationFailed: 'AiGenerationFailed',
+  GenerationFailed: 'GenerationFailed',
   // add more as needed
 } as const;
 
@@ -108,7 +108,7 @@ export class XxxError extends BaseError {
 **Rules:**
 - Extend `BaseError` — never extend the native `Error` directly.
 - The constructor `message` is for **logging and debugging only** — the UI never reads it. User-facing text always goes through `useErrorMessage` → `errorCodeToMessageKey` → localized string.
-- Use an **existing `ErrorCode`** when the failure category is already represented (e.g. `AiGenerationFailed` for any AI pipeline failure). Add a new code to `ErrorCode` only when the UI needs to handle it differently from all existing codes.
+- Use an **existing `ErrorCode`** when the failure category is already represented (e.g. `GenerationFailed` for any AI pipeline failure). Add a new code to `ErrorCode` only when the UI needs to handle it differently from all existing codes.
 - Pass `cause` when wrapping a lower-level error — this preserves the full stack trace chain.
 
 ### When to create a feature-specific error class
@@ -128,19 +128,19 @@ export class XxxError extends BaseError {
 // features/ai/domain/entities/errors/GeminiSearchError.ts
 export class GeminiSearchError extends BaseError {
   constructor(cause?: Error) {
-    super('Google Search grounding returned no results.', ErrorCode.AiGenerationFailed, { cause });
+    super('Google Search grounding returned no results.', ErrorCode.GenerationFailed, { cause });
   }
 }
 
 // features/ai/domain/entities/errors/GeminiExtractionError.ts
 export class GeminiExtractionError extends BaseError {
   constructor(cause?: Error) {
-    super('Failed to extract structured output from search context.', ErrorCode.AiGenerationFailed, { cause });
+    super('Failed to extract structured output from search context.', ErrorCode.GenerationFailed, { cause });
   }
 }
 ```
 
-Both use `ErrorCode.AiGenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
+Both use `ErrorCode.GenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
 
 ---
 
@@ -448,7 +448,7 @@ The mapping object lives alongside the hook:
 export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.NetworkFailure]:    'ERRORS.NETWORK',
   [ErrorCode.Unauthorized]:      'ERRORS.UNAUTHORIZED',
-  [ErrorCode.AiGenerationFailed]: 'ERRORS.AI_GENERATION',
+  [ErrorCode.GenerationFailed]: 'ERRORS.GENERATION',
   [ErrorCode.NotFound]:          'ERRORS.NOT_FOUND',
 };
 // Unmapped codes fall back to 'ERRORS.GENERIC'
@@ -497,3 +497,22 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 6. **Root boundary always present.** `app/_layout.tsx` always exports an `ErrorBoundary`.
 7. **Route boundaries for high-risk operations.** Add one when the feature can fail without taking down the rest of the app.
 8. **Toast for mutations, inline for forms, boundary for screens.** Match the error surface to the interaction model.
+
+---
+
+## Exceptions
+
+These are deliberate, documented deviations from the rules above. Each must have a comment at the call site referencing this section.
+
+### `AppCrashView` — logging outside a use case (exception to rule 2)
+
+`useAppCrashViewLogic` calls `logger.error()` directly, which violates the "log only in `useCases/`" rule. This is intentional for two reasons:
+
+1. **No use case involved.** The root error boundary receives a raw `Error` from the React render tree — there is no use case, facade, or repository in this path. The normal logging chain does not apply.
+2. **Dev console visibility.** `Sentry.wrap()` in `app/_layout.tsx` already captures the error and sends it to Sentry automatically. The `logger.error()` call here is purely for the development console, so crashes are visible during local debugging without opening Sentry.
+
+The log is called inline (not in a `useEffect`) because the error boundary only renders on a crash and stays mounted until `retry()` is called — re-render risk is negligible.
+
+### `AppCrashView` — rendering `error.message` (exception to rule 5)
+
+`AppCrashView` previously rendered `error.message` directly. It now shows a generic localized string (`ERRORS.GENERIC`) to the user, which is the correct approach. The raw `error` is passed to `logger.error()` instead, where it belongs.

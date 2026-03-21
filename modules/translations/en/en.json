@@ -160,5 +160,15 @@
       "INVALID_CREDENTIALS": "Invalid credentials",
       "INVALID_EMAIL": "Invalid email"
     }
+  },
+  "ERRORS": {
+    "GENERIC": "Something went wrong",
+    "NETWORK": "Network error, please try again",
+    "UNAUTHORIZED": "You are not authorized",
+    "GENERATION": "Failed to generate content",
+    "NOT_FOUND": "Content not found",
+    "BUTTONS": {
+      "TRY_AGAIN": "Try again"
+    }
   }
 }

@@ -160,5 +160,15 @@
       "INVALID_CREDENTIALS": "Credenziali non valide",
       "INVALID_EMAIL": "Email non valida"
     }
+  },
+  "ERRORS": {
+    "GENERIC": "Qualcosa è andato storto",
+    "NETWORK": "Errore di rete, riprova",
+    "UNAUTHORIZED": "Non sei autorizzato",
+    "GENERATION": "Impossibile generare il contenuto",
+    "NOT_FOUND": "Contenuto non trovato",
+    "BUTTONS": {
+      "TRY_AGAIN": "Riprova"
+    }
   }
 }

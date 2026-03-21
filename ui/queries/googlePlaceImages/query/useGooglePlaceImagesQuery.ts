@@ -1,4 +1,4 @@
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { GooglePlaceImagesKeys } from '../GooglePlaceImagesKeys';

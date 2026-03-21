@@ -1,4 +1,4 @@
-import { logger } from '@/di/resolve';
+import { logger } from '@/features/core/error';
 import { AppKeys } from '@/modules/shared/domain/AppKeys';
 import type { LocationInfo } from '@/modules/trips/domain/entities/LocationInfo';
 import { colors } from '@/ui/style/colors';
