@@ -1,5 +1,5 @@
 import type { BaseError } from '@/features/core/error/domain/entities/BaseError';
-import { errorCodeToMessageKey } from '@/features/core/error/hooks/errorCodeToMessageKey';
+import { errorCodeToMessageKey } from '@/features/core/error/mappers/errorCodeToMessageKey';
 import { useTranslation } from 'react-i18next';
 
 export const useErrorMessage = (error: BaseError | null): string | null => {
