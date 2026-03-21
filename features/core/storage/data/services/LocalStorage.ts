@@ -14,10 +14,10 @@ import type { IStorage } from '@/features/core/storage/domain/entities/IStorage'
 export class LocalStorage implements IStorage {
   constructor(@inject(STORAGE_TYPES.MMKV) private storage: MMKV) {}
 
-  /** Stores a primitive value. `Uint8Array` is written as a raw `ArrayBuffer`. */
+  /** Stores a primitive value. `Uint8Array` is copied into a new `ArrayBuffer` via `slice()` to ensure only the view bytes are persisted, not the full backing buffer (relevant when the caller passes a subarray). */
   set(key: string, value: boolean | string | number | Uint8Array): void {
     if (value instanceof Uint8Array) {
-      this.storage.set(key, value.buffer as ArrayBuffer);
+      this.storage.set(key, value.slice().buffer);
     } else {
       this.storage.set(key, value);
     }
@@ -51,7 +51,7 @@ export class LocalStorage implements IStorage {
    */
   getObj<T>(key: string): Result<T | undefined> {
     const obj = this.storage.getString(key);
-    if (!obj) return ok(undefined);
+    if (obj === undefined) return ok(undefined);
     try {
       return ok(JSON.parse(obj) as T);
     } catch (err) {
