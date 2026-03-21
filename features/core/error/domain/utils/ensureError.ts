@@ -1,5 +1,5 @@
-import { BaseError } from './BaseError';
-import { ErrorCode } from './ErrorCode';
+import { BaseError } from '@/features/core/error/domain/entities/BaseError';
+import { ErrorCode } from '@/features/core/error/domain/entities/ErrorCode';
 
 export const ensureError = (value: unknown): BaseError => {
   if (value instanceof BaseError) return value;

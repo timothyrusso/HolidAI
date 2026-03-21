@@ -5,4 +5,4 @@ export {
   getTodayInLocalTimezoneUseCase,
   normalizeDateToISOUseCase,
   translateDateUseCase,
-} from './di/resolve';
+} from '@/features/core/dates/di/resolve';

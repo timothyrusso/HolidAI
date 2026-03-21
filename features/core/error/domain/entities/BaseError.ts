@@ -1,4 +1,4 @@
-import { ErrorCode } from './ErrorCode';
+import { ErrorCode } from '@/features/core/error/domain/entities/ErrorCode';
 
 export class BaseError extends Error {
   public readonly context?: Record<string, unknown>;

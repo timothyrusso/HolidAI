@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import './config';
+import '@/features/core/dates/di/config';
 
 import { container } from 'tsyringe';
 
@@ -10,7 +10,7 @@ import type { GetTodayInLocalTimezoneUseCase } from '@/features/core/dates/useCa
 import type { NormalizeDateToISOUseCase } from '@/features/core/dates/useCases/NormalizeDateToISOUseCase';
 import type { TranslateDateUseCase } from '@/features/core/dates/useCases/TranslateDateUseCase';
 
-import { DATES_TYPES } from './types';
+import { DATES_TYPES } from '@/features/core/dates/di/types';
 
 export const convertFromUTCToLocaleUseCase = container.resolve<ConvertFromUTCToLocaleUseCase>(
   DATES_TYPES.ConvertFromUTCToLocaleUseCase,

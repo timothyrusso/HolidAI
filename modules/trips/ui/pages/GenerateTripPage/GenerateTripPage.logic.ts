@@ -1,10 +1,10 @@
 import { api } from '@/convex/_generated/api';
 import { AiModels, travelPlanPrompt } from '@/features/ai';
 import { formatDateForPromptUseCase } from '@/features/core/dates';
-import { logger } from '@/features/core/error';
+import { ensureError, logger } from '@/features/core/error';
+import { useToast } from '@/features/core/toast';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useLocale } from '@/modules/shared/hooks/useLocale';
-import { useToast } from '@/modules/shared/hooks/useToast';
 import { useVercelAi } from '@/modules/shared/hooks/useVercelAi';
 import { generatedTripSchema } from '@/modules/trips/domain/entities/GenerateTripSchema';
 import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
@@ -21,7 +21,7 @@ export const useGenerateTripPageLogic = () => {
   const { user } = useUser();
   const userId = user?.id;
   const { locale } = useLocale();
-  const { showToast } = useToast();
+  const { showErrorToast } = useToast();
 
   const { decrementTokens } = useGetUserStatus();
 
@@ -68,7 +68,7 @@ export const useGenerateTripPageLogic = () => {
       });
     } catch (error) {
       router.replace(`/${Routes.HomePage}`);
-      showToast('GENERATE_TRIP.ERROR');
+      showErrorToast(ensureError(error));
       logger.error(new Error('Error generating AI trip:'), error);
     } finally {
       setIsLoading(false);

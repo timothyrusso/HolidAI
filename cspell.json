@@ -12,7 +12,8 @@
     "statsig",
     "tsyringe",
     "zustand",
-    "sourcery"
+    "sourcery",
+    "tsdoc"
   ],
   "flagWords": [
     "hte"

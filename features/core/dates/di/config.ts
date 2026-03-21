@@ -9,7 +9,7 @@ import { GetTodayInLocalTimezoneUseCase } from '@/features/core/dates/useCases/G
 import { NormalizeDateToISOUseCase } from '@/features/core/dates/useCases/NormalizeDateToISOUseCase';
 import { TranslateDateUseCase } from '@/features/core/dates/useCases/TranslateDateUseCase';
 
-import { DATES_TYPES } from './types';
+import { DATES_TYPES } from '@/features/core/dates/di/types';
 
 container.registerSingleton(DATES_TYPES.ConvertFromUTCToLocaleUseCase, ConvertFromUTCToLocaleUseCase);
 container.registerSingleton(DATES_TYPES.FormatDateForPromptUseCase, FormatDateForPromptUseCase);

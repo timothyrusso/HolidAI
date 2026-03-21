@@ -1,12 +1,12 @@
 import { logger } from '@/features/core/error';
-import { ToastType, useToast } from '@/modules/shared/hooks/useToast';
+import { useToast } from '@/features/core/toast';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import { useClerk, useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
 
 export const useResetPasswordModalLogic = () => {
   const { modalActions, modalSelectors } = useModalState();
-  const { showToast } = useToast();
+  const { showInfoToast, showSuccessToast } = useToast();
 
   const { signOut } = useClerk();
 
@@ -25,7 +25,7 @@ export const useResetPasswordModalLogic = () => {
 
   const handleCreateResetPasswordButton = async () => {
     if (!emailRegex.test(email)) {
-      showToast('GLOBAL.ERROR.INVALID_EMAIL');
+      showInfoToast('GLOBAL.ERROR.INVALID_EMAIL');
       return;
     }
 
@@ -70,7 +70,7 @@ export const useResetPasswordModalLogic = () => {
 
       if (response.status === 'complete') {
         await signOut();
-        showToast('SIGNIN.RESET_PASSWORD_SUCCESS', ToastType.SUCCESS);
+        showSuccessToast('SIGNIN.RESET_PASSWORD_SUCCESS');
         handleResetModal();
       }
     } catch (error) {
