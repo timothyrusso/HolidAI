@@ -94,7 +94,11 @@
     "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm your password",
     "EMAIL_VERIFICATION_TITLE": "Verify your email",
     "EMAIL_VERIFICATION_CODE": "Enter the verification code sent to your email",
-    "ALREADY_ACCOUNT": "Already have an account? "
+    "VERIFICATION_CODE_PLACEHOLDER": "Enter your verification code",
+    "ALREADY_ACCOUNT": "Already have an account? ",
+    "ERROR": {
+      "PASSWORDS_DO_NOT_MATCH": "Passwords do not match"
+    }
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Search",
@@ -167,6 +171,12 @@
     "UNAUTHORIZED": "You are not authorized",
     "GENERATION": "Failed to generate content",
     "NOT_FOUND": "Content not found",
+    "AUTH": {
+      "SIGN_IN_FAILED": "Incorrect email or password",
+      "SIGN_UP_FAILED": "Unable to create account, please try again",
+      "VERIFICATION_FAILED": "Invalid verification code",
+      "PASSWORD_RESET_FAILED": "Unable to reset password, please try again"
+    },
     "BUTTONS": {
       "TRY_AGAIN": "Try again"
     }

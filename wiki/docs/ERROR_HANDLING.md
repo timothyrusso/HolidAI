@@ -265,6 +265,7 @@ export const useGenerateTrip = () => {
 - Decide here: toast, error state, or throw for the error boundary.
 - Throw to the boundary only for unrecoverable errors that should terminate the current screen.
 - Never call `console.error`.
+- Do not wrap repository or use case calls in `try/catch` or `try/finally` — the repository contract guarantees no exceptions escape its boundary. If a repository violates this contract, fix the repository, not the facade.
 
 ---
 

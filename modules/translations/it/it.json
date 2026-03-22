@@ -94,7 +94,11 @@
     "CONFIRM_PASSWORD_PLACEHOLDER": "Conferma la tua password",
     "EMAIL_VERIFICATION_TITLE": "Verifica la tua email",
     "EMAIL_VERIFICATION_CODE": "Inserisci il codice di verifica che ti è stato inviato per email",
-    "ALREADY_ACCOUNT": "Hai già un account? "
+    "VERIFICATION_CODE_PLACEHOLDER": "Inserisci il codice di verifica",
+    "ALREADY_ACCOUNT": "Hai già un account? ",
+    "ERROR": {
+      "PASSWORDS_DO_NOT_MATCH": "Le password non corrispondono"
+    }
   },
   "SEARCH_PLACE_PAGE": {
     "TITLE": "Cerca",
@@ -167,6 +171,12 @@
     "UNAUTHORIZED": "Non sei autorizzato",
     "GENERATION": "Impossibile generare il contenuto",
     "NOT_FOUND": "Contenuto non trovato",
+    "AUTH": {
+      "SIGN_IN_FAILED": "Email o password non corretti",
+      "SIGN_UP_FAILED": "Impossibile creare l'account, riprova",
+      "VERIFICATION_FAILED": "Codice di verifica non valido",
+      "PASSWORD_RESET_FAILED": "Impossibile reimpostare la password, riprova"
+    },
     "BUTTONS": {
       "TRY_AGAIN": "Riprova"
     }
