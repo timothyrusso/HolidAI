@@ -5,14 +5,15 @@ import { useState } from 'react';
 export const useSignUp = () => {
   const repo = useAuthRepository();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState<boolean>(false);
 
   const { showErrorToast } = useToast();
 
   const signUp = async (email: string, password: string, fullName: string): Promise<boolean> => {
-    setIsLoading(true);
+    setIsSigningUp(true);
     const result = await repo.signUp(email, password, fullName);
-    setIsLoading(false);
+    setIsSigningUp(false);
     if (!result.success) {
       showErrorToast(result.error);
       return false;
@@ -21,9 +22,9 @@ export const useSignUp = () => {
   };
 
   const verifyEmail = async (code: string): Promise<boolean> => {
-    setIsLoading(true);
+    setIsVerifyingEmail(true);
     const result = await repo.verifyEmail(code);
-    setIsLoading(false);
+    setIsVerifyingEmail(false);
     if (!result.success) {
       showErrorToast(result.error);
       return false;
@@ -31,5 +32,5 @@ export const useSignUp = () => {
     return true;
   };
 
-  return { signUp, verifyEmail, isLoading };
+  return { signUp, verifyEmail, isSigningUp, isVerifyingEmail };
 };

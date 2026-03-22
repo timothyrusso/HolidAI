@@ -14,7 +14,7 @@ export const useSignUpPageLogic = () => {
 
   const router = useRouter();
 
-  const { signUp, verifyEmail, isLoading } = useSignUp();
+  const { signUp, verifyEmail, isSigningUp, isVerifyingEmail } = useSignUp();
 
   const { showInfoToast } = useToast();
 
@@ -44,7 +44,7 @@ export const useSignUpPageLogic = () => {
     code,
     setCode,
     pendingVerification,
-    isLoading,
+    isLoading: pendingVerification ? isVerifyingEmail : isSigningUp,
     onSignUpPress,
     onVerifyPress,
   };
