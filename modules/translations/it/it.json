@@ -97,7 +97,8 @@
     "VERIFICATION_CODE_PLACEHOLDER": "Inserisci il codice di verifica",
     "ALREADY_ACCOUNT": "Hai già un account? ",
     "ERROR": {
-      "PASSWORDS_DO_NOT_MATCH": "Le password non corrispondono"
+      "PASSWORDS_DO_NOT_MATCH": "Le password non corrispondono",
+      "VERIFICATION_CODE_REQUIRED": "Inserisci il codice di verifica"
     }
   },
   "SEARCH_PLACE_PAGE": {

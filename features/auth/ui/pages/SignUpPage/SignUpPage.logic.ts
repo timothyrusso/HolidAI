@@ -28,6 +28,10 @@ export const useSignUpPageLogic = () => {
   };
 
   const onVerifyPress = async () => {
+    if (!code.trim()) {
+      showInfoToast('SIGNUP.ERROR.VERIFICATION_CODE_REQUIRED');
+      return;
+    }
     const success = await verifyEmail(code);
     if (success) router.replace(`/${Routes.HomePage}`);
   };
