@@ -8,7 +8,7 @@ export const useSignUpPageLogic = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [fullName, setFullName] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
   const [pendingVerification, setPendingVerification] = useState<boolean>(false);
 
@@ -23,7 +23,7 @@ export const useSignUpPageLogic = () => {
       showInfoToast('SIGNUP.ERROR.PASSWORDS_DO_NOT_MATCH');
       return;
     }
-    const success = await signUp(email, password, fullName);
+    const success = await signUp(email, password, name);
     if (success) setPendingVerification(true);
   };
 
@@ -39,8 +39,8 @@ export const useSignUpPageLogic = () => {
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    fullName,
-    setFullName,
+    name,
+    setName,
     code,
     setCode,
     pendingVerification,

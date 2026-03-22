@@ -19,14 +19,14 @@ export const useAuthRepository = (): IAuthRepository => {
         }
         return fail(new AuthError(ErrorCode.AuthSignInFailed));
       } catch (err) {
-        return fail(new BaseError('Sign-in failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
+        return fail(new AuthError(ErrorCode.AuthSignInFailed, ensureError(err)));
       }
     },
 
-    signUp: async (email, password, fullName) => {
+    signUp: async (email, password, name) => {
       if (!signUpLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
-        await signUp.create({ emailAddress: email, password, firstName: fullName });
+        await signUp.create({ emailAddress: email, password, firstName: name });
       } catch (err) {
         return fail(new AuthError(ErrorCode.AuthSignUpFailed, ensureError(err)));
       }
@@ -50,7 +50,7 @@ export const useAuthRepository = (): IAuthRepository => {
         }
         return fail(new AuthError(ErrorCode.AuthVerificationFailed));
       } catch (err) {
-        return fail(new BaseError('Email verification failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
+        return fail(new AuthError(ErrorCode.AuthVerificationFailed, ensureError(err)));
       }
     },
 
@@ -63,9 +63,7 @@ export const useAuthRepository = (): IAuthRepository => {
         });
         return ok(undefined);
       } catch (err) {
-        return fail(
-          new BaseError('Password reset code delivery failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }),
-        );
+        return fail(new AuthError(ErrorCode.AuthPasswordResetFailed, ensureError(err)));
       }
     },
 
@@ -87,7 +85,7 @@ export const useAuthRepository = (): IAuthRepository => {
         }
         return fail(new AuthError(ErrorCode.AuthPasswordResetFailed));
       } catch (err) {
-        return fail(new BaseError('Password reset failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
+        return fail(new AuthError(ErrorCode.AuthPasswordResetFailed, ensureError(err)));
       }
     },
   };

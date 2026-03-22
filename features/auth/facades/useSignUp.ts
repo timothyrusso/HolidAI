@@ -10,9 +10,9 @@ export const useSignUp = () => {
 
   const { showErrorToast } = useToast();
 
-  const signUp = async (email: string, password: string, fullName: string): Promise<boolean> => {
+  const signUp = async (email: string, password: string, name: string): Promise<boolean> => {
     setIsSigningUp(true);
-    const result = await repo.signUp(email, password, fullName);
+    const result = await repo.signUp(email, password, name);
     setIsSigningUp(false);
     if (!result.success) {
       showErrorToast(result.error);

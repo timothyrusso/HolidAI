@@ -61,7 +61,7 @@ export const useProfilePageLogic = () => {
     seed: user?.id,
   }).toString();
 
-  const username = user?.fullName;
+  const username = user?.firstName;
   const email = user?.emailAddresses[0].emailAddress;
 
   const goToChangeLanguage = () => {

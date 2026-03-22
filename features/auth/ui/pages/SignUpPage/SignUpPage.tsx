@@ -20,8 +20,8 @@ const SignUpPage = () => {
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    fullName,
-    setFullName,
+    name,
+    setName,
     pendingVerification,
     code,
     setCode,
@@ -48,7 +48,7 @@ const SignUpPage = () => {
         <View style={styles.container}>
           <CustomText text="SIGNUP.SUBTITLE" style={styles.subtitle} />
           <View style={styles.inputContainer}>
-            <CustomTextInput placeholder="SIGNUP.NAME_PLACEHOLDER" onChangeText={setFullName} value={fullName} />
+            <CustomTextInput placeholder="SIGNUP.NAME_PLACEHOLDER" onChangeText={setName} value={name} />
             <CustomTextInput
               placeholder="SIGNUP.EMAIL_PLACEHOLDER"
               onChangeText={setEmail}
