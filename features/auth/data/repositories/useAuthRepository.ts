@@ -1,6 +1,6 @@
 import { AuthError } from '@/features/auth/domain/entities/errors/AuthError';
 import type { IAuthRepository } from '@/features/auth/domain/entities/repositories/IAuthRepository';
-import { ErrorCode, ensureError, fail, ok } from '@/features/core/error';
+import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
 import { useClerk, useSignIn, useSignUp } from '@clerk/clerk-expo';
 
 export const useAuthRepository = (): IAuthRepository => {
@@ -10,7 +10,7 @@ export const useAuthRepository = (): IAuthRepository => {
 
   return {
     signIn: async (email, password) => {
-      if (!signInLoaded) return fail(new AuthError(ErrorCode.AuthSignInFailed));
+      if (!signInLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
         const attempt = await signIn.create({ identifier: email, password });
         if (attempt.status === 'complete') {
@@ -19,23 +19,29 @@ export const useAuthRepository = (): IAuthRepository => {
         }
         return fail(new AuthError(ErrorCode.AuthSignInFailed));
       } catch (err) {
-        return fail(new AuthError(ErrorCode.AuthSignInFailed, ensureError(err)));
+        return fail(new BaseError('Sign-in failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
       }
     },
 
     signUp: async (email, password, fullName) => {
-      if (!signUpLoaded) return fail(new AuthError(ErrorCode.AuthSignUpFailed));
+      if (!signUpLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
         await signUp.create({ emailAddress: email, password, firstName: fullName });
+      } catch (err) {
+        return fail(new AuthError(ErrorCode.AuthSignUpFailed, ensureError(err)));
+      }
+      try {
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
         return ok(undefined);
       } catch (err) {
-        return fail(new AuthError(ErrorCode.AuthSignUpFailed, ensureError(err)));
+        return fail(
+          new BaseError('Failed to send verification email', ErrorCode.NetworkFailure, { cause: ensureError(err) }),
+        );
       }
     },
 
     verifyEmail: async code => {
-      if (!signUpLoaded) return fail(new AuthError(ErrorCode.AuthVerificationFailed));
+      if (!signUpLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
         const attempt = await signUp.attemptEmailAddressVerification({ code });
         if (attempt.status === 'complete') {
@@ -44,12 +50,12 @@ export const useAuthRepository = (): IAuthRepository => {
         }
         return fail(new AuthError(ErrorCode.AuthVerificationFailed));
       } catch (err) {
-        return fail(new AuthError(ErrorCode.AuthVerificationFailed, ensureError(err)));
+        return fail(new BaseError('Email verification failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
       }
     },
 
     sendPasswordResetCode: async email => {
-      if (!signInLoaded) return fail(new AuthError(ErrorCode.AuthPasswordResetFailed));
+      if (!signInLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
         await signIn.create({
           strategy: 'reset_password_email_code',
@@ -57,12 +63,14 @@ export const useAuthRepository = (): IAuthRepository => {
         });
         return ok(undefined);
       } catch (err) {
-        return fail(new AuthError(ErrorCode.AuthPasswordResetFailed, ensureError(err)));
+        return fail(
+          new BaseError('Password reset code delivery failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }),
+        );
       }
     },
 
     resetPassword: async (code, newPassword) => {
-      if (!signInLoaded) return fail(new AuthError(ErrorCode.AuthPasswordResetFailed));
+      if (!signInLoaded) return fail(new BaseError('Clerk not loaded', ErrorCode.NetworkFailure));
       try {
         const attempt = await signIn.attemptFirstFactor({
           strategy: 'reset_password_email_code',
@@ -70,12 +78,16 @@ export const useAuthRepository = (): IAuthRepository => {
           password: newPassword,
         });
         if (attempt.status === 'complete') {
-          await signOut();
+          try {
+            await signOut();
+          } catch {
+            /* best-effort cleanup — password already reset */
+          }
           return ok(undefined);
         }
         return fail(new AuthError(ErrorCode.AuthPasswordResetFailed));
       } catch (err) {
-        return fail(new AuthError(ErrorCode.AuthPasswordResetFailed, ensureError(err)));
+        return fail(new BaseError('Password reset failed', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
       }
     },
   };
