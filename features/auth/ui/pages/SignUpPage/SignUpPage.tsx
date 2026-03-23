@@ -20,8 +20,8 @@ const SignUpPage = () => {
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    fullName,
-    setFullName,
+    name,
+    setName,
     pendingVerification,
     code,
     setCode,
@@ -35,11 +35,7 @@ const SignUpPage = () => {
       <BasicView nameView={Routes.SignUp} statusBarStyle="dark" viewStyle={styles.verifyContainer}>
         <View style={styles.verifyContent}>
           <CustomText text="SIGNUP.EMAIL_VERIFICATION_CODE" style={styles.verifyTitle} />
-          <CustomTextInput
-            value={code}
-            placeholder="Enter your verification code"
-            onChangeText={code => setCode(code)}
-          />
+          <CustomTextInput value={code} placeholder="SIGNUP.VERIFICATION_CODE_PLACEHOLDER" onChangeText={setCode} />
           <CustomButtonLarge onPress={onVerifyPress} title="SIGNIN.VERIFY" isLoading={isLoading} />
         </View>
       </BasicView>
@@ -52,27 +48,23 @@ const SignUpPage = () => {
         <View style={styles.container}>
           <CustomText text="SIGNUP.SUBTITLE" style={styles.subtitle} />
           <View style={styles.inputContainer}>
-            <CustomTextInput
-              placeholder="SIGNUP.NAME_PLACEHOLDER"
-              onChangeText={(text: string) => setFullName(text)}
-              value={fullName}
-            />
+            <CustomTextInput placeholder="SIGNUP.NAME_PLACEHOLDER" onChangeText={setName} value={name} />
             <CustomTextInput
               placeholder="SIGNUP.EMAIL_PLACEHOLDER"
-              onChangeText={(text: string) => setEmail(text)}
+              onChangeText={setEmail}
               value={email}
               autoComplete="email"
               keyboardType="email-address"
             />
             <CustomTextInput
               placeholder="SIGNUP.PASSWORD_PLACEHOLDER"
-              onChangeText={(text: string) => setPassword(text)}
+              onChangeText={setPassword}
               value={password}
               isPassword
             />
             <CustomTextInput
               placeholder="SIGNUP.CONFIRM_PASSWORD_PLACEHOLDER"
-              onChangeText={(text: string) => setConfirmPassword(text)}
+              onChangeText={setConfirmPassword}
               value={confirmPassword}
               isPassword
             />

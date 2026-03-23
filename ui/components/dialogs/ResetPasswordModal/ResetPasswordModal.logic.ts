@@ -1,52 +1,23 @@
-import { logger } from '@/features/core/error';
+import { useResetPassword } from '@/features/auth/facades/useResetPassword';
 import { useToast } from '@/features/core/toast';
 import { useModalState } from '@/ui/state/modal/useModalState';
-import { useClerk, useSignIn } from '@clerk/clerk-expo';
 import { useState } from 'react';
+
+const emailRegex = /\S+@\S+\.\S+/;
 
 export const useResetPasswordModalLogic = () => {
   const { modalActions, modalSelectors } = useModalState();
-  const { showInfoToast, showSuccessToast } = useToast();
 
-  const { signOut } = useClerk();
+  const { sendCode, resetPassword, isLoading } = useResetPassword();
 
-  const closeModal = () => modalActions.hideResetPasswordModal();
-
-  const [successfulCreation, setSuccessfulCreation] = useState(false);
-
+  const [successfulCreation, setSuccessfulCreation] = useState<boolean>(false);
   const [code, setCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const emailRegex = /\S+@\S+\.\S+/;
+  const { showInfoToast } = useToast();
 
-  const { isLoaded, signIn } = useSignIn();
-
-  const handleCreateResetPasswordButton = async () => {
-    if (!emailRegex.test(email)) {
-      showInfoToast('GLOBAL.ERROR.INVALID_EMAIL');
-      return;
-    }
-
-    setIsLoading(true);
-
-    if (!isLoaded) return;
-
-    // Start sign-up process using email and password provided
-    try {
-      await signIn.create({
-        strategy: 'reset_password_email_code',
-        identifier: email,
-      });
-
-      setSuccessfulCreation(true);
-    } catch (error) {
-      logger.error(error as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const closeModal = () => modalActions.hideResetPasswordModal();
 
   const handleResetModal = () => {
     setCode('');
@@ -56,28 +27,18 @@ export const useResetPasswordModalLogic = () => {
     closeModal();
   };
 
-  const handleChangePasswordButton = async () => {
-    if (!isLoaded) return;
-
-    setIsLoading(true);
-
-    try {
-      const response = await signIn.attemptFirstFactor({
-        strategy: 'reset_password_email_code',
-        code,
-        password,
-      });
-
-      if (response.status === 'complete') {
-        await signOut();
-        showSuccessToast('SIGNIN.RESET_PASSWORD_SUCCESS');
-        handleResetModal();
-      }
-    } catch (error) {
-      logger.error(error as Error);
-    } finally {
-      setIsLoading(false);
+  const handleCreateResetPasswordButton = async () => {
+    if (!emailRegex.test(email)) {
+      showInfoToast('GLOBAL.ERROR.INVALID_EMAIL');
+      return;
     }
+    const success = await sendCode(email);
+    if (success) setSuccessfulCreation(true);
+  };
+
+  const handleChangePasswordButton = async () => {
+    const success = await resetPassword(code, password);
+    if (success) handleResetModal();
   };
 
   return {
