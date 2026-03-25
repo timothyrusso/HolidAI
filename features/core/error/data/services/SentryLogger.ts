@@ -1,5 +1,8 @@
+import { inject, injectable } from 'tsyringe';
+
+import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
-import { sentryClient } from '@/features/core/error/libraries/sentryClient';
+import type { ISentryErrorClient } from '@/features/core/sentry';
 
 /**
  * Production logger implementation that forwards errors to Sentry.
@@ -7,10 +10,13 @@ import { sentryClient } from '@/features/core/error/libraries/sentryClient';
  * Only `error()` is active — all other log levels are no-ops to avoid
  * sending noise to Sentry in production.
  */
+@injectable()
 export class SentryLogger implements ILogger {
+  constructor(@inject(ERROR_TYPES.SentryErrorClient) private readonly sentryClient: ISentryErrorClient) {}
+
   /** Captures the error as a Sentry exception with optional context metadata. */
   error(error: Error, context?: Record<string, unknown>): void {
-    sentryClient.captureException(error, context);
+    this.sentryClient.captureException(error, context);
   }
 
   /** No-op in production — informational logs are not forwarded to Sentry. */

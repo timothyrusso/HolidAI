@@ -14,6 +14,7 @@ export const initSentry = (): void => {
     dsn: Constants.expoConfig?.extra?.sentryDsn,
     sendDefaultPii: __DEV__,
     enableLogs: __DEV__,
+    tracesSampleRate: __DEV__ ? 1.0 : 0.1,
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1,
     integrations: [Sentry.mobileReplayIntegration(), sentryNavigationIntegration],
@@ -21,12 +22,17 @@ export const initSentry = (): void => {
   });
 };
 
-export const sentryClient = {
-  captureException(error: Error, context?: Record<string, unknown>): void {
-    Sentry.captureException(error, { extra: context });
-  },
+export const captureException = (error: Error, context?: Record<string, unknown>): void => {
+  Sentry.captureException(error, { extra: context });
+};
 
-  wrap<P extends Record<string, unknown>>(component: React.ComponentType<P>): React.ComponentType<P> {
-    return Sentry.wrap(component);
-  },
+export const wrap = <P extends Record<string, unknown>>(component: React.ComponentType<P>): React.ComponentType<P> => {
+  return Sentry.wrap(component);
+};
+
+export const startSpan = Sentry.startSpan;
+export const setMeasurement = Sentry.setMeasurement;
+
+export const registerNavigationContainer = (ref: unknown): void => {
+  sentryNavigationIntegration.registerNavigationContainer(ref);
 };

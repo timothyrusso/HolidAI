@@ -6,7 +6,7 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 }
 
 import { queryClient } from '@/di/resolve';
-import { initSentry, sentryClient, sentryNavigationIntegration } from '@/features/core/error';
+import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import i18n from '@/modules/translations/i18n';
@@ -38,11 +38,11 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <AppCrashView error={error} retry={retry} />;
 }
 
-export default sentryClient.wrap(function RootLayout() {
+export default wrap(function RootLayout() {
   const ref = useNavigationContainerRef();
   useEffect(() => {
     if (ref) {
-      sentryNavigationIntegration.registerNavigationContainer(ref);
+      registerNavigationContainer(ref);
     }
   }, [ref]);
 

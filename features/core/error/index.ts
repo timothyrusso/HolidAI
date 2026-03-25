@@ -6,5 +6,4 @@ export type { Result } from '@/features/core/error/domain/entities/Result';
 export type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
 export { ensureError } from '@/features/core/error/domain/utils/ensureError';
 export { useErrorMessage } from '@/features/core/error/hooks/useErrorMessage';
-export { initSentry, sentryClient, sentryNavigationIntegration } from '@/features/core/error/libraries/sentryClient';
 export { errorCodeToMessageKey } from '@/features/core/error/mappers/errorCodeToMessageKey';
