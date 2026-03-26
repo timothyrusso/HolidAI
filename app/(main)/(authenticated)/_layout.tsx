@@ -1,7 +1,12 @@
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { GenericCrashView } from '@/ui/components/errors/GenericCrashView/GenericCrashView';
 import { useAuth } from '@clerk/clerk-expo';
-import { Redirect, Stack } from 'expo-router';
+import { type ErrorBoundaryProps, Redirect, Stack } from 'expo-router';
+
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  return <GenericCrashView error={error} retry={retry} redirectTo={`/${Routes.HomePage}`} />;
+}
 
 export default function AuthLayout() {
   const { isSignedIn } = useAuth();
