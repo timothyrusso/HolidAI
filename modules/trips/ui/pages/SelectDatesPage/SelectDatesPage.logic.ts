@@ -20,7 +20,13 @@ export const useSelectDatesPageLogic = () => {
   const router = useRouter();
   const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
 
-  const handleDateChange = (date: Date, type: string) => {
+  const handleDateChange = (date: Date | null, type: 'START_DATE' | 'END_DATE') => {
+    if (!date) {
+      if (type === 'START_DATE') setStartDate(null);
+      if (type === 'END_DATE') setEndDate(null);
+      return;
+    }
+
     const timezoneFormattedDate = getTimezoneFormattedDateUseCase.execute(date);
 
     if (type === 'START_DATE') {
