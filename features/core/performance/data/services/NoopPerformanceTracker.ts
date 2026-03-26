@@ -10,11 +10,23 @@ import type { IPerformanceTracker } from '@/features/core/performance/domain/ent
  */
 @injectable()
 export class NoopPerformanceTracker implements IPerformanceTracker {
+  /**
+   * Executes the callback directly without creating a span.
+   *
+   * @param _options - Ignored in development.
+   * @param callback - The async operation to execute.
+   * @returns The result of the callback.
+   */
   startSpan<T>(_options: SpanOptions, callback: () => Promise<T>): Promise<T> {
     return callback();
   }
 
-  setMeasurement(_name: string, _value: number, _unit: MeasurementUnit): void {
-    /* no-op in development */
-  }
+  /**
+   * No-op in development — measurements are not recorded.
+   *
+   * @param _name - Ignored.
+   * @param _value - Ignored.
+   * @param _unit - Ignored.
+   */
+  setMeasurement(_name: string, _value: number, _unit: MeasurementUnit): void {}
 }

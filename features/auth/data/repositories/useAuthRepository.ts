@@ -79,7 +79,7 @@ export const useAuthRepository = (): IAuthRepository => {
           try {
             await signOut();
           } catch {
-            /* best-effort cleanup — password already reset */
+            /*TODO: best-effort cleanup — password already reset */
           }
           return ok(undefined);
         }
