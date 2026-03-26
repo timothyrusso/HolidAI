@@ -5,10 +5,10 @@ import type { ZodType, z } from 'zod';
 
 import { AI_TYPES } from '@/features/ai/di/types';
 import type { AiModels } from '@/features/ai/domain/entities/AiModels';
-import { SpanKeys } from '@/features/ai/domain/entities/SpanKeys';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
-import { PERFORMANCE_TYPES } from '@/features/core/performance';
+import { SpanKeys } from '@/features/ai/domain/utils/SpanKeys';
 import type { IPerformanceTracker } from '@/features/core/performance';
+import { PERFORMANCE_TYPES } from '@/features/core/performance';
 
 @injectable()
 export class GeminiClient implements IAiClient {

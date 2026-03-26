@@ -67,10 +67,34 @@ ai.extract.total_tokens            ← total tokens for the structured extractio
 
 ---
 
+## SpanKeys — where to define them
+
+Each feature that uses `startSpan` must define its span keys in a `SpanKeys.ts` file under its own `domain/utils/` folder:
+
+```
+features/<name>/domain/utils/SpanKeys.ts
+```
+
+Span keys are performance metadata — not business entities — so they belong in `domain/utils/` rather than `domain/entities/`. The file exports a single `SpanKeys` const object grouping all spans for that feature:
+
+```ts
+// features/ai/domain/utils/SpanKeys.ts
+export const SpanKeys = {
+  generate: { name: 'ai.generate', op: 'ai.run' },
+  search:   { name: 'ai.search',   op: 'ai.run' },
+  extract:  { name: 'ai.extract',  op: 'ai.run' },
+} as const;
+```
+
+Call sites import from the feature's own `domain/utils/SpanKeys` — never define span name strings inline.
+
+---
+
 ## Where to call `performanceTracker`
 
 | Layer | Allowed |
 |---|---|
+| `data/services/` | ✅ Wrap external I/O boundaries (HTTP clients, SDK wrappers) with `startSpan` — measure the actual call, not the coordination around it |
 | `facades/` | ✅ Wrap async coordination flows with `startSpan` |
 | `.logic.ts` (ViewModel) | ✅ Wrap flows not covered by a facade |
 | `useCases/` | ❌ Performance tracking is a coordination concern, not business logic |

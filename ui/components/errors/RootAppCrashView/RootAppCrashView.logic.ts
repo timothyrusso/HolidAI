@@ -7,7 +7,9 @@ export const useRootAppCrashViewLogic = ({ error, retry }: ErrorBoundaryProps) =
 
   // Exception to the "log only in useCases/" rule — see ERROR_HANDLING.md Exceptions.
   // Sentry already captures this via Sentry.wrap(), so this log is for the dev console only.
-  logger.error(error, { source: 'RootAppCrashView' });
+  if (__DEV__) {
+    logger.error(error, { source: 'RootAppCrashView' });
+  }
 
   const message = t('ERRORS.GENERIC');
   return { message, retry, t };

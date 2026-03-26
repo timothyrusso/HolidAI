@@ -13,11 +13,13 @@ export const useGenericCrashViewLogic = ({ error, retry, redirectTo }: GenericCr
 
   // Exception to the "log only in useCases/" rule — see ERROR_HANDLING.md Exceptions.
   // Sentry already captures this via Sentry.wrap(), so this log is for the dev console only.
-  logger.error(error, { source: 'GenericCrashView' });
+  if (__DEV__) {
+    logger.error(error, { source: 'GenericCrashView' });
+  }
 
-  const handleRetry = async () => {
+  const handleRetry = () => {
     router.replace(redirectTo);
-    await retry();
+    retry();
   };
 
   const message = t('ERRORS.GENERIC');
