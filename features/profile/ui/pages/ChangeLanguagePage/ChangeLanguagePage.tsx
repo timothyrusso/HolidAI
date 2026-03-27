@@ -1,10 +1,11 @@
+import { LanguageItem } from '@/features/profile/ui/components/LanguageItem/LanguageItem';
 import { Routes } from '@/modules/navigation/domain/entities/routes';
 import { Languages } from '@/modules/shared/domain/Languages';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { LanguageItem } from '../../components/LanguageItem/LanguageItem';
 import { useChangeLanguagePageLogic } from './ChangeLanguagePage.logic';
 import { styles } from './ChangeLanguagePage.style';
+
 export const ChangeLanguagePage = () => {
   const { changeLanguageHandler, selectedLanguage, isLoading } = useChangeLanguagePageLogic();
 

@@ -37,6 +37,26 @@ export const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: spacing.separator80,
   },
+  avatarSkeleton: {
+    width: components.profileImageHeight,
+    height: components.profileImageHeight,
+    borderRadius: components.profileImageHeight / 2,
+  },
+  nameSkeleton: {
+    width: '40%',
+    height: spacing.Fourfold,
+    borderRadius: spacing.Double,
+    alignSelf: 'center',
+    marginTop: spacing.Double,
+  },
+  emailSkeleton: {
+    width: '55%',
+    height: spacing.Double + spacing.Minimal,
+    borderRadius: spacing.Double,
+    alignSelf: 'center',
+    marginTop: spacing.Triple,
+    marginBottom: spacing.Fourfold,
+  },
   skeletonContainer: {
     marginHorizontal: spacing.Fourfold,
   },

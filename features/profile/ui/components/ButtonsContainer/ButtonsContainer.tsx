@@ -39,8 +39,13 @@ export const ButtonsContainer: FC<ButtonsContainerProps> = ({
   return (
     <View style={style.container}>
       <Pressable
-        style={({ pressed }) => [style.button, pressed && style.pressed, firstIsLoading && style.isLoading]}
-        onPress={firstIsLoading ? undefined : firstOnPress}
+        style={({ pressed }) => [
+          style.button,
+          pressed && !firstIsLoading && style.pressed,
+          firstIsLoading && style.isLoading,
+        ]}
+        onPress={firstOnPress}
+        disabled={firstIsLoading}
       >
         <View style={style.titleContainer}>
           <CustomIcon name={firstIcon} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
@@ -56,10 +61,11 @@ export const ButtonsContainer: FC<ButtonsContainerProps> = ({
         style={({ pressed }) => [
           style.button,
           style.topBorder,
-          pressed && style.pressed,
+          pressed && !secondIsLoading && style.pressed,
           secondIsLoading && style.isLoading,
         ]}
-        onPress={secondIsLoading ? undefined : secondOnPress}
+        onPress={secondOnPress}
+        disabled={secondIsLoading}
       >
         <View style={style.titleContainer}>
           <CustomIcon name={secondIcon} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
@@ -75,10 +81,11 @@ export const ButtonsContainer: FC<ButtonsContainerProps> = ({
         style={({ pressed }) => [
           style.button,
           style.topBorder,
-          pressed && style.pressed,
+          pressed && !thirdIsLoading && style.pressed,
           thirdIsLoading && style.isLoading,
         ]}
-        onPress={thirdIsLoading ? undefined : thirdOnPress}
+        onPress={thirdOnPress}
+        disabled={thirdIsLoading}
       >
         {thirdIsLoading ? (
           <ActivityIndicator size="small" color={colors.primaryBlack} />
