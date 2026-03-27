@@ -79,7 +79,8 @@ export const useAuthRepository = (): IAuthRepository => {
           try {
             await signOut();
           } catch {
-            /*TODO: best-effort cleanup — password already reset */
+            // Intentional no-op — signOut is best-effort cleanup after a successful
+            // password reset. Failure here is non-critical and does not affect the user.
           }
           return ok(undefined);
         }
