@@ -20,8 +20,17 @@ export const useSelectDatesPageLogic = () => {
   const router = useRouter();
   const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
 
-  const handleDateChange = (date: Date, type: string) => {
-    const timezoneFormattedDate = getTimezoneFormattedDateUseCase.execute(date);
+  const handleDateChange = (date: Date, type?: 'START_DATE' | 'END_DATE') => {
+    // The library's types declare date as Date, but passes null at runtime during
+    // mid-range selection. The cast and null guard are intentional.
+    const safeDate = date as Date | null;
+    if (!safeDate) {
+      if (type === 'START_DATE') setStartDate(null);
+      if (type === 'END_DATE') setEndDate(null);
+      return;
+    }
+
+    const timezoneFormattedDate = getTimezoneFormattedDateUseCase.execute(safeDate);
 
     if (type === 'START_DATE') {
       setStartDate(timezoneFormattedDate);

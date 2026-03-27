@@ -21,14 +21,16 @@ Follow these rules on every task that involves writing or modifying code. If a s
 
 ## Import rules
 
-| Layer | Can import |
+**Cross-feature imports (all layers):** dependencies only flow downward through the tier stack, always via the target feature's `index.ts`. Never import from a peer or higher tier, never reach into internal folders. See Feature Dependency Tiers in the architecture doc.
+
+| Layer | Can import (within feature) |
 |---|---|
 | `.tsx` | ViewModel (`.logic.ts`), UI components, styles |
-| `.logic.ts` (ViewModel) | facades, hooks, mappers, `features/core/utils` (via `index.ts`), same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, state |
-| `facades/` | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores |
+| `.logic.ts` (ViewModel) | facades, hooks, mappers, use cases via `di/resolve`, state |
+| `facades/` | hook-based repos, use cases via `di/resolve`, other facades, utility hooks, state |
 | `hooks/` | domain types, mappers, state, external library hooks only |
 | `mappers/` | domain types only |
-| `useCases/` | IoC repository interfaces, IoC service interfaces, domain entities, `domain/utils/` |
+| `useCases/` | repository interfaces, service interfaces, domain entities, `domain/utils/` |
 | `data/repositories/` | domain interfaces, DTOs, adapters |
 
 ## Naming conventions

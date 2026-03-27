@@ -6,17 +6,18 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 }
 
 import { queryClient } from '@/di/resolve';
-import { initSentry, sentryClient, sentryNavigationIntegration } from '@/features/core/error';
+import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import i18n from '@/modules/translations/i18n';
-import { AppCrashView } from '@/ui/components/errors/AppCrashView/AppCrashView';
+import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
 import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
+import { reloadAppAsync } from 'expo';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
@@ -34,15 +35,15 @@ const InitialLayout = () => {
   );
 };
 
-export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
-  return <AppCrashView error={error} retry={retry} />;
+export function ErrorBoundary({ error }: ErrorBoundaryProps) {
+  return <RootAppCrashView error={error} retry={() => reloadAppAsync()} />;
 }
 
-export default sentryClient.wrap(function RootLayout() {
+export default wrap(function RootLayout() {
   const ref = useNavigationContainerRef();
   useEffect(() => {
     if (ref) {
-      sentryNavigationIntegration.registerNavigationContainer(ref);
+      registerNavigationContainer(ref);
     }
   }, [ref]);
 

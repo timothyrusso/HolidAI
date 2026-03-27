@@ -9,8 +9,8 @@
 - **Feature-first** — code is grouped by business capability, not by technical layer. Open a feature folder and understand its full scope end to end.
 - **Inward dependencies** — outer layers depend on inner ones, never the reverse. `ui` → `facades/hooks/state` → `useCases` → `domain`.
 - **Abstraction over coupling** — feature code depends on interfaces, not concrete implementations. Swapping a library only affects its wrapper, not any feature.
-- **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories for reactive backends that require React lifecycle and auth context.
-- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features.
+- **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories when the underlying SDK only exposes a React hook API and cannot be wrapped in a class singleton (e.g. reactive real-time backends like Convex, or auth SDKs like Clerk that are hook-only by design).
+- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features. Features are organised into dependency tiers — dependencies only flow downward, never between peers. See [Feature Dependency Tiers](#feature-dependency-tiers).
 - **Start simple, promote when needed** — components, facades, and hooks start local. They move to a shared location only when a second consumer appears.
 
 ---
@@ -22,7 +22,11 @@ This project follows a **feature-first Clean Architecture**. Each self-contained
 The app uses two complementary dependency injection patterns:
 
 - **IoC container singletons** (e.g. tsyringe) for stateless services: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
-- **Hook-based repositories** for reactive backend data access (e.g. Convex). The backend client exposes reactive hooks that subscribe to real-time updates and depend on the auth context provided by the app's auth provider (e.g. Clerk). Forcing them into a class singleton would lose reactivity and break auth. Repository interfaces are defined in `domain/` and implemented as hooks in `data/repositories/`.
+- **Hook-based repositories** when the underlying SDK only exposes a React hook API and cannot be wrapped in a class singleton. Two distinct cases apply:
+  - **Reactive backends** (e.g. Convex) — the client exposes `useQuery`-style hooks that subscribe to real-time updates. Forcing them into a class singleton would lose reactivity.
+  - **Hook-only SDKs** (e.g. Clerk) — the SDK exposes its API exclusively as React hooks (`useSignIn`, `useClerk`, etc.) with no class-friendly alternative. The operations may be async rather than reactive, but a class singleton is still not possible.
+
+  In both cases, repository interfaces are defined in `domain/` and implemented as hooks in `data/repositories/`.
 
 ### What is an IoC container?
 
@@ -107,7 +111,7 @@ features/core/<sub-module>/
 └── index.ts                 (public API of the sub-module)
 ```
 
-Every feature is **isolated**: `features/items/` cannot reach into `features/entity/` internals. If logic or types are needed across features, they either:
+Every feature is **isolated**: `features/items/` cannot reach into `features/catalog/` internals. If logic or types are needed across features, they either:
 
 - Move into `features/core/` (foundational infrastructure) or the relevant `core` sub-module
 - Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
@@ -141,14 +145,14 @@ Not every feature needs an `index.ts` — only create one when another feature a
 
 
 ```ts
-// features/entity/index.ts
-export type { Entity } from './domain/entities/Entity';           // ✅ domain type
-export { useGetEntityStatus } from './facades/useGetEntityStatus'; // ✅ facade
+// features/catalog/index.ts
+export type { Catalog } from './domain/entities/Catalog';             // ✅ domain type
+export { useGetCatalogStatus } from './facades/useGetCatalogStatus';  // ✅ facade
 
 // never exported:
-// export { useItemRepository } from './data/repositories/...' ❌
-// export { getEntityUseCase } from './di/resolve'             ❌
-// export { EntityResponseDTO } from './data/dtos/...'         ❌
+// export { useItemRepository } from './data/repositories/...'  ❌
+// export { getCatalogUseCase } from './di/resolve'              ❌
+// export { CatalogResponseDTO } from './data/dtos/...'          ❌
 ```
 
 > **Exception — `features/core/` sub-modules:** Core sub-modules are foundational infrastructure shared across the whole app, not feature boundaries. Their `index.ts` may re-export IoC singletons and use cases when other features need to call them directly (e.g. `logger`, `fetchImageUseCase`). This is the deliberate exception to the "Class use cases" and "`di/resolve.ts` exports" rows above. Regular features (`items`, `entity`, etc.) follow the strict rule — use cases are internal, only facades cross the boundary.
@@ -157,24 +161,24 @@ export { useGetEntityStatus } from './facades/useGetEntityStatus'; // ✅ facade
 
 ```ts
 // ✅ Import domain types from another feature's public API
-import type { Entity } from '@/features/entity';
+import type { Catalog } from '@/features/catalog';
 
 // ✅ Import facades from another feature's public API
-import { useGetEntityStatus } from '@/features/entity';
+import { useGetCatalogStatus } from '@/features/catalog';
 
 // ✅ Import from a core sub-module via its public API (index.ts) — hooks, types, AND IoC singletons
 import { useGetImage } from '@/features/core/images';
 import { logger } from '@/features/core/error';
 
 // ❌ Never reach into another feature's internal folders
-import { useItemRepository } from '@/features/entity/data/repositories/useConvexEntityRepository';
+import { useItemRepository } from '@/features/catalog/data/repositories/useConvexCatalogRepository';
 
 // ❌ Never reach into a core sub-module's internal folders — di/resolve.ts is internal to the owning feature
 import { logger } from '@/features/core/error/di/resolve';
 import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
 ```
 
-`**di/resolve.ts` is internal to its feature.** Within a feature, files import their own resolved singletons via `di/resolve.ts` directly. Outside the feature, consumers always go through the sub-module's `index.ts`. Core sub-modules re-export their public IoC singletons from `index.ts`:
+**`di/resolve.ts` is internal to its feature.** Within a feature, files import their own resolved singletons via `di/resolve.ts` directly. Outside the feature, consumers always go through the sub-module's `index.ts`. Core sub-modules re-export their public IoC singletons from `index.ts`:
 
 ```ts
 // features/core/error/index.ts
@@ -197,6 +201,116 @@ export { useGetImage } from './facades/useGetImage';            // facade
 | UI component needed by many features                                                      | Promote to global `ui/components/`                                                                                                                                                                                                                                          |
 | UI component needed by one other feature                                                  | Before sharing, ask: does the other feature need the component itself, or just the data? If it just needs the data, it can build its own version. If the component is truly needed as-is, promote it to global `ui/components/` — never export UI components via `index.ts` |
 
+> **When the consumer is a same-tier feature:** the table above does not apply — same-tier features cannot import from each other regardless of what is being shared. Extract the shared concept to a lower-tier feature, move it to `features/core/` if it is infrastructural, or introduce a Tier 3 orchestration feature. See [Feature Dependency Tiers](#feature-dependency-tiers).
+
+---
+
+## Feature Dependency Tiers
+
+Features are not all equal — they sit at different levels of the dependency stack. Understanding this hierarchy is what lets you decide whether a cross-feature import is valid before writing a single line of code.
+
+### The tier model
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                 Tier 3 — Orchestration                   │
+│          checkout-flow, onboarding-flow, ...             │
+│    coordinates multiple domain features — no entity      │
+│         of its own. Valid tool, use sparingly.           │
+└─────────────────────────┬────────────────────────────────┘
+                          │ can import ↓
+┌──────────────────────────────────────────────────────────┐
+│                   Tier 2 — Domain                        │
+│            orders, inventory, catalog, ...               │
+│      owns a domain entity specific to this app.          │
+│      ← peers: no imports between Tier 2 features →       │
+└─────────────────────────┬────────────────────────────────┘
+                          │ can import ↓
+┌──────────────────────────────────────────────────────────┐
+│                 Tier 1 — Foundation                      │
+│             identity, settings, locale, ...              │
+│    cross-cutting concerns, no specific domain entity.    │
+│      ← peers: no imports between Tier 1 features →       │
+└─────────────────────────┬────────────────────────────────┘
+                          │ can import ↓
+┌──────────────────────────────────────────────────────────┐
+│                    Tier 0 — Core                         │
+│            error, storage, http, images, utils           │
+│    pure infrastructure — no business logic,              │
+│         no dependency on any business feature.           │
+└──────────────────────────────────────────────────────────┘
+```
+
+The single governing rule: **dependencies only flow downward**. A feature may import from any feature in a lower tier. It may never import from a peer (same tier) or from a higher tier. There are no exceptions.
+
+### Classifying a feature
+
+Use this decision tree when adding a new feature or questioning whether an existing one is correctly placed:
+
+```
+Is it pure infrastructure with no business logic?
+  Yes → Tier 0 (Core)
+  No  ↓
+
+Does it coordinate multiple domain features to do its job,
+with no domain entity of its own?
+  Yes → Tier 3 (Orchestration)
+  No  ↓
+
+Does it model a concept specific to this app's domain
+(an entity or capability tied to what the product does)?
+  Yes → Tier 2 (Domain)
+  No  → Tier 1 (Foundation)
+```
+
+**Tier 2 vs Tier 3 — the ownership question:**
+- A Tier 2 feature *owns* a domain concept — it has a meaningful `domain/entities/` at its core.
+- A Tier 3 feature *coordinates* concepts owned by others — it has no entity of its own. If you cannot point to a single primary entity that lives in this feature, it is Tier 3.
+
+**Tier 1 vs Tier 2 — the specificity question:**
+- Would this feature exist in almost any app, regardless of business domain? → **Tier 1** (e.g. `identity`, `locale`, `settings`)
+- Is this feature specific to what this app does? → **Tier 2** (e.g. `orders`, `catalog`, `inventory`)
+
+### Practical examples
+
+**Valid — downward dependency**
+
+`orders` (Tier 2) needs the current user to scope its data → imports `useCurrentUser` from `identity` (Tier 1) via its `index.ts`. One tier down, one direction. Clean.
+
+```ts
+// features/orders/facades/useOrderList.ts
+import { useCurrentUser } from '@/features/identity'; // ✅ Tier 2 → Tier 1
+```
+
+**Invalid — peer dependency**
+
+`inventory` (Tier 2) wants to import a type from `orders` (Tier 2). Both are peers — blocked, no exceptions. Two resolutions:
+
+- If the shared type is infrastructural → move it down to `features/core/`.
+- If both features genuinely need to coordinate → that coordination is a Tier 3 responsibility. Introduce an orchestration feature that imports from both.
+
+**Valid — Tier 3 orchestration**
+
+`checkout-flow` (Tier 3) drives a multi-step purchase flow that spans `orders`, `inventory`, and `payments`. It has no entity of its own — its sole job is coordination. It imports facades from all three Tier 2 features; the domain features remain unaware of each other.
+
+```ts
+// features/checkout-flow/facades/useCheckout.ts
+import { useOrderDraft } from '@/features/orders';         // ✅ Tier 3 → Tier 2
+import { useInventoryCheck } from '@/features/inventory';  // ✅ Tier 3 → Tier 2
+import { usePayment } from '@/features/payments';          // ✅ Tier 3 → Tier 2
+```
+
+### Design smell: upward or circular dependency
+
+If you find yourself needing to import from a higher tier or from a peer, stop. It is always a signal that something is misclassified or misplaced:
+
+| Symptom | Root cause | Resolution |
+| --- | --- | --- |
+| A Tier 1 feature needs something from Tier 2 | The Tier 1 feature is probably Tier 2 itself | Reclassify it |
+| Two Tier 2 features need each other | A shared concept has no clear owner | Extract the shared concept to a lower tier, or introduce a Tier 3 coordinator |
+| A Tier 2 feature needs something from Tier 3 | The Tier 3 feature owns something it shouldn't | Move that concept down into its own Tier 2 feature |
+
+Never work around these by restructuring imports. Resolve the classification first.
 
 ---
 
@@ -210,7 +324,7 @@ The core of the feature. Contains only pure TypeScript — no external library i
 
 Pure domain models — TypeScript interfaces, types, and constants that represent the concepts of this feature in the app's own language, not in an external API's language.
 
-`**interface` vs `type**`
+**`interface` vs `type`**
 
 - Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
 - Use `type` for unions, aliases, or intersections — anything that is not a plain object shape.
@@ -221,7 +335,7 @@ type ItemStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
 type ItemWithStatus = Item & { status: ItemStatus };  // ✅ intersection → type
 ```
 
-`**enum` vs `const**`
+**`enum` vs `const`**
 Avoid TypeScript `enum` — it generates unexpected runtime code, behaves differently between regular and `const enum`, and does not tree-shake well. Use a `const` object with `as const` instead:
 
 ```ts
@@ -512,11 +626,13 @@ Thin wrappers around external libraries. No business logic — only API normaliz
 
 `data/services/` implementations are the **exclusive consumers** of library wrappers in the class-based pattern. Class-based repositories never import from `libraries/` directly — they receive service interfaces via constructor injection, and the service implementation calls the library wrapper internally.
 
-**Two documented exceptions:**
+**Three documented exceptions:**
 
 1. **Hook-based repositories** import Convex and auth hooks directly — a structural necessity of the hook-based repository pattern (see `data/repositories/`).
 
 2. **Hook-based service layers** — when a feature has no class-based service (because the functionality is inherently React lifecycle-bound), the hook that wraps the library *is* the service layer. In this case the hook may import from `libraries/` directly. The condition is strict: there must be no meaningful service interface to extract — the hook IS the entire service. Example: `useToast` in `features/core/toast/` wraps `toastClient` from `libraries/` because toast display is a UI-only concern with no swappable implementation interface. Adding a class-based `IToastService` would be pure ceremony with no architectural benefit.
+
+3. **SDK bootstrap functions** — one-time SDK setup operations that must run at app startup, before the DI container is meaningful, do not benefit from being behind an injectable interface. These are re-exported from the feature's `index.ts` as standalone functions and consumed directly by `app/_layout.tsx`. The condition is strict: the function must be a true one-time bootstrap call (not a runtime service operation), and there must be no scenario where the behaviour needs to vary or be mocked. Current example: `initSentry`, `wrap`, and `registerNavigationContainer` in `features/core/sentry/` — all three configure the Sentry SDK at startup and are called exactly once in `app/_layout.tsx`. Runtime service operations from the same SDK (`captureException`, `startSpan`, `setMeasurement`) are properly behind `ISentryErrorClient` / `ISentryPerfClient` interfaces and injected via the container.
 
 **How to decide if a library needs a wrapper:** ask "if I swap this library for another, how many files change?" If the answer is more than one file, the library needs a wrapper. That wrapper becomes the only file to update on swap.
 
@@ -571,16 +687,19 @@ Application logic that orchestrates domain entities, repositories, and services 
 
 Use cases can depend on both **repository interfaces** (data access) and **service interfaces** (capabilities) — both are infrastructure concerns injected via their interfaces.
 
-Use cases with no external dependencies have an empty constructor. They still receive runtime data as method parameters:
+All use case dependencies are declared in the constructor and injected by the IoC container. Use cases with no dependencies omit the constructor entirely.
 
 ```ts
 // features/items/useCases/FilterItemsUseCase.ts
 // registered in di/config.ts
-import { getTodayInLocalTimezoneUseCase } from '@/features/core/dates';
-
 export class FilterItemsUseCase {
+  constructor(
+    @inject(DATES_TYPES.GetTodayInLocalTimezoneUseCase)
+    private getTodayUseCase: IGetTodayInLocalTimezoneUseCase,
+  ) {}
+
   execute(items: Item[]): Item | undefined {
-    const today = getTodayInLocalTimezoneUseCase.execute().toISOString().split('T')[0];
+    const today = this.getTodayUseCase.execute().toISOString().split('T')[0];
     return items
       .filter(item => item.startDate >= today)
       .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
@@ -588,12 +707,12 @@ export class FilterItemsUseCase {
 }
 ```
 
-Use cases that need capabilities inject them via the constructor — both repository interfaces (data access) and service interfaces (capabilities like AI or logging) are valid dependencies. Both are pure TypeScript interfaces defined in `domain/` and neither exposes a concrete implementation:
+Service interfaces (capabilities like AI or logging) are equally valid constructor dependencies — both are pure TypeScript interfaces defined in `domain/` and neither exposes a concrete implementation:
 
 ```ts
 // features/items/useCases/GenerateItemUseCase.ts
 // registered in di/config.ts
-import { buildPayloadUseCase } from '@/features/ai';
+import { buildItemPrompt } from '@/features/items/domain/utils/buildItemPrompt'; // own domain util — no cross-feature import
 
 export class GenerateItemUseCase {
   constructor(
@@ -603,9 +722,9 @@ export class GenerateItemUseCase {
 
   async execute(formData: ItemFormData): Promise<Result<GeneratedItem>> {
     try {
-      const prompt = buildPayloadUseCase.execute(formData);
-      const trip = await this.aiService.generateObject(prompt, generateItemSchema, AiModel.Default);
-      return ok(trip);
+      const prompt = buildItemPrompt(formData);
+      const result = await this.aiService.generateObject(prompt, generateItemSchema, AiModel.Default);
+      return ok(result);
     } catch (err) {
       const error = ensureError(err);
       this.logger.error(error, { context: 'GenerateItemUseCase', formData });
@@ -1550,7 +1669,7 @@ This section briefly explains the design patterns used in this architecture. You
 
 **What it is:** A module exposes only a curated set of exports via an entry point (`index.ts`). Internal implementation files are not directly importable by consumers.
 
-**How we use it:** Each feature that shares something with another feature has an `index.ts` that explicitly lists what is public. Consumers import from `@/features/entity`, never from `@/features/entity/data/repositories/...`. This keeps internal refactoring invisible to the outside.
+**How we use it:** Each feature that shares something with another feature has an `index.ts` that explicitly lists what is public. Consumers import from `@/features/catalog`, never from `@/features/catalog/data/repositories/...`. This keeps internal refactoring invisible to the outside.
 
 ---
 
