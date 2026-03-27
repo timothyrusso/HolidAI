@@ -517,3 +517,44 @@ The log is called inline (not in a `useEffect`) because the error boundary only 
 ### `AppCrashView` — rendering `error.message` (exception to rule 5)
 
 `AppCrashView` previously rendered `error.message` directly. It now shows a generic localized string (`ERRORS.GENERIC`) to the user, which is the correct approach. The raw `error` is passed to `logger.error()` instead, where it belongs.
+
+---
+
+## Frequently questioned patterns
+
+Patterns that look wrong at a glance but are intentional. Reference this section in code review responses.
+
+### Loading state not guarded by `try/finally` in facades
+
+Reviewers sometimes flag code like this:
+
+```ts
+const logout = async (): Promise<boolean> => {
+  setIsLoading(true);
+  const result = await repo.signOut();  // ← no try/finally around this
+  setIsLoading(false);
+  if (!result.success) {
+    showErrorToast(result.error);
+    return false;
+  }
+  return true;
+};
+```
+
+The suggested fix is usually:
+
+```ts
+try {
+  const result = await repo.signOut();
+  if (!result.success) { ... }
+  return true;
+} finally {
+  setIsLoading(false);
+}
+```
+
+**This is intentionally rejected.** The repository contract guarantees that no exception ever escapes a repository method — every repository wraps its operations in `try/catch` and returns `fail(ensureError(err))` on failure. `result` is always a `Result<T>`, never a throw. The `finally` guard is therefore unnecessary.
+
+If `repo.signOut()` did throw past its own `try/catch`, that would be a bug in the repository — and the correct fix is to make the repository honour its contract, not to silently swallow the exception in the facade. Adding `try/finally` to facades would mask repository bugs instead of surfacing them, and would need to be repeated at every call site across every facade.
+
+**What to check if this concern arises:** look at the repository implementation. Every async method must have a `try/catch` that returns `fail(ensureError(err))`. If that block is missing or incomplete, fix it there.
