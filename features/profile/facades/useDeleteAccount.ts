@@ -6,7 +6,7 @@ import { useState } from 'react';
 export const useDeleteAccount = () => {
   const repo = useProfileRepository();
   const { showErrorToast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const deleteAccount = async (): Promise<boolean> => {
     setIsLoading(true);

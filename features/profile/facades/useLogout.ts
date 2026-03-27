@@ -5,7 +5,7 @@ import { useState } from 'react';
 export const useLogout = () => {
   const repo = useProfileRepository();
   const { showErrorToast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const logout = async (): Promise<boolean> => {
     setIsLoading(true);
