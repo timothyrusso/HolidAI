@@ -12,6 +12,8 @@ export const useProfilePageLogic = () => {
   const { logout, isLoading: isLogoutLoading } = useLogout();
   const { deleteAccount, isLoading: isDeleteAccountLoading } = useDeleteAccount();
 
+  const isUserLoading = !userId;
+
   const avatar = createAvatar(thumbs, {
     radius: components.profileImageHeight / 2,
     seed: userId,
@@ -37,6 +39,7 @@ export const useProfilePageLogic = () => {
 
   return {
     avatar,
+    isUserLoading,
     username,
     email,
     totalTrips,

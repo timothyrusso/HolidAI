@@ -16,7 +16,7 @@ export const useProfileRepository = (): IProfileRepository => {
         ? {
             id: user.id,
             firstName: user.firstName,
-            email: user.emailAddresses[0]?.emailAddress,
+            email: user.primaryEmailAddress?.emailAddress,
           }
         : undefined,
 

@@ -67,11 +67,15 @@ export const ErrorCode = {
   Unauthorized:     'Unauthorized',
   NetworkFailure:   'NetworkFailure',
   GenerationFailed: 'GenerationFailed',
-  // add more as needed
+  Unknown:          'Unknown',
 } as const;
 
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
 ```
+
+**`ErrorCode.Unknown` — migration placeholder.** Used by feature-specific error classes (`AuthError`, `ProfileError`, etc.) during the migration phase, before named per-feature codes are introduced. It signals "this failure has a domain name but no UI-distinct code yet". It maps to `ERRORS.GENERIC` in `errorCodeToMessageKey` — the same fallback as any unmapped code. Once all features are migrated, a dedicated error handling polish pass replaces `Unknown` with specific codes (e.g. `AuthSignInFailed`, `ProfileDeleteFailed`) for each failure mode that the UI needs to handle differently.
+
+Do not use `Unknown` for genuinely unexpected errors caught in a `catch` block — use `UnexpectedError` for those. `Unknown` is only for explicit, named failure states that have not yet been assigned a final code.
 
 ### `ensureError` — `features/core/error/domain/utils/ensureError.ts`
 

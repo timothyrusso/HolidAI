@@ -17,6 +17,7 @@ export const ProfilePage = () => {
     handleLogout,
     handleDeleteAccount,
     avatar,
+    isUserLoading,
     username,
     email,
     totalTrips,
@@ -32,13 +33,23 @@ export const ProfilePage = () => {
   return (
     <BasicView nameView={Stacks.Profile} isMenuVisible statusBarStyle="dark" hasHeader={false}>
       <CustomScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatar}>
-            <SvgXml xml={avatar} width={components.profileImageHeight} height={components.profileImageHeight} />
+        {isUserLoading ? (
+          <View style={styles.avatarContainer}>
+            <BaseSkeleton style={styles.avatarSkeleton} />
+            <BaseSkeleton style={styles.nameSkeleton} />
+            <BaseSkeleton style={styles.emailSkeleton} />
           </View>
-        </View>
-        {username && <CustomText text={username} style={styles.name} />}
-        {email && <CustomText text={email} style={styles.email} />}
+        ) : (
+          <>
+            <View style={styles.avatarContainer}>
+              <View style={styles.avatar}>
+                <SvgXml xml={avatar} width={components.profileImageHeight} height={components.profileImageHeight} />
+              </View>
+            </View>
+            {username && <CustomText text={username} style={styles.name} />}
+            {email && <CustomText text={email} style={styles.email} />}
+          </>
+        )}
         {isTripDataLoading ? (
           <View style={styles.skeletonContainer}>
             <BaseSkeleton style={styles.skeleton} />

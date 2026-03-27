@@ -7,10 +7,12 @@ export const useProfileData = () => {
   const { isLoading: isTripsLoading, getTotalTrips, getFavouriteTrips } = useGetUserTrips();
   const { getUserTokens } = useGetUserStatus();
 
+  const user = repo.getUser();
+
   return {
-    userId: repo.getUser()?.id,
-    username: repo.getUser()?.firstName,
-    email: repo.getUser()?.email,
+    userId: user?.id,
+    username: user?.firstName,
+    email: user?.email,
     totalTrips: getTotalTrips(),
     favoriteTrips: getFavouriteTrips(),
     userTokens: getUserTokens(),
