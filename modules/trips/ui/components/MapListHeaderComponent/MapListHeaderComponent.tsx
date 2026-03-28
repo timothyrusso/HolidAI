@@ -1,9 +1,9 @@
-import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
+import { PlatformOS } from '@/ui/PlatformOS';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { Platform, View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
-import type { AllCoordinates } from '../../TripDetailsPage.logic';
+import type { AllCoordinates } from '../../pages/TripDetailsPage/TripDetailsPage.logic';
 import { MapCallout } from '../MapCallout/MapCallout';
 import { NumberedMarker } from '../NumberedMarker/NumberedMarker';
 import { styles } from './MapListHeaderComponent.style';

@@ -7,9 +7,9 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 
 import { queryClient } from '@/di/resolve';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
+import { initI18n } from '@/features/core/translations';
 import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
 import { Stacks } from '@/modules/navigation/domain/entities/routes';
-import i18n from '@/modules/translations/i18n';
 import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
 import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
@@ -26,6 +26,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import Toast from 'react-native-toast-message';
 
 initSentry();
+initI18n();
 
 const InitialLayout = () => {
   return (
@@ -46,9 +47,6 @@ export default wrap(function RootLayout() {
       registerNavigationContainer(ref);
     }
   }, [ref]);
-
-  // Initialize localization
-  i18n;
 
   // biome-ignore lint/style/noNonNullAssertion: <following the convex docs: https://docs.convex.dev/quickstart/react-native>
   const convex = new ConvexReactClient(Constants.expoConfig?.extra?.convexUrl!, {

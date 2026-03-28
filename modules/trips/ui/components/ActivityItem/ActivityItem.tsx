@@ -1,12 +1,13 @@
 import type { ScheduleItem } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { type FC, Fragment, memo } from 'react';
-import { Image, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { NumberedMarker } from '../NumberedMarker/NumberedMarker';
 import { useActivityItemLogic } from './ActivityItem.logic';
 import { styles } from './ActivityItem.style';
@@ -30,7 +31,7 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
             <BaseSkeleton style={styles.skeleton} />
           ) : (
             <Fragment>
-              <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
+              <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
               <CustomText text={`${t('MY_TRIP.DAY')} ${day}`} style={styles.day} />
             </Fragment>
           )}
