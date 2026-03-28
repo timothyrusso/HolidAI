@@ -1,4 +1,4 @@
-import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
+import { PlatformOS } from '@/ui/PlatformOS';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

@@ -1,15 +1,15 @@
 import { storage } from '@/features/core/storage';
-import { AppKeys } from '@/modules/shared/domain/AppKeys';
+import { TranslationKeys } from '@/features/core/translations/domain/entities/TranslationKeys';
 import * as Localization from 'expo-localization';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const useChangeLanguage = () => {
   const { i18n } = useTranslation();
-  const initialLanguage = Localization.getLocales()[0].languageCode ?? AppKeys.defaultLanguage;
+  const initialLanguage = Localization.getLocales()[0].languageCode ?? TranslationKeys.defaultLanguage;
 
   const loadLanguage = () => {
-    const savedLanguage = storage.getString(AppKeys.storageLanguageKey);
+    const savedLanguage = storage.getString(TranslationKeys.storageLanguageKey);
     if (savedLanguage) {
       i18n.changeLanguage(savedLanguage);
     } else {
@@ -23,7 +23,7 @@ export const useChangeLanguage = () => {
   }, [i18n]);
 
   const changeLanguage = (lang: string) => {
-    storage.set(AppKeys.storageLanguageKey, lang);
+    storage.set(TranslationKeys.storageLanguageKey, lang);
     i18n.changeLanguage(lang);
   };
 

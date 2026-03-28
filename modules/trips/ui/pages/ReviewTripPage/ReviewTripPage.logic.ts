@@ -1,6 +1,6 @@
 import { translateDateUseCase } from '@/features/core/dates';
+import { useLocale } from '@/features/core/translations';
 import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
-import { useLocale } from '@/modules/shared/hooks/useLocale';
 import { useTripState } from '@/ui/state/trip';
 import { useRouter } from 'expo-router';
 

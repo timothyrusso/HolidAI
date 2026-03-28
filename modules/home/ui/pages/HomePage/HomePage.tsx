@@ -1,6 +1,7 @@
 import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import { DetailsBox } from '../../components/DetailsBox/DetailsBox';
 import { EmptyListContainer } from '../../components/EmptyListContainer/EmptyListContainer';
 import { HomeSkeleton } from '../../components/HomeSkeleton/HomeSkeleton';
@@ -8,7 +9,8 @@ import { useHomePageLogic } from './HomePage.logic';
 import { styles } from './HomePage.style';
 
 const HomePage = () => {
-  const { lastCreatedTrip, isLoading, image, location, tripId, tripStartDate, totalTrips } = useHomePageLogic();
+  const { lastCreatedTrip, isLoading, image, imageBlurHash, location, tripId, tripStartDate, totalTrips } =
+    useHomePageLogic();
 
   return (
     <BasicView nameView={Routes.HomePage} isFullScreen isMenuVisible statusBarStyle="light">
@@ -16,7 +18,11 @@ const HomePage = () => {
         <HomeSkeleton />
       ) : lastCreatedTrip ? (
         <View style={styles.container}>
-          <Image source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
+          <CustomImage
+            source={typeof image === 'string' ? { uri: image } : image}
+            style={styles.image}
+            placeholder={{ blurhash: imageBlurHash }}
+          />
           <DetailsBox
             location={location}
             tripId={tripId}

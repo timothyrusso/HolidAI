@@ -5,9 +5,9 @@ import { styles } from './MainPlacesList.style';
 import { MainListItem } from './components/MainListItem/MainListItem';
 
 export const MainPlacesList = () => {
-  const { listItems, isFetching } = useMainPlacesListLogic();
+  const { listItems, isLoading } = useMainPlacesListLogic();
 
-  return isFetching ? (
+  return isLoading ? (
     <BaseSkeleton style={styles.skeleton} />
   ) : (
     <FlatList

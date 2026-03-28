@@ -8,10 +8,10 @@
     "SHOW_ALL_TRIPS": "VEDI TUTTI",
     "TRIP_DETAILS": "Dettagli viaggio",
     "BUDGET_NOT_AVAILABLE": "Budget non disponibile",
-    "DAYS": "Giorno",
-    "DAYS_plural": "Giorni",
-    "NIGHT": "Notte",
-    "NIGHTS_plural": "Notti",
+    "DAYS_one": "Giorno",
+    "DAYS_other": "Giorni",
+    "NIGHT_one": "Notte",
+    "NIGHT_other": "Notti",
     "DAY": "GIORNO",
     "WEATHER_INFORMATION": "INFORMAZIONI METEO",
     "GENERAL_CONDITIONS": "Condizioni generali",
@@ -154,7 +154,7 @@
     "BEST_TIME_TO_VISIT": "Miglior momento per visitare"
   },
   "GLOBAL": {
-    "NO_IMAGE": "Nessun immagine disponibile",
+    "NO_IMAGE": "Nessuna immagine disponibile",
     "VIEW_ALL": "Vedi tutti",
     "BUTTON": {
       "CONFIRM": "Conferma",

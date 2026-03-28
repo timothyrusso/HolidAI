@@ -1,6 +1,6 @@
+import { Languages } from '@/features/core/translations';
 import { LanguageItem } from '@/features/profile/ui/components/LanguageItem/LanguageItem';
 import { Routes } from '@/modules/navigation/domain/entities/routes';
-import { Languages } from '@/modules/shared/domain/Languages';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
 import { useChangeLanguagePageLogic } from './ChangeLanguagePage.logic';
