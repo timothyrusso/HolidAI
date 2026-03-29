@@ -12,6 +12,8 @@ const resources = {
 };
 
 export const initI18n = (): void => {
+  if (i18n.isInitialized) return;
+
   let savedLanguage = storage.getString(TranslationKeys.storageLanguageKey);
 
   if (!savedLanguage) {
