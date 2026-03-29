@@ -1,5 +1,5 @@
 import { logger } from '@/features/core/error';
-import { AppKeys } from '@/modules/shared/domain/AppKeys';
+import { TranslationKeys } from '@/features/core/translations';
 import type { LocationInfo } from '@/modules/trips/domain/entities/LocationInfo';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
@@ -17,7 +17,6 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
   placeholder = 'SEARCH_PLACE_PAGE.SEARCH_PLACE',
 }) => {
   const { i18n, t } = useTranslation();
-  const getLanguage = () => i18n.language;
 
   return (
     <GooglePlacesAutocomplete
@@ -34,7 +33,7 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
       }}
       query={{
         key: Constants.expoConfig?.extra?.googlePlacesApiKey,
-        language: getLanguage ?? AppKeys.defaultLanguage,
+        language: i18n.language ?? TranslationKeys.defaultLanguage,
         types: 'geocode',
       }}
       styles={{

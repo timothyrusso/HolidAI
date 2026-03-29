@@ -1,5 +1,6 @@
+import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import type { FC, ReactElement } from 'react';
-import { Animated, Image, View, type ViewStyle } from 'react-native';
+import { Animated, View, type ViewStyle } from 'react-native';
 
 import { images } from '@/ui/style/dimensions/images';
 
@@ -10,7 +11,8 @@ import { style } from './AnimatedHeaderImage.style';
 interface AnimatedHeaderImageProps {
   value: Animated.Value;
   title?: string;
-  imageUrl?: string;
+  imageUrl?: string | number;
+  imageBlurHash?: string;
   chips?: ReactElement;
   isLoading?: boolean;
   headerIcons?: ReactElement;
@@ -20,6 +22,7 @@ interface AnimatedHeaderImageProps {
 const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
   value,
   imageUrl,
+  imageBlurHash,
   title,
   chips,
   isLoading,
@@ -58,7 +61,11 @@ const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
       </Animated.View>
       <View style={styles.image}>
         {imageUrl && (
-          <Image source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl} style={styles.image} />
+          <CustomImage
+            source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
+            style={styles.image}
+            placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
+          />
         )}
       </View>
       {headerIcons && <View style={styles.iconsContainer}>{headerIcons}</View>}

@@ -1,8 +1,9 @@
+import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import MaskedView from '@react-native-masked-view/masked-view';
 import type { FC } from 'react';
 import type { ImageSourcePropType, StyleProp, TextStyle } from 'react-native';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import CustomText from '../CustomText/CustomText';
 import { styles as stylesFactory } from './LinearGradientText.style';
 
@@ -21,6 +22,8 @@ export const LinearGradientText: FC<LinearGradientTextProps> = ({
 }) => {
   const styles = stylesFactory(height);
 
+  if (!imageSource) return null;
+
   return (
     <MaskedView
       style={styles.maskedView}
@@ -31,7 +34,7 @@ export const LinearGradientText: FC<LinearGradientTextProps> = ({
       }
     >
       {/* Shows behind the mask, you can put anything here, such as an image */}
-      <Image source={imageSource} style={styles.image} />
+      <CustomImage source={imageSource} style={styles.image} useBlur={false} />
     </MaskedView>
   );
 };

@@ -1,10 +1,8 @@
-import { AppKeys } from '@/modules/shared/domain/AppKeys';
-import type { Language } from '@/modules/shared/domain/Languages';
-import { useChangeLanguage } from '@/modules/shared/hooks/useChangeLanguage';
+import { type Language, TranslationKeys, useChangeLanguage } from '@/features/core/translations';
 import { useEffect, useState } from 'react';
 
 export const useChangeLanguagePageLogic = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(AppKeys.defaultLanguage);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(TranslationKeys.defaultLanguage);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { changeLanguage, loadLanguage } = useChangeLanguage();

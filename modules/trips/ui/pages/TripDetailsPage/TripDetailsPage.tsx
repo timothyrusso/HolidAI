@@ -24,6 +24,7 @@ export const TripDetailsPage = () => {
     weather,
     id,
     imageUrl,
+    imageBlurHash,
     food,
   } = useTripDetailsPageLogic();
 
@@ -44,7 +45,13 @@ export const TripDetailsPage = () => {
 
   return (
     <Fragment>
-      <AnimatedHeaderImage value={scrollOffsetY} imageUrl={imageUrl} title={title} headerIcons={<HeaderIcons />} />
+      <AnimatedHeaderImage
+        value={scrollOffsetY}
+        imageUrl={imageUrl}
+        imageBlurHash={imageBlurHash}
+        title={title}
+        headerIcons={<HeaderIcons />}
+      />
       <BasicView nameView={Routes.TripDetails} containerStyle={styles.basicViewContainer} isFullScreen>
         <SectionList
           sections={sectionData ?? []}

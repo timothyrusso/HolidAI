@@ -8,16 +8,15 @@ export const useHomePageLogic = () => {
 
   const location = lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.FULL);
-
-  const image = imageUrl;
+  const { data: unsplashImage } = useUnsplashImages(location, UrlTypes.FULL);
 
   const totalTrips = getTotalTrips();
 
   return {
     lastCreatedTrip,
     isLoading,
-    image,
+    image: unsplashImage?.url,
+    imageBlurHash: unsplashImage?.blurHash,
     location,
     tripId: lastCreatedTrip?._id ?? '',
     tripStartDate: lastCreatedTrip?.tripAiResp.tripDetails.startDate ?? '',

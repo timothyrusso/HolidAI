@@ -1,4 +1,4 @@
-import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
+import { PlatformOS } from '@/ui/PlatformOS';
 import { components } from '@/ui/style/dimensions/components';
 import { useEffect, useState } from 'react';
 import { Keyboard, Platform } from 'react-native';

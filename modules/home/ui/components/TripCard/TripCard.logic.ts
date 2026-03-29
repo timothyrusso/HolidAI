@@ -8,7 +8,9 @@ export const useTripCardLogic = (item: UserTrips) => {
 
   const location = item.tripAiResp.tripDetails.location.split(',')[0];
 
-  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.REGULAR);
+  const { data: unsplashImage } = useUnsplashImages(location, UrlTypes.REGULAR);
+  const imageUrl = unsplashImage?.url;
+  const imageBlurHash = unsplashImage?.blurHash;
 
   const onCardPress = () => {
     router.push({
@@ -19,5 +21,5 @@ export const useTripCardLogic = (item: UserTrips) => {
 
   const isFavorite = item.isFavorite;
 
-  return { imageUrl, location, onCardPress, isFavorite };
+  return { imageUrl, imageBlurHash, location, onCardPress, isFavorite };
 };

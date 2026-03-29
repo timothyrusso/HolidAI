@@ -1,4 +1,5 @@
 import { logger } from '@/features/core/error';
+import { DEFAULT_BLURHASH } from '@/ui/style/blur';
 import { useQuery } from '@tanstack/react-query';
 import Constants from 'expo-constants';
 import { UnsplashImagesKeys } from '../UnsplashImagesKeys';
@@ -14,21 +15,29 @@ export enum UrlTypes {
   THUMB = 'thumb',
 }
 
-const getUnsplashImages = async (placeName: string, urlType: UrlTypes) => {
+type UnsplashImageResult = {
+  url: string | number;
+  blurHash: string;
+};
+
+const getUnsplashImages = async (placeName: string, urlType: UrlTypes): Promise<UnsplashImageResult> => {
   try {
     const response = await fetch(
       `https://api.unsplash.com/search/photos?page=1&query=${placeName}&client_id=${_unsplashAccessKey}`,
     );
     const data = await response.json();
 
-    if (data.results) {
-      return data.results[0].urls[urlType];
+    if (data.results?.[0]) {
+      return {
+        url: data.results[0].urls[urlType],
+        blurHash: data.results[0].blur_hash ?? DEFAULT_BLURHASH,
+      };
     }
 
-    return noImage;
+    return { url: noImage, blurHash: DEFAULT_BLURHASH };
   } catch (error) {
     logger.error(new Error('Failed to fetch unsplash images:'), error);
-    return noImage;
+    return { url: noImage, blurHash: DEFAULT_BLURHASH };
   }
 };
 

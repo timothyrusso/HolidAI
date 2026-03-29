@@ -1,4 +1,4 @@
-import { PlatformOS } from '@/modules/shared/domain/PlatformOS';
+import { PlatformOS } from '@/ui/PlatformOS';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fonts } from '@/ui/style/fonts';

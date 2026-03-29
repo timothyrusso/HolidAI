@@ -1,5 +1,5 @@
 import { translateDateUseCase } from '@/features/core/dates';
-import { useLocale } from '@/modules/shared/hooks/useLocale';
+import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
@@ -28,7 +28,9 @@ export const useTripDetailsPageLogic = () => {
 
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: imageUrl } = useUnsplashImages(location, UrlTypes.SMALL);
+  const { data: unsplashImage } = useUnsplashImages(location, UrlTypes.SMALL);
+  const imageUrl = unsplashImage?.url;
+  const imageBlurHash = unsplashImage?.blurHash;
 
   const title = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
@@ -126,6 +128,7 @@ export const useTripDetailsPageLogic = () => {
     weather,
     id: trip?._id ?? '',
     imageUrl,
+    imageBlurHash,
     food,
   };
 };
