@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 export const useChangeLanguage = () => {
   const { i18n } = useTranslation();
-  const initialLanguage = Localization.getLocales()[0].languageCode ?? TranslationKeys.defaultLanguage;
+  const initialLanguage = Localization.getLocales()[0]?.languageCode ?? TranslationKeys.defaultLanguage;
 
   const loadLanguage = () => {
     const savedLanguage = storage.getString(TranslationKeys.storageLanguageKey);

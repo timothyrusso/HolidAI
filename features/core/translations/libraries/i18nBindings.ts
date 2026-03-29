@@ -15,7 +15,7 @@ export const initI18n = (): void => {
   let savedLanguage = storage.getString(TranslationKeys.storageLanguageKey);
 
   if (!savedLanguage) {
-    savedLanguage = Localization.getLocales()[0].languageCode ?? TranslationKeys.defaultLanguage;
+    savedLanguage = Localization.getLocales()[0]?.languageCode ?? TranslationKeys.defaultLanguage;
   }
 
   i18n.use(initReactI18next).init({
