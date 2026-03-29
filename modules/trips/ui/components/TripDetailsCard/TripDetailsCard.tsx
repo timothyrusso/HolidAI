@@ -39,7 +39,10 @@ export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
               style={styles.headerChipText}
             />
           ) : (
-            <CustomText text={`${tripDetails.durationDays} ${t('MY_TRIP.DAYS')}`} style={styles.headerChipText} />
+            <CustomText
+              text={`${tripDetails.durationDays} ${t('MY_TRIP.DAYS', { count: tripDetails.durationDays })}`}
+              style={styles.headerChipText}
+            />
           )}
         </View>
       </View>
