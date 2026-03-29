@@ -21,7 +21,7 @@ const HomePage = () => {
           <CustomImage
             source={typeof image === 'string' ? { uri: image } : image}
             style={styles.image}
-            placeholder={{ blurhash: imageBlurHash }}
+            placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
           />
           <DetailsBox
             location={location}

@@ -17,7 +17,7 @@ export const TripCard = ({ item }: { item: UserTrips }) => {
       <CustomImage
         source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
         style={styles.image}
-        placeholder={{ blurhash: imageBlurHash }}
+        placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
       />
       <View style={styles.iconContainer}>
         <CustomIcon
