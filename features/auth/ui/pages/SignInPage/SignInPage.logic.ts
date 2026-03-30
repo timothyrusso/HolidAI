@@ -1,7 +1,6 @@
 import { useSignIn } from '@/features/auth/facades/useSignIn';
 import { navigationService } from '@/features/core/navigation';
 import { useModalState } from '@/ui/state/modal/useModalState';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useSignInPageLogic = () => {
@@ -9,8 +8,6 @@ export const useSignInPageLogic = () => {
   const [password, setPassword] = useState<string>('');
 
   const { modalActions } = useModalState();
-
-  const router = useRouter();
 
   const { signIn, isLoading } = useSignIn();
 
@@ -23,5 +20,16 @@ export const useSignInPageLogic = () => {
     if (success) navigationService.toAppRoot();
   };
 
-  return { email, setEmail, password, setPassword, isLoading, handleResetPasswordModal, onSignInPress, router };
+  const handleSignUpPress = () => navigationService.toSignUp();
+
+  return {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    isLoading,
+    handleResetPasswordModal,
+    onSignInPress,
+    handleSignUpPress,
+  };
 };

@@ -14,8 +14,16 @@ import { useSignInPageLogic } from './SignInPage.logic';
 import { styles } from './SignInPage.style';
 
 const SignInPage = () => {
-  const { email, setEmail, password, setPassword, isLoading, handleResetPasswordModal, onSignInPress, router } =
-    useSignInPageLogic();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    isLoading,
+    handleResetPasswordModal,
+    onSignInPress,
+    handleSignUpPress,
+  } = useSignInPageLogic();
 
   return (
     <BasicView nameView={Routes.SignIn} statusBarStyle="dark">
@@ -53,11 +61,7 @@ const SignInPage = () => {
             />
             <View style={styles.noAccountContainer}>
               <CustomText text="SIGNIN.NO_ACCOUNT" style={styles.labelText} />
-              <CustomTextButton
-                title="SIGNUP.TITLE"
-                onPress={() => router.replace(`/${Routes.SignUp}`)}
-                textStyle={styles.textButton}
-              />
+              <CustomTextButton title="SIGNUP.TITLE" onPress={handleSignUpPress} textStyle={styles.textButton} />
             </View>
           </View>
         </View>

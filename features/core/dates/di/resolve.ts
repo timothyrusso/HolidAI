@@ -1,14 +1,13 @@
 import 'reflect-metadata';
+
 import '@/features/core/dates/di/config';
-
-import { container } from 'tsyringe';
-
 import type { ConvertFromUTCToLocaleUseCase } from '@/features/core/dates/useCases/ConvertFromUTCToLocaleUseCase';
 import type { FormatDateForPromptUseCase } from '@/features/core/dates/useCases/FormatDateForPromptUseCase';
 import type { GetTimezoneFormattedDateUseCase } from '@/features/core/dates/useCases/GetTimezoneFormattedDateUseCase';
 import type { GetTodayInLocalTimezoneUseCase } from '@/features/core/dates/useCases/GetTodayInLocalTimezoneUseCase';
 import type { NormalizeDateToISOUseCase } from '@/features/core/dates/useCases/NormalizeDateToISOUseCase';
 import type { TranslateDateUseCase } from '@/features/core/dates/useCases/TranslateDateUseCase';
+import { container } from 'tsyringe';
 
 import { DATES_TYPES } from '@/features/core/dates/di/types';
 

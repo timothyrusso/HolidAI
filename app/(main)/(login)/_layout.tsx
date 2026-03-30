@@ -1,11 +1,9 @@
-import { Routes } from '@/features/core/navigation';
+import { Routes, navigationService } from '@/features/core/navigation';
 import CustomHeader from '@/ui/components/composite/CustomHeader/CustomHeader';
 import { icons } from '@/ui/style/icons';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 
 export default function LoginLayout() {
-  const router = useRouter();
-
   return (
     <Stack>
       <Stack.Screen name={Routes.Welcome} options={{ headerShown: false }} />
@@ -13,11 +11,7 @@ export default function LoginLayout() {
         name={Routes.SignIn}
         options={{
           header: () => (
-            <CustomHeader
-              title="SIGNIN.TITLE"
-              icon={icons.arrowBack}
-              onPress={() => router.replace(`/${Routes.Welcome}`)}
-            />
+            <CustomHeader title="SIGNIN.TITLE" icon={icons.arrowBack} onPress={() => navigationService.toWelcome()} />
           ),
         }}
       />
@@ -25,11 +19,7 @@ export default function LoginLayout() {
         name={Routes.SignUp}
         options={{
           header: () => (
-            <CustomHeader
-              title="SIGNUP.TITLE"
-              icon={icons.arrowBack}
-              onPress={() => router.replace(`/${Routes.SignIn}`)}
-            />
+            <CustomHeader title="SIGNUP.TITLE" icon={icons.arrowBack} onPress={() => navigationService.toSignIn()} />
           ),
         }}
       />

@@ -21,6 +21,10 @@ Follow these rules on every task that involves writing or modifying code. If a s
 
 ## Import rules
 
+- When `import 'reflect-metadata'` is present, it must be the first import and followed by a blank line. This keeps Biome's import organizer from reordering it.
+
+
+
 **Cross-feature imports (all layers):** dependencies only flow downward through the tier stack, always via the target feature's `index.ts`. Never import from a peer or higher tier, never reach into internal folders. See Feature Dependency Tiers in the architecture doc.
 
 | Layer | Can import (within feature) |

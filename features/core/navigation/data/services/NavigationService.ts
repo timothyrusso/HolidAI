@@ -2,7 +2,7 @@ import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';
 import { Routes } from '@/features/core/navigation/domain/entities/Routes';
 import { Stacks } from '@/features/core/navigation/domain/entities/Stacks';
 import type { INavigationService } from '@/features/core/navigation/domain/entities/services/INavigationService';
-import type { IRouterClient } from '@/features/core/navigation/domain/entities/services/IRouterClient';
+import type { IRouterClient, NavigationHref } from '@/features/core/navigation/domain/entities/services/IRouterClient';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -63,5 +63,9 @@ export class NavigationService implements INavigationService {
 
   back() {
     this.client.back();
+  }
+
+  replace(href: NavigationHref) {
+    this.client.replace(href);
   }
 }

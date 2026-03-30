@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import { NavigationService } from '@/features/core/navigation/data/services/NavigationService';
 import { routerClient } from '@/features/core/navigation/di/factories/routerClient';
 import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';

@@ -1,3 +1,5 @@
+import type { NavigationHref } from '@/features/core/navigation/domain/entities/services/IRouterClient';
+
 export interface INavigationService {
   // Auth flows — always replace (no back into previous state)
   toAppRoot(): void;
@@ -23,4 +25,7 @@ export interface INavigationService {
   toChangeLanguage(): void;
 
   back(): void;
+
+  // Escape hatch for dynamic destinations (e.g. error boundaries)
+  replace(href: NavigationHref): void;
 }

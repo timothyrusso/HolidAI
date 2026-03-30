@@ -35,6 +35,8 @@ export const useSignUpPageLogic = () => {
     if (success) navigationService.toHome();
   };
 
+  const handleSignInPress = () => navigationService.toSignIn();
+
   return {
     email,
     setEmail,
@@ -50,5 +52,6 @@ export const useSignUpPageLogic = () => {
     isLoading: pendingVerification ? isVerifyingEmail : isSigningUp,
     onSignUpPress,
     onVerifyPress,
+    handleSignInPress,
   };
 };
