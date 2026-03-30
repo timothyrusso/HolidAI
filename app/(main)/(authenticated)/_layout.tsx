@@ -1,5 +1,4 @@
-import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { Routes, Stacks, screenOptions } from '@/features/core/navigation';
 import { GenericCrashView } from '@/ui/components/errors/GenericCrashView/GenericCrashView';
 import { useAuth } from '@clerk/clerk-expo';
 import { type ErrorBoundaryProps, Redirect, Stack } from 'expo-router';

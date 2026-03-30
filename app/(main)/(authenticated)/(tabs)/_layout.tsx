@@ -1,4 +1,4 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { Routes, Stacks } from '@/features/core/navigation';
 import { CustomTabButton } from '@/ui/components/composite/CustomTabButton/CustomTabButton';
 import { CustomTabButtonWithText } from '@/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
 import { colors } from '@/ui/style/colors';

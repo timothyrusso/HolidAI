@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import CustomHeader from '@/ui/components/composite/CustomHeader/CustomHeader';
 import { icons } from '@/ui/style/icons';
 import { Stack, useRouter } from 'expo-router';

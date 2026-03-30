@@ -1,4 +1,4 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { Routes, Stacks } from '@/features/core/navigation';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';

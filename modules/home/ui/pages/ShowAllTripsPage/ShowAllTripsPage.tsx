@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import type { UniqueItem } from '@/modules/shared/hooks/useUniqueItems';
 import type { UserTrips } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';

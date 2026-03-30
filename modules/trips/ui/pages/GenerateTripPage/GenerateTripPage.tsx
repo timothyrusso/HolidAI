@@ -1,5 +1,5 @@
 import { logger } from '@/features/core/error';
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';

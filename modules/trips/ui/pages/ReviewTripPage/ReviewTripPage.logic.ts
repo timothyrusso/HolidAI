@@ -1,8 +1,7 @@
 import { translateDateUseCase } from '@/features/core/dates';
+import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useTripState } from '@/ui/state/trip';
-import { useRouter } from 'expo-router';
 
 export type TripRecap = {
   title: string;
@@ -10,7 +9,6 @@ export type TripRecap = {
   icon: string;
 };
 export const useReviewTripPageLogic = () => {
-  const router = useRouter();
   const { tripSelectors } = useTripState();
   const { locale } = useLocale();
 
@@ -23,8 +21,7 @@ export const useReviewTripPageLogic = () => {
   };
 
   const handleButtonPress = () => {
-    router.dismissAll();
-    router.replace(`/${Stacks.CreateTrip}/${Routes.GenerateTrip}`);
+    navigationService.toGenerateTrip();
   };
 
   const animation = require('@/ui/assets/lottie/photo_animation.json');

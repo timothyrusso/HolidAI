@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';

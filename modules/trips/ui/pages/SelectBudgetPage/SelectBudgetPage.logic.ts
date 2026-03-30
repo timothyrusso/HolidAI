@@ -1,12 +1,10 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { navigationService } from '@/features/core/navigation';
 import { useTripState } from '@/ui/state/trip';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BudgetData } from './SelectBudgetPage.data';
 
 export const useSelectBudgetPageLogic = () => {
-  const router = useRouter();
   const { tripActions } = useTripState();
   const { t } = useTranslation();
 
@@ -17,7 +15,7 @@ export const useSelectBudgetPageLogic = () => {
     tripActions.setBudgetInfo(t(BudgetData[id].title));
   };
 
-  const handleButtonPress = () => router.push(`/${Stacks.CreateTrip}/${Routes.ReviewTrip}`);
+  const handleButtonPress = () => navigationService.toReviewTrip();
 
   return {
     selectedBudget,

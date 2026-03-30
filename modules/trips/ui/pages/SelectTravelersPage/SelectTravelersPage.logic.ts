@@ -1,12 +1,10 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { navigationService } from '@/features/core/navigation';
 import { useTripState } from '@/ui/state/trip';
-import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TravelerData } from './SelectTravelersPage.data';
 
 export const useSelectTravelersPageLogic = () => {
-  const router = useRouter();
   const { tripActions } = useTripState();
   const { t } = useTranslation();
 
@@ -21,7 +19,7 @@ export const useSelectTravelersPageLogic = () => {
     tripActions.setTravelerType(t(TravelerData[id].title));
   };
 
-  const handleButtonPress = () => router.push(`/${Stacks.CreateTrip}/${Routes.SelectDates}`);
+  const handleButtonPress = () => navigationService.toSelectDates();
 
   return {
     TravelerData,

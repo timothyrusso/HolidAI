@@ -1,7 +1,7 @@
 import { useSignUp } from '@/features/auth/facades/useSignUp';
+import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
-import { Routes } from '@/modules/navigation/domain/entities/routes';
-import { useRouter } from 'expo-router';
+
 import { useState } from 'react';
 
 export const useSignUpPageLogic = () => {
@@ -11,8 +11,6 @@ export const useSignUpPageLogic = () => {
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
   const [pendingVerification, setPendingVerification] = useState<boolean>(false);
-
-  const router = useRouter();
 
   const { signUp, verifyEmail, isSigningUp, isVerifyingEmail } = useSignUp();
 
@@ -34,7 +32,7 @@ export const useSignUpPageLogic = () => {
       return;
     }
     const success = await verifyEmail(normalizedCode);
-    if (success) router.replace(`/${Routes.HomePage}`);
+    if (success) navigationService.toHome();
   };
 
   return {

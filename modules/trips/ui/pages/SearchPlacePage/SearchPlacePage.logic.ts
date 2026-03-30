@@ -1,11 +1,9 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { navigationService } from '@/features/core/navigation';
 import type { LocationInfo } from '@/modules/trips/domain/entities/LocationInfo';
 import { useTripState } from '@/ui/state/trip';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useSearchPageLogic = () => {
-  const router = useRouter();
   const { tripActions } = useTripState();
   const [locationInfo, setLocationInfo] = useState<LocationInfo>();
 
@@ -14,7 +12,7 @@ export const useSearchPageLogic = () => {
     setLocationInfo(locationInfo);
   };
 
-  const handleParticipantsPress = () => router.push(`/${Stacks.CreateTrip}/${Routes.SelectTraveler}`);
+  const handleParticipantsPress = () => navigationService.toSelectTravelers();
 
   const isButtonDisabled = !locationInfo;
 

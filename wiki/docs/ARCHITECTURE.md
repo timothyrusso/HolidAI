@@ -81,7 +81,7 @@ features/<name>/
 features/core/
 ├── error/           → BaseError, ErrorCode, Result, ok/fail helpers, ensureError, ILogger, BasicLogger, SentryLogger
 ├── storage/         → IStorage, LocalStorage, MMKV wrapper, zustandStorage adapter
-├── http/            → IHttpClient, HttpClient, ky wrapper
+├── http/            → IHttpClient, HttpClient, fetch wrapper
 ├── images/          → IImageRepository, ImageRepository, FetchImageUseCase, useGetImage facade
 ├── state/           → createStore, createSelectors utilities; app-wide and modal state stores
 └── utils/           → generic utility hooks (useDebounce, etc.) and pure utility functions
@@ -650,11 +650,12 @@ Do **not** wrap:
 
 ```ts
 // features/core/http/libraries/httpClient.ts
-// e.g. wrapping ky
-export const httpClient = ky.create({
-  timeout: 10_000,
-  retry: 1,
-});
+// thin wrapper around native fetch — normalises base URL, timeout, and default headers
+export const httpClient = {
+  get: (url: string, options?: RequestInit) => fetch(url, { ...options, method: 'GET' }),
+  post: (url: string, body: unknown, options?: RequestInit) =>
+    fetch(url, { ...options, method: 'POST', body: JSON.stringify(body) }),
+};
 ```
 
 ```ts

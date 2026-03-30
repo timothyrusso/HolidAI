@@ -1,4 +1,5 @@
 import { useSignIn } from '@/features/auth/facades/useSignIn';
+import { navigationService } from '@/features/core/navigation';
 import { useModalState } from '@/ui/state/modal/useModalState';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -19,7 +20,7 @@ export const useSignInPageLogic = () => {
 
   const onSignInPress = async () => {
     const success = await signIn(email, password);
-    if (success) router.replace('/');
+    if (success) navigationService.toAppRoot();
   };
 
   return { email, setEmail, password, setPassword, isLoading, handleResetPasswordModal, onSignInPress, router };

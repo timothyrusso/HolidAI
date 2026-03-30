@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
