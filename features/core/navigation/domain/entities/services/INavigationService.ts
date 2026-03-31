@@ -1,7 +1,9 @@
 import type { NavigationHref } from '@/features/core/navigation/domain/entities/services/IRouterClient';
 
 export interface INavigationService {
-  // Auth flows — always replace (no back into previous state)
+  // Auth flows — always replace (no back into previous auth state)
+  // toSignIn/toSignUp replace so native back gestures are disabled between auth screens;
+  // explicit back navigation is handled by inline links within each screen.
   toAppRoot(): void;
   toHome(): void;
   toWelcome(): void;

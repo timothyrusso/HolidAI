@@ -19,7 +19,7 @@ export class NavigationService implements INavigationService {
     this.client.replace(`/${Routes.Welcome}`);
   }
   toSignIn() {
-    this.client.push(`/${Routes.SignIn}`);
+    this.client.replace(`/${Routes.SignIn}`);
   }
   toSignUp() {
     this.client.replace(`/${Routes.SignUp}`);
