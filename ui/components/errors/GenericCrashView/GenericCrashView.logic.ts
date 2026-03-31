@@ -16,9 +16,9 @@ export const useGenericCrashViewLogic = ({ error, retry, redirectTo }: GenericCr
     logger.error(error, { source: 'GenericCrashView' });
   }
 
-  const handleRetry = () => {
+  const handleRetry = async () => {
     navigationService.replace(redirectTo);
-    retry();
+    await retry();
   };
 
   const message = t('ERRORS.GENERIC');
