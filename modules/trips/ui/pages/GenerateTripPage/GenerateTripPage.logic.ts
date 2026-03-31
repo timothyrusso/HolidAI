@@ -60,7 +60,7 @@ export const useGenerateTripPageLogic = () => {
 
       decrementTokens(totalNoOfDays);
 
-      navigationService.toTripDetails({ id: tripId, fromGenerate: 'true' });
+      navigationService.toTripDetails({ id: tripId, fromGenerate: true });
     } catch (error) {
       navigationService.toHome();
       showErrorToast(ensureError(error));

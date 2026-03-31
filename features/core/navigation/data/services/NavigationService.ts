@@ -46,8 +46,11 @@ export class NavigationService implements INavigationService {
     this.client.replace(`/${Stacks.CreateTrip}/${Routes.GenerateTrip}`);
   }
 
-  toTripDetails(params: { id: string; fromGenerate?: string }) {
-    this.client.push({ pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`, params });
+  toTripDetails({ id, fromGenerate }: { id: string; fromGenerate?: boolean }) {
+    this.client.push({
+      pathname: `/${Stacks.CreateTrip}/${Routes.TripDetails}`,
+      params: { id, ...(fromGenerate && { fromGenerate: 'true' }) },
+    });
   }
 
   toActivityDetails(params: { tripId: string; activityId: number }) {

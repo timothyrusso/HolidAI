@@ -19,7 +19,7 @@ export interface INavigationService {
   toGenerateTrip(): void;
 
   // Detail screens — always push
-  toTripDetails(params: { id: string; fromGenerate?: string }): void;
+  toTripDetails(params: { id: string; fromGenerate?: boolean }): void;
   toActivityDetails(params: { tripId: string; activityId: number }): void;
 
   // Other screens
