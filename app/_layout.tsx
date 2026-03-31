@@ -6,10 +6,9 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
 }
 
 import { queryClient } from '@/di/resolve';
+import { Stacks, screenOptions } from '@/features/core/navigation';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
-import { screenOptions } from '@/modules/navigation/domain/entities/ScreenOptions';
-import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
 import { fontsConfig } from '@/ui/style/fonts';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';

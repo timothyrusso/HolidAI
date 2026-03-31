@@ -3,12 +3,11 @@ import {
   getTodayInLocalTimezoneUseCase,
   translateDateUseCase,
 } from '@/features/core/dates';
+import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
 import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
 import { useTripState } from '@/ui/state/trip';
 import { differenceInDays } from 'date-fns';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export const useSelectDatesPageLogic = () => {
@@ -17,7 +16,6 @@ export const useSelectDatesPageLogic = () => {
   const [calendarKey, setCalendarKey] = useState<number>(0); // To force re-render of CalendarPicker
 
   const { tripActions } = useTripState();
-  const router = useRouter();
   const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
 
   const handleDateChange = (date: Date, type?: 'START_DATE' | 'END_DATE') => {
@@ -51,7 +49,7 @@ export const useSelectDatesPageLogic = () => {
       endDate,
       totalNoOfDays: calculateDifferenceInDays(),
     });
-    router.push(`/${Stacks.CreateTrip}/${Routes.SelectBudget}`);
+    navigationService.toSelectBudget();
   };
 
   const { locale } = useLocale();

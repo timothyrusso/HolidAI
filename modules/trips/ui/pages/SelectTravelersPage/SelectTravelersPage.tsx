@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import type { TravelerInfoMap } from '@/modules/trips/domain/entities/TravelerInfoMap';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';

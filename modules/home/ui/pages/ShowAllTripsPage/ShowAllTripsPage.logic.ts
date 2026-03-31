@@ -1,7 +1,7 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { navigationService } from '@/features/core/navigation';
 import { useUniqueItems } from '@/modules/shared/hooks/useUniqueItems';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
-import { useRouter } from 'expo-router';
+
 import { useEffect } from 'react';
 
 export const useShowAllTripsPageLogic = () => {
@@ -14,13 +14,12 @@ export const useShowAllTripsPageLogic = () => {
   const skeletonCards = getUniqueItems(4);
 
   const userTrips = isLoading ? skeletonCards : trips;
-  const router = useRouter();
 
   useEffect(() => {
-    if (totalTrips === 0) {
-      router.push(`/${Routes.HomePage}`);
+    if (!isLoading && totalTrips === 0) {
+      navigationService.toHome();
     }
-  }, []);
+  }, [isLoading, totalTrips]);
 
   return { userTrips };
 };

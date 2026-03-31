@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import type { BudgetInfo } from '@/modules/trips/domain/entities/BudgetInfo';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';

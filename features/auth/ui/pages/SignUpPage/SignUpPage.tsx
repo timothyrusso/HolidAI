@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
@@ -7,7 +7,6 @@ import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInp
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useSignUpPageLogic } from './SignUpPage.logic';
 import { styles } from './SignUpPage.style';
@@ -28,6 +27,7 @@ const SignUpPage = () => {
     onSignUpPress,
     onVerifyPress,
     isLoading,
+    handleSignInPress,
   } = useSignUpPageLogic();
 
   if (pendingVerification) {
@@ -78,11 +78,7 @@ const SignUpPage = () => {
             />
             <View style={styles.alreadyAccountContainer}>
               <CustomText text="SIGNUP.ALREADY_ACCOUNT" style={styles.labelText} />
-              <CustomTextButton
-                title="SIGNIN.TITLE"
-                onPress={() => router.replace(`/${Routes.SignIn}`)}
-                textStyle={styles.textButton}
-              />
+              <CustomTextButton title="SIGNIN.TITLE" onPress={handleSignInPress} textStyle={styles.textButton} />
             </View>
           </View>
         </View>

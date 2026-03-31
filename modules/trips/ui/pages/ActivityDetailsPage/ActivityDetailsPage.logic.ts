@@ -1,12 +1,12 @@
+import { navigationService } from '@/features/core/navigation';
 import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
 
 export const useActivityDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const router = useRouter();
 
   const { tripId, activityId } = useLocalSearchParams();
 
@@ -40,7 +40,7 @@ export const useActivityDetailsPageLogic = () => {
   const longitude = activity?.geoCoordinates.longitude;
 
   const goBackHandler = () => {
-    router.back();
+    navigationService.back();
   };
 
   return {

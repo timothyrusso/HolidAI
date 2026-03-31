@@ -1,6 +1,6 @@
+import { Stacks } from '@/features/core/navigation';
 import { ButtonsContainer } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer';
 import { UserDataBox } from '@/features/profile/ui/components/UserDataBox/UserDataBox';
-import { Stacks } from '@/modules/navigation/domain/entities/routes';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';

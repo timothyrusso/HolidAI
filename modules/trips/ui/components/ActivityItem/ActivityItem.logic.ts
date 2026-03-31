@@ -1,11 +1,9 @@
-import { Routes, Stacks } from '@/modules/navigation/domain/entities/routes';
+import { navigationService } from '@/features/core/navigation';
 import type { ScheduleItem } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
-import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: string, tripId: string) => {
-  const router = useRouter();
   const imageLocationName = `${scheduleItem?.placeName}, ${location}`;
 
   const { data: imageData, isLoading: isImageLoading } = useGooglePlaceImagesQuery(imageLocationName, 400);
@@ -13,10 +11,7 @@ export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: strin
   const { t } = useTranslation();
 
   const handlePress = () => {
-    router.push({
-      pathname: `/${Stacks.CreateTrip}/${Routes.ActivityDetails}`,
-      params: { tripId, activityId: scheduleItem.placeNumberID },
-    });
+    navigationService.toActivityDetails({ tripId, activityId: scheduleItem.placeNumberID });
   };
 
   return {

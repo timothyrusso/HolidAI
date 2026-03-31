@@ -1,12 +1,9 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
-import { useRouter } from 'expo-router';
+import { navigationService } from '@/features/core/navigation';
 
 const welcomePageImage = require('@/ui/assets/images/welcome_intro.jpg');
 
 export const useWelcomePageLogic = () => {
-  const router = useRouter();
-
-  const handlePress = () => router.push(`/${Routes.SignIn}`);
+  const handlePress = () => navigationService.toSignIn();
 
   return { handlePress, welcomePageImage };
 };

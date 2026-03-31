@@ -1,4 +1,4 @@
-import { Routes } from '@/modules/navigation/domain/entities/routes';
+import { Routes } from '@/features/core/navigation';
 import type { DayPlan } from '@/modules/trips/domain/dto/UserTripsDTO';
 import AnimatedHeaderImage from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';

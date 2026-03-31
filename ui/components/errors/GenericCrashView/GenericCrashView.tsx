@@ -1,10 +1,11 @@
-import type { ErrorBoundaryProps, Href } from 'expo-router';
+import type { NavigationHref } from '@/features/core/navigation';
+import type { ErrorBoundaryProps } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { useGenericCrashViewLogic } from './GenericCrashView.logic';
 import { styles } from './GenericCrashView.style';
 
 type GenericCrashViewProps = ErrorBoundaryProps & {
-  redirectTo: Href;
+  redirectTo: NavigationHref;
 };
 
 export const GenericCrashView = (props: GenericCrashViewProps) => {
