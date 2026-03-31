@@ -16,10 +16,10 @@ export const useShowAllTripsPageLogic = () => {
   const userTrips = isLoading ? skeletonCards : trips;
 
   useEffect(() => {
-    if (totalTrips === 0) {
+    if (!isLoading && totalTrips === 0) {
       navigationService.toHome();
     }
-  }, []);
+  }, [isLoading, totalTrips]);
 
   return { userTrips };
 };
