@@ -29,13 +29,11 @@ commit-msg:
       run: npx --no-install commitlint --config .commitlint.cjs --edit {1}
     spell-check:
       run: npx cspell --no-summary {1}
-    validate-parentheses:
+    validate-issue-number:
       run: |
         COMMIT_MSG=$(cat {1})
-        OPEN_COUNT=$(echo "$COMMIT_MSG" | tr -cd '(' | wc -c)
-        CLOSE_COUNT=$(echo "$COMMIT_MSG" | tr -cd ')' | wc -c)
-        if [ "$OPEN_COUNT" -gt 1 ] || [ "$CLOSE_COUNT" -gt 1 ]; then
-          echo "❌ Commit message must contain at most one '(' and one ')'"
+        if ! echo "$COMMIT_MSG" | grep -qE '^[a-z]+\([0-9]+\): .+'; then
+          echo "❌ Commit message must include a GitHub issue number."
           echo "   Got: $COMMIT_MSG"
           echo "   Example: feat(200): your description"
           exit 1
