@@ -1,4 +1,4 @@
-name: Update PR Title
+name: Setup PR
 
 on:
   pull_request:
@@ -50,3 +50,9 @@ jobs:
 
           # Update the PR title
           gh pr edit "$PR_NUMBER" --title "$ISSUE_TITLE"
+
+          # Update the PR body
+          gh pr edit "$PR_NUMBER" --body "Fixes #$ISSUE_NUMBER
+
+- [ ] Android app runs correctly (\`expo run:android\` or equivalent)
+- [ ] iOS app runs correctly (\`expo run:ios\` or equivalent)"
