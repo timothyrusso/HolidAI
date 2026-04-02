@@ -54,7 +54,6 @@
     "expo-web-browser": "~15.0.10",
     "i18next": "^25.10.10",
     "immer": "^10.1.1",
-    "ky": "^1.7.3",
     "lottie-react-native": "~7.3.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",

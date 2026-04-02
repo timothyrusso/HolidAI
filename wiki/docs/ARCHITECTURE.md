@@ -649,16 +649,6 @@ Do **not** wrap:
 - Libraries that are already abstractions by design (e.g. React Query's `useQuery` is itself the abstraction layer — wrapping it adds nothing)
 
 ```ts
-// features/core/http/libraries/httpClient.ts
-// thin wrapper around native fetch — normalises base URL, timeout, and default headers
-export const httpClient = {
-  get: (url: string, options?: RequestInit) => fetch(url, { ...options, method: 'GET' }),
-  post: (url: string, body: unknown, options?: RequestInit) =>
-    fetch(url, { ...options, method: 'POST', body: JSON.stringify(body) }),
-};
-```
-
-```ts
 // features/core/storage/di/factories/mmkvClient.ts
 import Constants from 'expo-constants';
 import { MMKV } from 'react-native-mmkv';
