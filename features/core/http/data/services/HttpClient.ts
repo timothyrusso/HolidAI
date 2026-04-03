@@ -23,7 +23,9 @@ export class HttpClient implements IHttpClient {
       if (error.name === 'TimeoutError') {
         return fail(new BaseError('Request timed out', ErrorCode.NetworkFailure, { cause: error, context: { url } }));
       }
-      return fail(new BaseError('Network request failed', ErrorCode.NetworkFailure, { cause: error, context: { url } }));
+      return fail(
+        new BaseError('Network request failed', ErrorCode.NetworkFailure, { cause: error, context: { url } }),
+      );
     }
   }
 
