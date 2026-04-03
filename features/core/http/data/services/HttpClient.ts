@@ -8,8 +8,10 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 @injectable()
 export class HttpClient implements IHttpClient {
   private async request<T>(url: string, options: RequestInit): Promise<Result<T>> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS), ...options });
+      const response = await fetch(url, { ...options, signal: controller.signal });
       if (!response.ok) {
         return fail(
           new BaseError(`HTTP ${response.status}`, ErrorCode.NetworkFailure, {
@@ -20,12 +22,14 @@ export class HttpClient implements IHttpClient {
       return ok((await response.json()) as T);
     } catch (e) {
       const error = ensureError(e);
-      if (error.name === 'TimeoutError') {
+      if (error.name === 'AbortError') {
         return fail(new BaseError('Request timed out', ErrorCode.NetworkFailure, { cause: error, context: { url } }));
       }
       return fail(
         new BaseError('Network request failed', ErrorCode.NetworkFailure, { cause: error, context: { url } }),
       );
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 

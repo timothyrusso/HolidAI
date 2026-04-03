@@ -1,8 +1,8 @@
 import { translateDateUseCase } from '@/features/core/dates';
+import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/modules/trips/domain/dto/UserTripsDTO';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
-import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
@@ -28,7 +28,7 @@ export const useTripDetailsPageLogic = () => {
 
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: unsplashImage } = useUnsplashImages(location, UrlTypes.SMALL);
+  const { data: unsplashImage } = useGetUnsplashImage(location, UrlType.SMALL);
   const imageUrl = unsplashImage?.url;
   const imageBlurHash = unsplashImage?.blurHash;
 

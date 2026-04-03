@@ -1,12 +1,12 @@
+import { useGetGooglePlaceImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import type { ScheduleItem } from '@/modules/trips/domain/dto/UserTripsDTO';
-import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
 import { useTranslation } from 'react-i18next';
 
 export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: string, tripId: string) => {
   const imageLocationName = `${scheduleItem?.placeName}, ${location}`;
 
-  const { data: imageData, isLoading: isImageLoading } = useGooglePlaceImagesQuery(imageLocationName, 400);
+  const { data: imageResult, isLoading: isImageLoading } = useGetGooglePlaceImage(imageLocationName, 400);
 
   const { t } = useTranslation();
 
@@ -15,7 +15,7 @@ export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: strin
   };
 
   return {
-    image: imageData,
+    image: imageResult?.url,
     isLoading: isImageLoading,
     t,
     handlePress,
