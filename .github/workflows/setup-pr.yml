@@ -1,0 +1,60 @@
+name: Setup PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  update-pr-title:
+    if: github.event.pull_request.head.repo.fork == false
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+      issues: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update PR title from linked GitHub issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          # Get the first commit message of this PR
+          BASE=${{ github.event.pull_request.base.sha }}
+          HEAD=${{ github.event.pull_request.head.sha }}
+
+          FIRST_COMMIT=$(git log "$BASE".."$HEAD" --reverse --format="%s" | head -1)
+          echo "First commit: $FIRST_COMMIT"
+
+          # Extract issue number from pattern like feat(200) or fix(123)
+          ISSUE_NUMBER=$(echo "$FIRST_COMMIT" | grep -oP '(?<=\()\d+(?=\))')
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No issue number found in first commit, skipping."
+            exit 0
+          fi
+
+          echo "Found issue number: $ISSUE_NUMBER"
+
+          # Fetch the issue title from GitHub API
+          ISSUE_TITLE=$(gh issue view "$ISSUE_NUMBER" --json title --jq '.title')
+
+          if [ -z "$ISSUE_TITLE" ]; then
+            echo "Could not fetch issue #$ISSUE_NUMBER, skipping."
+            exit 0
+          fi
+
+          echo "Issue title: $ISSUE_TITLE"
+
+          # Update the PR title
+          gh pr edit "$PR_NUMBER" --title "$ISSUE_TITLE"
+
+          # Update the PR body
+          gh pr edit "$PR_NUMBER" --body "Fixes #$ISSUE_NUMBER
+
+          - [ ] Android app runs correctly (\`expo run:android\` or equivalent)
+          - [ ] iOS app runs correctly (\`expo run:ios\` or equivalent)"
