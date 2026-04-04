@@ -13,7 +13,7 @@ export class FetchGooglePlaceImageUseCase {
     @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
   ) {}
 
-  async execute(resourceName: string, options?: ImageFetchOptions): Promise<Result<ImageResult>> {
+  async execute(resourceName: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
     const result = await this.imageRepository.getImage(resourceName, options);
     if (!result.success) this.logger.error(result.error, { resourceName });
     return result;

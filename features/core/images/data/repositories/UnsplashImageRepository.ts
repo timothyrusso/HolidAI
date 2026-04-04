@@ -10,8 +10,6 @@ import { UrlType } from '@/features/core/images/domain/entities/UrlType';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
 import { inject, injectable } from 'tsyringe';
 
-const noImage = require('@/ui/assets/images/no-image-placeholder.jpg');
-
 @injectable()
 export class UnsplashImageRepository implements IImageRepository {
   constructor(
@@ -19,7 +17,7 @@ export class UnsplashImageRepository implements IImageRepository {
     @inject(IMAGES_TYPES.UnsplashApiKey) private readonly apiKey: string,
   ) {}
 
-  async getImage(query: string, options?: ImageFetchOptions): Promise<Result<ImageResult>> {
+  async getImage(query: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
     const urlType = options?.urlType ?? UrlType.REGULAR;
     const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}`;
     const result = await this.http.get<UnsplashSearchResponseDTO>(url, {
@@ -27,7 +25,7 @@ export class UnsplashImageRepository implements IImageRepository {
     });
     if (!result.success) return result;
     const photo = result.data.results?.[0];
-    if (!photo) return ok({ url: noImage });
+    if (!photo) return ok(null);
     return ok({ url: photo.urls[urlType], blurHash: photo.blur_hash ?? undefined });
   }
 }

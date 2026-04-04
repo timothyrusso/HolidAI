@@ -9,8 +9,6 @@ import type { ImageResult } from '@/features/core/images/domain/entities/ImageRe
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
 import { inject, injectable } from 'tsyringe';
 
-const noImage = require('@/ui/assets/images/no-image-placeholder.jpg');
-
 @injectable()
 export class GooglePlacesImageRepository implements IImageRepository {
   constructor(
@@ -18,7 +16,7 @@ export class GooglePlacesImageRepository implements IImageRepository {
     @inject(IMAGES_TYPES.GooglePlacesApiKey) private readonly apiKey: string,
   ) {}
 
-  async getImage(placeName: string, options?: ImageFetchOptions): Promise<Result<ImageResult>> {
+  async getImage(placeName: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
     const maxWidthPx = options?.maxWidthPx ?? 500;
     const result = await this.http.post<GooglePlacesSearchResponseDTO>(
       'https://places.googleapis.com/v1/places:searchText',
@@ -27,7 +25,7 @@ export class GooglePlacesImageRepository implements IImageRepository {
     );
     if (!result.success) return result;
     const photoName = result.data.places?.[0]?.photos?.[0]?.name;
-    if (!photoName) return ok({ url: noImage });
+    if (!photoName) return ok(null);
     return ok({
       url: `https://places.googleapis.com/v1/${photoName}/media?key=${this.apiKey}&maxWidthPx=${maxWidthPx}`,
     });
