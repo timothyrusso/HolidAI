@@ -15,7 +15,7 @@ export class FetchGooglePlaceImageUseCase {
 
   async execute(resourceName: string, options?: ImageFetchOptions): Promise<Result<ImageResult>> {
     const result = await this.imageRepository.getImage(resourceName, options);
-    if (!result.success) this.logger.error(result.error);
+    if (!result.success) this.logger.error(result.error, { resourceName });
     return result;
   }
 }
