@@ -21,6 +21,6 @@ export const MainListItem: FC<MainListItemProps> = ({ id, index }) => {
       <CustomIcon name={icons.star} size={spacing.Triple} color={colors.primaryBlack} />
     </View>
   ) : (
-    <CustomImage source={{ uri: data }} style={styles.image} />
+    <CustomImage source={typeof data === 'string' ? { uri: data } : data} style={styles.image} />
   );
 };

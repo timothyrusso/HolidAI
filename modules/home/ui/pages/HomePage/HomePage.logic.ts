@@ -1,5 +1,5 @@
+import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
-import { UrlTypes, useUnsplashImages } from '@/ui/queries/unsplashImages/query/useUnsplashImages';
 
 export const useHomePageLogic = () => {
   const { isLoading, getUpcomingTrip, getTotalTrips } = useGetUserTrips();
@@ -8,7 +8,7 @@ export const useHomePageLogic = () => {
 
   const location = lastCreatedTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: unsplashImage } = useUnsplashImages(location, UrlTypes.FULL);
+  const { data: unsplashImage } = useGetUnsplashImage(location, UrlType.FULL);
 
   const totalTrips = getTotalTrips();
 

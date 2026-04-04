@@ -1,5 +1,5 @@
+import { useGetGooglePlaceImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
-import { useGooglePlaceImagesQuery } from '@/ui/queries/googlePlaceImages/query/useGooglePlaceImagesQuery';
 import { useGetUserTrips } from '@/ui/queries/trips/query/useGetUserTrips';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
@@ -24,7 +24,7 @@ export const useActivityDetailsPageLogic = () => {
 
   const imageLocationName = `${activity?.placeName}, ${location}`;
 
-  const { data: imageData, isLoading: isImageLoading } = useGooglePlaceImagesQuery(imageLocationName, 400);
+  const { data: imageResult, isLoading: isImageLoading } = useGetGooglePlaceImage(imageLocationName, 400);
 
   const mainDescription = activity?.placeDetailsLongDescription;
 
@@ -47,7 +47,7 @@ export const useActivityDetailsPageLogic = () => {
     scrollOffsetY,
     handleScroll,
     locationTitle,
-    imageData,
+    imageData: imageResult?.url,
     isImageLoading,
     mainDescription,
     activityInsights,
