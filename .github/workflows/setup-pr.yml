@@ -5,7 +5,7 @@ on:
     types: [opened]
 
 jobs:
-  update-pr-title:
+  setup-pr:
     if: github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     permissions:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Update PR title from linked GitHub issue
+      - name: Setup PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -54,7 +54,4 @@ jobs:
           gh pr edit "$PR_NUMBER" --title "$ISSUE_TITLE"
 
           # Update the PR body
-          gh pr edit "$PR_NUMBER" --body "Fixes #$ISSUE_NUMBER
-
-          - [ ] Android app runs correctly (\`expo run:android\` or equivalent)
-          - [ ] iOS app runs correctly (\`expo run:ios\` or equivalent)"
+          gh pr edit "$PR_NUMBER" --body "Fixes #$ISSUE_NUMBER"
