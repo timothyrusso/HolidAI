@@ -96,8 +96,6 @@ export const useTripDetailsPageLogic = () => {
   const budgetNotes = trip?.tripAiResp?.budgetNotes;
   const transportationNotes = trip?.tripAiResp?.transportationNotes;
 
-  trip?.tripAiResp?.tripDetails;
-
   const budget = trip?.tripAiResp?.tripDetails?.budget;
   const travelers = trip?.tripAiResp?.tripDetails?.travelers;
   const durationDays = trip?.tripAiResp?.tripDetails?.durationDays;
