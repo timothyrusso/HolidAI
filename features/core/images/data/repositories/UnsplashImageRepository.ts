@@ -21,8 +21,10 @@ export class UnsplashImageRepository implements IImageRepository {
 
   async getImage(query: string, options?: ImageFetchOptions): Promise<Result<ImageResult>> {
     const urlType = options?.urlType ?? UrlType.REGULAR;
-    const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&client_id=${this.apiKey}`;
-    const result = await this.http.get<UnsplashSearchResponseDTO>(url);
+    const url = `https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}`;
+    const result = await this.http.get<UnsplashSearchResponseDTO>(url, {
+      headers: { Authorization: `Client-ID ${this.apiKey}` },
+    });
     if (!result.success) return result;
     const photo = result.data.results?.[0];
     if (!photo) return ok({ url: noImage });
