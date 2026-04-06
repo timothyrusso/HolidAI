@@ -28,6 +28,21 @@ export const resetAllStores = () => {
  * reset target when {@link resetAllStores} is invoked. Call this immediately after
  * creating the singleton, before any user interaction mutates the store.
  *
+ * @remarks
+ * The snapshot is captured **by reference**, not as a deep clone. This is safe only
+ * as long as every store action replaces nested objects rather than mutating them in
+ * place. Mutating in place silently corrupts the snapshot:
+ *
+ * ```ts
+ * // SAFE — produces a new object, snapshot is unaffected
+ * set({ locationInfo: newValue })
+ *
+ * // UNSAFE — mutates the same object the snapshot points to
+ * set(s => { s.locationInfo.name = x; return s; })
+ * ```
+ *
+ * `immer` is intentionally not used in any store to prevent accidental in-place mutation.
+ *
  * @param store - The singleton store to register. Must be a module-level instance,
  * never a factory instance created for testing.
  *
