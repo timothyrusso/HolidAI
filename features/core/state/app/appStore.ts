@@ -26,7 +26,7 @@ const initialState: AppState = {
   loading: false,
 };
 
-const createAppStore = (storageClient: IStorage = defaultStorage) =>
+export const createAppStore = (storageClient: IStorage = defaultStorage) =>
   createWithEqualityFn<AppState & AppActions>()(
     persist(
       set => ({

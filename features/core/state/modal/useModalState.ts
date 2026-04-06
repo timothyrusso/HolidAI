@@ -1,10 +1,8 @@
 import { modalStoreSelectors } from '@/features/core/state/modal/modalStore';
 
-export const useModalState = () => {
-  const { actions, ...stateSelectors } = modalStoreSelectors.use;
+const { actions, ...modalSelectors } = modalStoreSelectors.use;
 
-  return {
-    modalActions: actions(),
-    modalSelectors: { ...stateSelectors },
-  };
-};
+export const useModalState = () => ({
+  modalActions: actions(),
+  modalSelectors,
+});

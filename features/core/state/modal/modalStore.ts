@@ -88,7 +88,7 @@ const initialState: ModalState = {
   },
 };
 
-const createModalStore = () =>
+export const createModalStore = () =>
   createWithEqualityFn<ModalState & ModalActions>()(
     set => ({
       ...initialState,

@@ -21,7 +21,7 @@ const initialState: TripState = {
   budgetInfo: 'Cheap',
 };
 
-const createTripStore = () =>
+export const createTripStore = () =>
   createWithEqualityFn<TripState & TripActions>()(
     set => ({
       ...initialState,
