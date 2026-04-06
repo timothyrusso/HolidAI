@@ -1110,8 +1110,7 @@ import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { storage as defaultStorage } from '@/features/core/storage';
 import type { IStorage } from '@/features/core/storage';
-import { createZustandStorage } from '@/features/core/state';
-import { registerStore } from '@/features/core/state';
+import { createSelectors, createZustandStorage, registerStore } from '@/features/core/state';
 
 export const createItemWizardStore = (storageClient: IStorage = defaultStorage) =>
   createWithEqualityFn<ItemState & ItemActions>()(
