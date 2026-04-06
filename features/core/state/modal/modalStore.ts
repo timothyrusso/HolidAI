@@ -1,5 +1,6 @@
-import { create } from '@/features/core/state/libraries/createStore';
-import { immer } from 'zustand/middleware/immer';
+import { registerStore } from '@/features/core/state/libraries/createStore';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 
 export type ModalType = {
   isVisible: boolean;
@@ -86,53 +87,23 @@ const initialState: ModalState = {
   },
 };
 
-export const useModalStore = create<ModalState & ModalActions>()(
-  immer(set => ({
-    ...initialState,
-    actions: {
-      showResetPasswordModal: modal =>
-        set({
-          resetPasswordModal: {
-            isVisible: true,
-            modal,
-          },
-        }),
-      hideResetPasswordModal: () =>
-        set(state => ({
-          resetPasswordModal: {
-            isVisible: false,
-            modal: state.resetPasswordModal.modal,
-          },
-        })),
-      showInfoModal: modal =>
-        set({
-          infoModal: {
-            isVisible: true,
-            modal,
-          },
-        }),
-      hideInfoModal: () =>
-        set(state => ({
-          infoModal: {
-            isVisible: false,
-            modal: state.infoModal.modal,
-          },
-        })),
-      showActionModal: modal =>
-        set({
-          actionModal: {
-            isVisible: true,
-            modal,
-          },
-        }),
-      hideActionModal: () =>
-        set(state => ({
-          actionModal: {
-            isVisible: false,
-            modal: state.actionModal.modal,
-          },
-        })),
-      resetModal: () => set(initialState),
-    },
-  })),
-);
+const createModalStore = () =>
+  createWithEqualityFn<ModalState & ModalActions>()(
+    set => ({
+      ...initialState,
+      actions: {
+        showResetPasswordModal: modal => set({ resetPasswordModal: { isVisible: true, modal } }),
+        hideResetPasswordModal: () =>
+          set(state => ({ resetPasswordModal: { ...state.resetPasswordModal, isVisible: false } })),
+        showInfoModal: modal => set({ infoModal: { isVisible: true, modal } }),
+        hideInfoModal: () => set(state => ({ infoModal: { ...state.infoModal, isVisible: false } })),
+        showActionModal: modal => set({ actionModal: { isVisible: true, modal } }),
+        hideActionModal: () => set(state => ({ actionModal: { ...state.actionModal, isVisible: false } })),
+        resetModal: () => set(initialState),
+      },
+    }),
+    shallow,
+  );
+
+export const useModalStore = createModalStore();
+registerStore(useModalStore);

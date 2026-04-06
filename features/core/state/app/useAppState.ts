@@ -1,4 +1,4 @@
-import { useAppStore } from '@/features/core/state/hooks/appStore';
+import { useAppStore } from '@/features/core/state/app/appStore';
 import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 
 export const useAppState = () => {
