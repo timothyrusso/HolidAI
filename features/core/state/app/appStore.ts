@@ -39,7 +39,7 @@ const createAppStore = (storageClient: IStorage = defaultStorage) =>
       {
         name: 'app-store',
         version: 1,
-        migrate: (persistedState) => ({
+        migrate: persistedState => ({
           language: (persistedState as Partial<AppState>)?.language ?? initialState.language,
         }),
         storage: createZustandStorage(storageClient),
