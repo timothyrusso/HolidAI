@@ -1,7 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-import { registerStore } from '@/features/core/state';
+import { createSelectors, registerStore } from '@/features/core/state';
 import type { TripActions, TripState } from './types';
 
 const initialState: TripState = {
@@ -38,4 +38,5 @@ const createTripStore = () =>
   );
 
 export const useTripStore = createTripStore();
+export const tripStoreSelectors = createSelectors(useTripStore);
 registerStore(useTripStore);

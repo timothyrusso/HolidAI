@@ -1,3 +1,4 @@
+import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 import { registerStore } from '@/features/core/state/libraries/createStore';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -106,4 +107,5 @@ const createModalStore = () =>
   );
 
 export const useModalStore = createModalStore();
+export const modalStoreSelectors = createSelectors(useModalStore);
 registerStore(useModalStore);

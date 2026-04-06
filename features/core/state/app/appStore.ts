@@ -1,3 +1,4 @@
+import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 import { registerStore } from '@/features/core/state/libraries/createStore';
 import { createZustandStorage } from '@/features/core/state/libraries/createZustandStorage';
 import type { IStorage } from '@/features/core/storage';
@@ -50,4 +51,5 @@ const createAppStore = (storageClient: IStorage = defaultStorage) =>
   );
 
 export const useAppStore = createAppStore();
+export const appStoreSelectors = createSelectors(useAppStore);
 registerStore(useAppStore);

@@ -1,10 +1,7 @@
-import { useAppStore } from '@/features/core/state/app/appStore';
-import { createSelectors } from '@/features/core/state/libraries/createSelectors';
+import { appStoreSelectors } from '@/features/core/state/app/appStore';
 
 export const useAppState = () => {
-  const appStore = createSelectors(useAppStore);
-
-  const { actions, ...appSelectors } = appStore.use;
+  const { actions, ...appSelectors } = appStoreSelectors.use;
 
   const appActions = actions();
 

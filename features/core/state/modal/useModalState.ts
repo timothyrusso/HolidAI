@@ -1,10 +1,7 @@
-import { createSelectors } from '@/features/core/state/libraries/createSelectors';
-import { useModalStore } from '@/features/core/state/modal/modalStore';
+import { modalStoreSelectors } from '@/features/core/state/modal/modalStore';
 
 export const useModalState = () => {
-  const modalState = createSelectors(useModalStore);
-
-  const { actions, ...stateSelectors } = modalState.use;
+  const { actions, ...stateSelectors } = modalStoreSelectors.use;
 
   return {
     modalActions: actions(),
