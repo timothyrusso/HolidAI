@@ -1,4 +1,7 @@
-import { create } from '../shared/createStore';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
+
+import { createSelectors, registerStore } from '@/features/core/state';
 import type { TripActions, TripState } from './types';
 
 const initialState: TripState = {
@@ -18,14 +21,22 @@ const initialState: TripState = {
   budgetInfo: 'Cheap',
 };
 
-export const useTripStore = create<TripState & TripActions>()(set => ({
-  ...initialState,
-  actions: {
-    setLocationInfo: locationInfo => set({ locationInfo }),
-    setTravelerType: travelerType => set({ travelerType }),
-    setTravelersNumber: travelersNumber => set({ travelersNumber }),
-    setDatesInfo: datesInfo => set({ datesInfo }),
-    setBudgetInfo: budgetInfo => set({ budgetInfo }),
-    resetTripState: () => set(initialState),
-  },
-}));
+export const createTripStore = () =>
+  createWithEqualityFn<TripState & TripActions>()(
+    set => ({
+      ...initialState,
+      actions: {
+        setLocationInfo: locationInfo => set({ locationInfo }),
+        setTravelerType: travelerType => set({ travelerType }),
+        setTravelersNumber: travelersNumber => set({ travelersNumber }),
+        setDatesInfo: datesInfo => set({ datesInfo }),
+        setBudgetInfo: budgetInfo => set({ budgetInfo }),
+        resetTripState: () => set(initialState),
+      },
+    }),
+    shallow,
+  );
+
+export const useTripStore = createTripStore();
+export const tripStoreSelectors = createSelectors(useTripStore);
+registerStore(useTripStore);

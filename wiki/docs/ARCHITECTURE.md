@@ -83,7 +83,7 @@ features/core/
 ├── storage/         → IStorage, LocalStorage, MMKV wrapper, zustandStorage adapter
 ├── http/            → IHttpClient, HttpClient, fetch wrapper
 ├── images/          → IImageRepository, ImageRepository, FetchImageUseCase, useGetImage facade
-├── state/           → createStore, createSelectors utilities; app-wide and modal state stores
+├── state/           → createSelectors, registerStore, resetAllStores, createZustandStorage utilities; app-wide and modal state stores
 └── utils/           → generic utility hooks (useDebounce, etc.) and pure utility functions
 ```
 
@@ -960,6 +960,11 @@ All stores follow the same pattern: a typed state slice plus an `actions` object
 
 ```ts
 // features/items/state/itemStore.ts
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
+import { createSelectors } from '@/features/core/state/libraries/createSelectors';
+import { registerStore } from '@/features/core/state/libraries/createStore';
+
 interface ItemState {
   detailsInfo: { name: string; coordinates?: Coordinates; };
   datesInfo: { startDate: Date | null; endDate: Date | null; totalNoOfDays: number; };
@@ -981,15 +986,26 @@ const initialState: ItemState = {
   categoryInfo: CategoryLevel.Basic,
 };
 
-export const useItemStore = createStore<ItemState & ItemActions>()(set => ({
-  ...initialState,
-  actions: {
-    setDetailsInfo: (detailsInfo) => set({ detailsInfo }),
-    setDatesInfo: (datesInfo) => set({ datesInfo }),
-    setCategoryInfo: (categoryInfo) => set({ categoryInfo }),
-    resetItemState: () => set(initialState),
-  },
-}));
+// Export the factory for isolated testing — pass a mock IStorage to avoid touching MMKV.
+// The singleton below is the only instance used in production.
+export const createItemStore = () =>
+  createWithEqualityFn<ItemState & ItemActions>()(
+    set => ({
+      ...initialState,
+      actions: {
+        setDetailsInfo: detailsInfo => set({ detailsInfo }),
+        setDatesInfo: datesInfo => set({ datesInfo }),
+        setCategoryInfo: categoryInfo => set({ categoryInfo }),
+        resetItemState: () => set(initialState),
+      },
+    }),
+    shallow,
+  );
+
+export const useItemStore = createItemStore();
+// Build selectors once at module load — never call createSelectors inside a hook.
+export const itemStoreSelectors = createSelectors(useItemStore);
+registerStore(useItemStore);
 ```
 
 **The one rule that governs actions: a store action contains exactly one `set()` call — nothing else.**
@@ -1033,16 +1049,34 @@ actions: {
 
 **Selectors — avoid unnecessary re-renders**
 
-Import only the slice of state you need. Using `createSelectors` (from `features/core/state/`) generates fine-grained selectors so a component only re-renders when its specific slice changes:
+Every store exports a pre-built `createSelectors` result alongside the store singleton. Import the selectors object and call the key you need — each selector subscribes only to its own slice, so the component re-renders only when that field changes.
+
+`createSelectors` must be called **once at module level**, never inside a hook. Calling it inside a hook would rebuild the entire `.use` object on every render, creating new function references and undermining the re-render optimisation.
 
 ```ts
-// ✅ Only re-renders when detailsInfo changes
-const detailsInfo = useItemStore(state => state.detailsInfo);
+// features/items/state/itemStore.ts
+export const itemStoreSelectors = createSelectors(useItemStore); // ← module level, once
 
-// ✅ Always access actions via the actions key — actions never change reference
-const { setDetailsInfo, resetItemState } = useItemStore(state => state.actions);
+// features/items/state/useItemState.ts
+import { itemStoreSelectors } from '@/features/items/state/itemStore';
 
-// ❌ Subscribes to the entire store — re-renders on any state change
+export const useItemState = () => {
+  const { actions, ...selectors } = itemStoreSelectors.use;
+  const itemActions = actions();
+  return {
+    detailsInfo: selectors.detailsInfo(), // ✅ re-renders only when detailsInfo changes
+    itemActions,
+  };
+};
+
+// ❌ Wrong — createSelectors called on every render
+export const useItemState = () => {
+  const store = createSelectors(useItemStore); // rebuilds .use every render
+  const { actions, ...selectors } = store.use;
+  ...
+};
+
+// ❌ Wrong — subscribes to the entire store
 const store = useItemStore();
 ```
 
@@ -1051,13 +1085,14 @@ const store = useItemStore();
 **Feature state vs global state**
 
 
-| State                                       | Location                     |
-| ------------------------------------------- | ---------------------------- |
-| Item wizard inputs                          | `features/items/state/`      |
-| Feature-specific UI flags                   | `features/<name>/state/`     |
-| App-wide theme, language                    | `features/core/state/app/`   |
-| Modal visibility (shared modals)            | `features/core/state/modal/` |
-| `createStore` / `createSelectors` utilities | `features/core/state/`       |
+| State                                                          | Location                     |
+| -------------------------------------------------------------- | ---------------------------- |
+| Item wizard inputs                                             | `features/items/state/`      |
+| Feature-specific UI flags                                      | `features/<name>/state/`     |
+| App-wide theme, language                                       | `features/core/state/app/`   |
+| Modal visibility (shared modals)                               | `features/core/state/modal/` |
+| `createSelectors`, `registerStore`, `resetAllStores` utilities | `features/core/state/`       |
+| MMKV → Zustand storage adapter (`createZustandStorage`)        | `features/core/state/`       |
 
 
 ---
@@ -1066,52 +1101,111 @@ const store = useItemStore();
 
 Only persist state that cannot be reconstructed cheaply. Wizard form inputs that survive app restart are a valid use case. Derived data, cached server responses, and anything easily re-fetched should never be persisted.
 
-Every persisted store **must** use Zustand's `persist` middleware with an explicit `version`, a `migrate` function, and a versioned `name`. Without this, any change to the store shape silently corrupts data on existing devices.
+Every persisted store **must** use Zustand's `persist` middleware with an explicit `version`, a `migrate` function, and `partialize`. Without this, any change to the store shape silently corrupts data on existing devices.
 
 ```ts
 // features/items/state/itemWizardStore.ts
-import { zustandStorage } from '@/features/core/storage'; // public API — never import storageClient from libraries/ directly
+import { persist } from 'zustand/middleware';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
+import { storage as defaultStorage } from '@/features/core/storage';
+import type { IStorage } from '@/features/core/storage';
+import { createSelectors, createZustandStorage, registerStore } from '@/features/core/state';
 
-export const useItemWizardStore = createStore<ItemState & ItemActions>()(
-  persist(
-    (set) => ({
-      ...initialState,
-      actions: {
-        setDetailsInfo: (detailsInfo) => set({ detailsInfo }),
-        setDatesInfo: (datesInfo) => set({ datesInfo }),
-        resetItemState: () => set(initialState),
+export const createItemWizardStore = (storageClient: IStorage = defaultStorage) =>
+  createWithEqualityFn<ItemState & ItemActions>()(
+    persist(
+      set => ({
+        ...initialState,
+        actions: {
+          setDetailsInfo: detailsInfo => set({ detailsInfo }),
+          setDatesInfo: datesInfo => set({ datesInfo }),
+          resetItemState: () => set(initialState),
+        },
+      }),
+      {
+        name: 'item-wizard-store',
+        version: 1,
+        migrate: (persistedState) => ({
+          // Preserve fields that represent user preference; reset everything else.
+          // Add explicit field-level handling here when bumping version.
+          ...initialState,
+          detailsInfo: (persistedState as Partial<ItemState>)?.detailsInfo ?? initialState.detailsInfo,
+        }),
+        storage: createZustandStorage(storageClient),
+        partialize: ({ detailsInfo, datesInfo }) => ({ detailsInfo, datesInfo }),
       },
-    }),
-    {
-      name: 'item-wizard-store-v1',              // bump suffix on every breaking shape change
-      version: 1,
-      migrate: () => initialState,               // breaking change → reset to initial state
-      storage: createJSONStorage(() => zustandStorage),
-    },
-  ),
-);
+    ),
+    shallow,
+  );
+
+export const useItemWizardStore = createItemWizardStore();
+export const itemWizardStoreSelectors = createSelectors(useItemWizardStore);
+registerStore(useItemWizardStore);
 ```
 
-`**zustandStorage**` is a thin adapter exposed by `features/core/storage/` that wraps the MMKV instance to match Zustand's `StateStorage` interface. It lives in `features/core/storage/data/services/zustandStorage.ts` and is exported from `features/core/storage/index.ts`. Stores import it from the sub-module's public API — never from `libraries/` directly, which would violate the rule that `libraries/` is exclusively consumed by `data/services/`.
-
-```ts
-// features/core/storage/data/services/zustandStorage.ts
-export const zustandStorage: StateStorage = {
-  getItem:    (key) => storageClient.getString(key) ?? null,
-  setItem:    (key, value) => storageClient.set(key, value),
-  removeItem: (key) => storageClient.delete(key),
-};
-
-// features/core/storage/index.ts
-export { zustandStorage } from './data/services/zustandStorage';
-```
+**`createZustandStorage`** is a factory exported from `features/core/state` that bridges `IStorage` (the domain interface from `features/core/storage`) to Zustand's `StateStorage` contract. It accepts an `IStorage` instance so stores remain testable — pass a mock `IStorage` in tests to avoid touching MMKV.
 
 Rules for persisted stores:
 
-- `**name**` must include a version suffix (`-v1`, `-v2`, …). Bump it on every breaking shape change.
-- `**version**` must be incremented on every breaking change.
-- `**migrate**` defaults to resetting to `initialState`. A real field-level migration is only warranted when preserving existing user data matters more than starting clean — rare for UI state.
-- `**storage**` always uses `zustandStorage` from `@/features/core/storage` — never raw `AsyncStorage` or `storageClient` directly.
+- **`name`** is a stable identifier — never embed a version suffix in the name. Use the separate `version` field instead.
+- **`version`** must be incremented on every breaking shape change.
+- **`migrate`** receives the persisted state from the previous version. Prefer preserving meaningful user data (preferences, wizard inputs) over always resetting — but reset fields whose shape changed incompatibly.
+- **`partialize`** must be explicit — list only the fields that should reach disk. Actions, loading flags, and ephemeral UI state must be excluded.
+- **`storage`** always uses `createZustandStorage(storageClient)` — never raw `AsyncStorage` or the MMKV instance directly.
+
+**Post-rehydration cleanup** — if persisted data can become stale (e.g. date fields that expire), handle it in `onRehydrateStorage` using a pure function defined alongside the store:
+
+```ts
+// features/items/state/clearExpiredDates.ts
+export const clearExpiredDates = (state: ItemState): Partial<ItemState> => {
+  if (state.datesInfo.startDate && new Date(state.datesInfo.startDate) < new Date()) {
+    return { datesInfo: initialState.datesInfo };
+  }
+  return {};
+};
+
+// in persist options:
+onRehydrateStorage: () => (state, error) => {
+  if (error || !state) return;
+  Object.assign(state, clearExpiredDates(state));
+},
+```
+
+---
+
+**Global reset — `registerStore` and `resetAllStores`**
+
+Every store singleton must register itself with the global reset registry immediately after creation by calling `registerStore`. This captures a snapshot of the store's initial state and enables `resetAllStores()` to wipe all in-memory state in a single call — used on logout to prevent user data from bleeding into the next session.
+
+```ts
+// At the bottom of every store file:
+export const useItemStore = createItemStore();
+registerStore(useItemStore); // must be called before any set() reaches the store
+```
+
+`resetAllStores()` is called in the logout facade after a successful sign-out:
+
+```ts
+// features/profile/facades/useLogout.ts
+import { resetAllStores } from '@/features/core/state';
+
+const logout = async () => {
+  const result = await repo.signOut();
+  if (!result.success) { showErrorToast(result.error); return false; }
+  resetAllStores(); // wipe all in-memory state
+  return true;
+};
+```
+
+Two constraints to keep the snapshot valid:
+
+1. **Call `registerStore` before any render** — the snapshot is captured at call time. If a render fires first, the snapshot may include already-mutated state.
+2. **Never mutate nested objects in place** — `registerStore` captures state by reference. In-place mutation corrupts the snapshot silently. Always replace nested objects via `set({ field: newValue })`, never `set(s => { s.field.x = y; return s; })`.
+
+`resetAllStores` resets **in-memory state only**. Persisted MMKV data is unaffected — call the store's persist middleware `clearStorage` separately if a full wipe is needed.
+
+Factory instances created for testing must **not** call `registerStore` — only the production singleton should be registered.
 
 ---
 

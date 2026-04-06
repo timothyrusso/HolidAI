@@ -1,3 +1,4 @@
+import { resetAllStores } from '@/features/core/state';
 import { useToast } from '@/features/core/toast';
 import { useProfileRepository } from '@/features/profile/data/repositories/useProfileRepository';
 import { useState } from 'react';
@@ -15,6 +16,7 @@ export const useLogout = () => {
       showErrorToast(result.error);
       return false;
     }
+    resetAllStores();
     return true;
   };
 

@@ -101,7 +101,7 @@
       }
     },
     {
-      "include": ["ui/state/shared/createSelectors.ts", "ui/state/shared/createStore.ts"],
+      "include": ["features/core/state/libraries/createSelectors.ts", "features/core/state/libraries/createStore.ts"],
       "linter": {
         "rules": {
           "correctness": {

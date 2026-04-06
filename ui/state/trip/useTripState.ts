@@ -1,13 +1,10 @@
-import { createSelectors } from '../shared/createSelectors';
-import { useTripStore } from './tripStore';
+import { tripStoreSelectors } from './tripStore';
 
 export const useTripState = () => {
-  const tripStore = createSelectors(useTripStore);
-
-  const { actions, ...tripSelectors } = tripStore.use;
+  const { actions, ...tripSelectors } = tripStoreSelectors.use;
 
   return {
     tripActions: actions(),
-    tripSelectors: { ...tripSelectors },
+    tripSelectors,
   };
 };
