@@ -1,4 +1,4 @@
-import { create } from '../shared/createStore';
+import { create } from '@/features/core/state';
 import type { TripActions, TripState } from './types';
 
 const initialState: TripState = {

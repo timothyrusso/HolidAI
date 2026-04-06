@@ -1,4 +1,4 @@
-import { createSelectors } from '../shared/createSelectors';
+import { createSelectors } from '@/features/core/state';
 import { useTripStore } from './tripStore';
 
 export const useTripState = () => {

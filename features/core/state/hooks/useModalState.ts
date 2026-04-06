@@ -1,5 +1,5 @@
-import { createSelectors } from '../shared/createSelectors';
-import { useModalStore } from './modalStore';
+import { useModalStore } from '@/features/core/state/hooks/modalStore';
+import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 
 export const useModalState = () => {
   const modalState = createSelectors(useModalStore);

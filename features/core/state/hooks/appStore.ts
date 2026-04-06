@@ -1,6 +1,18 @@
+import { create } from '@/features/core/state/libraries/createStore';
 import { TranslationKeys } from '@/features/core/translations';
-import { create } from '../shared/createStore';
-import type { AppActions, AppState } from './types';
+
+export type AppState = {
+  language: string;
+  loading: boolean;
+};
+
+export type AppActions = {
+  actions: {
+    setLanguage: (value: string) => void;
+    setLoading: (value: boolean) => void;
+    resetAppState: () => void;
+  };
+};
 
 const initialState: AppState = {
   language: TranslationKeys.defaultLanguage,

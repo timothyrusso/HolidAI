@@ -1,4 +1,4 @@
-import { useModalState } from '@/ui/state/modal/useModalState';
+import { useModalState } from '@/features/core/state';
 
 export const useInfoModalLogic = () => {
   const { modalActions, modalSelectors } = useModalState();

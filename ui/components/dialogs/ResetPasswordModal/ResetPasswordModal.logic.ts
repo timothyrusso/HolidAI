@@ -1,6 +1,6 @@
 import { useResetPassword } from '@/features/auth/facades/useResetPassword';
+import { useModalState } from '@/features/core/state';
 import { useToast } from '@/features/core/toast';
-import { useModalState } from '@/ui/state/modal/useModalState';
 import { useState } from 'react';
 
 const emailRegex = /\S+@\S+\.\S+/;

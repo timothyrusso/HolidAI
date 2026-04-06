@@ -1,6 +1,6 @@
 import { useSignIn } from '@/features/auth/facades/useSignIn';
 import { navigationService } from '@/features/core/navigation';
-import { useModalState } from '@/ui/state/modal/useModalState';
+import { useModalState } from '@/features/core/state';
 import { useState } from 'react';
 
 export const useSignInPageLogic = () => {
