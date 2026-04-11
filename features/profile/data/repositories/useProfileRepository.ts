@@ -1,15 +1,11 @@
-import { api } from '@/convex/_generated/api';
 import { ensureError, fail, ok } from '@/features/core/error';
 import { ProfileError } from '@/features/profile/domain/entities/errors/ProfileError';
 import type { IProfileRepository } from '@/features/profile/domain/entities/repositories/IProfileRepository';
 import { useClerk, useUser } from '@clerk/clerk-expo';
-import { useMutation } from 'convex/react';
 
 export const useProfileRepository = (): IProfileRepository => {
   const { signOut } = useClerk();
   const { user } = useUser();
-  const deleteAllTripsMutation = useMutation(api.trips.deleteAllTripsByUserId);
-
   return {
     getUser: () =>
       user
@@ -33,15 +29,6 @@ export const useProfileRepository = (): IProfileRepository => {
       if (!user) return fail(new ProfileError('No user to delete'));
       try {
         await user.delete();
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    deleteAllTrips: async (userId: string) => {
-      try {
-        await deleteAllTripsMutation({ userId });
         return ok(undefined);
       } catch (err) {
         return fail(ensureError(err));

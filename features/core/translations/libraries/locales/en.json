@@ -1,4 +1,7 @@
 {
+  "HOME": {
+    "TITLE": "Home"
+  },
   "MY_TRIP": {
     "NO_TRIPS_PLANNED": "No trips planned yet",
     "START_NEW_TRIP": "New Trip",

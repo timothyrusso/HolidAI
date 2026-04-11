@@ -1,4 +1,4 @@
-import ReviewTripPage from '@/modules/trips/ui/pages/ReviewTripPage/ReviewTripPage';
+import ReviewTripPage from '@/features/trip-generation/ui/pages/ReviewTripPage/ReviewTripPage';
 
 const ReviewTrip = () => {
   return <ReviewTripPage />;

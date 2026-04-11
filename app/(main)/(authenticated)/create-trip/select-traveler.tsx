@@ -1,4 +1,4 @@
-import SelectTravelersPage from '@/modules/trips/ui/pages/SelectTravelersPage/SelectTravelersPage';
+import SelectTravelersPage from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage';
 
 const SelectTraveler = () => {
   return <SelectTravelersPage />;

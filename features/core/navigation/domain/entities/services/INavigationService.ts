@@ -23,7 +23,7 @@ export interface INavigationService {
   toActivityDetails(params: { tripId: string; activityId: number }): void;
 
   // Other screens
-  toShowAllTrips(): void;
+  toTripList(): void;
   toChangeLanguage(): void;
 
   back(): void;

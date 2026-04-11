@@ -103,8 +103,8 @@ When a feature has failure modes that benefit from a named type — for logging 
 import { BaseError, ErrorCode } from '@/features/core/error';
 
 export class XxxError extends BaseError {
-  constructor(cause?: Error) {
-    super('Developer-facing description for logs.', ErrorCode.SomeCode, { cause });
+  constructor(message: string, cause?: Error) {
+    super(message, ErrorCode.SomeCode, { cause });
   }
 }
 ```
@@ -131,20 +131,22 @@ export class XxxError extends BaseError {
 ```ts
 // features/ai/domain/entities/errors/GeminiSearchError.ts
 export class GeminiSearchError extends BaseError {
-  constructor(cause?: Error) {
-    super('Google Search grounding returned no results.', ErrorCode.GenerationFailed, { cause });
+  constructor(message: string, cause?: Error) {
+    super(message, ErrorCode.GenerationFailed, { cause });
   }
 }
 
 // features/ai/domain/entities/errors/GeminiExtractionError.ts
 export class GeminiExtractionError extends BaseError {
-  constructor(cause?: Error) {
-    super('Failed to extract structured output from search context.', ErrorCode.GenerationFailed, { cause });
+  constructor(message: string, cause?: Error) {
+    super(message, ErrorCode.GenerationFailed, { cause });
   }
 }
 ```
 
 Both use `ErrorCode.GenerationFailed` — the UI shows the same localized message for both. The distinct class names make logs and Sentry reports immediately actionable.
+
+The `message` parameter is for **logging and debugging only** — pass a developer-facing description at the call site. Use a dynamic message when additional context is available (e.g. a Zod validation error message), and a static string when the failure mode is fixed.
 
 ---
 
