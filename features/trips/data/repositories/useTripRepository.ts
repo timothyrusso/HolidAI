@@ -15,7 +15,14 @@ export const useTripRepository = (): ITripRepository => {
   return {
     getTrips: () => userTrips,
 
-    addTrip: params => createTrip(params),
+    addTrip: async params => {
+      try {
+        const id = await createTrip(params);
+        return ok(id);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
 
     deleteAllTrips: async id => {
       try {

@@ -45,16 +45,23 @@ export const useGenerateTripPageLogic = () => {
       return;
     }
 
-    const tripId = await addTrip({
+    const addTripResult = await addTrip({
       userId: user?.id ?? 'unknown_user',
       tripAiResp: result.data,
       isFavorite: false,
     });
 
+    if (!addTripResult.success) {
+      navigationService.toHome();
+      showErrorToast(addTripResult.error);
+      setIsLoading(false);
+      return;
+    }
+
     decrementTokens(datesInfo.totalNoOfDays);
     tripActions.resetTripGenerationState();
     setIsLoading(false);
-    navigationService.toTripDetails({ id: tripId, fromGenerate: true });
+    navigationService.toTripDetails({ id: addTripResult.data, fromGenerate: true });
   };
 
   useEffect(() => {
