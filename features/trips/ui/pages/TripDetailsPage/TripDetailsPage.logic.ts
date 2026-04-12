@@ -44,7 +44,7 @@ export const useTripDetailsPageLogic = () => {
   );
 
   const calculateRegion = () => {
-    if (allCoordinates?.length === 0) {
+    if (!allCoordinates || allCoordinates.length === 0) {
       return {
         latitude: 37.78825,
         longitude: -122.4324,
@@ -53,13 +53,13 @@ export const useTripDetailsPageLogic = () => {
       };
     }
 
-    const latitudes = allCoordinates?.map(coord => coord.latitude);
-    const longitudes = allCoordinates?.map(coord => coord.longitude);
+    const latitudes = allCoordinates.map(coord => coord.latitude);
+    const longitudes = allCoordinates.map(coord => coord.longitude);
 
-    const minLat = Math.min(...(latitudes ?? []));
-    const maxLat = Math.max(...(latitudes ?? []));
-    const minLng = Math.min(...(longitudes ?? []));
-    const maxLng = Math.max(...(longitudes ?? []));
+    const minLat = Math.min(...latitudes);
+    const maxLat = Math.max(...latitudes);
+    const minLng = Math.min(...longitudes);
+    const maxLng = Math.max(...longitudes);
 
     const centerLat = (minLat + maxLat) / 2;
     const centerLng = (minLng + maxLng) / 2;
