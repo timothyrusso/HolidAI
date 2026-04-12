@@ -22,8 +22,8 @@ export const useHeaderIconsLogic = () => {
 
   const handleDeleteTrip = async () => {
     if (!trip) return;
-    await deleteTrip(trip._id);
-    navigationService.back();
+    const deleted = await deleteTrip(trip._id);
+    if (deleted) navigationService.back();
   };
 
   const goBackHandler = () => {
