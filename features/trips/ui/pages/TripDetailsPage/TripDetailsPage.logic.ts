@@ -18,11 +18,11 @@ export interface AllCoordinates {
 }
 
 export const useTripDetailsPageLogic = () => {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const { locale } = useLocale();
 
-  const { trip } = useGetTripById(id as string);
+  const { trip } = useGetTripById(id);
 
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
