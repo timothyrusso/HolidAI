@@ -69,6 +69,7 @@ export const styles = StyleSheet.create({
     height: spacing.Sextuple,
     borderColor: colors.primary,
     borderWidth: spacing.MinimalDouble,
+    borderRadius: spacing.Sextuple / 2,
   },
   skeleton: {
     width: '100%',
