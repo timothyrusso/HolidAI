@@ -6,4 +6,6 @@ export interface ITripRepository {
   getTrips(): readonly Trip[] | undefined;
   addTrip(params: { userId: string; tripAiResp: TripAiResp; isFavorite: boolean }): Promise<Result<Id<'trips'>>>;
   deleteAllTrips(userId: string): Promise<Result<void>>;
+  deleteTrip(id: Id<'trips'>): Promise<Result<void>>;
+  toggleFavoriteTrip(params: { id: Id<'trips'>; isFavorite: boolean }): Promise<Result<void>>;
 }

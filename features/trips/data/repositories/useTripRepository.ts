@@ -11,6 +11,19 @@ export const useTripRepository = (): ITripRepository => {
   const userTrips = useQuery(api.trips.getAllTripsbyUserId, { userId });
   const createTrip = useMutation(api.trips.createTrip);
   const deleteAllTripsMutation = useMutation(api.trips.deleteAllTripsByUserId);
+  const deleteTripMutation = useMutation(api.trips.deleteTrip);
+  const toggleFavoriteTripMutation = useMutation(api.trips.toggleFavoriteTrip).withOptimisticUpdate(
+    (localStore, args) => {
+      const trips = localStore.getQuery(api.trips.getAllTripsbyUserId, { userId });
+      if (trips) {
+        localStore.setQuery(
+          api.trips.getAllTripsbyUserId,
+          { userId },
+          trips.map(t => (t._id === args.id ? { ...t, isFavorite: args.isFavorite } : t)),
+        );
+      }
+    },
+  );
 
   return {
     getTrips: () => userTrips,
@@ -27,6 +40,24 @@ export const useTripRepository = (): ITripRepository => {
     deleteAllTrips: async id => {
       try {
         await deleteAllTripsMutation({ userId: id });
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
+
+    deleteTrip: async id => {
+      try {
+        await deleteTripMutation({ id });
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
+
+    toggleFavoriteTrip: async params => {
+      try {
+        await toggleFavoriteTripMutation(params);
         return ok(undefined);
       } catch (err) {
         return fail(ensureError(err));

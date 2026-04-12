@@ -1,7 +1,7 @@
-import { api } from '@/convex/_generated/api';
 import { navigationService } from '@/features/core/navigation';
+import { useDeleteTrip } from '@/features/trips/facades/useDeleteTrip';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
-import { useMutation } from 'convex/react';
+import { useToggleFavoriteTrip } from '@/features/trips/facades/useToggleFavoriteTrip';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 
@@ -9,23 +9,20 @@ export const useHeaderIconsLogic = () => {
   const { id, fromGenerate } = useLocalSearchParams();
 
   const { trip } = useGetTripById(id as string);
-
-  const [isFavorite, setIsFavorite] = useState<boolean>(trip?.isFavorite ?? false);
   const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
 
-  const removeTripMutation = useMutation(api.trips.deleteTrip);
-  const toggleFavoriteTripMutation = useMutation(api.trips.toggleFavoriteTrip);
+  const { toggleFavoriteTrip } = useToggleFavoriteTrip();
+  const { deleteTrip } = useDeleteTrip();
 
   const addToFavoritesHandler = useCallback(() => {
     if (!trip) return;
-    setShouldAnimate(!isFavorite);
-    setIsFavorite(prev => !prev);
-    toggleFavoriteTripMutation({ id: trip._id, isFavorite: !isFavorite });
-  }, [isFavorite, trip, toggleFavoriteTripMutation]);
+    setShouldAnimate(!trip.isFavorite);
+    toggleFavoriteTrip({ id: trip._id, isFavorite: !trip.isFavorite });
+  }, [trip, toggleFavoriteTrip]);
 
   const handleDeleteTrip = async () => {
     if (!trip) return;
-    await removeTripMutation({ id: trip._id });
+    await deleteTrip(trip._id);
     navigationService.back();
   };
 
@@ -37,5 +34,5 @@ export const useHeaderIconsLogic = () => {
     }
   };
 
-  return { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite, shouldAnimate };
+  return { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite: trip?.isFavorite ?? false, shouldAnimate };
 };
