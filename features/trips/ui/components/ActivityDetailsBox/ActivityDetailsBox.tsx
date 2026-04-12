@@ -28,7 +28,7 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {rating && (
+      {rating != null && (
         <View style={styles.ratingContainer}>
           <View style={styles.ratingValueContainer}>
             <CustomText text={rating.toString()} style={styles.ratingText} />
