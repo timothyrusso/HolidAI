@@ -7,8 +7,8 @@ export const useMapCalloutLogic = () => {
       android: 'geo:',
     });
     const url = Platform.select({
-      ios: `${scheme}?q=${title}&ll=${latitude},${longitude}`,
-      android: `${scheme}?q=${latitude},${longitude}(${title})`,
+      ios: `${scheme}?q=${encodeURIComponent(title)}&ll=${latitude},${longitude}`,
+      android: `${scheme}?q=${latitude},${longitude}(${encodeURIComponent(title)})`,
     });
 
     if (url) {
