@@ -21,7 +21,7 @@ export const useHeaderIconsLogic = () => {
     setShouldAnimate(!isFavorite);
     setIsFavorite(prev => !prev);
     toggleFavoriteTripMutation({ id: trip._id, isFavorite: !isFavorite });
-  }, [isFavorite]);
+  }, [isFavorite, trip, toggleFavoriteTripMutation]);
 
   const handleDeleteTrip = async () => {
     if (!trip) return;
