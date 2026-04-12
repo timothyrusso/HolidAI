@@ -6,9 +6,9 @@ import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
-  const { id, fromGenerate } = useLocalSearchParams();
+  const { id, fromGenerate } = useLocalSearchParams<{ id: string; fromGenerate?: string }>();
 
-  const { trip } = useGetTripById(id as string);
+  const { trip } = useGetTripById(id);
   const [shouldAnimate, setShouldAnimate] = useState<boolean>(false);
 
   const { toggleFavoriteTrip } = useToggleFavoriteTrip();
