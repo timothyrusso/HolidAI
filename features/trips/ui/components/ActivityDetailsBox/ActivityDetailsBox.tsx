@@ -62,7 +62,7 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
           </View>
         </Fragment>
       )}
-      {latitude && longitude && locationTitle && (
+      {latitude != null && longitude != null && locationTitle && (
         <OpenMapButton
           onPress={() =>
             showLocation({
