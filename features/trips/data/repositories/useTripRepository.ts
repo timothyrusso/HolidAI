@@ -6,14 +6,15 @@ import { useMutation, useQuery } from 'convex/react';
 
 export const useTripRepository = (): ITripRepository => {
   const { user } = useUser();
-  const userId = user?.id ?? '';
+  const userId = user?.id;
 
-  const userTrips = useQuery(api.trips.getAllTripsbyUserId, { userId });
+  const userTrips = useQuery(api.trips.getAllTripsbyUserId, userId ? { userId } : 'skip');
   const createTrip = useMutation(api.trips.createTrip);
   const deleteAllTripsMutation = useMutation(api.trips.deleteAllTripsByUserId);
   const deleteTripMutation = useMutation(api.trips.deleteTrip);
   const toggleFavoriteTripMutation = useMutation(api.trips.toggleFavoriteTrip).withOptimisticUpdate(
     (localStore, args) => {
+      if (!userId) return;
       const trips = localStore.getQuery(api.trips.getAllTripsbyUserId, { userId });
       if (trips) {
         localStore.setQuery(
