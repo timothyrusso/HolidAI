@@ -13,7 +13,8 @@ type ActivityDetailsBoxProps = {
   locationTitle?: string;
   rating?: number;
   bestTimeToVisit?: string;
-  ticketPricing?: string;
+  ticketPricing?: number | null;
+  currency?: string;
   latitude?: number;
   longitude?: number;
 };
@@ -22,6 +23,7 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
   rating,
   bestTimeToVisit,
   ticketPricing,
+  currency,
   locationTitle,
   latitude,
   longitude,
@@ -47,12 +49,12 @@ export const ActivityDetailsBox: FC<ActivityDetailsBoxProps> = ({
           <CustomText text={bestTimeToVisit} style={styles.bestTimeToVisitValue} />
         </View>
       )}
-      {ticketPricing && (
+      {ticketPricing != null && (
         <Fragment>
           <View style={styles.ticketPricingContainer}>
             <CustomText text="ACTIVITY_DETAILS.TICKET_PRICING" style={styles.ticketPricingTitle} />
             <CustomText
-              text={`${ticketPricing}${Number(ticketPricing.toString()) > 0 ? '$' : ''}`}
+              text={ticketPricing === 0 ? 'ACTIVITY_DETAILS.FREE' : `${ticketPricing} ${currency}`}
               style={styles.ticketPricingValue}
             />
           </View>

@@ -1,4 +1,3 @@
-import { dbKeys } from '@/modules/trips/domain/entities/DbKeys';
 import { v } from 'convex/values';
 import { type QueryCtx, internalMutation, mutation, query } from './_generated/server';
 
@@ -6,7 +5,7 @@ const DEFAULT_TOKENS = 10;
 
 async function userByExternalId(ctx: QueryCtx, externalId: string) {
   return await ctx.db
-    .query(dbKeys.users)
+    .query('users')
     .filter(q => q.eq(q.field('clerkId'), externalId))
     .unique();
 }
@@ -14,7 +13,7 @@ async function userByExternalId(ctx: QueryCtx, externalId: string) {
 export const createUser = internalMutation({
   args: { clerkId: v.string() },
   handler: async (ctx, args) => {
-    const userId = await ctx.db.insert(dbKeys.users, {
+    const userId = await ctx.db.insert('users', {
       ...args,
       tokens: 5,
       isPro: false,
@@ -75,7 +74,7 @@ export const decrementUserTokens = mutation({
 export const resetAllUserTokens = internalMutation({
   args: {},
   handler: async ctx => {
-    const users = await ctx.db.query(dbKeys.users).collect();
+    const users = await ctx.db.query('users').collect();
     for (const user of users) {
       await ctx.db.patch(user._id, { tokens: DEFAULT_TOKENS });
     }

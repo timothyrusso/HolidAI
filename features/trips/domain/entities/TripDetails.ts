@@ -7,4 +7,5 @@ export interface TripDetails {
   startDate: string;
   endDate: string;
   locale: string;
+  currency: string;
 }

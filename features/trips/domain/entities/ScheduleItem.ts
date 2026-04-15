@@ -7,7 +7,7 @@ export interface ScheduleItem {
   placeNumberID: number;
   bestTimeToVisit: string;
   rating: number;
-  ticketPricing: string | number;
+  ticketPricing: number | null;
   placeDetails: string;
   placeDetailsLongDescription: string;
   placeSecretsAndInsights: string;

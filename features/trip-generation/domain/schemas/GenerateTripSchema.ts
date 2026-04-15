@@ -18,6 +18,7 @@ export const generatedTripSchema = z.object({
       .describe('Date in ISO format YYYY-MM-DD')
       .transform(val => normalizeDateToISOUseCase.execute(val)),
     locale: z.string(),
+    currency: z.string().describe('ISO 4217 currency code for the destination, e.g. "EUR", "USD", "JPY"'),
   }),
   dayPlans: z.array(
     z.object({
@@ -32,7 +33,7 @@ export const generatedTripSchema = z.object({
             ),
           bestTimeToVisit: z.string(),
           rating: z.number(),
-          ticketPricing: z.string().describe('Price of the ticket, can be a number or text like "Free" or "Varies"'),
+          ticketPricing: z.number().nullable().describe('Price of the ticket in local currency. Use 0 for free admission, null if unknown.'),
           placeDetails: z.string().describe('Maximum 20 words. A brief description of the place.'),
           placeDetailsLongDescription: z.string(),
           placeSecretsAndInsights: z.string(),

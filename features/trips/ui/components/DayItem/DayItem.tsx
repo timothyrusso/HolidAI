@@ -8,18 +8,19 @@ type DayItemProps = {
   dayPlan: DayPlan;
   location: string;
   tripId: string;
+  currency: string;
 };
 
 const separator = () => <View style={styles.separator} />;
 
-export const DayItem: FC<DayItemProps> = ({ dayPlan, location, tripId }) => {
+export const DayItem: FC<DayItemProps> = ({ dayPlan, location, tripId, currency }) => {
   return (
     <View style={styles.container}>
       <FlatList
         data={dayPlan.schedule}
         keyExtractor={(item, index) => `${index}-${item.geoCoordinates.latitude}-${item.geoCoordinates.longitude}`}
         renderItem={({ item }) => (
-          <ActivityItem scheduleItem={item} day={dayPlan.day} location={location} tripId={tripId} />
+          <ActivityItem scheduleItem={item} day={dayPlan.day} location={location} tripId={tripId} currency={currency} />
         )}
         ItemSeparatorComponent={separator}
         style={styles.list}

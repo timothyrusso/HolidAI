@@ -17,10 +17,11 @@ type ActivityItemProps = {
   day: number;
   location: string;
   tripId: string;
+  currency: string;
 };
 
 export const ActivityItem: FC<ActivityItemProps> = memo(
-  ({ scheduleItem, day, location, tripId }) => {
+  ({ scheduleItem, day, location, tripId, currency }) => {
     const { image, isLoading, t, handlePress } = useActivityItemLogic(scheduleItem, location, tripId);
 
     return (
@@ -60,13 +61,19 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
           </View>
           <CustomText text={scheduleItem.placeName} style={styles.place} />
           <CustomText text={scheduleItem.placeDetails} style={styles.description} />
-          <View style={styles.priceContainer}>
-            <CustomIcon name={icons.card} size={spacing.Fourfold} color={colors.primaryBlack} />
-            <CustomText
-              text={`${scheduleItem.ticketPricing}${Number(scheduleItem.ticketPricing.toString()) > 0 ? '$' : ''}`}
-              style={styles.price}
-            />
-          </View>
+          {scheduleItem.ticketPricing !== null && (
+            <View style={styles.priceContainer}>
+              <CustomIcon name={icons.card} size={spacing.Fourfold} color={colors.primaryBlack} />
+              <CustomText
+                text={
+                  scheduleItem.ticketPricing === 0
+                    ? t('ACTIVITY_DETAILS.FREE')
+                    : `${scheduleItem.ticketPricing} ${currency}`
+                }
+                style={styles.price}
+              />
+            </View>
+          )}
         </View>
       </Pressable>
     );

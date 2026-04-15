@@ -28,6 +28,7 @@ export const ActivityDetailsPage = () => {
     rating,
     bestTimeToVisit,
     ticketPricing,
+    currency,
     latitude,
     longitude,
   } = useActivityDetailsPageLogic();
@@ -58,7 +59,8 @@ export const ActivityDetailsPage = () => {
             <ActivityDetailsBox
               rating={rating}
               bestTimeToVisit={bestTimeToVisit}
-              ticketPricing={ticketPricing?.toString()}
+              ticketPricing={ticketPricing}
+              currency={currency}
               locationTitle={locationTitle}
               latitude={latitude}
               longitude={longitude}

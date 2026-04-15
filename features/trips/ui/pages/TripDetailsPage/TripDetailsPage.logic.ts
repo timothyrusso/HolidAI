@@ -104,6 +104,7 @@ export const useTripDetailsPageLogic = () => {
     durationNights: durationNights ?? 0,
     startDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.startDate),
     endDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.endDate),
+    currency: trip?.tripAiResp.tripDetails.currency ?? 'N/A',
   };
 
   return {
@@ -121,5 +122,6 @@ export const useTripDetailsPageLogic = () => {
     imageUrl,
     imageBlurHash,
     food,
+    currency: trip?.tripAiResp.tripDetails.currency ?? 'N/A',
   };
 };

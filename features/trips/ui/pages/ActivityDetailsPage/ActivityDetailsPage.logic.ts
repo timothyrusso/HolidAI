@@ -36,7 +36,8 @@ export const useActivityDetailsPageLogic = () => {
 
   const bestTimeToVisit = activity?.bestTimeToVisit;
 
-  const ticketPricing = activity?.ticketPricing;
+  const ticketPricing = activity?.ticketPricing ?? null;
+  const currency = trip?.tripAiResp.tripDetails.currency ?? 'N/A';
 
   const latitude = activity?.geoCoordinates.latitude;
   const longitude = activity?.geoCoordinates.longitude;
@@ -57,6 +58,7 @@ export const useActivityDetailsPageLogic = () => {
     rating,
     bestTimeToVisit,
     ticketPricing,
+    currency,
     latitude,
     longitude,
   };
