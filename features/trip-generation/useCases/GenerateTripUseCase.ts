@@ -32,8 +32,8 @@ export class GenerateTripUseCase {
   async execute(params: GenerateTripParams): Promise<Result<TripAiResp>> {
     const prompt = travelPlanPrompt
       .replace('{location}', params.location)
-      .replace('{days}', params.totalNoOfDays.toString())
-      .replace('{nights}', (params.totalNoOfDays - 1).toString())
+      .replaceAll('{days}', params.totalNoOfDays.toString())
+      .replaceAll('{nights}', (params.totalNoOfDays - 1).toString())
       .replace('{travelersNumber}', params.travelersNumber.toString())
       .replace('{travelersType}', params.travelerType)
       .replace('{budget}', params.budgetInfo)

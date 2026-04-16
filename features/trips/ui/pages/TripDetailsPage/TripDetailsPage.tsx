@@ -42,7 +42,9 @@ export const TripDetailsPage = () => {
     return trailingSection || isFirstItemOfSection ? <View style={styles.separator} /> : null;
   };
 
-  const renderItem = ({ item }: { item: DayPlan }) => <DayItem dayPlan={item} location={title} tripId={id} currency={currency} />;
+  const renderItem = ({ item }: { item: DayPlan }) => (
+    <DayItem dayPlan={item} location={title} tripId={id} currency={currency} />
+  );
 
   return (
     <Fragment>

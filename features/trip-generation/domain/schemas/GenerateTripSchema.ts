@@ -33,7 +33,10 @@ export const generatedTripSchema = z.object({
             ),
           bestTimeToVisit: z.string(),
           rating: z.number(),
-          ticketPricing: z.number().nullable().describe('Price of the ticket in local currency. Use 0 for free admission, null if unknown.'),
+          ticketPricing: z
+            .number()
+            .nullable()
+            .describe('Price of the ticket in local currency. Use 0 for free admission, null if unknown.'),
           placeDetails: z.string().describe('Maximum 20 words. A brief description of the place.'),
           placeDetailsLongDescription: z.string(),
           placeSecretsAndInsights: z.string(),
