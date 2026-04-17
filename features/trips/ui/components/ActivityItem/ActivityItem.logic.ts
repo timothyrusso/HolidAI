@@ -4,7 +4,7 @@ import type { ScheduleItem } from '@/features/trips';
 import { useTranslation } from 'react-i18next';
 
 export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: string, tripId: string) => {
-  const imageLocationName = `${scheduleItem?.placeName}, ${location}`;
+  const imageLocationName = `${scheduleItem.placeName}, ${location}`;
 
   const { data: imageResult, isLoading: isImageLoading } = useGetGooglePlaceImage(imageLocationName, 500);
 

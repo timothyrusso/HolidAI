@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { type ReactElement, useEffect } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
@@ -10,12 +10,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-export type BaseSkeletonProps = {
+export type BaseSkeletonProps = ViewProps & {
   children?: ReactElement;
   style?: StyleProp<ViewStyle>;
 };
 
-export const BaseSkeleton = ({ children, style }: BaseSkeletonProps) => {
+export const BaseSkeleton = ({ children, style, ...props }: BaseSkeletonProps) => {
   const opacity = useSharedValue(1);
 
   useEffect(() => {
@@ -35,5 +35,9 @@ export const BaseSkeleton = ({ children, style }: BaseSkeletonProps) => {
     return { opacity: opacity.value, backgroundColor: colors.primaryGrey };
   });
 
-  return <Animated.View style={[animatedStyleParent, style]}>{children}</Animated.View>;
+  return (
+    <Animated.View style={[animatedStyleParent, style]} {...props}>
+      {children}
+    </Animated.View>
+  );
 };

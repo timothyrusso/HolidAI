@@ -170,6 +170,9 @@
       "INVALID_EMAIL": "Invalid email"
     }
   },
+  "ACCESSIBILITY": {
+    "LOADING": "Loading content"
+  },
   "ERRORS": {
     "GENERIC": "Something went wrong",
     "NETWORK": "Network error, please try again",

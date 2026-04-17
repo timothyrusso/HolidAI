@@ -170,6 +170,9 @@
       "INVALID_EMAIL": "Email non valida"
     }
   },
+  "ACCESSIBILITY": {
+    "LOADING": "Caricamento in corso"
+  },
   "ERRORS": {
     "GENERIC": "Qualcosa è andato storto",
     "NETWORK": "Errore di rete, riprova",

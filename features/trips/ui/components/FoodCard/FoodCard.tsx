@@ -45,6 +45,7 @@ export const FoodCard: FC<FoodCardProps> = ({ food }) => {
           renderItem={({ item }) => (
             <CustomText text={item} style={styles.foodItem} numberOfLines={1} ellipsizeMode="tail" />
           )}
+          keyExtractor={item => item}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.contentContainer}
