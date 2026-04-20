@@ -51,6 +51,7 @@ export const styles = StyleSheet.create({
     color: colors.primaryBlack,
     backgroundColor: colors.primaryGreen,
     borderWidth: 1,
+    borderColor: colors.primaryBlack,
     borderRadius: spacing.Triple,
     alignSelf: 'flex-start',
     marginLeft: spacing.Quintuple,

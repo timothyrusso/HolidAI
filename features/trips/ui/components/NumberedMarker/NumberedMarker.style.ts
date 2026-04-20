@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.Quintuple,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: spacing.Minimal,
     borderColor: colors.primaryWhite,
   },
   number: {

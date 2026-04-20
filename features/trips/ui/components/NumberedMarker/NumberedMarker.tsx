@@ -1,7 +1,7 @@
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { styles } from './NumberedMarket.style';
+import { styles } from './NumberedMarker.style';
 
 type NumberedMarkerProps = {
   number: number;

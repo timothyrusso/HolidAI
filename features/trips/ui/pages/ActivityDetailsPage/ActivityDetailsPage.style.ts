@@ -29,8 +29,8 @@ export const styles = (isImageLoading: boolean) =>
     },
     insightsContainer: {
       paddingHorizontal: spacing.Fourfold,
+      paddingVertical: spacing.Double,
       backgroundColor: colors.primaryYellow,
-      padding: spacing.Double,
       marginTop: spacing.Double,
     },
     insightHeader: {

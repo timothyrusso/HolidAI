@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     height: spacing.separator40,
     borderRadius: spacing.separator40,
     borderWidth: 1.5,
+    borderColor: colors.primaryBlack,
     marginRight: -spacing.Double,
   },
   lastItem: {

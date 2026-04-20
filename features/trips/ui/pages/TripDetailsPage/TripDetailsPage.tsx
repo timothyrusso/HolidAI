@@ -29,7 +29,7 @@ export const TripDetailsPage = () => {
     currency,
   } = useTripDetailsPageLogic();
 
-  const separator = ({
+  const Separator = ({
     trailingSection,
     leadingItem,
     trailingItem,
@@ -61,7 +61,7 @@ export const TripDetailsPage = () => {
           keyExtractor={item => item.day.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.dayPlans}
-          SectionSeparatorComponent={separator}
+          SectionSeparatorComponent={Separator}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
           style={styles.sectionList}

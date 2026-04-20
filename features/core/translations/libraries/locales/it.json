@@ -125,7 +125,8 @@
     "DESCRIPTION": "Scegli la data di partenza e di ritorno del tuo viaggio.",
     "START_DATE": "Data di partenza:",
     "END_DATE": "Data di ritorno:",
-    "SINGLE_DAY": "Giornata singola"
+    "SINGLE_DAY": "Giornata singola",
+    "CLEAR_DATES": "Cancella le date"
   },
   "SELECT_BUDGET": {
     "TITLE": "Seleziona il budget",

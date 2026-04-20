@@ -6,16 +6,19 @@ import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { style } from './DateBox.style';
 
 type DateBoxProps = {
   startDateLabel: string;
   endDateLabel: string;
-  action: () => void;
+  onClearDates: () => void;
 };
 
-export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel, action }) => {
+export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel, onClearDates }) => {
+  const { t } = useTranslation();
+
   return (
     <View style={style.dateLabelContainer}>
       <View style={style.rowLabelContainer}>
@@ -30,7 +33,7 @@ export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel, action
           <CustomIcon name={icons.airplane} size={spacing.Triple} color={colors.primaryBlack} style={style.icon} />
           <CustomText text="SELECT_DATES.END_DATE" style={style.dateLabel} />
         </View>
-        <CustomText text={endDateLabel ? endDateLabel : startDateLabel} style={style.dateValue} />
+        <CustomText text={endDateLabel || startDateLabel} style={style.dateValue} />
       </View>
       {startDateLabel && !endDateLabel && (
         <View style={style.singleDayLabelContainer}>
@@ -43,9 +46,9 @@ export const DateBox: FC<DateBoxProps> = ({ startDateLabel, endDateLabel, action
           buttonType={ButtonType.Secondary}
           iconSize={spacing.Fourfold}
           style={style.removeDateButton}
-          onPress={() => {
-            action();
-          }}
+          onPress={onClearDates}
+          accessibilityRole="button"
+          accessibilityLabel={t('SELECT_DATES.CLEAR_DATES')}
         />
       )}
     </View>
