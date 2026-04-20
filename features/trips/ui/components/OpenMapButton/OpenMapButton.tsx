@@ -14,7 +14,11 @@ type OpenMapButtonProps = {
 
 export const OpenMapButton: FC<OpenMapButtonProps> = ({ onPress, style }) => {
   return (
-    <Pressable style={({ pressed }) => [styles.container, style, pressed && styles.pressed]} onPress={onPress} accessibilityRole="button">
+    <Pressable
+      style={({ pressed }) => [styles.container, style, pressed && styles.pressed]}
+      onPress={onPress}
+      accessibilityRole="button"
+    >
       <CustomIcon name={icons.location} size={spacing.Triple} color={colors.primaryBlack} style={styles.icon} />
       <CustomText text="ACTIVITY_DETAILS.OPEN_MAP" style={styles.title} />
     </Pressable>

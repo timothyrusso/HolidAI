@@ -47,7 +47,9 @@ const SelectDatesPage = () => {
             key={calendarKey}
           />
         </View>
-        {startDateLabel && <DateBox startDateLabel={startDateLabel} endDateLabel={endDateLabel} onClearDates={removeDates} />}
+        {startDateLabel && (
+          <DateBox startDateLabel={startDateLabel} endDateLabel={endDateLabel} onClearDates={removeDates} />
+        )}
       </CustomScrollView>
     </BasicView>
   );
