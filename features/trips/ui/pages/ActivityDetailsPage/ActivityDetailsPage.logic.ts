@@ -8,13 +8,13 @@ import { Animated } from 'react-native';
 export const useActivityDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
 
-  const { tripId, activityId } = useLocalSearchParams();
+  const { tripId, activityId } = useLocalSearchParams<{ tripId: string; activityId: string }>();
 
   const { trip } = useGetTripById(tripId as string);
 
   const activity = trip?.tripAiResp.dayPlans
-    .find(dayPlan => dayPlan.schedule.find(a => a.placeNumberID === Number(activityId)))
-    ?.schedule.find(a => a.placeNumberID === Number(activityId));
+    .flatMap(dayPlan => dayPlan.schedule)
+    .find(a => a.placeNumberID === Number(activityId));
 
   const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }], {
     useNativeDriver: false,
@@ -24,7 +24,7 @@ export const useActivityDetailsPageLogic = () => {
 
   const location = trip?.tripAiResp.tripDetails.location.split(',')[0];
 
-  const imageLocationName = `${activity?.placeName}, ${location}`;
+  const imageLocationName = activity?.placeName && location ? `${activity.placeName}, ${location}` : '';
 
   const { data: imageResult, isLoading: isImageLoading } = useGetGooglePlaceImage(imageLocationName, 600);
 
