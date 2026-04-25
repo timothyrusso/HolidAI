@@ -30,8 +30,6 @@ export const useTripDetailsPageLogic = () => {
   const imageUrl = unsplashImage?.url;
   const imageBlurHash = unsplashImage?.blurHash;
 
-  const title = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
-
   const allCoordinates = trip?.tripAiResp?.dayPlans.flatMap((dayPlan, dayIndex) =>
     dayPlan.schedule.map((item, scheduleIndex) => ({
       ...item.geoCoordinates,
@@ -108,7 +106,7 @@ export const useTripDetailsPageLogic = () => {
   };
 
   return {
-    title,
+    location,
     allCoordinates,
     region,
     scrollOffsetY,

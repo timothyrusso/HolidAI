@@ -9,8 +9,8 @@ import { useMainListItemLogic } from './MainListItem.logic';
 import { styles } from './MainListItem.style';
 
 type MainListItemProps = {
-  id?: string;
-  index?: number;
+  id: string;
+  index: number;
 };
 
 export const MainListItem: FC<MainListItemProps> = ({ id, index }) => {

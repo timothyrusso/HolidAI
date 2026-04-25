@@ -12,7 +12,7 @@ import { SectionList, type SectionListData, View } from 'react-native';
 
 export const TripDetailsPage = () => {
   const {
-    title,
+    location,
     allCoordinates,
     region,
     scrollOffsetY,
@@ -43,7 +43,7 @@ export const TripDetailsPage = () => {
   };
 
   const renderItem = ({ item }: { item: DayPlan }) => (
-    <DayItem dayPlan={item} location={title} tripId={id} currency={currency} />
+    <DayItem dayPlan={item} location={location} tripId={id} currency={currency} />
   );
 
   return (
@@ -52,7 +52,7 @@ export const TripDetailsPage = () => {
         value={scrollOffsetY}
         imageUrl={imageUrl}
         imageBlurHash={imageBlurHash}
-        title={title}
+        title={location}
         headerIcons={<HeaderIcons />}
       />
       <BasicView nameView={Routes.TripDetails} containerStyle={styles.basicViewContainer} isFullScreen>
