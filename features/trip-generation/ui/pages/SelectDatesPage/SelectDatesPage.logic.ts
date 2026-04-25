@@ -58,8 +58,8 @@ export const useSelectDatesPageLogic = () => {
 
   const userTokens = getUserTokens();
 
-  const startDateLabel = `${translateDateUseCase.execute(locale, startDate)}`;
-  const endDateLabel = `${translateDateUseCase.execute(locale, endDate)}`;
+  const startDateLabel = translateDateUseCase.execute(locale, startDate);
+  const endDateLabel = translateDateUseCase.execute(locale, endDate);
 
   const removeDates = () => {
     setStartDate(null);

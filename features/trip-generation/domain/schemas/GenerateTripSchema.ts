@@ -32,7 +32,7 @@ export const generatedTripSchema = z.object({
               'A unique identifier for the place in the schedule. The identifier must be unique across all days in the schedule, including past days.',
             ),
           bestTimeToVisit: z.string(),
-          rating: z.number(),
+          rating: z.number().min(0).max(5).describe('Rating on a 0-5 scale'),
           ticketPricing: z
             .number()
             .nullable()

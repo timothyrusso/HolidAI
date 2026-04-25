@@ -9,7 +9,7 @@ import { TravelersNumberSelector } from '../../components/TravelersNumberSelecto
 import { useSelectTravelersPageLogic } from './SelectTravelersPage.logic';
 import { style } from './SelectTravelersPage.style';
 
-const separatorItem = () => <View style={style.separator} />;
+const SeparatorItem = () => <View style={style.separator} />;
 
 const SelectTravelersPage = () => {
   const { TravelerData, handleCardPress, selectedTravelers, handleButtonPress } = useSelectTravelersPageLogic();
@@ -40,7 +40,7 @@ const SelectTravelersPage = () => {
         data={TravelerData}
         numColumns={2}
         keyExtractor={item => item.id?.toString() ?? ''}
-        ItemSeparatorComponent={separatorItem}
+        ItemSeparatorComponent={SeparatorItem}
         renderItem={renderItem}
         style={style.list}
         contentContainerStyle={style.contentContainer}

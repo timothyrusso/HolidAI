@@ -9,12 +9,12 @@ import { BudgetData } from './SelectBudgetPage.data';
 import { useSelectBudgetPageLogic } from './SelectBudgetPage.logic';
 import { style } from './SelectBudgetPage.style';
 
-const separatorItem = () => <View style={style.separator} />;
+const SeparatorItem = () => <View style={style.separator} />;
 
 const SelectBudgetPage = () => {
   const { selectedBudget, handleCardPress, handleButtonPress } = useSelectBudgetPageLogic();
 
-  const item = ({ item }: { item: (typeof BudgetData)[number] }) =>
+  const renderBudgetItem = ({ item }: { item: (typeof BudgetData)[number] }) =>
     item.id !== null ? (
       <CustomIconTextCard
         cardType={CardType.Secondary}
@@ -39,8 +39,8 @@ const SelectBudgetPage = () => {
         data={BudgetData}
         numColumns={2}
         keyExtractor={item => item.id?.toString() ?? ''}
-        ItemSeparatorComponent={separatorItem}
-        renderItem={item}
+        ItemSeparatorComponent={SeparatorItem}
+        renderItem={renderBudgetItem}
         style={style.list}
         contentContainerStyle={style.contentContainer}
         columnWrapperStyle={style.columnWrapper}

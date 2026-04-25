@@ -3,6 +3,8 @@ import type { LocationInfo } from '@/features/trip-generation/domain/entities/Lo
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useState } from 'react';
 
+const animation = require('@/ui/assets/lottie/search_animation.json');
+
 export const useSearchPageLogic = () => {
   const { tripActions } = useTripGenerationState();
   const [locationInfo, setLocationInfo] = useState<LocationInfo>();
@@ -15,8 +17,6 @@ export const useSearchPageLogic = () => {
   const handleParticipantsPress = () => navigationService.toSelectTravelers();
 
   const isButtonDisabled = !locationInfo;
-
-  const animation = require('@/ui/assets/lottie/search_animation.json');
 
   return {
     handleSearchPress,

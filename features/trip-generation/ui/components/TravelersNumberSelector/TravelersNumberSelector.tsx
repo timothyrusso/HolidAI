@@ -4,27 +4,28 @@ import { FlatList, View } from 'react-native';
 import { useTravelersNumberSelectorLogic } from './TravelersNumberSelector.logic';
 import { styles } from './TravelersNumberSelector.style';
 
+const Separator = () => <View style={styles.separator} />;
+
 export const TravelersNumberSelector = () => {
   const { handleCardPress, travelersNumber, data } = useTravelersNumberSelectorLogic();
 
-  const renderItem = ({ item }: { item: number }) =>
-    item !== null ? (
-      <CustomNumberButton
-        cardType={CardType.Secondary}
-        label={item.toString()}
-        selected={travelersNumber === item}
-        onPress={() => handleCardPress(item ?? 0)}
-      />
-    ) : null;
+  const renderItem = ({ item }: { item: number }) => (
+    <CustomNumberButton
+      cardType={CardType.Secondary}
+      label={item.toString()}
+      selected={travelersNumber === item}
+      onPress={() => handleCardPress(item)}
+    />
+  );
 
   return (
     <FlatList
       data={data}
       renderItem={renderItem}
       keyExtractor={item => item.toString()}
-      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       horizontal
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ItemSeparatorComponent={Separator}
       style={styles.list}
     />
   );

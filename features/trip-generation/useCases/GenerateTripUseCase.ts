@@ -31,20 +31,25 @@ export class GenerateTripUseCase {
 
   async execute(params: GenerateTripParams): Promise<Result<TripAiResp>> {
     const prompt = travelPlanPrompt
-      .replace('{location}', params.location)
+      .replaceAll('{location}', params.location)
       .replaceAll('{days}', params.totalNoOfDays.toString())
       .replaceAll('{nights}', (params.totalNoOfDays - 1).toString())
-      .replace('{travelersNumber}', params.travelersNumber.toString())
-      .replace('{travelersType}', params.travelerType)
-      .replace('{budget}', params.budgetInfo)
-      .replace('{startDate}', formatDateForPromptUseCase.execute(params.startDate))
-      .replace('{endDate}', formatDateForPromptUseCase.execute(params.endDate))
-      .replace('{locale}', params.locale);
+      .replaceAll('{travelersNumber}', params.travelersNumber.toString())
+      .replaceAll('{travelersType}', params.travelerType)
+      .replaceAll('{budget}', params.budgetInfo)
+      .replaceAll('{startDate}', formatDateForPromptUseCase.execute(params.startDate))
+      .replaceAll('{endDate}', formatDateForPromptUseCase.execute(params.endDate))
+      .replaceAll('{locale}', params.locale);
 
     const result = await this.aiClient.generateObject(prompt, generatedTripSchema, AiModels.GEMINI_2_5_FLASH);
 
     if (!result.success) {
-      this.logger.error(result.error, { location: params.location });
+      this.logger.error(result.error, {
+        location: params.location,
+        totalNoOfDays: params.totalNoOfDays,
+        travelerType: params.travelerType,
+        budgetInfo: params.budgetInfo,
+      });
       return fail(result.error);
     }
 

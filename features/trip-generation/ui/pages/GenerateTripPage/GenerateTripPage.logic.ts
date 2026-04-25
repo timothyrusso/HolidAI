@@ -9,7 +9,7 @@ import { useUser } from '@clerk/clerk-expo';
 import { useEffect, useState } from 'react';
 
 export const useGenerateTripPageLogic = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { tripSelectors, tripActions } = useTripGenerationState();
   const { user } = useUser();
@@ -25,8 +25,6 @@ export const useGenerateTripPageLogic = () => {
   const budgetInfo = tripSelectors.budgetInfo();
 
   const generateTrip = async () => {
-    setIsLoading(true);
-
     const result = await generateTripUseCase.execute({
       location: locationInfo.name,
       totalNoOfDays: datesInfo.totalNoOfDays,
