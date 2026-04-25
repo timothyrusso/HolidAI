@@ -57,7 +57,7 @@ export class NavigationService implements INavigationService {
     this.client.push({ pathname: `/${Stacks.CreateTrip}/${Routes.ActivityDetails}`, params });
   }
 
-  toShowAllTrips() {
+  toTripList() {
     this.client.push({ pathname: `/${Stacks.HomePage}/${Routes.ShowAllTrips}` });
   }
   toChangeLanguage() {

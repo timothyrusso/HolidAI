@@ -1,5 +1,5 @@
-import { ShowAllTripsPage } from '@/modules/home/ui/pages/ShowAllTripsPage/ShowAllTripsPage';
+import { TripListPage } from '@/features/trips/ui/pages/TripListPage/TripListPage';
 
 export default function ShowAllTrips() {
-  return <ShowAllTripsPage />;
+  return <TripListPage />;
 }

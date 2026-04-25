@@ -1,4 +1,3 @@
-import { dbKeys } from '@/modules/trips/domain/entities/DbKeys';
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { TripAiResp } from './validators/Trips';
@@ -6,7 +5,7 @@ import { TripAiResp } from './validators/Trips';
 export const getAllTripsbyUserId = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const trips = await ctx.db.query(dbKeys.trips).collect();
+    const trips = await ctx.db.query('trips').collect();
 
     return trips.filter(trip => trip.userId === args.userId);
   },
@@ -18,9 +17,9 @@ export const createTrip = mutation({
     tripAiResp: TripAiResp,
     isFavorite: v.boolean(),
   },
-  returns: v.id(dbKeys.trips),
+  returns: v.id('trips'),
   handler: async (ctx, args) => {
-    const tripId = await ctx.db.insert(dbKeys.trips, {
+    const tripId = await ctx.db.insert('trips', {
       userId: args.userId,
       tripAiResp: args.tripAiResp,
       isFavorite: args.isFavorite,
@@ -30,17 +29,17 @@ export const createTrip = mutation({
 });
 
 export const deleteTrip = mutation({
-  args: { id: v.id(dbKeys.trips) },
+  args: { id: v.id('trips') },
   handler: async (ctx, args) => {
-    await ctx.db.delete(dbKeys.trips, args.id);
+    await ctx.db.delete('trips', args.id);
     return;
   },
 });
 
 export const toggleFavoriteTrip = mutation({
-  args: { id: v.id(dbKeys.trips), isFavorite: v.boolean() },
+  args: { id: v.id('trips'), isFavorite: v.boolean() },
   handler: async (ctx, args) => {
-    const trip = await ctx.db.get(dbKeys.trips, args.id);
+    const trip = await ctx.db.get('trips', args.id);
     if (!trip) {
       throw new Error('Trip not found');
     }
@@ -55,12 +54,12 @@ export const toggleFavoriteTrip = mutation({
 export const deleteAllTripsByUserId = mutation({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
-    const trips = await ctx.db.query(dbKeys.trips).collect();
+    const trips = await ctx.db.query('trips').collect();
 
     const userTrips = trips.filter(trip => trip.userId === args.userId);
 
     for (const trip of userTrips) {
-      await ctx.db.delete(dbKeys.trips, trip._id);
+      await ctx.db.delete('trips', trip._id);
     }
 
     return;

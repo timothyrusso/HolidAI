@@ -1,4 +1,4 @@
-import type { UserTrips } from '@/modules/trips/domain/dto/UserTripsDTO';
+import type { Trip } from '@/features/trips';
 import CustomText from '@/ui/components/basic/CustomText/CustomText';
 import { type FC, Fragment } from 'react';
 import { Pressable, View } from 'react-native';
@@ -6,7 +6,7 @@ import { styles } from './UserDataBox.style';
 
 type UserDataBoxProps = {
   totalTrips: number;
-  favoriteTrips: UserTrips[];
+  favoriteTrips: Trip[];
   userTokens: number;
   onPress: () => void;
 };

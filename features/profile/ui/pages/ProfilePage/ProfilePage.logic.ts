@@ -33,7 +33,7 @@ export const useProfilePageLogic = () => {
   };
 
   const goToShowAllTrips = () => {
-    navigationService.toShowAllTrips();
+    navigationService.toTripList();
   };
 
   return {

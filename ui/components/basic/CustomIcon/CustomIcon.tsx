@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import type { ViewProps } from 'react-native';
 import { type GestureResponderEvent, type OpaqueColorValue, type StyleProp, View, type ViewStyle } from 'react-native';
 import { styles } from './CustomIcon.style';
 
@@ -15,7 +16,7 @@ export type CustomIconProps = {
   style?: StyleProp<ViewStyle>;
   isDarkThemed?: boolean;
   isOutlined?: boolean;
-};
+} & ViewProps;
 
 export const CustomIcon = ({
   disabled = false,

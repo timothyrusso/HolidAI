@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, Pressable, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { spacing } from '@/ui/style/dimensions/spacing';
@@ -18,7 +18,7 @@ export type CustomIconButtonProps = {
   isLoading?: boolean;
   animatedIconStyle?: StyleProp<AnimatedStyle<ViewStyle>>;
   noPressedStyle?: boolean;
-};
+} & ViewProps;
 
 export function BaseIconButton({
   style,

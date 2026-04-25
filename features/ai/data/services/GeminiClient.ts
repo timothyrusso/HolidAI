@@ -5,8 +5,11 @@ import type { ZodType, z } from 'zod';
 
 import { AI_TYPES } from '@/features/ai/di/types';
 import type { AiModels } from '@/features/ai/domain/entities/AiModels';
+import { GeminiExtractionError } from '@/features/ai/domain/entities/errors/GeminiExtractionError';
+import { GeminiSearchError } from '@/features/ai/domain/entities/errors/GeminiSearchError';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
 import { SpanKeys } from '@/features/ai/domain/utils/SpanKeys';
+import { type Result, ensureError, fail, ok } from '@/features/core/error';
 import type { IPerformanceTracker } from '@/features/core/performance';
 import { PERFORMANCE_TYPES } from '@/features/core/performance';
 
@@ -29,12 +32,16 @@ export class GeminiClient implements IAiClient {
    * @param prompt - The natural language query describing what data to generate.
    * @param schema - A Zod schema that defines the shape of the returned object.
    * @param model - The model to use. Must be a value from the `AiModels` const (e.g. `AiModels.GEMINI_2_5_FLASH`).
-   * @returns The generated object typed and validated against the schema.
+   * @returns A `Result` wrapping the generated object typed and validated against the schema.
    */
-  async generateObject<T extends ZodType>(prompt: string, schema: T, model: AiModels): Promise<z.infer<T>> {
+  async generateObject<T extends ZodType>(prompt: string, schema: T, model: AiModels): Promise<Result<z.infer<T>>> {
     return await this.performanceTracker.startSpan(SpanKeys.generate, async () => {
-      const context = await this.searchWithGrounding(prompt, model);
-      return this.extractStructuredOutput(context, prompt, schema, model);
+      try {
+        const context = await this.searchWithGrounding(prompt, model);
+        return await this.extractStructuredOutput(context, prompt, schema, model);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
     });
   }
 
@@ -59,7 +66,7 @@ export class GeminiClient implements IAiClient {
         prompt,
       });
 
-      if (!result.text) throw new Error('No search results found for the query.');
+      if (!result.text) throw new GeminiSearchError('No search results found for the query.');
 
       return result.text;
     });
@@ -72,14 +79,14 @@ export class GeminiClient implements IAiClient {
    * @param prompt - The original user query, included for extraction accuracy.
    * @param schema - A Zod schema that defines the shape of the returned object.
    * @param model - The model to use for extraction.
-   * @returns The extracted object typed and validated against the schema.
+   * @returns A `Result` wrapping the extracted object typed and validated against the schema.
    */
   private async extractStructuredOutput<T extends ZodType>(
     context: string,
     prompt: string,
     schema: T,
     model: AiModels,
-  ): Promise<z.infer<T>> {
+  ): Promise<Result<z.infer<T>>> {
     return await this.performanceTracker.startSpan(SpanKeys.extract, async () => {
       const { output } = await generateText({
         model: this.google(model),
@@ -99,7 +106,11 @@ export class GeminiClient implements IAiClient {
         `,
       });
 
-      return schema.parse(output);
+      const parsed = schema.safeParse(output);
+      if (!parsed.success) {
+        return fail(new GeminiExtractionError(parsed.error.message, ensureError(parsed.error)));
+      }
+      return ok(parsed.data);
     });
   }
 }

@@ -9,7 +9,7 @@ export const ScheduleItem = v.object({
   placeNumberID: v.number(),
   bestTimeToVisit: v.string(),
   rating: v.number(),
-  ticketPricing: v.union(v.string(), v.number()),
+  ticketPricing: v.union(v.number(), v.null()),
   placeDetails: v.string(),
   placeDetailsLongDescription: v.string(),
   placeSecretsAndInsights: v.string(),
@@ -33,6 +33,7 @@ export const TripDetails = v.object({
   startDate: v.string(),
   endDate: v.string(),
   locale: v.string(),
+  currency: v.string(),
 });
 
 export const Weather = v.object({

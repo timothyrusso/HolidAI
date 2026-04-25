@@ -1,4 +1,7 @@
 {
+  "HOME": {
+    "TITLE": "Home"
+  },
   "MY_TRIP": {
     "NO_TRIPS_PLANNED": "No trips planned yet",
     "START_NEW_TRIP": "New Trip",
@@ -40,7 +43,8 @@
     "BEST_TIME_TO_VISIT": "Best Time to Visit:",
     "TICKET_PRICING": "Ticket Pricing:",
     "PRICE_ALERT": "Prices may vary, do not rely solely on this information and do your own research.",
-    "OPEN_MAP": "OPEN IN MAPS"
+    "OPEN_MAP": "OPEN IN MAPS",
+    "FREE": "Free"
   },
   "PROFILE": {
     "TITLE": "Profile",
@@ -121,7 +125,8 @@
     "DESCRIPTION": "Choose your departure and return travel dates.",
     "START_DATE": "Start date:",
     "END_DATE": "Return date:",
-    "SINGLE_DAY": "Single day"
+    "SINGLE_DAY": "Single day",
+    "CLEAR_DATES": "Clear dates"
   },
   "SELECT_BUDGET": {
     "TITLE": "Select budget",
@@ -165,6 +170,9 @@
       "INVALID_CREDENTIALS": "Invalid credentials",
       "INVALID_EMAIL": "Invalid email"
     }
+  },
+  "ACCESSIBILITY": {
+    "LOADING": "Loading content"
   },
   "ERRORS": {
     "GENERIC": "Something went wrong",

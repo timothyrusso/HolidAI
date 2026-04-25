@@ -4,6 +4,7 @@ import { CustomTabButtonWithText } from '@/ui/components/composite/CustomTabButt
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
+import { shadows } from '@/ui/style/shadows';
 import * as Haptics from 'expo-haptics';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,7 @@ const TabLayout = () => {
       <TabSlot />
       <TabList style={tabsStyle.tabList}>
         <TabTrigger name="home" href="/home-page" style={tabsStyle.tabTrigger} asChild>
-          <CustomTabButtonWithText icon={icons.location}>{t('MY_TRIP.MY_TRIPS')}</CustomTabButtonWithText>
+          <CustomTabButtonWithText icon={icons.location}>{t('HOME.TITLE')}</CustomTabButtonWithText>
         </TabTrigger>
         <CustomTabButton icon={icons.add} onPress={handlePress} />
         <TabTrigger name="profile" href="/profile" style={tabsStyle.tabTrigger} asChild>
@@ -49,6 +50,7 @@ const tabsStyle = StyleSheet.create({
     paddingHorizontal: spacing.separator40,
     borderRadius: spacing.Quintuple,
     height: spacing.separator40 + spacing.TripleAndHalf,
+    boxShadow: shadows.mediumShadow,
   },
   tabTrigger: {
     flex: 1,

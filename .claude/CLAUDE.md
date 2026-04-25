@@ -23,20 +23,6 @@ Follow these rules on every task that involves writing or modifying code. If a s
 
 - When `import 'reflect-metadata'` is present, it must be the first import and followed by a blank line. This keeps Biome's import organizer from reordering it.
 
-
-
-**Cross-feature imports (all layers):** dependencies only flow downward through the tier stack, always via the target feature's `index.ts`. Never import from a peer or higher tier, never reach into internal folders. See Feature Dependency Tiers in the architecture doc.
-
-| Layer | Can import (within feature) |
-|---|---|
-| `.tsx` | ViewModel (`.logic.ts`), UI components, styles |
-| `.logic.ts` (ViewModel) | facades, hooks, mappers, use cases via `di/resolve`, state |
-| `facades/` | hook-based repos, use cases via `di/resolve`, other facades, utility hooks, state |
-| `hooks/` | domain types, mappers, state, external library hooks only |
-| `mappers/` | domain types only |
-| `useCases/` | repository interfaces, service interfaces, domain entities, `domain/utils/` |
-| `data/repositories/` | domain interfaces, DTOs, adapters |
-
 ## Naming conventions
 
 | Thing | Convention |
@@ -53,7 +39,3 @@ Follow these rules on every task that involves writing or modifying code. If a s
 | Adapter | `xxxAdapter.ts` |
 | Schema | `XxxSchema.ts` |
 | Page / component files | `Name.tsx` + `Name.logic.ts` + `Name.style.ts` |
-
-## Architecture changes
-
-If you believe a rule needs to change, say so explicitly before writing any code. Do not silently deviate.

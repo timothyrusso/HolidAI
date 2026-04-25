@@ -1,5 +1,5 @@
-import HomePage from '@/modules/home/ui/pages/HomePage/HomePage';
+import UpcomingTripPage from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage';
 
 export default function HomePageTab() {
-  return <HomePage />;
+  return <UpcomingTripPage />;
 }
