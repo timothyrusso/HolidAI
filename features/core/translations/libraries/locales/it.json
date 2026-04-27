@@ -186,6 +186,7 @@
       "VERIFICATION_FAILED": "Codice di verifica non valido",
       "PASSWORD_RESET_FAILED": "Impossibile reimpostare la password, riprova"
     },
+    "TOKENS_EXHAUSTED": "Hai esaurito tutti i tuoi token. I nuovi token saranno disponibili all'inizio del prossimo mese.",
     "BUTTONS": {
       "TRY_AGAIN": "Riprova"
     }

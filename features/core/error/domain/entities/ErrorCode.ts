@@ -9,6 +9,7 @@ export const ErrorCode = {
   AuthSignUpFailed: 'AuthSignUpFailed',
   AuthVerificationFailed: 'AuthVerificationFailed',
   AuthPasswordResetFailed: 'AuthPasswordResetFailed',
+  TokensExhausted: 'TokensExhausted',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];

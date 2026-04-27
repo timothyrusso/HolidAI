@@ -186,6 +186,7 @@
       "VERIFICATION_FAILED": "Invalid verification code",
       "PASSWORD_RESET_FAILED": "Unable to reset password, please try again"
     },
+    "TOKENS_EXHAUSTED": "You've used all your tokens. New tokens will be available at the start of next month.",
     "BUTTONS": {
       "TRY_AGAIN": "Try again"
     }
