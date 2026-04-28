@@ -14,7 +14,7 @@ import { match } from 'ts-pattern';
  *   - paddingHeight {number}: The height of the padding required to adjust the UI when the keyboard is visible.
  *   - keyboardHeight {number}: The height of the keyboard.
  */
-const useKeyboardEffect = (ignoreBottomMenu = false) => {
+export const useKeyboardEffect = (ignoreBottomMenu = false) => {
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [keyboard, setKeyboard] = useState({ height: 0, visible: false });
 
@@ -58,4 +58,3 @@ const useKeyboardEffect = (ignoreBottomMenu = false) => {
     paddingHeight,
   };
 };
-export default useKeyboardEffect;
