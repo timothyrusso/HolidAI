@@ -19,11 +19,11 @@ const TabLayout = () => {
   const { t } = useTranslation();
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (userTokens === 0) {
       showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
       return;
     }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     navigationService.toSearch();
   };
 

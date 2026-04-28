@@ -4,7 +4,7 @@ import { useQuery } from 'convex/react';
 
 export const useGetUserTokens = () => {
   const { user } = useUser();
-  const tokens = useQuery(api.users.getUserTokens, { clerkId: user?.id ?? '' });
+  const tokens = useQuery(api.users.getUserTokens, user?.id ? { clerkId: user.id } : 'skip');
 
   return { userTokens: tokens ?? 0 };
 };
