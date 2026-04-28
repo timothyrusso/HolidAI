@@ -79,6 +79,7 @@ Create a `.env` file in the root directory with the following variables:
 - `GOOGLE_MAPS_API_KEY_IOS`: API key for Google Maps on iOS
 - `GOOGLE_MAPS_API_KEY_ANDROID`: API key for Google Maps on Android
 - `GOOGLE_GEMINI_API_KEY`: API key for Google Gemini AI
+- `FIREBASE_MOBILE_APP_ID`: Firebase Mobile App ID (required for push notifications)
 
 To obtain these values:
 
@@ -112,20 +113,19 @@ To obtain these values:
 2. Prebuild the app
 
    ```bash
-   npx expo prebuild --clean npm run android
-
-   or
-
-   npx expo prebuild --clean npm run ios
+   npx expo prebuild --clean
    ```
 
-3. To run on a specific platform with a clean cache:
+3. Run the app
+
+   ```bash
+   npx expo start
+   ```
+
+   To run on a specific platform with a clean cache:
 
    ```bash
    npx expo start --clear --ios
-
-   or
-
    npx expo start --clear --android
    ```
 
