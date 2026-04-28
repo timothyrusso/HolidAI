@@ -1,11 +1,12 @@
 import { ensureError, fail, ok } from '@/features/core/error';
-import { ProfileError } from '@/features/profile/domain/entities/errors/ProfileError';
-import type { IProfileRepository } from '@/features/profile/domain/entities/repositories/IProfileRepository';
+import { UserError } from '@/features/user/domain/entities/errors/UserError';
+import type { IUserRepository } from '@/features/user/domain/entities/repositories/IUserRepository';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 
-export const useProfileRepository = (): IProfileRepository => {
+export const useUserRepository = (): IUserRepository => {
   const { signOut } = useClerk();
   const { user } = useUser();
+
   return {
     getUser: () =>
       user
@@ -26,7 +27,7 @@ export const useProfileRepository = (): IProfileRepository => {
     },
 
     deleteUser: async () => {
-      if (!user) return fail(new ProfileError('No user to delete'));
+      if (!user) return fail(new UserError('No user to delete'));
       try {
         await user.delete();
         return ok(undefined);

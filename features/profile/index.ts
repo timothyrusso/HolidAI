@@ -1,1 +1,2 @@
-export { useDecrementTokens } from '@/features/profile/facades/useDecrementTokens';
+export { useDeleteAccount } from '@/features/profile/facades/useDeleteAccount';
+export { useProfileData } from '@/features/profile/facades/useProfileData';

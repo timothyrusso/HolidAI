@@ -1,10 +1,10 @@
 import { resetAllStores } from '@/features/core/state';
 import { useToast } from '@/features/core/toast';
-import { useProfileRepository } from '@/features/profile/data/repositories/useProfileRepository';
+import { useUserRepository } from '@/features/user/data/repositories/useUserRepository';
 import { useState } from 'react';
 
 export const useLogout = () => {
-  const repo = useProfileRepository();
+  const repo = useUserRepository();
   const { showErrorToast } = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

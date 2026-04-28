@@ -1,19 +1,19 @@
 import { useToast } from '@/features/core/toast';
-import { useProfileRepository } from '@/features/profile/data/repositories/useProfileRepository';
 import { ProfileError } from '@/features/profile/domain/entities/errors/ProfileError';
 import { useDeleteAllTrips } from '@/features/trips';
+import { useDeleteUser, useGetUser } from '@/features/user';
 import { useState } from 'react';
 
 export const useDeleteAccount = () => {
-  const repo = useProfileRepository();
+  const { user } = useGetUser();
+  const { deleteUser } = useDeleteUser();
   const { deleteAll } = useDeleteAllTrips();
   const { showErrorToast } = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const deleteAccount = async (): Promise<boolean> => {
     setIsLoading(true);
-    const userId = repo.getUser()?.id;
-    if (!userId) {
+    if (!user?.id) {
       setIsLoading(false);
       showErrorToast(new ProfileError('User not loaded'));
       return false;
@@ -23,13 +23,9 @@ export const useDeleteAccount = () => {
       setIsLoading(false);
       return false;
     }
-    const userResult = await repo.deleteUser();
+    const deleted = await deleteUser();
     setIsLoading(false);
-    if (!userResult.success) {
-      showErrorToast(userResult.error);
-      return false;
-    }
-    return true;
+    return deleted;
   };
 
   return { deleteAccount, isLoading };
