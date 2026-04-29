@@ -1,12 +1,12 @@
 import { PlatformOS } from '@/ui/PlatformOS';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { Platform, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   title: {
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     fontSize: spacing.Fourfold,
   },
   inputContainer: {
@@ -35,26 +35,26 @@ export const styles = StyleSheet.create({
     rowGap: spacing.Fourfold,
   },
   verifyTitle: {
-    fontFamily: fonts.interRegular,
+    fontFamily: fontFamily.interRegular,
     fontSize: spacing.Triple,
     alignSelf: 'flex-start',
     ...(Platform.OS === PlatformOS.ios && { marginTop: spacing.Double }),
   },
   subtitle: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     fontSize: spacing.Triple,
     textAlign: 'center',
     color: colors.primaryGrey,
     paddingTop: spacing.Double,
   },
   textButton: {
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     textAlign: 'right',
     color: colors.tertiaryBlue,
     fontSize: spacing.Double + spacing.Minimal,
   },
   labelText: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     color: colors.primaryGrey,
     alignSelf: 'flex-end',
     fontSize: spacing.Double + spacing.Minimal,

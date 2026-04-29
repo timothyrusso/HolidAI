@@ -1,7 +1,7 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -20,12 +20,12 @@ export const styles = StyleSheet.create({
   },
   name: {
     fontSize: spacing.Fourfold,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     textAlign: 'center',
   },
   email: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interRegular,
+    fontFamily: fontFamily.interRegular,
     textAlign: 'center',
     paddingTop: spacing.Triple,
     paddingBottom: spacing.Fourfold,

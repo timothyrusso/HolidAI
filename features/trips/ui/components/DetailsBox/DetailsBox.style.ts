@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -17,19 +17,19 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: colors.primaryWhite,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     fontSize: spacing.Triple,
     alignSelf: 'flex-start',
   },
   location: {
     color: colors.primaryWhite,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     fontSize: spacing.Quintuple,
     alignSelf: 'flex-start',
   },
   date: {
     color: colors.primaryWhite,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     fontSize: spacing.Triple,
   },
   labelDetailsContainer: {

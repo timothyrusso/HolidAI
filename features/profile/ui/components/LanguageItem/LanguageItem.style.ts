@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
 import { StyleSheet } from 'react-native';
 
@@ -22,7 +22,7 @@ export const styles = (isSelected: boolean) =>
     },
     language: {
       fontSize: spacing.Triple,
-      fontFamily: fonts.interMedium,
+      fontFamily: fontFamily.interMedium,
     },
     skeleton: {
       width: '100%',

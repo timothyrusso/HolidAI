@@ -1,7 +1,7 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -15,7 +15,7 @@ export const style = StyleSheet.create({
     marginTop: spacing.Double,
   },
   calendarText: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   calendarDayText: {
     color: colors.primaryWhite,
@@ -23,7 +23,7 @@ export const style = StyleSheet.create({
   subtitle: {
     marginVertical: spacing.Fourfold,
     fontSize: spacing.Triple,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     alignSelf: 'flex-start',
   },
   rangeSelection: {

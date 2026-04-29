@@ -4,7 +4,7 @@ import { type ButtonState, ButtonType } from '@/ui/components/basic/CustomButton
 import type { IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
 
 export type ButtonStyles = {
@@ -44,7 +44,7 @@ export const styleButton = (
       width: '100%',
       color: buttonStyles.textColor,
       textDecorationLine: buttonType === ButtonType.Ghost ? 'underline' : undefined,
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       fontSize: spacing.Triple,
       textAlign: 'center',
       textTransform: 'uppercase',

@@ -1,5 +1,5 @@
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = (height: number) =>
@@ -17,7 +17,7 @@ export const styles = (height: number) =>
       alignItems: 'center',
     },
     title: {
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       fontSize: spacing.Triple + spacing.Minimal,
       textAlign: 'center',
       width: '100%',

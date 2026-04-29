@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   location: {
     fontSize: spacing.Triple,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
   },
   ratingValueContainer: {
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   ratingText: {
     fontSize: spacing.Triple,
     color: colors.primaryWhite,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   ratingContainer: {
     alignItems: 'flex-start',
@@ -47,28 +47,28 @@ export const styles = StyleSheet.create({
   },
   bestTimeToVisitTitle: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   bestTimeToVisitValue: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
   },
   ticketPricingContainer: {
     gap: spacing.Single,
   },
   ticketPricingValue: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     flexWrap: 'wrap',
     flexShrink: 1,
   },
   ticketPricingTitle: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   priceAlert: {
     fontSize: spacing.SingleAndHalf + spacing.Minimal,
-    fontFamily: fonts.interRegular,
+    fontFamily: fontFamily.interRegular,
   },
   priceAlertContainer: {
     flexDirection: 'row',

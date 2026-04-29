@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -27,15 +27,15 @@ export const style = StyleSheet.create({
   },
   label: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   value: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
   },
   destination: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     backgroundColor: colors.primary,
     padding: spacing.Single,
     borderRadius: spacing.Double,

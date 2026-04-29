@@ -1,7 +1,7 @@
 import { colors } from '@/ui/style/colors';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = (isImageLoading: boolean) =>
@@ -22,7 +22,7 @@ export const styles = (isImageLoading: boolean) =>
     },
     description: {
       fontSize: spacing.Triple,
-      fontFamily: fonts.interMedium,
+      fontFamily: fontFamily.interMedium,
       color: colors.primaryBlack,
       paddingHorizontal: spacing.Fourfold,
       lineHeight: spacing.Fourfold,
@@ -41,12 +41,12 @@ export const styles = (isImageLoading: boolean) =>
     },
     insightTitle: {
       fontSize: spacing.Triple,
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       color: colors.primaryBlack,
     },
     insightDescription: {
       fontSize: spacing.Triple,
-      fontFamily: fonts.interMedium,
+      fontFamily: fontFamily.interMedium,
       color: colors.primaryBlack,
       lineHeight: spacing.Fourfold,
     },

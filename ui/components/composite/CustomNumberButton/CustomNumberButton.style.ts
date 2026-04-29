@@ -1,6 +1,6 @@
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet, type TextStyle } from 'react-native';
 
 export const styles = (labelColor: TextStyle['color']) =>
@@ -13,7 +13,7 @@ export const styles = (labelColor: TextStyle['color']) =>
     },
 
     label: {
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       fontSize: spacing.Triple,
       color: labelColor,
     },

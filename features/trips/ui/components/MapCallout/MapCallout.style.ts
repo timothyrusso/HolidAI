@@ -1,7 +1,7 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -15,19 +15,19 @@ export const styles = StyleSheet.create({
   },
   calloutTitle: {
     fontSize: spacing.Triple,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
     marginBottom: spacing.Single,
   },
   calloutDescription: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interRegular,
+    fontFamily: fontFamily.interRegular,
     color: colors.primaryGrey,
     marginBottom: spacing.Double,
   },
   calloutButton: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     color: colors.primary,
     textAlign: 'center',
   },

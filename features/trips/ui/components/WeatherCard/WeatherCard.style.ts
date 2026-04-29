@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -28,11 +28,11 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     color: colors.primaryWhite,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
   },
   subtitle: {
     color: colors.primaryGrey,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   subtitleContainer: {
     flexDirection: 'row',
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     paddingBottom: spacing.MinimalDouble,
   },
   contentValue: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     color: colors.primaryBlack,
     paddingHorizontal: spacing.Quintuple + spacing.Minimal,
   },
@@ -62,7 +62,7 @@ export const styles = StyleSheet.create({
     marginVertical: spacing.Double,
   },
   title: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     color: colors.primaryBlack,
     paddingHorizontal: spacing.Double,
     fontSize: spacing.Double + spacing.Minimal,

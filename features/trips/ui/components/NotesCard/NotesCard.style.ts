@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = (isTitleInverted: boolean) =>
@@ -12,7 +12,7 @@ export const styles = (isTitleInverted: boolean) =>
       marginHorizontal: spacing.Fourfold,
     },
     title: {
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
     },
     notes: {
       fontSize: spacing.Double,

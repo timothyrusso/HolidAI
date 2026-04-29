@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = (color: string) =>
@@ -19,7 +19,7 @@ export const styles = (color: string) =>
     title: {
       color: colors.primaryBlack,
       fontSize: spacing.SingleAndHalf + spacing.Minimal,
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
   });

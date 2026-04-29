@@ -1,7 +1,7 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -31,20 +31,20 @@ export const styles = StyleSheet.create({
   },
   time: {
     fontSize: spacing.SingleAndHalf + spacing.Minimal,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     maxWidth: '80%',
   },
   place: {
     fontSize: spacing.Triple,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
   },
   description: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   price: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   day: {
     position: 'absolute',
@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     color: colors.primaryWhite,
     fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     borderRadius: spacing.Fourfold,
     textAlign: 'center',
     alignSelf: 'center',
@@ -95,7 +95,7 @@ export const styles = StyleSheet.create({
   },
   rating: {
     fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   headerContainer: {
     flexDirection: 'row',

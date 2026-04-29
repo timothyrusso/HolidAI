@@ -1,5 +1,5 @@
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -9,7 +9,7 @@ export const style = StyleSheet.create({
     rowGap: spacing.Triple,
   },
   title: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     fontSize: spacing.Fourfold,
   },
   button: {

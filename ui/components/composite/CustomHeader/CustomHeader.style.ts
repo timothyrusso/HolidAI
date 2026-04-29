@@ -1,6 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = (headerPaddingTop: number) =>
@@ -15,7 +15,7 @@ export const style = (headerPaddingTop: number) =>
     },
     title: {
       fontSize: spacing.Fourfold,
-      fontFamily: fonts.interBold,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
       width: '100%',
     },
