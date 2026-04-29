@@ -1,6 +1,6 @@
 import { normalizeDateToISOUseCase } from '@/features/core/dates';
 import type { TripAiResp } from '@/features/trips';
-import { type ZodSchema, z } from 'zod';
+import { z } from 'zod';
 
 export const generatedTripSchema = z.object({
   tripDetails: z.object({
@@ -67,4 +67,4 @@ export const generatedTripSchema = z.object({
     foodBudgetNotes: z.string(),
     typicalDishes: z.array(z.string()),
   }),
-}) satisfies ZodSchema<TripAiResp>;
+}) satisfies z.ZodType<TripAiResp>;
