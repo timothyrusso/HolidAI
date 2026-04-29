@@ -8,7 +8,7 @@ import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
 
-const UpcomingTripPage = () => {
+export const UpcomingTripPage = () => {
   const { lastCreatedTrip, isLoading, image, imageBlurHash, location, tripId, tripStartDate, totalTrips } =
     useUpcomingTripPageLogic();
 
@@ -37,5 +37,3 @@ const UpcomingTripPage = () => {
     </BasicView>
   );
 };
-
-export default UpcomingTripPage;

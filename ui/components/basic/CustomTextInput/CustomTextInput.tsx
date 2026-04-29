@@ -13,7 +13,7 @@ type CustomTextInputProps = TextInputProps & {
   isPassword?: boolean;
 };
 
-const CustomTextInput: FC<CustomTextInputProps> = ({
+export const CustomTextInput: FC<CustomTextInputProps> = ({
   placeholder,
   placeholderTextColor = colors.primaryGrey,
   isPassword = false,
@@ -42,5 +42,3 @@ const CustomTextInput: FC<CustomTextInputProps> = ({
     </View>
   );
 };
-
-export default CustomTextInput;

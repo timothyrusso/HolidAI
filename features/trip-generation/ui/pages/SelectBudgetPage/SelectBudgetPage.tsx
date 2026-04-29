@@ -1,6 +1,6 @@
 import { Routes } from '@/features/core/navigation';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { colors } from '@/ui/style/colors';
@@ -11,7 +11,7 @@ import { style } from './SelectBudgetPage.style';
 
 const SeparatorItem = () => <View style={style.separator} />;
 
-const SelectBudgetPage = () => {
+export const SelectBudgetPage = () => {
   const { selectedBudget, handleCardPress, handleButtonPress } = useSelectBudgetPageLogic();
 
   const renderBudgetItem = ({ item }: { item: (typeof BudgetData)[number] }) =>
@@ -48,5 +48,3 @@ const SelectBudgetPage = () => {
     </BasicView>
   );
 };
-
-export default SelectBudgetPage;

@@ -4,7 +4,7 @@ import { ButtonType } from '../../basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '../../basic/CustomButton/CustomButtonLarge';
 import { styles } from './ModalTemplate.style';
 
-const ModalFixedFooter = ({
+export const ModalFixedFooter = ({
   primaryAction,
   secondaryAction,
   primaryButtonTitle = 'GLOBAL.BUTTON.CONFIRM',
@@ -44,5 +44,3 @@ const ModalFixedFooter = ({
     </View>
   );
 };
-
-export default ModalFixedFooter;

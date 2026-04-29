@@ -1,5 +1,5 @@
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
-import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInput';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { CustomTextInput } from '@/ui/components/basic/CustomTextInput/CustomTextInput';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
 import { styles } from './ResetPasswordModalBody.style';

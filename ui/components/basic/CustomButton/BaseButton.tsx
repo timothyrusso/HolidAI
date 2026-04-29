@@ -4,7 +4,7 @@ import { match } from 'ts-pattern';
 
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
-import CustomText from '../CustomText/CustomText';
+import { CustomText } from '../CustomText/CustomText';
 import { ButtonState, ButtonType, useCustomButtonLogic } from './CustomButton.logic';
 import { styleButton } from './CustomButton.style';
 

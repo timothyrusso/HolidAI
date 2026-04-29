@@ -16,7 +16,7 @@ type CustomScrollViewProps = {
   scrollEventThrottle?: number;
 };
 
-const CustomScrollView: FC<PropsWithChildren<CustomScrollViewProps>> = ({
+export const CustomScrollView: FC<PropsWithChildren<CustomScrollViewProps>> = ({
   style,
   contentContainerStyle,
   childrenStyle,
@@ -46,5 +46,3 @@ const CustomScrollView: FC<PropsWithChildren<CustomScrollViewProps>> = ({
     </View>
   );
 };
-
-export default CustomScrollView;

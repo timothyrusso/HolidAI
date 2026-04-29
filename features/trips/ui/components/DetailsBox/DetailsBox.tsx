@@ -1,6 +1,6 @@
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonMedium } from '@/ui/components/basic/CustomButton/CustomButtonMedium';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { blur } from '@/ui/style/blur';
 import { BlurView } from 'expo-blur';
 import type { FC } from 'react';

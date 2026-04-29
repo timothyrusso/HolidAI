@@ -1,10 +1,10 @@
 import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomTextButton } from '@/ui/components/basic/CustomTextButton/CustomTextButton';
-import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInput';
-import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
+import { CustomTextInput } from '@/ui/components/basic/CustomTextInput/CustomTextInput';
+import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { ActionModal } from '@/ui/components/dialogs/ActionModal/ActionModal';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
@@ -13,7 +13,7 @@ import { View } from 'react-native';
 import { useSignInPageLogic } from './SignInPage.logic';
 import { styles } from './SignInPage.style';
 
-const SignInPage = () => {
+export const SignInPage = () => {
   const {
     email,
     setEmail,
@@ -72,5 +72,3 @@ const SignInPage = () => {
     </BasicView>
   );
 };
-
-export default SignInPage;

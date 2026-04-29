@@ -4,7 +4,7 @@ import type { TabTriggerSlotProps } from 'expo-router/ui';
 import { type PropsWithChildren, forwardRef } from 'react';
 import { Pressable, type View } from 'react-native';
 import { CustomIcon, type IoniconsName } from '../../basic/CustomIcon/CustomIcon';
-import CustomText from '../../basic/CustomText/CustomText';
+import { CustomText } from '../../basic/CustomText/CustomText';
 import { styles } from './CustomTabButtonWithText.style';
 interface CustomTabButtonWithTextProps extends PropsWithChildren, TabTriggerSlotProps {
   icon: IoniconsName;

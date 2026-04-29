@@ -5,7 +5,7 @@ import { Animated, View, type ViewStyle } from 'react-native';
 import { images } from '@/ui/style/dimensions/images';
 
 import { BaseSkeleton } from '../../basic/BaseSkeleton/BaseSkeleton';
-import CustomText from '../../basic/CustomText/CustomText';
+import { CustomText } from '../../basic/CustomText/CustomText';
 import { style } from './AnimatedHeaderImage.style';
 
 interface AnimatedHeaderImageProps {
@@ -19,7 +19,7 @@ interface AnimatedHeaderImageProps {
   chipsAlignment?: ViewStyle['justifyContent'];
 }
 
-const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
+export const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
   value,
   imageUrl,
   imageBlurHash,
@@ -72,5 +72,3 @@ const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
     </Animated.View>
   );
 };
-
-export default AnimatedHeaderImage;

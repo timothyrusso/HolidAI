@@ -1,6 +1,6 @@
 import { Routes } from '@/features/core/navigation';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { colors } from '@/ui/style/colors';
@@ -11,7 +11,7 @@ import { style } from './SelectTravelersPage.style';
 
 const SeparatorItem = () => <View style={style.separator} />;
 
-const SelectTravelersPage = () => {
+export const SelectTravelersPage = () => {
   const { TravelerData, handleCardPress, selectedTravelers, handleButtonPress } = useSelectTravelersPageLogic();
 
   const renderItem = ({ item }: { item: (typeof TravelerData)[number] }) =>
@@ -50,5 +50,3 @@ const SelectTravelersPage = () => {
     </BasicView>
   );
 };
-
-export default SelectTravelersPage;

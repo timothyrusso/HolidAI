@@ -5,7 +5,7 @@ import { HeaderIcons } from '@/features/trips/ui/components/HeaderIcons/HeaderIc
 import { ListHeaderComponent } from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent';
 import { useTripDetailsPageLogic } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.style';
-import AnimatedHeaderImage from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
+import { AnimatedHeaderImage } from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Fragment } from 'react';
 import { SectionList, type SectionListData, View } from 'react-native';

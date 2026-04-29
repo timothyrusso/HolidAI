@@ -1,6 +1,6 @@
-import LottieAnimation from '@/ui/components/basic/LottieAnimation/LottieAnimation';
+import { LottieAnimation } from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { View } from 'react-native';
-import StartNewTripCard from '../StartNewTripCard/StartNewTripCard';
+import { StartNewTripCard } from '../StartNewTripCard/StartNewTripCard';
 import { styles } from './EmptyListContainer.style';
 
 const animation = require('@/ui/assets/lottie/trip_animation.json');

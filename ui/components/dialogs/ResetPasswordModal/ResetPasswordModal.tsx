@@ -1,5 +1,5 @@
 import { components } from '@/ui/style/dimensions/components';
-import ModalTemplate from '../ModalTemplate/ModalTemplate';
+import { ModalTemplate } from '../ModalTemplate/ModalTemplate';
 import { useResetPasswordModalLogic } from './ResetPasswordModal.logic';
 import { ResetPasswordModalBody } from './components/ResetPasswordModalBody/ResetPasswordModalBody';
 

@@ -1,4 +1,4 @@
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { Pressable, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
 import { styles } from './CustomTextButton.style';

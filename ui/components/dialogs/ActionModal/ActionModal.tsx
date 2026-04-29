@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import CustomText from '../../basic/CustomText/CustomText';
-import ModalTemplate from '../ModalTemplate/ModalTemplate';
+import { CustomText } from '../../basic/CustomText/CustomText';
+import { ModalTemplate } from '../ModalTemplate/ModalTemplate';
 import { useActionModalLogic } from './ActionModal.logic';
 
 export const ActionModal = () => {

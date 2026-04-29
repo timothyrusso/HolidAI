@@ -9,7 +9,7 @@ type ModalContainerProps = PropsWithChildren<ViewProps> & {
   maxHeight?: number;
 };
 
-const ModalContainer: FC<ModalContainerProps> = ({ children, maxHeight, ...props }) => {
+export const ModalContainer: FC<ModalContainerProps> = ({ children, maxHeight, ...props }) => {
   const { containerStyle } = useModalTemplateContainerLogic(maxHeight);
 
   return (
@@ -18,5 +18,3 @@ const ModalContainer: FC<ModalContainerProps> = ({ children, maxHeight, ...props
     </Animated.View>
   );
 };
-
-export default ModalContainer;

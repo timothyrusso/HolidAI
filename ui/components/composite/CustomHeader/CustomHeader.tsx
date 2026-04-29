@@ -1,4 +1,4 @@
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { Ionicons } from '@expo/vector-icons';
 import type { FC } from 'react';
@@ -13,7 +13,7 @@ type CustomHeaderProps = {
   onPress?: () => void;
 };
 
-const CustomHeader: FC<CustomHeaderProps> = ({ title, icon, onPress }) => {
+export const CustomHeader: FC<CustomHeaderProps> = ({ title, icon, onPress }) => {
   const { styleComponent } = useCustomHeaderLogic();
 
   return (
@@ -31,5 +31,3 @@ const CustomHeader: FC<CustomHeaderProps> = ({ title, icon, onPress }) => {
     </View>
   );
 };
-
-export default CustomHeader;

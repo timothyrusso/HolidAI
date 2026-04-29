@@ -4,10 +4,8 @@ import { View } from 'react-native';
 
 import { styles } from './ModalTemplate.style';
 
-const ModalBody: FC<PropsWithChildren<ViewProps>> = ({ children, ...props }) => (
+export const ModalBody: FC<PropsWithChildren<ViewProps>> = ({ children, ...props }) => (
   <View style={styles.body} {...props}>
     {children}
   </View>
 );
-
-export default ModalBody;

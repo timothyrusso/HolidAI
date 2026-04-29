@@ -4,7 +4,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import type { FC } from 'react';
 import type { ImageSourcePropType, StyleProp, TextStyle } from 'react-native';
 import { View } from 'react-native';
-import CustomText from '../CustomText/CustomText';
+import { CustomText } from '../CustomText/CustomText';
 import { styles as stylesFactory } from './LinearGradientText.style';
 
 type LinearGradientTextProps = {

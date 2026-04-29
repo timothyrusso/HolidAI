@@ -3,7 +3,7 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import type { FC } from 'react';
 import { View } from 'react-native';
 import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
-import CustomText from '../CustomText/CustomText';
+import { CustomText } from '../CustomText/CustomText';
 import { styles as cheapStyles } from './Cheap.style';
 
 type CheapProps = {

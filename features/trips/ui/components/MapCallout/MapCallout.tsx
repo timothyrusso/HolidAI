@@ -1,4 +1,4 @@
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { View } from 'react-native';
 import { Callout } from 'react-native-maps';

@@ -12,7 +12,7 @@ type PlacesAutocompleteProps = {
   onPress: (locationInfo: LocationInfo) => void;
   placeholder?: string;
 };
-const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
+export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
   onPress,
   placeholder = 'SEARCH_PLACE_PAGE.SEARCH_PLACE',
 }) => {
@@ -80,5 +80,3 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
     />
   );
 };
-
-export default PlacesAutocomplete;

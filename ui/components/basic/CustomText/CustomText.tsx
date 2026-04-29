@@ -7,7 +7,7 @@ type CustomTextProps = TextProps & {
   text: string;
   style?: StyleProp<TextStyle>;
 };
-const CustomText: FC<CustomTextProps> = ({ text, style, ...textProps }) => {
+export const CustomText: FC<CustomTextProps> = ({ text, style, ...textProps }) => {
   const { t } = useTranslation();
   return (
     <Text style={[styles.text, style]} {...textProps}>
@@ -15,5 +15,3 @@ const CustomText: FC<CustomTextProps> = ({ text, style, ...textProps }) => {
     </Text>
   );
 };
-
-export default CustomText;
