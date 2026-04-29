@@ -15,8 +15,8 @@ import { match } from 'ts-pattern';
  *   - keyboardHeight {number}: The height of the keyboard.
  */
 export const useKeyboardEffect = (ignoreBottomMenu = false) => {
-  const [paddingHeight, setPaddingHeight] = useState(0);
-  const [keyboard, setKeyboard] = useState({ height: 0, visible: false });
+  const [paddingHeight, setPaddingHeight] = useState<number>(0);
+  const [keyboard, setKeyboard] = useState<{ height: number; visible: boolean }>({ height: 0, visible: false });
 
   const listenerType = match(Platform.OS)
     .with(PlatformOS.android, () => 'Did' as const)

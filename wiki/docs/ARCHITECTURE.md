@@ -327,12 +327,13 @@ Pure domain models — TypeScript interfaces, types, and constants that represen
 **`interface` vs `type`**
 
 - Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
-- Use `type` for unions, aliases, or intersections — anything that is not a plain object shape.
+- Use `type` for unions, aliases, intersections, or **component props** — anything that is not a plain domain entity shape.
 
 ```ts
-interface Item { id: string; name: string; }          // ✅ entity shape → interface
+interface Item { id: string; name: string; }          // ✅ domain entity shape → interface
 type ItemStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
 type ItemWithStatus = Item & { status: ItemStatus };  // ✅ intersection → type
+type ItemCardProps = { item: Item; onPress: () => void };  // ✅ component props → type
 ```
 
 **`enum` vs `const`**
