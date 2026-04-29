@@ -2,8 +2,8 @@ import type { FC, PropsWithChildren } from 'react';
 import type { ViewProps } from 'react-native';
 import { Animated } from 'react-native';
 
-import { useModalTemplateContainerLogic } from './ModalTemplateContainer.logic';
-import { styles } from './ModalTemplateContainer.style';
+import { useModalTemplateContainerLogic } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/ModalTemplateContainer.logic';
+import { styles } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/ModalTemplateContainer.style';
 
 type ModalContainerProps = PropsWithChildren<ViewProps> & {
   maxHeight?: number;

@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
+import { type ButtonState, ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import type { IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { components } from '@/ui/style/dimensions/components';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fonts } from '@/ui/style/fonts';
 import { opacity } from '@/ui/style/opacity';
-import type { IoniconsName } from '../CustomIcon/CustomIcon';
-import { type ButtonState, ButtonType } from './CustomButton.logic';
 
 export type ButtonStyles = {
   backgroundColor: string;

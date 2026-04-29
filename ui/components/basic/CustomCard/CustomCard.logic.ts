@@ -4,7 +4,7 @@ import { match } from 'ts-pattern';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 
-import { styles } from './CustomCard.style';
+import { styles } from '@/ui/components/basic/CustomCard/CustomCard.style';
 
 export const CardType = { Default: 'default', Secondary: 'secondary' } as const;
 export type CardType = (typeof CardType)[keyof typeof CardType];

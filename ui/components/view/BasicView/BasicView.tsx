@@ -2,10 +2,10 @@ import type { PropsWithChildren } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
+import { useBasicViewLogic } from '@/ui/components/view/BasicView/BasicView.logic';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { CustomButtonLarge } from '../../basic/CustomButton/CustomButtonLarge';
-import { useBasicViewLogic } from './BasicView.logic';
 
 export type BasicViewProps = {
   isFullScreen?: boolean;

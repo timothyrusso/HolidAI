@@ -1,9 +1,9 @@
+import { useMapCalloutLogic } from '@/features/trips/ui/components/MapCallout/MapCallout.logic';
+import { styles } from '@/features/trips/ui/components/MapCallout/MapCallout.style';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { View } from 'react-native';
 import { Callout } from 'react-native-maps';
-import { useMapCalloutLogic } from './MapCallout.logic';
-import { styles } from './MapCallout.style';
 
 type MapCalloutProps = {
   coord: {

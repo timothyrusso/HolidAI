@@ -1,8 +1,8 @@
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomTextInput } from '@/ui/components/basic/CustomTextInput/CustomTextInput';
+import { styles } from '@/ui/components/dialogs/ResetPasswordModal/components/ResetPasswordModalBody/ResetPasswordModalBody.style';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
-import { styles } from './ResetPasswordModalBody.style';
 
 type ResetPasswordModalBodyProps = {
   email: string;

@@ -1,12 +1,12 @@
 import { Routes } from '@/features/core/navigation';
+import { SummaryCard } from '@/features/trip-generation/ui/components/SummaryCard/SummaryCard';
+import { useReviewTripPageLogic } from '@/features/trip-generation/ui/pages/ReviewTripPage/ReviewTripPage.logic';
+import { style } from '@/features/trip-generation/ui/pages/ReviewTripPage/ReviewTripPage.style';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { LottieAnimation } from '@/ui/components/basic/LottieAnimation/LottieAnimation';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { SummaryCard } from '../../components/SummaryCard/SummaryCard';
-import { useReviewTripPageLogic } from './ReviewTripPage.logic';
-import { style } from './ReviewTripPage.style';
 
 export const ReviewTripPage = () => {
   const { handleButtonPress, destination, dates, travelers, budget, animation } = useReviewTripPageLogic();

@@ -1,3 +1,5 @@
+import { styles } from '@/features/trips/ui/components/ActivityDetailsBox/ActivityDetailsBox.style';
+import { OpenMapButton } from '@/features/trips/ui/components/OpenMapButton/OpenMapButton';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
@@ -6,8 +8,6 @@ import { icons } from '@/ui/style/icons';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
 import { showLocation } from 'react-native-map-link';
-import { OpenMapButton } from '../OpenMapButton/OpenMapButton';
-import { styles } from './ActivityDetailsBox.style';
 
 type ActivityDetailsBoxProps = {
   locationTitle?: string;

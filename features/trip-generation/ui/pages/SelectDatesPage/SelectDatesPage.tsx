@@ -1,4 +1,6 @@
 import { Routes } from '@/features/core/navigation';
+import { useSelectDatesPageLogic } from '@/features/trip-generation/ui/pages/SelectDatesPage/SelectDatesPage.logic';
+import { style } from '@/features/trip-generation/ui/pages/SelectDatesPage/SelectDatesPage.style';
 import { DateBox } from '@/features/trips/ui/components/DateBox/DateBox';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
@@ -6,8 +8,6 @@ import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { colors } from '@/ui/style/colors';
 import { View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
-import { useSelectDatesPageLogic } from './SelectDatesPage.logic';
-import { style } from './SelectDatesPage.style';
 
 export const SelectDatesPage = () => {
   const {

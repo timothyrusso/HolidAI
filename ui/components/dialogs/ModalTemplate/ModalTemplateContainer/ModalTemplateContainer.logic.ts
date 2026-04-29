@@ -5,8 +5,8 @@ import { match } from 'ts-pattern';
 
 import { PlatformOS } from '@/ui/PlatformOS';
 import { useKeyboardEffect } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/useKeyboardEffect';
+import { DefaultAnimationDurationMs } from '@/ui/components/dialogs/animations';
 import { SCREEN_HEIGHT } from '@/ui/style/dimensions/spacing';
-import { DefaultAnimationDurationMs } from '../../animations';
 
 export const useModalTemplateContainerLogic = (maxHeight?: number) => {
   const { paddingHeight, keyboardHeight, isKeyboardVisible } = useKeyboardEffect(true);

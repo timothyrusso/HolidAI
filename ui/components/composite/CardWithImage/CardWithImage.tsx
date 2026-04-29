@@ -1,8 +1,8 @@
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { style } from '@/ui/components/composite/CardWithImage/CardWithImage.style';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { CustomText } from '../../basic/CustomText/CustomText';
-import { style } from './CardWithImage.style';
 
 type CardWithImageProps = {
   title: string;

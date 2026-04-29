@@ -3,8 +3,8 @@ import type { NativeScrollEvent, NativeSyntheticEvent, StyleProp, ViewStyle } fr
 import { ScrollView, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import { useCustomScrollViewLogic } from './CustomScrollView.logic';
-import { styles } from './CustomScrollView.style';
+import { useCustomScrollViewLogic } from '@/ui/components/composite/CustomScrollView/CustomScrollView.logic';
+import { styles } from '@/ui/components/composite/CustomScrollView/CustomScrollView.style';
 
 type CustomScrollViewProps = {
   isDarkThemed?: boolean;

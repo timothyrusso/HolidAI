@@ -1,7 +1,7 @@
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { useInfoModalLogic } from '@/ui/components/dialogs/InfoModal/InfoModal.logic';
+import { ModalTemplate } from '@/ui/components/dialogs/ModalTemplate/ModalTemplate';
 import { View } from 'react-native';
-import { CustomText } from '../../basic/CustomText/CustomText';
-import { ModalTemplate } from '../ModalTemplate/ModalTemplate';
-import { useInfoModalLogic } from './InfoModal.logic';
 
 export const InfoModal = () => {
   const { isVisible, primaryAction, headerTitle, description, primaryButtonTitle } = useInfoModalLogic();

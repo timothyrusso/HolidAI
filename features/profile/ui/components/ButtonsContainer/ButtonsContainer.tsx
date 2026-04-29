@@ -1,3 +1,4 @@
+import { style } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer.style';
 import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
@@ -5,7 +6,6 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { type FC, Fragment } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import { style } from './ButtonsContainer.style';
 
 type ButtonsContainerProps = {
   firstTitle: string;

@@ -1,3 +1,5 @@
+import { useWelcomePageLogic } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.logic';
+import { styles } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.style';
 import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
@@ -6,8 +8,6 @@ import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { useWelcomePageLogic } from './WelcomePage.logic';
-import { styles } from './WelcomePage.style';
 
 export const WelcomePage = () => {
   const { handlePress, welcomePageImage } = useWelcomePageLogic();

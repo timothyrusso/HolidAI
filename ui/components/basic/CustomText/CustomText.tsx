@@ -1,7 +1,7 @@
+import { styles } from '@/ui/components/basic/CustomText/CustomText.style';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type StyleProp, Text, type TextProps, type TextStyle } from 'react-native';
-import { styles } from './CustomText.style';
 
 type CustomTextProps = TextProps & {
   text: string;

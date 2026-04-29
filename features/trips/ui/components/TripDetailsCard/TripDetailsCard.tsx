@@ -1,4 +1,5 @@
 import type { TripDetails } from '@/features/trips';
+import { styles } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
@@ -8,7 +9,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { styles } from './TripDetailsCard.style';
 
 type TripDetailsCardProps = {
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;

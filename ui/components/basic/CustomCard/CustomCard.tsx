@@ -2,7 +2,11 @@ import type { PropsWithChildren } from 'react';
 import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
 import { Pressable } from 'react-native';
 
-import { CardType, type CustomCardLogicProps, useCustomCardLogic } from './CustomCard.logic';
+import {
+  CardType,
+  type CustomCardLogicProps,
+  useCustomCardLogic,
+} from '@/ui/components/basic/CustomCard/CustomCard.logic';
 
 export type CustomCardProps = PressableProps &
   CustomCardLogicProps & {

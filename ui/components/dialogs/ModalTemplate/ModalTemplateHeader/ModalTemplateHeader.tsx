@@ -7,7 +7,7 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { styles } from './ModalTemplateHeader.style';
+import { styles } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateHeader/ModalTemplateHeader.style';
 
 export const ModalHeader = ({
   title = '',

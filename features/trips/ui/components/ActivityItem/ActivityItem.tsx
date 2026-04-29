@@ -1,4 +1,7 @@
 import type { ScheduleItem } from '@/features/trips';
+import { useActivityItemLogic } from '@/features/trips/ui/components/ActivityItem/ActivityItem.logic';
+import { styles } from '@/features/trips/ui/components/ActivityItem/ActivityItem.style';
+import { NumberedMarker } from '@/features/trips/ui/components/NumberedMarker/NumberedMarker';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
@@ -8,9 +11,6 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { type FC, Fragment, memo } from 'react';
 import { Pressable, View } from 'react-native';
-import { NumberedMarker } from '../NumberedMarker/NumberedMarker';
-import { useActivityItemLogic } from './ActivityItem.logic';
-import { styles } from './ActivityItem.style';
 
 type ActivityItemProps = {
   scheduleItem: ScheduleItem;

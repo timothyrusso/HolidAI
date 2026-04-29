@@ -1,11 +1,11 @@
+import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { styles } from '@/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText.style';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { TabTriggerSlotProps } from 'expo-router/ui';
 import { type PropsWithChildren, forwardRef } from 'react';
 import { Pressable, type View } from 'react-native';
-import { CustomIcon, type IoniconsName } from '../../basic/CustomIcon/CustomIcon';
-import { CustomText } from '../../basic/CustomText/CustomText';
-import { styles } from './CustomTabButtonWithText.style';
 interface CustomTabButtonWithTextProps extends PropsWithChildren, TabTriggerSlotProps {
   icon: IoniconsName;
 }

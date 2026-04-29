@@ -1,11 +1,11 @@
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { styles as stylesFactory } from '@/ui/components/basic/LinearGradientText/LinearGradientText.style';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import MaskedView from '@react-native-masked-view/masked-view';
 import type { FC } from 'react';
 import type { ImageSourcePropType, StyleProp, TextStyle } from 'react-native';
 import { View } from 'react-native';
-import { CustomText } from '../CustomText/CustomText';
-import { styles as stylesFactory } from './LinearGradientText.style';
 
 type LinearGradientTextProps = {
   text: string;

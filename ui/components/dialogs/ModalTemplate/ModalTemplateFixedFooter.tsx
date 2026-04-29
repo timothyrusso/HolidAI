@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 
-import { ButtonType } from '../../basic/CustomButton/CustomButton.logic';
-import { CustomButtonLarge } from '../../basic/CustomButton/CustomButtonLarge';
-import { styles } from './ModalTemplate.style';
+import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
+import { styles } from '@/ui/components/dialogs/ModalTemplate/ModalTemplate.style';
 
 export const ModalFixedFooter = ({
   primaryAction,

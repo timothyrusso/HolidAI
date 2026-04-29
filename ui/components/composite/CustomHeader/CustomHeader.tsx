@@ -1,11 +1,11 @@
+import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { useCustomHeaderLogic } from '@/ui/components/composite/CustomHeader/CustomHeader.logic';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { Ionicons } from '@expo/vector-icons';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { ButtonType } from '../../basic/CustomButton/CustomButton.logic';
-import { CustomIconButtonMedium } from '../../basic/CustomIconButton/CustomIconButtonMedium';
-import { useCustomHeaderLogic } from './CustomHeader.logic';
 
 type CustomHeaderProps = {
   title: string;

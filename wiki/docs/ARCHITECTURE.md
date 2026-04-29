@@ -1695,7 +1695,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
 11. **Feature isolation.** Features only import from `features/core/<sub-module>` (via its `index.ts`) or from another feature's public API (`index.ts`). Never reach into another feature's or core sub-module's internal folders (`data/`, `domain/`, `facades/`, etc.).
-12. **Always use `@/` path aliases.** Never use relative paths (`../`) anywhere in the project.
+12. **Always use `@/` path aliases.** Never use relative paths (`./` or `../`) anywhere in the project.
 13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
 
 ---

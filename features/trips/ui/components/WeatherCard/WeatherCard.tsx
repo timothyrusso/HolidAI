@@ -1,4 +1,5 @@
 import type { Weather } from '@/features/trips';
+import { styles } from '@/features/trips/ui/components/WeatherCard/WeatherCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
@@ -7,7 +8,6 @@ import { icons } from '@/ui/style/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { styles } from './WeatherCard.style';
 
 type WeatherCardProps = {
   weather: Weather;

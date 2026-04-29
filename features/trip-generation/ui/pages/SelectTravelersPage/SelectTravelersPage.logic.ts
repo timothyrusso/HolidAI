@@ -1,7 +1,7 @@
 import { navigationService } from '@/features/core/navigation';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
+import { TravelerData } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.data';
 import { useTranslation } from 'react-i18next';
-import { TravelerData } from './SelectTravelersPage.data';
 
 export const useSelectTravelersPageLogic = () => {
   const { tripActions, tripSelectors } = useTripGenerationState();

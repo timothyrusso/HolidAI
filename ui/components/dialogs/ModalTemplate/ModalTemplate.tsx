@@ -2,14 +2,14 @@ import type { ReactElement } from 'react';
 import type { ModalProps } from 'react-native-modal';
 import Modal from 'react-native-modal';
 
+import { styles } from '@/ui/components/dialogs/ModalTemplate/ModalTemplate.style';
+import { ModalBody } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateBody';
+import { ModalContainer } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/ModalTemplateContainer';
+import { ModalContent } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContent';
+import { ModalFixedFooter } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateFixedFooter';
+import { ModalFooter } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateFooter';
+import { ModalHeader } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateHeader/ModalTemplateHeader';
 import { opacity } from '@/ui/style/opacity';
-import { styles } from './ModalTemplate.style';
-import { ModalBody } from './ModalTemplateBody';
-import { ModalContainer } from './ModalTemplateContainer/ModalTemplateContainer';
-import { ModalContent } from './ModalTemplateContent';
-import { ModalFixedFooter } from './ModalTemplateFixedFooter';
-import { ModalFooter } from './ModalTemplateFooter';
-import { ModalHeader } from './ModalTemplateHeader/ModalTemplateHeader';
 
 type ModalTemplateProps = Partial<ModalProps> & {
   isVisible: boolean;

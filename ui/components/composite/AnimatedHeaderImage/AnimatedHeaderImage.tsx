@@ -4,9 +4,9 @@ import { Animated, View, type ViewStyle } from 'react-native';
 
 import { images } from '@/ui/style/dimensions/images';
 
-import { BaseSkeleton } from '../../basic/BaseSkeleton/BaseSkeleton';
-import { CustomText } from '../../basic/CustomText/CustomText';
-import { style } from './AnimatedHeaderImage.style';
+import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { style } from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage.style';
 
 interface AnimatedHeaderImageProps {
   value: Animated.Value;

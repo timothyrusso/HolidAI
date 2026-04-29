@@ -1,3 +1,5 @@
+import { useSignInPageLogic } from '@/features/auth/ui/pages/SignInPage/SignInPage.logic';
+import { styles } from '@/features/auth/ui/pages/SignInPage/SignInPage.style';
 import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
@@ -10,8 +12,6 @@ import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { useSignInPageLogic } from './SignInPage.logic';
-import { styles } from './SignInPage.style';
 
 export const SignInPage = () => {
   const {

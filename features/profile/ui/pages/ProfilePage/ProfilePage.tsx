@@ -1,6 +1,8 @@
 import { Stacks } from '@/features/core/navigation';
 import { ButtonsContainer } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer';
 import { UserDataBox } from '@/features/profile/ui/components/UserDataBox/UserDataBox';
+import { useProfilePageLogic } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.logic';
+import { styles } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.style';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
@@ -9,8 +11,6 @@ import { components } from '@/ui/style/dimensions/components';
 import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { useProfilePageLogic } from './ProfilePage.logic';
-import { styles } from './ProfilePage.style';
 
 export const ProfilePage = () => {
   const {

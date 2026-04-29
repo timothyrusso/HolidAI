@@ -1,3 +1,5 @@
+import { useSignUpPageLogic } from '@/features/auth/ui/pages/SignUpPage/SignUpPage.logic';
+import { styles } from '@/features/auth/ui/pages/SignUpPage/SignUpPage.style';
 import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
@@ -8,8 +10,6 @@ import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/Cus
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { useSignUpPageLogic } from './SignUpPage.logic';
-import { styles } from './SignUpPage.style';
 
 export const SignUpPage = () => {
   const {
