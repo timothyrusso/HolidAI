@@ -38,7 +38,7 @@ const initialState: TripGenerationState = {
     endDate: null,
     totalNoOfDays: 0,
   },
-  budgetInfo: 'Cheap',
+  budgetInfo: '',
 };
 
 export const createTripGenerationStore = () =>
