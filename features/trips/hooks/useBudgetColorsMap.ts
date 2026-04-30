@@ -1,4 +1,4 @@
-import { BudgetOptions } from '@/features/trips';
+import { BudgetOptions } from '@/features/trips/domain/entities/BudgetOptions';
 import { colors } from '@/ui/style/colors';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ export const useBudgetColorsMap = () => {
     [t(BudgetOptions[0].title)]: colors.primaryGreen,
     [t(BudgetOptions[1].title)]: colors.primaryBlue,
     [t(BudgetOptions[2].title)]: colors.secondaryPink,
-    [t(BudgetOptions[3].title)]: colors.primary,
+    [t(BudgetOptions[3].title)]: colors.secondaryYellow,
   };
 
   return { budgetColorsMap };
