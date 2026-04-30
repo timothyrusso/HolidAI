@@ -14,10 +14,6 @@ module.exports = {
       fileName: 'tsconfig.json',
     },
 
-    babelConfig: {
-      fileName: 'babel.config.js',
-    },
-
     enhancedResolveOptions: {
       exportsFields: ['exports'],
       conditionNames: ['react-native', 'import', 'require', 'node', 'default', 'types'],
