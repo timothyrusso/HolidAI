@@ -1,4 +1,4 @@
-import { UpcomingTripPage } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage';
+import { UpcomingTripPage } from '@/features/trips';
 
 export default function HomePageTab() {
   return <UpcomingTripPage />;

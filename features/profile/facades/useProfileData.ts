@@ -1,5 +1,4 @@
-import { useGetFavoriteTrips } from '@/features/trips/facades/useGetFavoriteTrips';
-import { useGetTrips } from '@/features/trips/facades/useGetTrips';
+import { useGetFavoriteTrips, useGetTrips } from '@/features/trips';
 import { useGetUser, useGetUserTokens } from '@/features/user';
 
 export const useProfileData = () => {

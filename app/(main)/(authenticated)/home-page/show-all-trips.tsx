@@ -1,4 +1,4 @@
-import { TripListPage } from '@/features/trips/ui/pages/TripListPage/TripListPage';
+import { TripListPage } from '@/features/trips';
 
 export default function ShowAllTrips() {
   return <TripListPage />;

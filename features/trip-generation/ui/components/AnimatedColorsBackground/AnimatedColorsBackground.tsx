@@ -1,4 +1,4 @@
-import { styles } from '@/features/trips/ui/components/AnimatedColorsBackground/AnimatedColorsBackground.style';
+import { styles } from '@/features/trip-generation/ui/components/AnimatedColorsBackground/AnimatedColorsBackground.style';
 import { colorBgPulse } from '@/ui/style/animations';
 import { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
