@@ -1,7 +1,7 @@
+import { useRootAppCrashViewLogic } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView.logic';
+import { styles } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView.style';
 import type { ErrorBoundaryProps } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
-import { useRootAppCrashViewLogic } from './RootAppCrashView.logic';
-import { styles } from './RootAppCrashView.style';
 
 export const RootAppCrashView = (props: ErrorBoundaryProps) => {
   const { message, retry, t } = useRootAppCrashViewLogic(props);

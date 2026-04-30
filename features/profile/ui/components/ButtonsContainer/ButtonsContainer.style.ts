@@ -1,6 +1,7 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -32,8 +33,8 @@ export const style = StyleSheet.create({
     columnGap: spacing.Double,
   },
   title: {
-    fontSize: spacing.Double + spacing.Minimal,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.MD,
+    fontFamily: fontFamily.interMedium,
   },
   isLoading: {
     justifyContent: 'center',

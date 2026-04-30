@@ -3,9 +3,9 @@ import { match } from 'ts-pattern';
 
 import { logger } from '@/features/core/error';
 import { PlatformOS } from '@/ui/PlatformOS';
+import type { BasicViewProps } from '@/ui/components/view/BasicView/BasicView';
+import { styles } from '@/ui/components/view/BasicView/BasicView.style';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import type { BasicViewProps } from './BasicView';
-import { styles } from './BasicView.style';
 
 export const useBasicViewLogic = ({
   nameView,

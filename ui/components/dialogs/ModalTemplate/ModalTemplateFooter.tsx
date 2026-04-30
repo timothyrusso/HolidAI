@@ -1,8 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
 import { View } from 'react-native';
 
-import { styles } from './ModalTemplate.style';
+import { styles } from '@/ui/components/dialogs/ModalTemplate/ModalTemplate.style';
 
-const ModalFooter: FC<PropsWithChildren> = ({ children }) => <View style={styles.footer}>{children}</View>;
-
-export default ModalFooter;
+export const ModalFooter: FC<PropsWithChildren> = ({ children }) => <View style={styles.footer}>{children}</View>;

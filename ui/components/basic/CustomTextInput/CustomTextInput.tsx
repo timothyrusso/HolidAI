@@ -1,11 +1,11 @@
+import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
+import { useCustomTextInputLogic } from '@/ui/components/basic/CustomTextInput/CustomTextInput.logic';
+import { styles as inputStyles } from '@/ui/components/basic/CustomTextInput/CustomTextInput.style';
 import { colors } from '@/ui/style/colors';
 import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
 import { TextInput, type TextInputProps, View } from 'react-native';
-import { ButtonType } from '../CustomButton/CustomButton.logic';
-import { CustomIconButtonMedium } from '../CustomIconButton/CustomIconButtonMedium';
-import { useCustomTextInputLogic } from './CustomTextInput.logic';
-import { styles as inputStyles } from './CustomTextInput.style';
 
 type CustomTextInputProps = TextInputProps & {
   placeholder: string;
@@ -13,7 +13,7 @@ type CustomTextInputProps = TextInputProps & {
   isPassword?: boolean;
 };
 
-const CustomTextInput: FC<CustomTextInputProps> = ({
+export const CustomTextInput: FC<CustomTextInputProps> = ({
   placeholder,
   placeholderTextColor = colors.primaryGrey,
   isPassword = false,
@@ -42,5 +42,3 @@ const CustomTextInput: FC<CustomTextInputProps> = ({
     </View>
   );
 };
-
-export default CustomTextInput;

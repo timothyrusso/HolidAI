@@ -1,4 +1,4 @@
-export const fonts = {
+export const fontFamily = {
   interRegular: 'inter-regular',
   interMedium: 'inter-medium',
   interBold: 'inter-bold',

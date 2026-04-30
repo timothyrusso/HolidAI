@@ -1,3 +1,6 @@
+import type { FeatureTier } from '@/features/core/featureTier';
+export const FEATURE_TIER: FeatureTier = 0;
+
 export { fetchGooglePlaceImageUseCase, fetchUnsplashImageUseCase } from '@/features/core/images/di/resolve';
 export type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 export type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';

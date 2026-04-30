@@ -1,23 +1,24 @@
 import { navigationService } from '@/features/core/navigation';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
+import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.data';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BudgetData } from './SelectBudgetPage.data';
 
 export const useSelectBudgetPageLogic = () => {
-  const { tripActions, tripSelectors } = useTripGenerationState();
+  const { tripActions } = useTripGenerationState();
   const { t } = useTranslation();
 
-  const budgetInfo = tripSelectors.budgetInfo();
-  const selectedBudget = Math.max(
-    0,
-    BudgetData.findIndex(item => t(item.title) === budgetInfo),
-  );
+  const [selectedBudget, setSelectedBudget] = useState<number>(0);
 
   const handleCardPress = (id: number) => {
+    setSelectedBudget(id);
     tripActions.setBudgetInfo(t(BudgetData[id].title));
   };
 
-  const handleButtonPress = () => navigationService.toReviewTrip();
+  const handleButtonPress = () => {
+    tripActions.setBudgetInfo(t(BudgetData[selectedBudget].title));
+    navigationService.toReviewTrip();
+  };
 
   return {
     selectedBudget,

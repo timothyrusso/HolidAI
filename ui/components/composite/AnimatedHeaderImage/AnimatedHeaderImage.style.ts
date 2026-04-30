@@ -1,7 +1,8 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import type { Animated, ViewStyle } from 'react-native';
 import { StyleSheet } from 'react-native';
 
@@ -33,8 +34,8 @@ export const style = (
     },
     title: {
       color: colors.primaryBlack,
-      fontSize: spacing.Triple,
-      fontFamily: fonts.interBold,
+      fontSize: fontSize.LG,
+      fontFamily: fontFamily.interBold,
       backgroundColor: colors.primaryWhite,
       borderRadius: spacing.Fourfold,
       paddingVertical: spacing.Single,
@@ -55,20 +56,20 @@ export const style = (
     },
     budgetChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
-      fontFamily: fonts.interBold,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
     travelersChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
-      fontFamily: fonts.interBold,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
     dateChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
-      fontFamily: fonts.interBold,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
     detailsChip: {

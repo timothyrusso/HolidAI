@@ -1,7 +1,7 @@
+import { styles } from '@/features/trips/ui/components/WordsAnimation/WordsAnimation.style';
 import { wordKeyframes } from '@/ui/style/animations';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { styles } from './WordsAnimation.style';
 
 const LOADING_WORDS = ['discovering', 'exploring', 'mapping', 'wandering', 'dreaming', 'your', 'perfect', 'journey'];
 const WORDS_ANIMATION_DURATION = 10000;

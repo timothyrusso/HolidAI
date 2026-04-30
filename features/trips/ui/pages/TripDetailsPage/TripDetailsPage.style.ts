@@ -1,14 +1,15 @@
 import { PlatformOS } from '@/ui/PlatformOS';
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { Platform, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   subTitle: {
-    fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interMedium,
     paddingHorizontal: spacing.Fourfold,
     color: colors.primaryGrey,
     textAlign: 'center',

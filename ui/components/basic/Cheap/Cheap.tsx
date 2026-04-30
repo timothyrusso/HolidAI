@@ -1,10 +1,10 @@
+import { styles as cheapStyles } from '@/ui/components/basic/Cheap/Cheap.style';
+import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
-import CustomText from '../CustomText/CustomText';
-import { styles as cheapStyles } from './Cheap.style';
 
 type CheapProps = {
   title: string;

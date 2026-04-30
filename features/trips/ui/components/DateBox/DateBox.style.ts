@@ -1,12 +1,13 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
   dateLabel: {
-    fontFamily: fonts.interMedium,
-    fontSize: spacing.Triple,
+    fontFamily: fontFamily.interMedium,
+    fontSize: fontSize.LG,
     textAlign: 'center',
   },
   dateLabelContainer: {
@@ -20,8 +21,8 @@ export const style = StyleSheet.create({
     alignSelf: 'center',
   },
   dateValue: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.Triple,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.LG,
     position: 'absolute',
     right: spacing.Fourfold,
   },
@@ -29,8 +30,8 @@ export const style = StyleSheet.create({
     flexDirection: 'row',
   },
   singleDayLabel: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.SingleAndHalf + spacing.HalfMinimal,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.XXS,
     color: colors.primaryWhite,
     textAlign: 'center',
     width: '80%',

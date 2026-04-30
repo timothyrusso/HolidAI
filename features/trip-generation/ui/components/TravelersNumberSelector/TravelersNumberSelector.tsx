@@ -1,8 +1,8 @@
+import { useTravelersNumberSelectorLogic } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector.logic';
+import { styles } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector.style';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import { CustomNumberButton } from '@/ui/components/composite/CustomNumberButton/CustomNumberButton';
 import { FlatList, View } from 'react-native';
-import { useTravelersNumberSelectorLogic } from './TravelersNumberSelector.logic';
-import { styles } from './TravelersNumberSelector.style';
 
 const Separator = () => <View style={styles.separator} />;
 

@@ -1,7 +1,8 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = (isPassword: boolean) =>
@@ -9,8 +10,8 @@ export const styles = (isPassword: boolean) =>
     input: {
       width: '100%',
       color: colors.primaryBlack,
-      fontFamily: fonts.interRegular,
-      fontSize: spacing.Triple,
+      fontFamily: fontFamily.interRegular,
+      fontSize: fontSize.LG,
       paddingHorizontal: spacing.Double,
       height: components.customInputHeight,
     },

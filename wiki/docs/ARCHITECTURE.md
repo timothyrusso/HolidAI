@@ -300,6 +300,18 @@ import { useInventoryCheck } from '@/features/inventory';  // ✅ Tier 3 → Tie
 import { usePayment } from '@/features/payments';          // ✅ Tier 3 → Tier 2
 ```
 
+### Declaring a feature's tier in code
+
+Every feature declares its tier via a `FEATURE_TIER` constant exported from its `index.ts`:
+
+```ts
+// features/items/index.ts
+import type { FeatureTier } from '@/features/core/featureTier';
+export const FEATURE_TIER: FeatureTier = 2;
+```
+
+`FeatureTier` is defined in `features/core/featureTier.ts` as `type FeatureTier = 0 | 1 | 2 | 3`. This constant is the machine-readable source of truth for the tier graph — it is the foundation for automated dependency enforcement via dependency-cruiser.
+
 ### Design smell: upward or circular dependency
 
 If you find yourself needing to import from a higher tier or from a peer, stop. It is always a signal that something is misclassified or misplaced:
@@ -327,12 +339,13 @@ Pure domain models — TypeScript interfaces, types, and constants that represen
 **`interface` vs `type`**
 
 - Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
-- Use `type` for unions, aliases, or intersections — anything that is not a plain object shape.
+- Use `type` for unions, aliases, intersections, or **component props** — anything that is not a plain domain entity shape.
 
 ```ts
-interface Item { id: string; name: string; }          // ✅ entity shape → interface
+interface Item { id: string; name: string; }          // ✅ domain entity shape → interface
 type ItemStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
 type ItemWithStatus = Item & { status: ItemStatus };  // ✅ intersection → type
+type ItemCardProps = { item: Item; onPress: () => void };  // ✅ component props → type
 ```
 
 **`enum` vs `const`**
@@ -1694,7 +1707,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
 11. **Feature isolation.** Features only import from `features/core/<sub-module>` (via its `index.ts`) or from another feature's public API (`index.ts`). Never reach into another feature's or core sub-module's internal folders (`data/`, `domain/`, `facades/`, etc.).
-12. **Always use `@/` path aliases.** Never use relative paths (`../`) anywhere in the project.
+12. **Always use `@/` path aliases.** Never use relative paths (`./` or `../`) anywhere in the project.
 13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
 
 ---

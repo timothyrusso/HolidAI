@@ -1,7 +1,7 @@
+import { styles } from '@/features/trips/ui/components/AnimatedColorsBackground/AnimatedColorsBackground.style';
 import { colorBgPulse } from '@/ui/style/animations';
 import { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
-import { styles } from './AnimatedColorsBackground.style';
 
 const COLORS = ['#fa7f7c', '#b58df1', '#ffe780', '#82cab2', '#87cce8'];
 const BORDER_CYCLE = 1000;

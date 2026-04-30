@@ -1,6 +1,7 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -13,8 +14,8 @@ export const styles = StyleSheet.create({
     rowGap: spacing.Triple,
   },
   location: {
-    fontSize: spacing.Triple,
-    fontFamily: fonts.interBold,
+    fontSize: fontSize.LG,
+    fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
   },
   ratingValueContainer: {
@@ -27,9 +28,9 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.Double,
   },
   ratingText: {
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     color: colors.primaryWhite,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   ratingContainer: {
     alignItems: 'flex-start',
@@ -46,29 +47,29 @@ export const styles = StyleSheet.create({
     gap: spacing.Single,
   },
   bestTimeToVisitTitle: {
-    fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interMedium,
   },
   bestTimeToVisitValue: {
-    fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interBold,
   },
   ticketPricingContainer: {
     gap: spacing.Single,
   },
   ticketPricingValue: {
-    fontSize: spacing.Double,
-    fontFamily: fonts.interBold,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interBold,
     flexWrap: 'wrap',
     flexShrink: 1,
   },
   ticketPricingTitle: {
-    fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interMedium,
   },
   priceAlert: {
-    fontSize: spacing.SingleAndHalf + spacing.Minimal,
-    fontFamily: fonts.interRegular,
+    fontSize: fontSize.XS,
+    fontFamily: fontFamily.interRegular,
   },
   priceAlertContainer: {
     flexDirection: 'row',

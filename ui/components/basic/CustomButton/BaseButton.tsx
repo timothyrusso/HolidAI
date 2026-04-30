@@ -2,11 +2,11 @@ import { Fragment } from 'react';
 import { ActivityIndicator, Pressable, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { match } from 'ts-pattern';
 
+import { ButtonState, ButtonType, useCustomButtonLogic } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import { styleButton } from '@/ui/components/basic/CustomButton/CustomButton.style';
+import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
-import CustomText from '../CustomText/CustomText';
-import { ButtonState, ButtonType, useCustomButtonLogic } from './CustomButton.logic';
-import { styleButton } from './CustomButton.style';
 
 export type CustomButtonProps = {
   title: string;

@@ -1,17 +1,17 @@
+import { useSignUpPageLogic } from '@/features/auth/ui/pages/SignUpPage/SignUpPage.logic';
+import { styles } from '@/features/auth/ui/pages/SignUpPage/SignUpPage.style';
 import { Routes } from '@/features/core/navigation';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomTextButton } from '@/ui/components/basic/CustomTextButton/CustomTextButton';
-import CustomTextInput from '@/ui/components/basic/CustomTextInput/CustomTextInput';
-import CustomScrollView from '@/ui/components/composite/CustomScrollView/CustomScrollView';
+import { CustomTextInput } from '@/ui/components/basic/CustomTextInput/CustomTextInput';
+import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
-import { useSignUpPageLogic } from './SignUpPage.logic';
-import { styles } from './SignUpPage.style';
 
-const SignUpPage = () => {
+export const SignUpPage = () => {
   const {
     email,
     setEmail,
@@ -87,5 +87,3 @@ const SignUpPage = () => {
     </BasicView>
   );
 };
-
-export default SignUpPage;

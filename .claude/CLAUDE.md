@@ -4,7 +4,7 @@ Follow these rules on every task that involves writing or modifying code. If a s
 
 ## Non-negotiable rules
 
-- Always use `@/` path aliases. Never use relative paths (`../`).
+- Always use `@/` path aliases. Never use relative paths (`./` or `../`).
 - IoC repositories → only inside `useCases/`. Never in facades, hooks, `.logic.ts`, or UI.
 - Hook-based repositories → only inside `facades/`. Never in `.logic.ts` or UI.
 - `.tsx` files → only import the ViewModel (`.logic.ts`), UI components, and styles.

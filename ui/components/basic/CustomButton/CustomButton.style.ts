@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 
+import { type ButtonState, ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import type { IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
-import type { IoniconsName } from '../CustomIcon/CustomIcon';
-import { type ButtonState, ButtonType } from './CustomButton.logic';
 
 export type ButtonStyles = {
   backgroundColor: string;
@@ -44,8 +45,8 @@ export const styleButton = (
       width: '100%',
       color: buttonStyles.textColor,
       textDecorationLine: buttonType === ButtonType.Ghost ? 'underline' : undefined,
-      fontFamily: fonts.interBold,
-      fontSize: spacing.Triple,
+      fontFamily: fontFamily.interBold,
+      fontSize: fontSize.LG,
       textAlign: 'center',
       textTransform: 'uppercase',
     },

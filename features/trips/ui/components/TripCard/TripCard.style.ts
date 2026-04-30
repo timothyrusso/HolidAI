@@ -1,7 +1,8 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
 import { shadows } from '@/ui/style/shadows';
 import { StyleSheet } from 'react-native';
@@ -19,8 +20,8 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.Double,
   },
   title: {
-    fontSize: spacing.Triple,
-    fontFamily: fonts.interBold,
+    fontSize: fontSize.LG,
+    fontFamily: fontFamily.interBold,
     paddingTop: spacing.Double,
   },
   pressed: {

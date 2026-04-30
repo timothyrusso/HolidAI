@@ -1,12 +1,7 @@
 import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 import { registerStore } from '@/features/core/state/libraries/createStore';
-import { createZustandStorage } from '@/features/core/state/libraries/createZustandStorage';
-import type { IStorage } from '@/features/core/storage';
-import { storage as defaultStorage } from '@/features/core/storage';
 import type { DatesInfo } from '@/features/trip-generation/domain/entities/DatesInfo';
 import type { LocationInfo } from '@/features/trip-generation/domain/entities/LocationInfo';
-import { clearExpiredDates } from '@/features/trip-generation/state/clearExpiredDates';
-import { persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
@@ -43,42 +38,22 @@ const initialState: TripGenerationState = {
     endDate: null,
     totalNoOfDays: 0,
   },
-  budgetInfo: 'Cheap',
+  budgetInfo: '',
 };
 
-export const createTripGenerationStore = (storageClient: IStorage = defaultStorage) =>
+export const createTripGenerationStore = () =>
   createWithEqualityFn<TripGenerationState & TripGenerationActions>()(
-    persist(
-      set => ({
-        ...initialState,
-        actions: {
-          setLocationInfo: locationInfo => set({ locationInfo }),
-          setTravelerType: travelerType => set({ travelerType }),
-          setTravelersNumber: travelersNumber => set({ travelersNumber }),
-          setDatesInfo: datesInfo => set({ datesInfo }),
-          setBudgetInfo: budgetInfo => set({ budgetInfo }),
-          resetTripGenerationState: () => set(initialState),
-        },
-      }),
-      {
-        name: 'trip-generation-store',
-        version: 1,
-        migrate: () => initialState,
-        storage: createZustandStorage(storageClient),
-        partialize: ({ locationInfo, travelerType, travelersNumber, datesInfo, budgetInfo }) => ({
-          locationInfo,
-          travelerType,
-          travelersNumber,
-          datesInfo,
-          budgetInfo,
-        }),
-        onRehydrateStorage: () => state => {
-          if (state && clearExpiredDates(state.datesInfo)) {
-            state.datesInfo = initialState.datesInfo;
-          }
-        },
+    set => ({
+      ...initialState,
+      actions: {
+        setLocationInfo: locationInfo => set({ locationInfo }),
+        setTravelerType: travelerType => set({ travelerType }),
+        setTravelersNumber: travelersNumber => set({ travelersNumber }),
+        setDatesInfo: datesInfo => set({ datesInfo }),
+        setBudgetInfo: budgetInfo => set({ budgetInfo }),
+        resetTripGenerationState: () => set(initialState),
       },
-    ),
+    }),
     shallow,
   );
 

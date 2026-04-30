@@ -1,10 +1,10 @@
+import { useHeaderIconsLogic } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.logic';
+import { heartPulseStyle, styles } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.style';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIconButtonLarge } from '@/ui/components/basic/CustomIconButton/CustomIconButtonLarge';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
-import { useHeaderIconsLogic } from './HeaderIcons.logic';
-import { heartPulseStyle, styles } from './HeaderIcons.style';
 
 export const HeaderIcons = () => {
   const { goBackHandler, addToFavoritesHandler, handleDeleteTrip, isFavorite, shouldAnimate } = useHeaderIconsLogic();

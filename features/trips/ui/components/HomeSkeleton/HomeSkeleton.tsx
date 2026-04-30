@@ -1,7 +1,7 @@
+import { styles } from '@/features/trips/ui/components/HomeSkeleton/HomeSkeleton.style';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { styles } from './HomeSkeleton.style';
 
 export const HomeSkeleton = () => {
   const { t } = useTranslation();

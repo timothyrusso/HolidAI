@@ -39,6 +39,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Dependency Injection**: tsyringe
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
+- **Internationalization**: i18next with react-i18next
 - **Push Notifications**: WIP - Expo Push Notifications
 - **Error Monitoring**: Sentry
 
@@ -78,6 +79,7 @@ Create a `.env` file in the root directory with the following variables:
 - `GOOGLE_MAPS_API_KEY_IOS`: API key for Google Maps on iOS
 - `GOOGLE_MAPS_API_KEY_ANDROID`: API key for Google Maps on Android
 - `GOOGLE_GEMINI_API_KEY`: API key for Google Gemini AI
+- `FIREBASE_MOBILE_APP_ID`: Firebase Mobile App ID (required for push notifications)
 
 To obtain these values:
 
@@ -95,6 +97,9 @@ To obtain these values:
 - `MMKV_ENCRYPTION_KEY`: A secure random string for encrypting local storage
   - Generate a secure random string (at least 32 characters)
 - `CLERK_PUBLISHABLE_KEY`: API key for Clerk authentication
+- `CLERK_JWT_ISSUER_DOMAIN`: JWT issuer domain for Clerk authentication
+- `CONVEX_URL`: URL for your Convex deployment
+- `OPEN_AI_API_KEY`: API key for OpenAI (optional, for alternative AI features)
 - `SENTRY_DSN`: Sentry DSN for error monitoring/session replay
 
 ## Get started with the development build
@@ -105,16 +110,23 @@ To obtain these values:
    npm install
    ```
 
-2. Build the app
+2. Prebuild the app
 
    ```bash
-    npm run ios && npm run android
+   npx expo prebuild --clean
    ```
 
 3. Run the app
 
    ```bash
-    npm run start
+   npx expo start
+   ```
+
+   To run on a specific platform with a clean cache:
+
+   ```bash
+   npx expo start --clear --ios
+   npx expo start --clear --android
    ```
 
 ## Documentation
@@ -123,6 +135,7 @@ Architecture, error handling, and coding conventions are documented in [`wiki/do
 
 - [Architecture](wiki/docs/ARCHITECTURE.md)
 - [Error Handling](wiki/docs/ERROR_HANDLING.md)
+- [Performance Conventions](wiki/docs/PERFORMANCE_CONVENTIONS.md)
 
 ---
 
@@ -151,7 +164,7 @@ Feel free to pick up any issue that interests you. If you're new to the project,
    ```
 3. Create a new branch:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/issue-number
    ```
 
 ### Development Process
@@ -165,7 +178,11 @@ Feel free to pick up any issue that interests you. If you're new to the project,
 
 ### AI-Assisted Code Review
 
-Pull requests are automatically reviewed by 🧙‍♂️ [Sourcery](https://sourcery.ai), an AI-powered code review tool that helps catch issues and suggest improvements before human review.
+Pull requests are automatically reviewed by multiple AI-powered code review tools that help catch issues and suggest improvements before human review:
+
+- 🧙‍♂️ [Sourcery](https://sourcery.ai) — refactoring suggestions and code quality improvements
+- 🐇 [CodeRabbit](https://coderabbit.ai) — line-by-line review with context-aware feedback
+- 🤖 [Gemini Code Assist](https://cloud.google.com/gemini/docs/codeassist/overview) — Google's AI-powered code review assistant
 
 ### Pull Request Guidelines
 

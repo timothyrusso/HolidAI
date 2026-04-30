@@ -1,5 +1,5 @@
+import { styles } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard.style';
 import { colors } from '@/ui/style/colors';
-import { styles } from './CustomIconTextCard.style';
 
 export type CustomIconCardLogicProps = {
   iconBackground?: string;

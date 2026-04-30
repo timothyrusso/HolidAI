@@ -1,10 +1,10 @@
+import { styles as stylesFactory } from '@/features/profile/ui/components/LanguageItem/LanguageItem.style';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
 import { Pressable } from 'react-native';
-import { styles as stylesFactory } from './LanguageItem.style';
 
 type LanguageItemProps = {
   language: string;

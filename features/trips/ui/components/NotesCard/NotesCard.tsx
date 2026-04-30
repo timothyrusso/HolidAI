@@ -1,10 +1,10 @@
+import { styles as stylesFactory } from '@/features/trips/ui/components/NotesCard/NotesCard.style';
 import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
-import { styles as stylesFactory } from './NotesCard.style';
 
 type NotesCardProps = {
   title: string;

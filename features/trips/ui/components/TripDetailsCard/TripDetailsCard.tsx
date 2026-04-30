@@ -1,26 +1,21 @@
 import type { TripDetails } from '@/features/trips';
+import { useTripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.logic';
+import { styles } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { styles } from './TripDetailsCard.style';
 
 type TripDetailsCardProps = {
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;
 };
 
 export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
-  const { t } = useTranslation();
-
-  const dateLabel =
-    tripDetails.startDate !== tripDetails.endDate
-      ? `${tripDetails.startDate} - ${tripDetails.endDate}`
-      : tripDetails.startDate;
+  const { dateLabel, durationLabel, budgetColor } = useTripDetailsCard({ tripDetails });
 
   return (
     <View style={styles.container}>
@@ -33,17 +28,7 @@ export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
         />
         <CustomText text="MY_TRIP.TRIP_DETAILS" style={styles.headerText} />
         <View style={styles.headerChipContainer}>
-          {tripDetails.durationNights > 0 ? (
-            <CustomText
-              text={`${tripDetails.durationDays} ${t('MY_TRIP.DAYS', { count: tripDetails.durationDays })} / ${tripDetails.durationNights} ${t('MY_TRIP.NIGHT', { count: tripDetails.durationNights })}`}
-              style={styles.headerChipText}
-            />
-          ) : (
-            <CustomText
-              text={`${tripDetails.durationDays} ${t('MY_TRIP.DAYS', { count: tripDetails.durationDays })}`}
-              style={styles.headerChipText}
-            />
-          )}
+          <CustomText text={durationLabel} style={styles.headerChipText} />
         </View>
       </View>
       <View style={styles.contentContainer}>
@@ -69,7 +54,7 @@ export const TripDetailsCard: FC<TripDetailsCardProps> = ({ tripDetails }) => {
               <CustomIcon name={icons.card} size={spacing.Triple} color={colors.secondaryBlue} />
               <CustomText text="MY_TRIP.BUDGET" style={styles.subtitle} />
             </View>
-            <CustomText text={tripDetails.budget} style={styles.budgetValue} />
+            <CustomText text={tripDetails.budget} style={[styles.budgetValue, { backgroundColor: budgetColor }]} />
           </View>
         </View>
       </View>

@@ -1,5 +1,6 @@
 import type { Food, TripDetails, Weather } from '@/features/trips';
 import { FoodCard } from '@/features/trips/ui/components/FoodCard/FoodCard';
+import { style } from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent.style';
 import { MapListHeaderComponent } from '@/features/trips/ui/components/MapListHeaderComponent/MapListHeaderComponent';
 import { NotesCard } from '@/features/trips/ui/components/NotesCard/NotesCard';
 import { TripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard';
@@ -10,7 +11,6 @@ import { icons } from '@/ui/style/icons';
 import { type FC, memo } from 'react';
 import { View } from 'react-native';
 import type { Region } from 'react-native-maps';
-import { style } from './ListHeaderComponent.style';
 
 type ListHeaderComponentProps = {
   region: Region;

@@ -1,4 +1,4 @@
-import { BudgetOptions } from '@/features/trip-generation/domain/entities/BudgetOptions';
+import { BudgetOptions } from '@/features/trips';
 import { colors } from '@/ui/style/colors';
 import { useTranslation } from 'react-i18next';
 

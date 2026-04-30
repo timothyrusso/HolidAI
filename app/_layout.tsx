@@ -10,7 +10,7 @@ import { Stacks, screenOptions } from '@/features/core/navigation';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
 import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
-import { fontsConfig } from '@/ui/style/fonts';
+import { fontsConfig } from '@/ui/style/fontFamily';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';

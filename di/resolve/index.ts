@@ -1,3 +1,3 @@
 import 'reflect-metadata';
 
-export * from './infra';
+export * from '@/di/resolve/infra';

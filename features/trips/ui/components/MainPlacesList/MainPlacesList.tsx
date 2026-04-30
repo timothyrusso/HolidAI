@@ -1,8 +1,8 @@
+import { useMainPlacesListLogic } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList.logic';
+import { styles } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList.style';
+import { MainListItem } from '@/features/trips/ui/components/MainPlacesList/components/MainListItem/MainListItem';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { FlatList } from 'react-native';
-import { useMainPlacesListLogic } from './MainPlacesList.logic';
-import { styles } from './MainPlacesList.style';
-import { MainListItem } from './components/MainListItem/MainListItem';
 
 export const MainPlacesList = () => {
   const { listItems, isLoading } = useMainPlacesListLogic();

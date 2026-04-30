@@ -1,7 +1,7 @@
+import { ModalTemplate } from '@/ui/components/dialogs/ModalTemplate/ModalTemplate';
+import { useResetPasswordModalLogic } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal.logic';
+import { ResetPasswordModalBody } from '@/ui/components/dialogs/ResetPasswordModal/components/ResetPasswordModalBody/ResetPasswordModalBody';
 import { components } from '@/ui/style/dimensions/components';
-import ModalTemplate from '../ModalTemplate/ModalTemplate';
-import { useResetPasswordModalLogic } from './ResetPasswordModal.logic';
-import { ResetPasswordModalBody } from './components/ResetPasswordModalBody/ResetPasswordModalBody';
 
 export const ResetPasswordModal = () => {
   const {

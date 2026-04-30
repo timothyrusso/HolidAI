@@ -1,3 +1,5 @@
+import { useMainListItemLogic } from '@/features/trips/ui/components/MainPlacesList/components/MainListItem/MainListItem.logic';
+import { styles } from '@/features/trips/ui/components/MainPlacesList/components/MainListItem/MainListItem.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import { colors } from '@/ui/style/colors';
@@ -5,8 +7,6 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import type { FC } from 'react';
 import { View } from 'react-native';
-import { useMainListItemLogic } from './MainListItem.logic';
-import { styles } from './MainListItem.style';
 
 type MainListItemProps = {
   id: string;
