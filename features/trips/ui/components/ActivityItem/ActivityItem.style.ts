@@ -1,5 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -30,20 +31,20 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.primaryWhite,
   },
   time: {
-    fontSize: spacing.SingleAndHalf + spacing.Minimal,
+    fontSize: fontSize.XS,
     fontFamily: fontFamily.interMedium,
     maxWidth: '80%',
   },
   place: {
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     fontFamily: fontFamily.interBold,
   },
   description: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
   },
   price: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
   },
   day: {
@@ -53,7 +54,7 @@ export const styles = StyleSheet.create({
     padding: spacing.Single,
     backgroundColor: colors.primary,
     color: colors.primaryWhite,
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interBold,
     borderRadius: spacing.Fourfold,
     textAlign: 'center',
@@ -94,7 +95,7 @@ export const styles = StyleSheet.create({
     gap: spacing.MinimalDouble,
   },
   rating: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
   },
   headerContainer: {

@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
@@ -21,7 +22,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   lastItemText: {
-    fontSize: spacing.Quintuple,
+    fontSize: fontSize.XL4,
     fontWeight: 'bold',
   },
   skeleton: {

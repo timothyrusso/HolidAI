@@ -1,5 +1,6 @@
 import { PlatformOS } from '@/ui/PlatformOS';
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
@@ -7,7 +8,7 @@ import { Platform, StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   subTitle: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
     paddingHorizontal: spacing.Fourfold,
     color: colors.primaryGrey,

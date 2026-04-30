@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
@@ -33,7 +34,7 @@ export const style = (
     },
     title: {
       color: colors.primaryBlack,
-      fontSize: spacing.Triple,
+      fontSize: fontSize.LG,
       fontFamily: fontFamily.interBold,
       backgroundColor: colors.primaryWhite,
       borderRadius: spacing.Fourfold,
@@ -55,19 +56,19 @@ export const style = (
     },
     budgetChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
+      fontSize: fontSize.XS,
       fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
     travelersChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
+      fontSize: fontSize.XS,
       fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
     dateChipLabel: {
       color: colors.primaryBlack,
-      fontSize: spacing.SingleAndHalf + spacing.Minimal,
+      fontSize: fontSize.XS,
       fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },

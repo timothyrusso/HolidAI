@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -27,7 +28,7 @@ export const styles = StyleSheet.create({
   headerText: {
     color: colors.primaryWhite,
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.Double + spacing.Minimal,
+    fontSize: fontSize.MD,
   },
   subtitle: {
     color: colors.primaryGrey,
@@ -83,6 +84,6 @@ export const styles = StyleSheet.create({
   headerChipText: {
     fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
-    fontSize: spacing.SingleAndHalf + spacing.Minimal,
+    fontSize: fontSize.XS,
   },
 });

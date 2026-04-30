@@ -1,3 +1,4 @@
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -16,7 +17,7 @@ export const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontFamily: fontFamily.interMedium,
-    fontSize: spacing.Fourfold,
+    fontSize: fontSize.XL2,
   },
   cancelIcon: {
     alignSelf: 'flex-end',

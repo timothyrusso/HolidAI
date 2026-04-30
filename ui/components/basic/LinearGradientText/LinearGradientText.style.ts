@@ -1,3 +1,4 @@
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -18,7 +19,7 @@ export const styles = (height: number) =>
     },
     title: {
       fontFamily: fontFamily.interBold,
-      fontSize: spacing.Triple + spacing.Minimal,
+      fontSize: fontSize.XL,
       textAlign: 'center',
       width: '100%',
       paddingHorizontal: spacing.Quintuple,

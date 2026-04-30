@@ -1,5 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { breakpoints } from '@/ui/style/dimensions/breakpoints';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { SCREEN_HEIGHT, spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
@@ -20,26 +21,26 @@ export const styles = StyleSheet.create({
   },
   titleFirstLine: {
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   titleSecondLine: {
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   peopleText: {
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
     color: colors.tertiaryBlue,
   },
   subtitle: {
     fontFamily: fontFamily.interMedium,
-    fontSize: spacing.Double + spacing.Minimal,
+    fontSize: fontSize.MD,
     textAlign: 'center',
     color: colors.primaryGrey,
   },

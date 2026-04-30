@@ -1,5 +1,5 @@
 import { components } from '@/ui/style/dimensions/components';
-import { spacing } from '@/ui/style/dimensions/spacing';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet, type TextStyle } from 'react-native';
 
@@ -14,7 +14,7 @@ export const styles = (labelColor: TextStyle['color']) =>
 
     label: {
       fontFamily: fontFamily.interBold,
-      fontSize: spacing.Triple,
+      fontSize: fontSize.LG,
       color: labelColor,
     },
   });

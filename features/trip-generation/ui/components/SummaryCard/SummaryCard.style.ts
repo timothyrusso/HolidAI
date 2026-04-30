@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -26,15 +27,15 @@ export const style = StyleSheet.create({
     columnGap: spacing.Single,
   },
   label: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
   },
   value: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interBold,
   },
   destination: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interBold,
     backgroundColor: colors.primary,
     padding: spacing.Single,

@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
@@ -21,7 +22,7 @@ export const styles = (isImageLoading: boolean) =>
       width: '100%',
     },
     description: {
-      fontSize: spacing.Triple,
+      fontSize: fontSize.LG,
       fontFamily: fontFamily.interMedium,
       color: colors.primaryBlack,
       paddingHorizontal: spacing.Fourfold,
@@ -40,12 +41,12 @@ export const styles = (isImageLoading: boolean) =>
       paddingBottom: spacing.Single,
     },
     insightTitle: {
-      fontSize: spacing.Triple,
+      fontSize: fontSize.LG,
       fontFamily: fontFamily.interBold,
       color: colors.primaryBlack,
     },
     insightDescription: {
-      fontSize: spacing.Triple,
+      fontSize: fontSize.LG,
       fontFamily: fontFamily.interMedium,
       color: colors.primaryBlack,
       lineHeight: spacing.Fourfold,

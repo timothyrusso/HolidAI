@@ -1,4 +1,5 @@
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet, type TextStyle, type ViewStyle } from 'react-native';
@@ -16,7 +17,7 @@ export const styles = (labelColor: TextStyle['color'], iconBackgroundColor: View
     },
     label: {
       fontFamily: fontFamily.interBold,
-      fontSize: spacing.Fourfold,
+      fontSize: fontSize.XL2,
       color: labelColor,
     },
   });

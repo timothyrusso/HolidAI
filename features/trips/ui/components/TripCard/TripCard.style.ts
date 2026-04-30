@@ -1,5 +1,6 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
@@ -19,7 +20,7 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.Double,
   },
   title: {
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     fontFamily: fontFamily.interBold,
     paddingTop: spacing.Double,
   },

@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -13,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     fontFamily: fontFamily.interRegular,
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     color: colors.primaryBlack,
     textAlign: 'center',
     marginBottom: spacing.Sextuple,
@@ -28,7 +29,7 @@ export const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     color: colors.primaryWhite,
     textTransform: 'uppercase',
   },

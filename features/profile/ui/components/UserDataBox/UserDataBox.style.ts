@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
@@ -19,14 +20,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userDataLabel: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interMedium,
     textAlign: 'center',
     maxWidth: '60%',
     paddingBottom: spacing.Quintuple,
   },
   userDataValue: {
-    fontSize: spacing.Double,
+    fontSize: fontSize.SM,
     fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
   },

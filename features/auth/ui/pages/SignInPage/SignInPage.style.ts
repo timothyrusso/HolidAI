@@ -1,4 +1,5 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
@@ -6,7 +7,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamily.interBold,
-    fontSize: spacing.Fourfold,
+    fontSize: fontSize.XL2,
   },
   passwordContainer: {
     paddingVertical: spacing.Double,
@@ -31,17 +32,17 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamily.interBold,
     textAlign: 'right',
     color: colors.tertiaryBlue,
-    fontSize: spacing.Double + spacing.Minimal,
+    fontSize: fontSize.MD,
   },
   labelText: {
     fontFamily: fontFamily.interMedium,
     color: colors.primaryGrey,
     alignSelf: 'flex-end',
-    fontSize: spacing.Double + spacing.Minimal,
+    fontSize: fontSize.MD,
   },
   subtitle: {
     fontFamily: fontFamily.interMedium,
-    fontSize: spacing.Triple,
+    fontSize: fontSize.LG,
     textAlign: 'center',
     color: colors.primaryGrey,
     paddingTop: spacing.Double,
