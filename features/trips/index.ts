@@ -1,3 +1,6 @@
+import type { FeatureTier } from '@/features/core/featureTier';
+export const FEATURE_TIER: FeatureTier = 2;
+
 export type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 export type { Food } from '@/features/trips/domain/entities/Food';
 export type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
