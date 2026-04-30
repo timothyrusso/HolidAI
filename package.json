@@ -14,6 +14,7 @@
     "lint": "npx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true",
     "lint:compiler": "npx eslint \"**/*.{js,jsx,ts,tsx}\"",
     "arch": "depcruise features ui di convex app types --config .dependency-cruiser.js",
+    "arch:ci": "depcruise features ui di convex app types --config .dependency-cruiser.js --output-type github-actions",
     "arch:report": "depcruise features ui di convex app types --config .dependency-cruiser.js --output-type err-html > arch-report.html && open arch-report.html"
   },
   "jest": {
