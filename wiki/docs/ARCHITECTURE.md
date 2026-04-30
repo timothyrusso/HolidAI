@@ -300,6 +300,18 @@ import { useInventoryCheck } from '@/features/inventory';  // ✅ Tier 3 → Tie
 import { usePayment } from '@/features/payments';          // ✅ Tier 3 → Tier 2
 ```
 
+### Declaring a feature's tier in code
+
+Every feature declares its tier via a `FEATURE_TIER` constant exported from its `index.ts`:
+
+```ts
+// features/items/index.ts
+import type { FeatureTier } from '@/features/core/featureTier';
+export const FEATURE_TIER: FeatureTier = 2;
+```
+
+`FeatureTier` is defined in `features/core/featureTier.ts` as `type FeatureTier = 0 | 1 | 2 | 3`. This constant is the machine-readable source of truth for the tier graph — it is the foundation for automated dependency enforcement via dependency-cruiser.
+
 ### Design smell: upward or circular dependency
 
 If you find yourself needing to import from a higher tier or from a peer, stop. It is always a signal that something is misclassified or misplaced:
