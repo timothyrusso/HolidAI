@@ -21,6 +21,10 @@ pre-commit:
       files: git diff --name-only --cached --diff-filter=d
       glob: "*.{js,jsx,ts,tsx}"
       run: npx @biomejs/biome format --write {files}
+    react-compiler:
+      files: git diff --name-only --cached --diff-filter=d
+      glob: "*.{js,jsx,ts,tsx}"
+      run: npx eslint --no-warn-ignored {files}
     no-relative-imports:
       files: git diff --name-only --cached --diff-filter=d
       glob: "*.{ts,tsx}"
