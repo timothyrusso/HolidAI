@@ -1,4 +1,4 @@
-import { SelectBudgetPage } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage';
+import { SelectBudgetPage } from '@/features/trip-generation';
 
 const SelectBudget = () => {
   return <SelectBudgetPage />;

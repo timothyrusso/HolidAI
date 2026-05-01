@@ -1,4 +1,4 @@
-import type { ScheduleItem } from '@/features/trips';
+import type { ScheduleItem } from '@/features/trips/ui/components/ActivityItem/ActivityItem.logic';
 import { useActivityItemLogic } from '@/features/trips/ui/components/ActivityItem/ActivityItem.logic';
 import { styles } from '@/features/trips/ui/components/ActivityItem/ActivityItem.style';
 import { NumberedMarker } from '@/features/trips/ui/components/NumberedMarker/NumberedMarker';

@@ -1,4 +1,4 @@
-import { style } from '@/features/trips/ui/components/DateBox/DateBox.style';
+import { style } from '@/features/trip-generation/ui/components/DateBox/DateBox.style';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';

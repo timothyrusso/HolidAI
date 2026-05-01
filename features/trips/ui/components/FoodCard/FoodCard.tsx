@@ -1,4 +1,4 @@
-import type { Food } from '@/features/trips';
+import type { Food } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';

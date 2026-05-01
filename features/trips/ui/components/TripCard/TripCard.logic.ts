@@ -1,6 +1,8 @@
 import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
-import type { Trip } from '@/features/trips';
+import type { Trip } from '@/features/trips/domain/entities/Trip';
+
+export type { Trip };
 
 export const useTripCardLogic = (item: Trip) => {
   const location = item.tripAiResp.tripDetails.location.split(',')[0];

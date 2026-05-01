@@ -20,7 +20,7 @@ pre-commit:
     format:
       files: git diff --name-only --cached --diff-filter=d
       glob: "*.{js,jsx,ts,tsx}"
-      run: npx @biomejs/biome format --write {files}
+      run: npx @biomejs/biome format --write --no-errors-on-unmatched {files}
     react-compiler:
       files: git diff --name-only --cached --diff-filter=d
       glob: "*.{js,jsx,ts,tsx}"
@@ -28,7 +28,7 @@ pre-commit:
     no-relative-imports:
       files: git diff --name-only --cached --diff-filter=d
       glob: "*.{ts,tsx}"
-      exclude: "^convex/"
+      exclude: "^(convex|scripts)/"
       run: |
         if grep -En "from ['\"](\./|\.\./).*['\"]" {files} 2>/dev/null; then
           echo "Relative imports are not allowed. Use @/ aliases instead."

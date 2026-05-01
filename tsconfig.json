@@ -7,7 +7,6 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./*"],
-      "@configs/*": ["./configs/*"],
       "@ui/*": ["./ui/*"]
     }
   },

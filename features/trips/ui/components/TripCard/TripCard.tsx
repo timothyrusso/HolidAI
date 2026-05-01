@@ -1,4 +1,4 @@
-import type { Trip } from '@/features/trips';
+import type { Trip } from '@/features/trips/ui/components/TripCard/TripCard.logic';
 import { useTripCardLogic } from '@/features/trips/ui/components/TripCard/TripCard.logic';
 import { styles } from '@/features/trips/ui/components/TripCard/TripCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';

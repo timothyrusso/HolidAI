@@ -1,5 +1,9 @@
-import type { Food, TripDetails, Weather } from '@/features/trips';
 import { FoodCard } from '@/features/trips/ui/components/FoodCard/FoodCard';
+import type {
+  Food,
+  TripDetails,
+  Weather,
+} from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent.logic';
 import { style } from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent.style';
 import { MapListHeaderComponent } from '@/features/trips/ui/components/MapListHeaderComponent/MapListHeaderComponent';
 import { NotesCard } from '@/features/trips/ui/components/NotesCard/NotesCard';
