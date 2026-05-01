@@ -32,6 +32,13 @@ const staticLayerRules = [
       pathNot: '/index\\.ts$',
     },
   },
+  {
+    name: 'no-circular',
+    comment: 'Circular dependencies make code hard to reason about and test — resolve via dependency inversion or module restructuring',
+    severity: 'error',
+    from: {},
+    to: { circular: true },
+  },
 ];
 
 module.exports = { staticLayerRules };
