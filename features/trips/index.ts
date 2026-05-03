@@ -10,4 +10,5 @@ export { BudgetOptions } from '@/features/trips/domain/entities/BudgetOptions';
 export type { Weather } from '@/features/trips/domain/entities/Weather';
 export { useAddTrip } from '@/features/trips/facades/useAddTrip';
 export { useDeleteAllTrips } from '@/features/trips/facades/useDeleteAllTrips';
+export { useGetFavoriteTrips } from '@/features/trips/facades/useGetFavoriteTrips';
 export { useGetTrips } from '@/features/trips/facades/useGetTrips';

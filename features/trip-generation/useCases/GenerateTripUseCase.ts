@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
 import { AiModels, travelPlanPrompt } from '@/features/ai';
-import { AI_TYPES } from '@/features/ai/di/types';
-import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
+import { AI_TYPES } from '@/features/ai';
+import type { IAiClient } from '@/features/ai';
 import { formatDateForPromptUseCase } from '@/features/core/dates';
 import type { ILogger } from '@/features/core/error';
 import { type Result, fail, ok } from '@/features/core/error';
-import { ERROR_TYPES } from '@/features/core/error/di/types';
+import { ERROR_TYPES } from '@/features/core/error';
 import { generatedTripSchema } from '@/features/trip-generation/domain/schemas/GenerateTripSchema';
 import type { TripAiResp } from '@/features/trips';
 import { inject, injectable } from 'tsyringe';

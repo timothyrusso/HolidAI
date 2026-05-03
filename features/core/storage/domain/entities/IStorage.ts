@@ -1,4 +1,4 @@
-import type { Result } from '@/features/core/error/domain/entities/Result';
+import type { Result } from '@/features/core/error';
 
 export interface IStorage {
   set: (key: string, value: boolean | string | number | Uint8Array) => void;

@@ -3,6 +3,8 @@ import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
+
+export type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';

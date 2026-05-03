@@ -2,7 +2,7 @@ import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
-import { generateTripUseCase } from '@/features/trip-generation';
+import { generateTripUseCase } from '@/features/trip-generation/di/resolve';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';

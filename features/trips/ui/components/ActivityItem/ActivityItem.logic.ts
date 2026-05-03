@@ -1,6 +1,8 @@
 import { useGetGooglePlaceImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
-import type { ScheduleItem } from '@/features/trips';
+import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
+
+export type { ScheduleItem };
 import { useTranslation } from 'react-i18next';
 
 export const useActivityItemLogic = (scheduleItem: ScheduleItem, location: string, tripId: string) => {

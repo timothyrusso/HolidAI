@@ -1,5 +1,4 @@
-import { createSelectors } from '@/features/core/state/libraries/createSelectors';
-import { registerStore } from '@/features/core/state/libraries/createStore';
+import { createSelectors, registerStore } from '@/features/core/state';
 import type { DatesInfo } from '@/features/trip-generation/domain/entities/DatesInfo';
 import type { LocationInfo } from '@/features/trip-generation/domain/entities/LocationInfo';
 import { shallow } from 'zustand/shallow';

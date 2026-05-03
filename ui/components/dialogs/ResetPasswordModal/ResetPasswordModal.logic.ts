@@ -1,4 +1,4 @@
-import { useResetPassword } from '@/features/auth/facades/useResetPassword';
+import { useResetPassword } from '@/features/auth';
 import { useModalState } from '@/features/core/state';
 import { useToast } from '@/features/core/toast';
 import { useState } from 'react';

@@ -1,4 +1,4 @@
-import { SearchPlacePage } from '@/features/trip-generation/ui/pages/SearchPlacePage/SearchPlacePage';
+import { SearchPlacePage } from '@/features/trip-generation/pages';
 
 const SearchPlace = () => {
   return <SearchPlacePage />;
