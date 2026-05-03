@@ -1,9 +1,8 @@
 import { Routes } from '@/features/core/navigation';
-import type { Trip } from '@/features/trips/domain/entities/Trip';
 import { TripCard } from '@/features/trips/ui/components/TripCard/TripCard';
+import type { Trip, UniqueItem } from '@/features/trips/ui/pages/TripListPage/TripListPage.logic';
 import { useTripListPageLogic } from '@/features/trips/ui/pages/TripListPage/TripListPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripListPage/TripListPage.style';
-import type { UniqueItem } from '@/modules/shared/hooks/useUniqueItems';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { FlatList } from 'react-native';

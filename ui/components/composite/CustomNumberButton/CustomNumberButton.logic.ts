@@ -1,5 +1,5 @@
+import { styles } from '@/ui/components/composite/CustomNumberButton/CustomNumberButton.style';
 import { colors } from '@/ui/style/colors';
-import { styles } from './CustomNumberButton.style';
 
 export type CustomNumberButtonLogicProps = {
   selected?: boolean;

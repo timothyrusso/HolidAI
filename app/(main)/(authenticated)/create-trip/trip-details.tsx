@@ -1,4 +1,4 @@
-import { TripDetailsPage } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage';
+import { TripDetailsPage } from '@/features/trips/pages';
 
 const TripDetails = () => {
   return <TripDetailsPage />;

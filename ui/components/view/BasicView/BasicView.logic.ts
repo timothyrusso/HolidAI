@@ -1,11 +1,26 @@
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, type StyleProp, type ViewStyle } from 'react-native';
 import { match } from 'ts-pattern';
 
 import { logger } from '@/features/core/error';
 import { PlatformOS } from '@/ui/PlatformOS';
+import { styles } from '@/ui/components/view/BasicView/BasicView.style';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import type { BasicViewProps } from './BasicView';
-import { styles } from './BasicView.style';
+
+export type BasicViewProps = {
+  isFullScreen?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
+  viewStyle?: StyleProp<ViewStyle>;
+  nameView: string;
+  bottomButtonTitle?: string;
+  bottomButtonPress?: () => void;
+  bottomButtonDisabled?: boolean;
+  bottomButtonLoading?: boolean;
+  topGradientColor?: string;
+  bottomGradientColor?: string;
+  isMenuVisible?: boolean;
+  statusBarStyle?: 'light' | 'dark';
+  hasHeader?: boolean;
+};
 
 export const useBasicViewLogic = ({
   nameView,

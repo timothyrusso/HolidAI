@@ -1,10 +1,10 @@
+import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { styles } from '@/ui/components/composite/CustomTabButton/CustomTabButton.style';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import type { TabTriggerSlotProps } from 'expo-router/ui';
 import { type PropsWithChildren, forwardRef } from 'react';
 import { Pressable, type View } from 'react-native';
-import { CustomIcon, type IoniconsName } from '../../basic/CustomIcon/CustomIcon';
-import { styles } from './CustomTabButton.style';
 
 interface CustomTabButtonProps extends PropsWithChildren, TabTriggerSlotProps {
   icon: IoniconsName;

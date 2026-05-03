@@ -1,8 +1,9 @@
 import { colors } from '@/ui/style/colors';
 import { breakpoints } from '@/ui/style/dimensions/breakpoints';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { images } from '@/ui/style/dimensions/images';
 import { SCREEN_HEIGHT, spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -19,27 +20,27 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleFirstLine: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   titleSecondLine: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
   },
   peopleText: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.FourfoldAndHalf,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.XL3,
     textAlign: 'center',
     lineHeight: spacing.Quintuple + spacing.Double,
     color: colors.tertiaryBlue,
   },
   subtitle: {
-    fontFamily: fonts.interMedium,
-    fontSize: spacing.Double + spacing.Minimal,
+    fontFamily: fontFamily.interMedium,
+    fontSize: fontSize.MD,
     textAlign: 'center',
     color: colors.primaryGrey,
   },

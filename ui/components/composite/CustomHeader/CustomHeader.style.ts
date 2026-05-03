@@ -1,6 +1,7 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = (headerPaddingTop: number) =>
@@ -14,8 +15,8 @@ export const style = (headerPaddingTop: number) =>
       paddingBottom: spacing.TripleAndHalf,
     },
     title: {
-      fontSize: spacing.Fourfold,
-      fontFamily: fonts.interBold,
+      fontSize: fontSize.XL2,
+      fontFamily: fontFamily.interBold,
       textAlign: 'center',
       width: '100%',
     },

@@ -1,5 +1,6 @@
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -9,8 +10,8 @@ export const style = StyleSheet.create({
     rowGap: spacing.Triple,
   },
   title: {
-    fontFamily: fonts.interMedium,
-    fontSize: spacing.Fourfold,
+    fontFamily: fontFamily.interMedium,
+    fontSize: fontSize.XL2,
   },
   button: {
     width: '60%',

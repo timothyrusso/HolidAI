@@ -1,8 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type ViewStyle } from 'react-native';
 
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { opacity } from '@/ui/style/opacity';
-import type { CustomCardStyle } from './CustomCard.logic';
+
+export type CustomCardStyle = {
+  backgroundColor: ViewStyle['backgroundColor'];
+  borderColor: ViewStyle['borderColor'];
+  borderWidth: ViewStyle['borderWidth'];
+};
 
 export const styles = ({ backgroundColor, borderColor, borderWidth }: CustomCardStyle) =>
   StyleSheet.create({

@@ -1,13 +1,13 @@
-import type { Food } from '@/features/trips';
+import type { Food } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
+import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { FlatList, View } from 'react-native';
-import { styles } from './FoodCard.style';
 
 type FoodCardProps = {
   food: Food;

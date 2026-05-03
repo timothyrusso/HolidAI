@@ -1,6 +1,7 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { SCREEN_WIDTH, spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -26,12 +27,12 @@ export const styles = StyleSheet.create({
   },
   headerText: {
     color: colors.primaryWhite,
-    fontFamily: fonts.interBold,
-    fontSize: spacing.Double + spacing.Minimal,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.MD,
   },
   subtitle: {
     color: colors.primaryGrey,
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
   },
   subtitleContainer: {
     flexDirection: 'row',
@@ -42,12 +43,12 @@ export const styles = StyleSheet.create({
     paddingBottom: spacing.MinimalDouble,
   },
   contentValue: {
-    fontFamily: fonts.interMedium,
+    fontFamily: fontFamily.interMedium,
     color: colors.primaryBlack,
     paddingHorizontal: spacing.Quintuple + spacing.Minimal,
   },
   foodItem: {
-    fontFamily: fonts.interBold,
+    fontFamily: fontFamily.interBold,
     color: colors.primaryBlack,
     backgroundColor: colors.primaryGreen,
     borderWidth: 1,

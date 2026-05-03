@@ -1,4 +1,4 @@
-import { ChangeLanguagePage } from '@/features/profile/ui/pages/ChangeLanguagePage/ChangeLanguagePage';
+import { ChangeLanguagePage } from '@/features/profile/pages';
 
 export default function ChangeLanguage() {
   return <ChangeLanguagePage />;

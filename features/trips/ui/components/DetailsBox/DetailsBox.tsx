@@ -1,13 +1,13 @@
+import { useDetailsBoxLogic } from '@/features/trips/ui/components/DetailsBox/DetailsBox.logic';
+import { styles } from '@/features/trips/ui/components/DetailsBox/DetailsBox.style';
+import { MainPlacesList } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonMedium } from '@/ui/components/basic/CustomButton/CustomButtonMedium';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { blur } from '@/ui/style/blur';
 import { BlurView } from 'expo-blur';
 import type { FC } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { MainPlacesList } from '../MainPlacesList/MainPlacesList';
-import { useDetailsBoxLogic } from './DetailsBox.logic';
-import { styles } from './DetailsBox.style';
 
 type DetailsBoxProps = {
   location: string;

@@ -1,7 +1,10 @@
 import { navigationService } from '@/features/core/navigation';
 import { useGetTrips } from '@/features/trips/facades/useGetTrips';
-import { useUniqueItems } from '@/modules/shared/hooks/useUniqueItems';
+import { useUniqueItems } from '@/features/trips/hooks/useUniqueItems';
 import { useEffect } from 'react';
+
+export type { Trip } from '@/features/trips/domain/entities/Trip';
+export type { UniqueItem } from '@/features/trips/hooks/useUniqueItems';
 
 export const useTripListPageLogic = () => {
   const { getUniqueItems } = useUniqueItems();

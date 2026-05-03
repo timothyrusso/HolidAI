@@ -1,4 +1,4 @@
-import { infra } from './infra';
+import { infra } from '@/di/types/infra';
 
 export const TYPES = {
   ...infra,

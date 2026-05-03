@@ -1,6 +1,6 @@
 import { logger } from '@/features/core/error';
 import { TranslationKeys } from '@/features/core/translations';
-import type { LocationInfo } from '@/modules/trips/domain/entities/LocationInfo';
+import type { LocationInfo } from '@/features/trip-generation';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import Constants from 'expo-constants';
@@ -12,7 +12,7 @@ type PlacesAutocompleteProps = {
   onPress: (locationInfo: LocationInfo) => void;
   placeholder?: string;
 };
-const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
+export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
   onPress,
   placeholder = 'SEARCH_PLACE_PAGE.SEARCH_PLACE',
 }) => {
@@ -80,5 +80,3 @@ const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
     />
   );
 };
-
-export default PlacesAutocomplete;

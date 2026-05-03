@@ -3,10 +3,10 @@ import { Animated, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { match } from 'ts-pattern';
 
-import useKeyboardEffect from '@/modules/shared/hooks/useKeyboardEffect';
 import { PlatformOS } from '@/ui/PlatformOS';
+import { useKeyboardEffect } from '@/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/useKeyboardEffect';
+import { DefaultAnimationDurationMs } from '@/ui/components/dialogs/animations';
 import { SCREEN_HEIGHT } from '@/ui/style/dimensions/spacing';
-import { DefaultAnimationDurationMs } from '../../animations';
 
 export const useModalTemplateContainerLogic = (maxHeight?: number) => {
   const { paddingHeight, keyboardHeight, isKeyboardVisible } = useKeyboardEffect(true);

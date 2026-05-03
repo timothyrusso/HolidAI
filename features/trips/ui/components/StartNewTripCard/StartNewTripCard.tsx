@@ -1,14 +1,14 @@
+import { useStartNewTripCardLogic } from '@/features/trips/ui/components/StartNewTripCard/StartNewTripCard.logic';
+import { style } from '@/features/trips/ui/components/StartNewTripCard/StartNewTripCard.style';
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
-import { useStartNewTripCardLogic } from './StartNewTripCard.logic';
-import { style } from './StartNewTripCard.style';
 
-const StartNewTripCard = () => {
+export const StartNewTripCard = () => {
   const { handleStartNewTrip } = useStartNewTripCardLogic();
 
   return (
@@ -19,5 +19,3 @@ const StartNewTripCard = () => {
     </View>
   );
 };
-
-export default StartNewTripCard;

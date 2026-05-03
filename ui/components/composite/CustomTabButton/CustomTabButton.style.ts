@@ -1,6 +1,7 @@
 import { colors } from '@/ui/style/colors';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { opacity } from '@/ui/style/opacity';
 import { shadows } from '@/ui/style/shadows';
 import { StyleSheet } from 'react-native';
@@ -17,8 +18,8 @@ export const styles = StyleSheet.create({
   },
   focusedText: {
     color: colors.primary,
-    fontSize: spacing.Double,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interMedium,
   },
   focusedIcon: {
     color: colors.primary,

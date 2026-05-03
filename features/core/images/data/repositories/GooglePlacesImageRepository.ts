@@ -1,7 +1,7 @@
 import type { Result } from '@/features/core/error';
 import { ok } from '@/features/core/error';
 import type { IHttpClient } from '@/features/core/http';
-import { HTTP_TYPES } from '@/features/core/http/di/types';
+import { HTTP_TYPES } from '@/features/core/http';
 import type { GooglePlacesSearchResponseDTO } from '@/features/core/images/data/dtos/GooglePlacesSearchResponseDTO';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';

@@ -1,8 +1,8 @@
-import type { DayPlan } from '@/features/trips';
+import { ActivityItem } from '@/features/trips/ui/components/ActivityItem/ActivityItem';
+import type { DayPlan } from '@/features/trips/ui/components/DayItem/DayItem.logic';
+import { styles } from '@/features/trips/ui/components/DayItem/DayItem.style';
 import type { FC } from 'react';
 import { FlatList, View } from 'react-native';
-import { ActivityItem } from '../ActivityItem/ActivityItem';
-import { styles } from './DayItem.style';
 
 type DayItemProps = {
   dayPlan: DayPlan;

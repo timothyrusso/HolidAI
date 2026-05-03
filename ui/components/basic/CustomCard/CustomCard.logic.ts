@@ -1,19 +1,13 @@
-import type { ViewStyle } from 'react-native';
 import { match } from 'ts-pattern';
 
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 
-import { styles } from './CustomCard.style';
+import type { CustomCardStyle } from '@/ui/components/basic/CustomCard/CustomCard.style';
+import { styles } from '@/ui/components/basic/CustomCard/CustomCard.style';
 
 export const CardType = { Default: 'default', Secondary: 'secondary' } as const;
 export type CardType = (typeof CardType)[keyof typeof CardType];
-
-export type CustomCardStyle = {
-  backgroundColor: ViewStyle['backgroundColor'];
-  borderColor: ViewStyle['borderColor'];
-  borderWidth: ViewStyle['borderWidth'];
-};
 
 export type CustomCardLogicProps = {
   cardType?: CardType;

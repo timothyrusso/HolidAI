@@ -7,6 +7,6 @@ type LottieAnimationProps = {
   autoPlay?: boolean;
   loop?: boolean;
 };
-export default function LottieAnimation({ style, animationPath, autoPlay = true, loop = true }: LottieAnimationProps) {
+export const LottieAnimation = ({ style, animationPath, autoPlay = true, loop = true }: LottieAnimationProps) => {
   return <LottieView source={animationPath} style={style} autoPlay={autoPlay} loop={loop} />;
-}
+};

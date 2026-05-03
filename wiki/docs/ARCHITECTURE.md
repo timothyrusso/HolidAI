@@ -66,9 +66,11 @@ features/<name>/
 ├── facades/
 ├── hooks/
 ├── state/
-└── ui/
-    ├── components/
-    └── pages/
+├── ui/
+│   ├── components/
+│   └── pages/
+├── index.ts              (public API — domain types, facades, utility hooks)
+└── pages.ts              (router entry point — page components only, for app/ routes)
 ```
 
 ---
@@ -131,6 +133,7 @@ Not every feature needs an `index.ts` — only create one when another feature a
 
 | Must NOT export                          | Why                                                                                                |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Page components                          | Pages are router entry points — they belong in `pages.ts`, not in the general public API           |
 | Hook-based repositories                  | Internal data access — consumers must go through facades, never call repos directly                |
 | Class use cases                          | Internal business logic — resolved via the feature's own DI container, not consumed cross-feature  |
 | DTOs                                     | Internal wire format — domain entity types are the shared language, not API shapes                 |
@@ -300,6 +303,18 @@ import { useInventoryCheck } from '@/features/inventory';  // ✅ Tier 3 → Tie
 import { usePayment } from '@/features/payments';          // ✅ Tier 3 → Tier 2
 ```
 
+### Declaring a feature's tier in code
+
+Every feature declares its tier via a `FEATURE_TIER` constant exported from its `index.ts`:
+
+```ts
+// features/items/index.ts
+import type { FeatureTier } from '@/features/core/featureTier';
+export const FEATURE_TIER: FeatureTier = 2;
+```
+
+`FeatureTier` is defined in `features/core/featureTier.ts` as `type FeatureTier = 0 | 1 | 2 | 3`. This constant is the machine-readable source of truth for the tier graph — it is the foundation for automated dependency enforcement via dependency-cruiser.
+
 ### Design smell: upward or circular dependency
 
 If you find yourself needing to import from a higher tier or from a peer, stop. It is always a signal that something is misclassified or misplaced:
@@ -327,12 +342,13 @@ Pure domain models — TypeScript interfaces, types, and constants that represen
 **`interface` vs `type`**
 
 - Use `interface` for object shapes that represent a domain entity — they are readable, clearly named, and easy to extend if needed.
-- Use `type` for unions, aliases, or intersections — anything that is not a plain object shape.
+- Use `type` for unions, aliases, intersections, or **component props** — anything that is not a plain domain entity shape.
 
 ```ts
-interface Item { id: string; name: string; }          // ✅ entity shape → interface
+interface Item { id: string; name: string; }          // ✅ domain entity shape → interface
 type ItemStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
 type ItemWithStatus = Item & { status: ItemStatus };  // ✅ intersection → type
+type ItemCardProps = { item: Item; onPress: () => void };  // ✅ component props → type
 ```
 
 **`enum` vs `const`**
@@ -1577,6 +1593,28 @@ app/
         └── profile/       → Language settings
 ```
 
+Route files import page components exclusively from the feature's `pages.ts` entry point — never from `index.ts` or internal paths:
+
+```ts
+// app/(main)/(authenticated)/items/list.tsx
+import { ItemListPage } from '@/features/items/pages'; // ✅ pages.ts — router entry point
+
+// ❌ Never import pages from index.ts
+import { ItemListPage } from '@/features/items';
+
+// ❌ Never reach into the feature internals
+import { ItemListPage } from '@/features/items/ui/pages/ItemListPage/ItemListPage';
+```
+
+**`pages.ts` vs `index.ts`** — every feature with pages exposes two separate entry points:
+
+| Entry point | Consumer | What it exports |
+| --- | --- | --- |
+| `index.ts` | Other features | Domain types, facades, utility hooks |
+| `pages.ts` | `app/` router only | Page components |
+
+Pages must not appear in `index.ts`. Keeping them in a dedicated `pages.ts` prevents circular dependencies — a feature's `index.ts` may be imported by global UI components, while `pages.ts` is only ever imported by the router.
+
 ---
 
 ## Backend (`/convex`)
@@ -1694,7 +1732,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 9. **Never instantiate services directly.** Always import from the feature's `di/resolve.ts`.
 10. **Reactive backends = hook-based repositories.** Never wrap reactive backend hooks (e.g. Convex `useQuery`) in a class singleton.
 11. **Feature isolation.** Features only import from `features/core/<sub-module>` (via its `index.ts`) or from another feature's public API (`index.ts`). Never reach into another feature's or core sub-module's internal folders (`data/`, `domain/`, `facades/`, etc.).
-12. **Always use `@/` path aliases.** Never use relative paths (`../`) anywhere in the project.
+12. **Always use `@/` path aliases.** Never use relative paths (`./` or `../`) anywhere in the project.
 13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
 
 ---

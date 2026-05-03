@@ -1,7 +1,8 @@
 import { colors } from '@/ui/style/colors';
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -19,17 +20,17 @@ export const style = StyleSheet.create({
     rowGap: spacing.Double,
   },
   icon: {
-    fontSize: spacing.separator40,
+    fontSize: fontSize.XL5,
     alignItems: 'center',
   },
   title: {
-    fontSize: spacing.Triple,
-    fontFamily: fonts.interRegular,
+    fontSize: fontSize.LG,
+    fontFamily: fontFamily.interRegular,
     color: colors.primaryGrey,
   },
   description: {
-    fontSize: spacing.Fourfold,
-    fontFamily: fonts.interBold,
+    fontSize: fontSize.XL2,
+    fontFamily: fontFamily.interBold,
   },
   image: {
     width: '100%',

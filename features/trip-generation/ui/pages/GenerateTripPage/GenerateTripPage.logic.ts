@@ -1,10 +1,11 @@
+import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
-import { useDecrementTokens } from '@/features/profile';
-import { generateTripUseCase } from '@/features/trip-generation';
+import { generateTripUseCase } from '@/features/trip-generation/di/resolve';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
+import { useDecrementTokens, useGetUserTokens } from '@/features/user';
 import { useUser } from '@clerk/clerk-expo';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +18,7 @@ export const useGenerateTripPageLogic = () => {
   const { showErrorToast } = useToast();
   const { addTrip } = useAddTrip();
   const { decrementTokens } = useDecrementTokens();
+  const { userTokens } = useGetUserTokens();
 
   const datesInfo = tripSelectors.datesInfo();
   const locationInfo = tripSelectors.locationInfo();
@@ -25,6 +27,12 @@ export const useGenerateTripPageLogic = () => {
   const budgetInfo = tripSelectors.budgetInfo();
 
   const generateTrip = async () => {
+    if (userTokens === 0) {
+      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
+      navigationService.toHome();
+      return;
+    }
+
     const result = await generateTripUseCase.execute({
       location: locationInfo.name,
       totalNoOfDays: datesInfo.totalNoOfDays,

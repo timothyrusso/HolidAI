@@ -1,17 +1,17 @@
 import { Routes } from '@/features/core/navigation';
+import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.data';
+import { useSelectBudgetPageLogic } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.logic';
+import { style } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.style';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
-import CustomText from '@/ui/components/basic/CustomText/CustomText';
+import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { colors } from '@/ui/style/colors';
 import { FlatList, View } from 'react-native';
-import { BudgetData } from './SelectBudgetPage.data';
-import { useSelectBudgetPageLogic } from './SelectBudgetPage.logic';
-import { style } from './SelectBudgetPage.style';
 
 const SeparatorItem = () => <View style={style.separator} />;
 
-const SelectBudgetPage = () => {
+export const SelectBudgetPage = () => {
   const { selectedBudget, handleCardPress, handleButtonPress } = useSelectBudgetPageLogic();
 
   const renderBudgetItem = ({ item }: { item: (typeof BudgetData)[number] }) =>
@@ -48,5 +48,3 @@ const SelectBudgetPage = () => {
     </BasicView>
   );
 };
-
-export default SelectBudgetPage;

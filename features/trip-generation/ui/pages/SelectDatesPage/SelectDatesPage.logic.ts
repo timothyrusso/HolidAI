@@ -6,7 +6,7 @@ import {
 import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
-import { useGetUserStatus } from '@/ui/queries/user/query/useGetUserStatus';
+import { useGetUserTokens } from '@/features/user';
 import { differenceInDays } from 'date-fns';
 import { useState } from 'react';
 
@@ -54,9 +54,7 @@ export const useSelectDatesPageLogic = () => {
 
   const { locale } = useLocale();
 
-  const { getUserTokens } = useGetUserStatus();
-
-  const userTokens = getUserTokens();
+  const { userTokens } = useGetUserTokens();
 
   const startDateLabel = translateDateUseCase.execute(locale, startDate);
   const endDateLabel = translateDateUseCase.execute(locale, endDate);

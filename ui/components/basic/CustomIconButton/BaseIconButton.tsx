@@ -1,10 +1,10 @@
 import { ActivityIndicator, Pressable, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
+import { ButtonState, ButtonType, useCustomButtonLogic } from '@/ui/components/basic/CustomButton/CustomButton.logic';
+import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
+import { styleButton } from '@/ui/components/basic/CustomIconButton/CustomIconButton.style';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { ButtonState, ButtonType, useCustomButtonLogic } from '../CustomButton/CustomButton.logic';
-import { CustomIcon, type IoniconsName } from '../CustomIcon/CustomIcon';
-import { styleButton } from './CustomIconButton.style';
 
 export type CustomIconButtonProps = {
   onPress: () => void;

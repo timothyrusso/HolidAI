@@ -1,4 +1,4 @@
-import { ActivityDetailsPage } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage';
+import { ActivityDetailsPage } from '@/features/trips/pages';
 
 const ActivityDetails = () => {
   return <ActivityDetailsPage />;

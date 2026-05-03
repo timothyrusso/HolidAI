@@ -1,5 +1,5 @@
 import { Routes, navigationService } from '@/features/core/navigation';
-import CustomHeader from '@/ui/components/composite/CustomHeader/CustomHeader';
+import { CustomHeader } from '@/ui/components/composite/CustomHeader/CustomHeader';
 import { icons } from '@/ui/style/icons';
 import { Stack } from 'expo-router';
 

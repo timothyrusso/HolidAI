@@ -1,17 +1,18 @@
 import { components } from '@/ui/style/dimensions/components';
+import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
-import { fonts } from '@/ui/style/fonts';
+import { fontFamily } from '@/ui/style/fontFamily';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   title: {
-    fontFamily: fonts.interBold,
-    fontSize: spacing.Fourfold,
+    fontFamily: fontFamily.interBold,
+    fontSize: fontSize.XL2,
   },
   subtitle: {
     marginVertical: spacing.Fourfold,
-    fontSize: spacing.Triple,
-    fontFamily: fonts.interMedium,
+    fontSize: fontSize.LG,
+    fontFamily: fontFamily.interMedium,
     alignSelf: 'flex-start',
     paddingHorizontal: spacing.Fourfold,
   },

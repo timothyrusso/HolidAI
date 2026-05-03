@@ -1,7 +1,7 @@
 import { navigationService } from '@/features/core/navigation';
 import { useDeleteAccount } from '@/features/profile/facades/useDeleteAccount';
-import { useLogout } from '@/features/profile/facades/useLogout';
 import { useProfileData } from '@/features/profile/facades/useProfileData';
+import { useLogout } from '@/features/user';
 import { components } from '@/ui/style/dimensions/components';
 import { thumbs } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
