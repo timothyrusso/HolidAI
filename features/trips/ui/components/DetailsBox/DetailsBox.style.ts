@@ -16,6 +16,23 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     columnGap: spacing.Minimal,
   },
+  androidWrapper: {
+    position: 'absolute',
+    bottom: spacing.Fourfold,
+    left: spacing.Fourfold,
+    right: spacing.Fourfold,
+  },
+  androidBlur: {
+    flex: 1,
+    padding: spacing.Fourfold,
+    flexDirection: 'row',
+    columnGap: spacing.Minimal,
+  },
+  mask: {
+    flex: 1,
+    borderRadius: spacing.Fourfold,
+    backgroundColor: 'black',
+  },
   title: {
     color: colors.primaryWhite,
     fontFamily: fontFamily.interBold,
