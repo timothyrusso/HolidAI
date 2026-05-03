@@ -39,7 +39,6 @@ export default ({ config }) => {
       adaptiveIcon: {
         backgroundColor: '#FFFFFF',
       },
-      edgeToEdgeEnabled: true,
       config: {
         googleMaps: {
           apiKey: GOOGLE_MAPS_API_KEY_ANDROID,
