@@ -3,7 +3,7 @@ function generateIndexBoundaryRules(featureTiers) {
     const slug = featurePath.replace(/\//g, '-');
     return {
       name: `enforce-index-boundary-${slug}`,
-      comment: `All imports into ${featurePath} from outside must go through its index.ts`,
+      comment: `All imports into ${featurePath} from outside must go through its index.ts or pages.ts`,
       severity: 'error',
       from: {
         pathNot: `^${featurePath}/`,
