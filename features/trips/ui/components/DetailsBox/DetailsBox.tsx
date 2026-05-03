@@ -1,6 +1,7 @@
 import { useDetailsBoxLogic } from '@/features/trips/ui/components/DetailsBox/DetailsBox.logic';
 import { styles } from '@/features/trips/ui/components/DetailsBox/DetailsBox.style';
 import { MainPlacesList } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList';
+import { PlatformOS } from '@/ui/PlatformOS';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomButtonMedium } from '@/ui/components/basic/CustomButton/CustomButtonMedium';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
@@ -52,7 +53,7 @@ export const DetailsBox: FC<DetailsBoxProps> = ({ location, tripId, tripStartDat
     </View>
   );
 
-  if (Platform.OS === 'android') {
+  if (Platform.OS === PlatformOS.android) {
     return (
       <MaskedView style={[styles.androidWrapper, style]} maskElement={<View style={styles.mask} />}>
         <BlurView intensity={blur.high} style={styles.androidBlur} blurMethod="dimezisBlurView" tint="dark">
