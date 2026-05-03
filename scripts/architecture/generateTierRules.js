@@ -8,6 +8,7 @@ function generateTierRules(featureTiers) {
   return Object.entries(featureTiers).flatMap(([featurePath, tier]) => {
     // Tier 0 (Core) may import from other Tier 0 peers — only higher tiers are forbidden.
     // Tier N > 0 may not import from same-tier peers or any higher tier.
+    // 0–3 range mirrors the FeatureTier type in features/core/featureTier.ts — update both if tiers change.
     const forbiddenTiers =
       tier === 0 ? [1, 2, 3] : Array.from({ length: 4 - tier }, (_, i) => tier + i);
 
