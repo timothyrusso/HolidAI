@@ -84,6 +84,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.0",
     "@babel/plugin-transform-class-static-block": "^7.27.1",
     "@biomejs/biome": "^1.9.4",
     "@commitlint/config-conventional": "^19.7.1",
