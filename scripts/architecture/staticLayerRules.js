@@ -7,7 +7,6 @@ const staticLayerRules = [
     from: { path: '\\.tsx$' },
     to: {
       path: '/(facades|domain|data|useCases|di|state|hooks|libraries|mappers)/',
-      pathNot: '/index\\.ts$',
     },
   },
   {
@@ -18,7 +17,6 @@ const staticLayerRules = [
     from: { path: '/domain/' },
     to: {
       path: '/(data|useCases|facades|ui|state|hooks|libraries|di|mappers)/',
-      pathNot: '/index\\.ts$',
     },
   },
   {
@@ -29,7 +27,6 @@ const staticLayerRules = [
     from: { path: '/useCases/' },
     to: {
       path: '/data/',
-      pathNot: '/index\\.ts$',
     },
   },
   {

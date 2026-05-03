@@ -1,11 +1,10 @@
 import { translateDateUseCase } from '@/features/core/dates';
 import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { useLocale } from '@/features/core/translations';
-import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
-
-export type { DayPlan };
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
+
+export type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
