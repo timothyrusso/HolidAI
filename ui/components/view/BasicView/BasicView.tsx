@@ -1,27 +1,12 @@
 import type { PropsWithChildren } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
+import type { BasicViewProps } from '@/ui/components/view/BasicView/BasicView.logic';
 import { useBasicViewLogic } from '@/ui/components/view/BasicView/BasicView.logic';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-
-export type BasicViewProps = {
-  isFullScreen?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
-  viewStyle?: StyleProp<ViewStyle>;
-  nameView: string;
-  bottomButtonTitle?: string;
-  bottomButtonPress?: () => void;
-  bottomButtonDisabled?: boolean;
-  bottomButtonLoading?: boolean;
-  topGradientColor?: string;
-  bottomGradientColor?: string;
-  isMenuVisible?: boolean;
-  statusBarStyle?: 'light' | 'dark';
-  hasHeader?: boolean;
-};
 
 export const BasicView = (props: PropsWithChildren<BasicViewProps>) => {
   const {

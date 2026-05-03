@@ -1,4 +1,4 @@
-import { SelectDatesPage } from '@/features/trip-generation';
+import { SelectDatesPage } from '@/features/trip-generation/pages';
 
 const SelectDates = () => {
   return <SelectDatesPage />;

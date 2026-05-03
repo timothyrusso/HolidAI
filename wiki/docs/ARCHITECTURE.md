@@ -66,9 +66,11 @@ features/<name>/
 ├── facades/
 ├── hooks/
 ├── state/
-└── ui/
-    ├── components/
-    └── pages/
+├── ui/
+│   ├── components/
+│   └── pages/
+├── index.ts              (public API — domain types, facades, utility hooks)
+└── pages.ts              (router entry point — page components only, for app/ routes)
 ```
 
 ---
@@ -131,6 +133,7 @@ Not every feature needs an `index.ts` — only create one when another feature a
 
 | Must NOT export                          | Why                                                                                                |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Page components                          | Pages are router entry points — they belong in `pages.ts`, not in the general public API           |
 | Hook-based repositories                  | Internal data access — consumers must go through facades, never call repos directly                |
 | Class use cases                          | Internal business logic — resolved via the feature's own DI container, not consumed cross-feature  |
 | DTOs                                     | Internal wire format — domain entity types are the shared language, not API shapes                 |
@@ -1589,6 +1592,28 @@ app/
         ├── items/         → Show all items
         └── profile/       → Language settings
 ```
+
+Route files import page components exclusively from the feature's `pages.ts` entry point — never from `index.ts` or internal paths:
+
+```ts
+// app/(main)/(authenticated)/items/list.tsx
+import { ItemListPage } from '@/features/items/pages'; // ✅ pages.ts — router entry point
+
+// ❌ Never import pages from index.ts
+import { ItemListPage } from '@/features/items';
+
+// ❌ Never reach into the feature internals
+import { ItemListPage } from '@/features/items/ui/pages/ItemListPage/ItemListPage';
+```
+
+**`pages.ts` vs `index.ts`** — every feature with pages exposes two separate entry points:
+
+| Entry point | Consumer | What it exports |
+| --- | --- | --- |
+| `index.ts` | Other features | Domain types, facades, utility hooks |
+| `pages.ts` | `app/` router only | Page components |
+
+Pages must not appear in `index.ts`. Keeping them in a dedicated `pages.ts` prevents circular dependencies — a feature's `index.ts` may be imported by global UI components, while `pages.ts` is only ever imported by the router.
 
 ---
 
