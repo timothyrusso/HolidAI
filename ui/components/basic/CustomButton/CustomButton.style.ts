@@ -6,7 +6,6 @@ import { components } from '@/ui/style/dimensions/components';
 import { fontSize } from '@/ui/style/dimensions/fontSize';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { fontFamily } from '@/ui/style/fontFamily';
-import { opacity } from '@/ui/style/opacity';
 
 export type ButtonStyles = {
   backgroundColor: string;
@@ -26,8 +25,10 @@ export const styleButton = (
 
   return StyleSheet.create({
     innerContainer: {
-      flexDirection: 'row',
+      width: '100%',
+      height: '100%',
       alignItems: 'center',
+      justifyContent: 'center',
     },
     button: {
       width: '100%',
@@ -53,9 +54,6 @@ export const styleButton = (
     icon: {
       marginLeft: rightIcon ? spacing.SingleAndHalf : 0,
       marginRight: leftIcon ? spacing.SingleAndHalf : 0,
-    },
-    pressed: {
-      opacity: opacity.default,
     },
   });
 };
