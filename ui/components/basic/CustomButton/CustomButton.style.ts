@@ -25,6 +25,7 @@ export const styleButton = (
 
   return StyleSheet.create({
     innerContainer: {
+      flexDirection: 'row',
       width: '100%',
       height: '100%',
       alignItems: 'center',
