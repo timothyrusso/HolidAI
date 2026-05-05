@@ -23,8 +23,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./ui/assets/images/android-icon.png",
         "backgroundColor": "#220059"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "bundler": "metro",
@@ -81,7 +80,6 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-    "newArchEnabled": true,
     "extra": {
       "router": {
         "origin": false

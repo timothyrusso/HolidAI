@@ -1,11 +1,13 @@
-import { Fragment } from 'react';
-import { ActivityIndicator, Pressable, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
+import { Fragment, useState } from 'react';
+import { ActivityIndicator, Pressable, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import { EaseView } from 'react-native-ease';
 import { match } from 'ts-pattern';
 
 import { ButtonState, ButtonType, useCustomButtonLogic } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { styleButton } from '@/ui/components/basic/CustomButton/CustomButton.style';
 import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
+import { easeTransitions } from '@/ui/style/animations';
 import { spacing } from '@/ui/style/dimensions/spacing';
 
 export type CustomButtonProps = {
@@ -50,13 +52,23 @@ export function BaseButton({
 
   const iconColor = styleIconColor(buttonType, buttonState);
 
+  const [pressed, setPressed] = useState<boolean>(false);
+
   return (
-    <Pressable
-      disabled={isDisabled || isLoading}
-      style={({ pressed }) => [styles.button, style, pressed && styles.pressed]}
-      onPress={onPress}
+    <EaseView
+      animate={{
+        scale: pressed ? 0.9 : 1,
+      }}
+      transition={easeTransitions.buttonPress}
+      style={[styles.button, style]}
     >
-      <View style={styles.innerContainer}>
+      <Pressable
+        disabled={isDisabled || isLoading}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
+        onPress={onPress}
+        style={styles.innerContainer}
+      >
         {isLoading ? (
           <ActivityIndicator color={styles.text.color} />
         ) : (
@@ -72,7 +84,7 @@ export function BaseButton({
             )}
           </Fragment>
         )}
-      </View>
-    </Pressable>
+      </Pressable>
+    </EaseView>
   );
 }
