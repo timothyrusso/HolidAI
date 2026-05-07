@@ -61,5 +61,6 @@ export const useActivityDetailsPageLogic = () => {
     currency,
     latitude,
     longitude,
+    imageLocationName,
   };
 };

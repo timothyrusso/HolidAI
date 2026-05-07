@@ -2,6 +2,7 @@ import { Routes } from '@/features/core/navigation';
 import { ActivityDetailsBox } from '@/features/trips/ui/components/ActivityDetailsBox/ActivityDetailsBox';
 import { useActivityDetailsPageLogic } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.logic';
 import { styles as stylesFactory } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.style';
+import { ActivityImageCarousel } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomIconButtonLarge } from '@/ui/components/basic/CustomIconButton/CustomIconButtonLarge';
@@ -31,6 +32,7 @@ export const ActivityDetailsPage = () => {
     currency,
     latitude,
     longitude,
+    imageLocationName,
   } = useActivityDetailsPageLogic();
 
   const styles = stylesFactory(isImageLoading);
@@ -73,6 +75,11 @@ export const ActivityDetailsPage = () => {
                   <CustomText text="ACTIVITY_DETAILS.USEFUL_TIPS" style={styles.insightTitle} />
                 </View>
                 <CustomText text={activityInsights} style={styles.insightDescription} />
+              </View>
+            )}
+            {imageLocationName && (
+              <View style={styles.carouselContainer}>
+                <ActivityImageCarousel imageLocationName={imageLocationName} />
               </View>
             )}
           </View>
