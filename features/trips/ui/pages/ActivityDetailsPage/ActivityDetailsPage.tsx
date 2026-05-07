@@ -32,7 +32,7 @@ export const ActivityDetailsPage = () => {
     currency,
     latitude,
     longitude,
-    imageLocationName,
+    carouselImages,
   } = useActivityDetailsPageLogic();
 
   const styles = stylesFactory(isImageLoading);
@@ -77,11 +77,7 @@ export const ActivityDetailsPage = () => {
                 <CustomText text={activityInsights} style={styles.insightDescription} />
               </View>
             )}
-            {imageLocationName && (
-              <View style={styles.carouselContainer}>
-                <ActivityImageCarousel imageLocationName={imageLocationName} />
-              </View>
-            )}
+            <ActivityImageCarousel images={carouselImages} isLoading={isImageLoading} />
           </View>
         </CustomScrollView>
       </BasicView>

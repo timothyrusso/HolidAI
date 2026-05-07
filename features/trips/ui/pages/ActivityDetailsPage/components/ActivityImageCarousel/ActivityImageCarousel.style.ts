@@ -3,6 +3,10 @@ import { spacing } from '@/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  container: {
+    marginTop: spacing.TripleAndHalf,
+    marginBottom: spacing.Fourfold,
+  },
   contentContainer: {
     paddingHorizontal: spacing.Fourfold,
     gap: spacing.Fourfold,

@@ -51,10 +51,6 @@ export const styles = (isImageLoading: boolean) =>
       color: colors.primaryBlack,
       lineHeight: spacing.Fourfold,
     },
-    carouselContainer: {
-      marginTop: spacing.TripleAndHalf,
-      marginBottom: spacing.Fourfold,
-    },
     backIcon: {
       position: 'absolute',
       zIndex: spacing.Double,
