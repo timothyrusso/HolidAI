@@ -11,7 +11,8 @@ export const useGetUnsplashImage = (placeName: string, urlType: UrlType) => {
     queryKey: ['unsplash-image', placeName, urlType],
     queryFn: async () => {
       const result = await fetchUnsplashImageUseCase.execute(placeName, { urlType });
-      return result.success ? (result.data ?? fallback) : fallback;
+      if (!result.success) throw result.error;
+      return result.data ?? fallback;
     },
     enabled: !!placeName,
     staleTime: Number.POSITIVE_INFINITY,

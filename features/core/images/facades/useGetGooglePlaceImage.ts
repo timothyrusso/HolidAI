@@ -10,7 +10,8 @@ export const useGetGooglePlaceImage = (placeName: string, maxWidthPx = 500) => {
     queryKey: ['google-place-image', placeName, maxWidthPx],
     queryFn: async () => {
       const result = await fetchGooglePlaceImageUseCase.execute(placeName, { maxWidthPx });
-      return result.success ? (result.data ?? fallback) : fallback;
+      if (!result.success) throw result.error;
+      return result.data ?? fallback;
     },
     enabled: !!placeName,
     staleTime: Number.POSITIVE_INFINITY,
