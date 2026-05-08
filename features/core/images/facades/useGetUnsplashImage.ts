@@ -7,7 +7,7 @@ import type { UrlType } from '@/features/core/images/domain/entities/UrlType';
 const fallback: ImageResult = { url: require('@/ui/assets/images/no-image-placeholder.jpg') };
 
 export const useGetUnsplashImage = (placeName: string, urlType: UrlType) => {
-  const { data, isLoading } = useQuery<ImageResult>({
+  const { data, isLoading, isError } = useQuery<ImageResult>({
     queryKey: ['unsplash-image', placeName, urlType],
     queryFn: async () => {
       const result = await fetchUnsplashImageUseCase.execute(placeName, { urlType });
@@ -19,5 +19,5 @@ export const useGetUnsplashImage = (placeName: string, urlType: UrlType) => {
     gcTime: Number.POSITIVE_INFINITY,
   });
 
-  return { data, isLoading };
+  return { data: isError ? fallback : data, isLoading };
 };
