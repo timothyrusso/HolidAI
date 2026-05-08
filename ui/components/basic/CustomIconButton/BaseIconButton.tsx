@@ -1,9 +1,10 @@
-import { ActivityIndicator, Pressable, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
+import { ActivityIndicator, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { ButtonState, ButtonType, useCustomButtonLogic } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIcon, type IoniconsName } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { styleButton } from '@/ui/components/basic/CustomIconButton/CustomIconButton.style';
+import { CustomPressable } from '@/ui/components/basic/CustomPressable/CustomPressable';
 import { spacing } from '@/ui/style/dimensions/spacing';
 
 export type CustomIconButtonProps = {
@@ -43,9 +44,10 @@ export function BaseIconButton({
   const icon = <CustomIcon name={iconName} size={iconSize} style={iconStyle} color={iconColor} />;
 
   return (
-    <Pressable
+    <CustomPressable
       disabled={isDisabled || isLoading}
-      style={({ pressed }) => [styles.button, style, pressed && !noPressedStyle && styles.pressed]}
+      style={[styles.button, style]}
+      scaleValue={noPressedStyle ? 1 : 1.2}
       onPress={onPress}
     >
       {isLoading ? (
@@ -55,6 +57,6 @@ export function BaseIconButton({
       ) : (
         icon
       )}
-    </Pressable>
+    </CustomPressable>
   );
 }

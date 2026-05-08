@@ -5,7 +5,7 @@ import { styles as stylesFactory } from '@/features/trips/ui/pages/ActivityDetai
 import { ActivityImageCarousel } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import { CustomIconButtonLarge } from '@/ui/components/basic/CustomIconButton/CustomIconButtonLarge';
+import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { AnimatedHeaderImage } from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
@@ -46,7 +46,7 @@ export const ActivityDetailsPage = () => {
         isLoading={isImageLoading}
         chipsAlignment="flex-end"
         headerIcons={
-          <CustomIconButtonLarge
+          <CustomIconButtonMedium
             iconName={icons.arrowBack}
             iconSize={spacing.Fourfold}
             onPress={goBackHandler}
