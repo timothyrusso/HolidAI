@@ -6,16 +6,17 @@ import type { ImageResult } from '@/features/core/images/domain/entities/ImageRe
 const fallback: ImageResult = { url: require('@/ui/assets/images/no-image-placeholder.jpg') };
 
 export const useGetGooglePlaceImage = (placeName: string, maxWidthPx = 500) => {
-  const { data, isLoading } = useQuery<ImageResult>({
+  const { data, isLoading, isError } = useQuery<ImageResult>({
     queryKey: ['google-place-image', placeName, maxWidthPx],
     queryFn: async () => {
       const result = await fetchGooglePlaceImageUseCase.execute(placeName, { maxWidthPx });
-      return result.success ? (result.data ?? fallback) : fallback;
+      if (!result.success) throw result.error;
+      return result.data ?? fallback;
     },
     enabled: !!placeName,
     staleTime: Number.POSITIVE_INFINITY,
     gcTime: Number.POSITIVE_INFINITY,
   });
 
-  return { data, isLoading };
+  return { data: isError ? fallback : data, isLoading };
 };

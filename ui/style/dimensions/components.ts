@@ -27,4 +27,5 @@ export const components = {
   customInputHeight: 40,
   buttonNumberHeight: 30,
   animatedWordsHeight: 30,
+  carouselImageSize: 200,
 };

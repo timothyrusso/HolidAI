@@ -1,9 +1,11 @@
-import { useGetGooglePlaceImage } from '@/features/core/images';
+import { useGetGooglePlaceImages } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
+
+const MAX_IMAGES = 5;
 
 export const useActivityDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
@@ -26,7 +28,7 @@ export const useActivityDetailsPageLogic = () => {
 
   const imageLocationName = activity?.placeName && location ? `${activity.placeName}, ${location}` : '';
 
-  const { data: imageResult, isLoading: isImageLoading } = useGetGooglePlaceImage(imageLocationName, 600);
+  const { data: allImages, isLoading: isImageLoading } = useGetGooglePlaceImages(imageLocationName, MAX_IMAGES + 1);
 
   const mainDescription = activity?.placeDetailsLongDescription;
 
@@ -50,7 +52,7 @@ export const useActivityDetailsPageLogic = () => {
     scrollOffsetY,
     handleScroll,
     locationTitle,
-    imageData: imageResult?.url,
+    imageData: allImages[0]?.url,
     isImageLoading,
     mainDescription,
     activityInsights,
@@ -61,5 +63,6 @@ export const useActivityDetailsPageLogic = () => {
     currency,
     latitude,
     longitude,
+    carouselImages: allImages.slice(1),
   };
 };
