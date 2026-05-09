@@ -10,6 +10,7 @@ import { Stacks, screenOptions } from '@/features/core/navigation';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
 import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
+import { ToastProvider } from '@/ui/components/providers/ToastProvider';
 import { fontsConfig } from '@/ui/style/fontFamily';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
@@ -22,7 +23,6 @@ import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
-import Toast from 'react-native-toast-message';
 
 initSentry();
 initI18n();
@@ -75,7 +75,7 @@ export default wrap(function RootLayout() {
           <QueryClientProvider client={queryClient}>
             <KeyboardProvider>
               <InitialLayout />
-              <Toast />
+              <ToastProvider />
             </KeyboardProvider>
           </QueryClientProvider>
         </ConvexProviderWithClerk>

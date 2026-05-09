@@ -1,7 +1,7 @@
 import { useHeaderIconsLogic } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.logic';
 import { heartPulseStyle, styles } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.style';
 import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomIconButtonLarge } from '@/ui/components/basic/CustomIconButton/CustomIconButtonLarge';
+import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
@@ -11,28 +11,28 @@ export const HeaderIcons = () => {
 
   return (
     <View style={styles.container}>
-      <CustomIconButtonLarge
+      <CustomIconButtonMedium
         iconName={icons.arrowBack}
         iconSize={spacing.Fourfold}
         onPress={goBackHandler}
         style={styles.backIcon}
-        buttonType={ButtonType.Tertiary}
+        buttonType={ButtonType.Quaternary}
       />
-      <CustomIconButtonLarge
+      <CustomIconButtonMedium
         iconName={!isFavorite ? icons.hearth : icons.heartOutline}
         iconSize={spacing.Fourfold}
         onPress={addToFavoritesHandler}
         style={styles.favoriteIcon}
-        buttonType={ButtonType.Tertiary}
+        buttonType={ButtonType.Quaternary}
         animatedIconStyle={shouldAnimate ? heartPulseStyle : undefined}
         noPressedStyle
       />
-      <CustomIconButtonLarge
+      <CustomIconButtonMedium
         iconName={icons.remove}
         iconSize={spacing.Fourfold}
         onPress={handleDeleteTrip}
         style={styles.removeIcon}
-        buttonType={ButtonType.Tertiary}
+        buttonType={ButtonType.Quaternary}
       />
     </View>
   );
