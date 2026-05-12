@@ -1,5 +1,5 @@
+import { BaseError, ErrorCode } from '@/features/core/error';
 import { useToast } from '@/features/core/toast';
-import { ProfileError } from '@/features/profile/domain/entities/errors/ProfileError';
 import { useDeleteAllTrips } from '@/features/trips';
 import { useDeleteUser, useGetUser } from '@/features/user';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ export const useDeleteAccount = () => {
     setIsLoading(true);
     if (!user?.id) {
       setIsLoading(false);
-      showErrorToast(new ProfileError('User not loaded'));
+      showErrorToast(new BaseError('User not loaded', ErrorCode.Unknown));
       return false;
     }
     const tripsDeleted = await deleteAll();
