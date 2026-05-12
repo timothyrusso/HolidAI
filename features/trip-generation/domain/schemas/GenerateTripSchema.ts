@@ -1,5 +1,4 @@
 import { normalizeDateToISO } from '@/features/trip-generation/domain/schemas/normalizeDateToISO';
-import type { TripAiResp } from '@/features/trips';
 import { z } from 'zod';
 
 export const generatedTripSchema = z.object({
@@ -61,4 +60,4 @@ export const generatedTripSchema = z.object({
     foodBudgetNotes: z.string(),
     typicalDishes: z.array(z.string()),
   }),
-}) satisfies z.ZodType<TripAiResp>;
+});
