@@ -41,6 +41,20 @@ const staticLayerRules = [
     },
   },
   {
+    name: 'domain-no-cross-feature-runtime-import',
+    comment:
+      'domain/ files must not import runtime values from another feature\'s public API (index.ts). ' +
+      'Use import type for cross-feature type references. ' +
+      'Exception: features/core/error is allowed so domain error subclasses can extend BaseError.',
+    severity: 'error',
+    from: { path: '/domain/' },
+    to: {
+      path: '^features/.*/index\\.ts$',
+      pathNot: '^features/core/error/',
+      dependencyTypes: ['import'],
+    },
+  },
+  {
     name: 'no-circular',
     comment: 'Circular dependencies make code hard to reason about and test — resolve via dependency inversion or module restructuring',
     severity: 'error',

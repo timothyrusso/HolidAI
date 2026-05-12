@@ -5,7 +5,6 @@ import type { ConvertFromUTCToLocaleUseCase } from '@/features/core/dates/useCas
 import type { FormatDateForPromptUseCase } from '@/features/core/dates/useCases/FormatDateForPromptUseCase';
 import type { GetTimezoneFormattedDateUseCase } from '@/features/core/dates/useCases/GetTimezoneFormattedDateUseCase';
 import type { GetTodayInLocalTimezoneUseCase } from '@/features/core/dates/useCases/GetTodayInLocalTimezoneUseCase';
-import type { NormalizeDateToISOUseCase } from '@/features/core/dates/useCases/NormalizeDateToISOUseCase';
 import type { TranslateDateUseCase } from '@/features/core/dates/useCases/TranslateDateUseCase';
 import { container } from 'tsyringe';
 
@@ -22,8 +21,5 @@ export const getTimezoneFormattedDateUseCase = container.resolve<GetTimezoneForm
 );
 export const getTodayInLocalTimezoneUseCase = container.resolve<GetTodayInLocalTimezoneUseCase>(
   DATES_TYPES.GetTodayInLocalTimezoneUseCase,
-);
-export const normalizeDateToISOUseCase = container.resolve<NormalizeDateToISOUseCase>(
-  DATES_TYPES.NormalizeDateToISOUseCase,
 );
 export const translateDateUseCase = container.resolve<TranslateDateUseCase>(DATES_TYPES.TranslateDateUseCase);

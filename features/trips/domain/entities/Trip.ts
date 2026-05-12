@@ -1,3 +1,7 @@
+// Pragmatic exception to domain purity: Id<'trips'> is a Convex branded string type used
+// throughout the Convex query/mutation API. Replacing it with a plain string would require
+// an adapter layer at every data boundary — a significant refactoring with high breakage risk
+// for minimal architectural gain, since Id<'trips'> carries no runtime behavior.
 import type { Id } from '@/convex/_generated/dataModel';
 import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import type { Food } from '@/features/trips/domain/entities/Food';
