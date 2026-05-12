@@ -1,18 +1,11 @@
-import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
-import { useToast } from '@/features/core/toast';
-import { useGetUserTokens } from '@/features/user';
+import { useStartNewTrip } from '@/features/trips/facades/useStartNewTrip';
 
 export const useStartNewTripCardLogic = () => {
-  const { userTokens } = useGetUserTokens();
-  const { showErrorToast } = useToast();
+  const { canStart } = useStartNewTrip();
 
   const handleStartNewTrip = () => {
-    if (userTokens === 0) {
-      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
-      return;
-    }
-    navigationService.toSearch();
+    if (canStart()) navigationService.toSearch();
   };
 
   return { handleStartNewTrip };

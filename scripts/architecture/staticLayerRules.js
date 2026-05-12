@@ -10,6 +10,17 @@ const staticLayerRules = [
     },
   },
   {
+    name: 'tsx-no-cross-feature-public-api',
+    comment:
+      '.tsx files must not import from a cross-feature public API (index.ts) — all cross-feature types and values must flow through the ViewModel (.logic.ts). Exception: features/core/navigation is allowed for Routes/Stacks constants used directly in BasicView.',
+    severity: 'error',
+    from: { path: '\\.tsx$' },
+    to: {
+      path: '^features/.*/index\\.ts$',
+      pathNot: '^features/core/navigation/',
+    },
+  },
+  {
     name: 'domain-no-outer-layer-import',
     comment:
       'domain/ is the innermost layer — must not import from data/, useCases/, facades/, ui/, state/, hooks/, libraries/, di/, or mappers/',

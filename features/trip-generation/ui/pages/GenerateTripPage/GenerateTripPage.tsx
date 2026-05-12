@@ -1,4 +1,3 @@
-import { logger } from '@/features/core/error';
 import { Routes } from '@/features/core/navigation';
 import { AnimatedBlocks } from '@/features/trip-generation/ui/components/AnimatedBlocks/AnimatedBlocks';
 import { AnimatedColorsBackground } from '@/features/trip-generation/ui/components/AnimatedColorsBackground/AnimatedColorsBackground';
@@ -12,10 +11,7 @@ import { View } from 'react-native';
 const animation = require('@/ui/assets/lottie/loading_animation.json');
 
 export const GenerateTripPage = () => {
-  const { isLoading } = useGenerateTripPageLogic();
-
-  // TODO: Remove this after testing
-  logger.log('isLoading', isLoading);
+  useGenerateTripPageLogic();
 
   return (
     <BasicView nameView={Routes.GenerateTrip} statusBarStyle="dark">
