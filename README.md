@@ -183,6 +183,7 @@ Pull requests are automatically reviewed by multiple AI-powered code review tool
 - 🧙‍♂️ [Sourcery](https://sourcery.ai) — refactoring suggestions and code quality improvements
 - 🐇 [CodeRabbit](https://coderabbit.ai) — line-by-line review with context-aware feedback
 - 🤖 [Gemini Code Assist](https://cloud.google.com/gemini/docs/codeassist/overview) — Google's AI-powered code review assistant
+- 🔷 [Cubic](https://www.cubic.dev/) — AI-powered code review agent
 
 ### Pull Request Guidelines
 

@@ -2,7 +2,7 @@
 
 > **Diagram:** [Architecture overview](diagrams/architecture.mermaid)
 
-> **Note on code examples:** All code examples in this document use generic, representative names (`Item`, `IItemRepository`, `FilterItemsUseCase`, `useGetItems`, etc.). They are intentionally disconnected from the actual project code. Their sole purpose is to illustrate patterns and rules — they are not templates to copy.
+> **Note on code examples:** All code examples in this document use generic, representative names (`Item`, `IItemRepository`, `FilterItemsUseCase`, `useGetItems`, etc.). They are intentionally disconnected from the actual project code. Their sole purpose is to illustrate patterns and rules, they are not templates to copy.
 
 ## Guiding Principles
 
@@ -10,7 +10,7 @@
 - **Inward dependencies** — outer layers depend on inner ones, never the reverse. `ui` → `facades/hooks/state` → `useCases` → `domain`.
 - **Abstraction over coupling** — feature code depends on interfaces, not concrete implementations. Swapping a library only affects its wrapper, not any feature.
 - **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories when the underlying SDK only exposes a React hook API and cannot be wrapped in a class singleton (e.g. reactive real-time backends like Convex, or auth SDKs like Clerk that are hook-only by design).
-- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features. Features are organised into dependency tiers — dependencies only flow downward, never between peers. See [Feature Dependency Tiers](#feature-dependency-tiers).
+- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features. Features are organised into dependency tiers, dependencies only flow downward, never between peers. See [Feature Dependency Tiers](#feature-dependency-tiers).
 - **Start simple, promote when needed** — components, facades, and hooks start local. They move to a shared location only when a second consumer appears.
 
 ---
@@ -552,12 +552,19 @@ export class ImageRepository implements IImageRepository {
 Implementations of service interfaces from `domain/entities/services/`. These are stateless, registered as singletons in the IoC container, and may use `libraries/` wrappers internally.
 
 ```ts
-// features/core/error/data/services/BasicLogger.ts
-// registered as singleton in di/config.ts via container.registerSingleton()
-export class BasicLogger implements ILogger {
-  log(message: string, ...args: unknown[]) { console.log(message, ...args); }
-  error(error: Error, context?: Record<string, unknown>) { console.error(error, context); }
-  warning(message: string, ...args: unknown[]) { console.warn(message, ...args); }
+// features/core/http/data/services/HttpClient.ts
+@injectable()
+export class HttpClient implements IHttpClient {
+  async get<T>(url: string): Promise<Result<T>> {
+    try {
+      const response = await fetch(url);
+      if (!response.ok)
+        return fail(new BaseError(`HTTP ${response.status}`, ErrorCode.NetworkFailure));
+      return ok(await response.json() as T);
+    } catch (err) {
+      return fail(ensureError(err));
+    }
+  }
 }
 ```
 
