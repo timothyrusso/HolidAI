@@ -15,6 +15,7 @@ export const useGenerateTripPageLogic = () => {
   const { tripSelectors, tripActions } = useTripGenerationState();
   const { user } = useUser();
   const { locale } = useLocale();
+  // Accepted exception to the "toast in facades" rule
   const { showErrorToast } = useToast();
   const { addTrip } = useAddTrip();
   const { decrementTokens } = useDecrementTokens();

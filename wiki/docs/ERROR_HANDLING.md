@@ -1,6 +1,6 @@
 # Error Handling
 
-This document is the authoritative reference for error handling in HolidAI. Every layer of the architecture has a defined role. Read this before writing any code that can fail.
+This document is the authoritative reference for error handling in the project. Every layer of the architecture has a defined role. Read this before writing any code that can fail.
 
 ---
 
@@ -8,7 +8,7 @@ This document is the authoritative reference for error handling in HolidAI. Ever
 
 **Errors are values, not surprises.** Functions that can fail return a `Result<T>` instead of throwing. This makes the failure path visible in the type signature, forces callers to handle it, and prevents unexpected crashes from propagating unchecked across layer boundaries.
 
-**No layer throws across a boundary.** Use cases always return `Result<T>` — they never throw. The only place a `throw` is acceptable is inside a facade, and only for unrecoverable errors that should terminate the current screen by triggering the Expo Router `ErrorBoundary`. For all other failures, facades handle the `Result<T>` directly (toast or inline state).
+**No layer throws across a boundary.** Use cases always return `Result<T>` — they never throw. The only place a `throw` is acceptable is inside a facade, and only for unrecoverable errors that should terminate the current screen by triggering the `ErrorBoundary`. For all other failures, facades handle the `Result<T>` directly (toast or inline state).
 
 **Logging happens once, at the layer where the error is first caught.** Do not log the same error multiple times as it propagates. The use case logs it; the facade does not log it again.
 
@@ -18,7 +18,7 @@ This document is the authoritative reference for error handling in HolidAI. Ever
 
 ## Core Types
 
-### `Result<T>` — `features/core/error/domain/entities/Result.ts`
+### `Result<T>`
 
 A discriminated union that represents either a successful value or a `BaseError`. It is a pure domain type — no external dependencies.
 
@@ -37,7 +37,7 @@ export const fail = (error: BaseError): Result<never> => ({ success: false, erro
 
 `ok(data)` and `fail(error)` reduce boilerplate at every call site. `fail` returns `Result<never>`, which is assignable to any `Result<T>` — so a function can return `fail(error)` regardless of its `T`.
 
-### `BaseError` — `features/core/error/domain/entities/BaseError.ts`
+### `BaseError`
 
 Extends the native `Error` with a typed code, optional context, and an optional cause chain. Always use `BaseError` (or a subclass) — never pass raw `Error` to the logger.
 
@@ -56,7 +56,7 @@ export class BaseError extends Error {
 }
 ```
 
-### `ErrorCode` — `features/core/error/domain/entities/ErrorCode.ts`
+### `ErrorCode`
 
 A `const` object (never an `enum`) of typed string codes. Add new codes here when a failure mode is domain-specific and needs to be handled differently by the UI.
 
@@ -68,16 +68,15 @@ export const ErrorCode = {
   NetworkFailure:   'NetworkFailure',
   GenerationFailed: 'GenerationFailed',
   Unknown:          'Unknown',
+  ...
 } as const;
 
 export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
 ```
 
-**`ErrorCode.Unknown` — migration placeholder.** Used by feature-specific error classes (`AuthError`, `ProfileError`, etc.) during the migration phase, before named per-feature codes are introduced. It signals "this failure has a domain name but no UI-distinct code yet". It maps to `ERRORS.GENERIC` in `errorCodeToMessageKey` — the same fallback as any unmapped code. Once all features are migrated, a dedicated error handling polish pass replaces `Unknown` with specific codes (e.g. `AuthSignInFailed`, `ProfileDeleteFailed`) for each failure mode that the UI needs to handle differently.
-
 Do not use `Unknown` for genuinely unexpected errors caught in a `catch` block — use `UnexpectedError` for those. `Unknown` is only for explicit, named failure states that have not yet been assigned a final code.
 
-### `ensureError` — `features/core/error/domain/utils/ensureError.ts`
+### `ensureError`
 
 Converts any unknown caught value into a `BaseError`. Use this in every `catch` block — never cast with `error as Error`.
 
@@ -159,7 +158,6 @@ Repositories interact with external systems (Convex, HTTP APIs). They catch low-
 **Hook-based repositories** (Convex): mutations return `Result<T>`. Queries surface loading state via `undefined` — no `Result` needed for reactive data.
 
 ```ts
-// features/trips/data/repositories/useTripRepository.ts
 export const useTripRepository = (): ITripRepository => {
   const trips = useQuery(api.trips.getAll);           // called at hook top level — undefined while loading
   const createMutation = useMutation(api.trips.create);
@@ -181,8 +179,7 @@ export const useTripRepository = (): ITripRepository => {
 
 **Class-based repositories** (HTTP): wrap every request in try/catch and return `Result<T>`.
 
-```ts
-// features/core/images/data/repositories/ImageRepository.ts
+```ts 
 async getImage(placeName: string, urlType: UrlType): Promise<Result<string>> {
   try {
     const data = await this.http.get('/search/photos', { query: placeName }).json();
@@ -205,7 +202,6 @@ async getImage(placeName: string, urlType: UrlType): Promise<Result<string>> {
 Use cases receive results from repositories, apply business logic, log on failure, and return `Result<T>`.
 
 ```ts
-// features/trips/useCases/GenerateTripUseCase.ts
 import { buildPromptUseCase } from '@/features/ai';
 
 export class GenerateTripUseCase {
@@ -240,13 +236,13 @@ export class GenerateTripUseCase {
 Facades coordinate repositories and use cases. They receive `Result<T>` and decide how to surface failure to the UI — either as an error state, a toast, or by letting it propagate to an error boundary.
 
 ```ts
-// features/trips/facades/useGenerateTrip.ts
 import { generateTripUseCase } from '@/features/trips/di/resolve';
 import { useToast } from '@/features/core/toast';
 
 export const useGenerateTrip = () => {
   const repo = useTripRepository();
-  const { showErrorToast } = useToast(); // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
+  // showErrorToast(error: BaseError) — translates internally, safe to call in callbacks
+  const { showErrorToast } = useToast();
 
   const generate = async (formData: TripFormData) => {
     const result = await generateTripUseCase.execute(formData);
@@ -280,7 +276,6 @@ export const useGenerateTrip = () => {
 The ViewModel consumes facades and maps failures to view state — loading, error message, empty state.
 
 ```ts
-// features/trips/ui/pages/GenerateTripPage/GenerateTripPage.logic.ts
 export const useGenerateTripPageLogic = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { generate } = useGenerateTrip();
@@ -326,7 +321,7 @@ export const GenerateTripPage = () => {
 
 ### The logger interface
 
-`ILogger` is defined in `features/core/error/domain/entities/services/ILogger.ts`. All use cases, repositories, and services depend on this interface — never on a concrete implementation.
+All use cases, repositories, and services depend on this interface — never on a concrete implementation.
 
 ```ts
 export interface ILogger {
@@ -340,15 +335,14 @@ export interface ILogger {
 
 ### Implementations
 
-| Environment | Implementation | Location |
-|---|---|---|
-| Development | `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
-| Production | `SentryLogger` | `features/core/error/data/services/SentryLogger.ts` |
+| Environment | Implementation |
+|---|---|
+| Development | `BasicLogger` |
+| Production | `SentryLogger` |
 
 The DI config selects the right implementation at startup:
 
 ```ts
-// features/core/error/di/config.ts
 if (__DEV__) {
   container.registerSingleton<ILogger>(ERROR_TYPES.Logger, BasicLogger);
 } else {
@@ -356,10 +350,9 @@ if (__DEV__) {
 }
 ```
 
-**`SentryLogger`** wraps Sentry's `captureException` and enriches errors with breadcrumbs. It lives in `features/core/error/data/services/SentryLogger.ts` and uses the Sentry library wrapper at `features/core/error/libraries/sentryClient.ts`.
+**`SentryLogger`** wraps Sentry's `captureException` and enriches errors with breadcrumbs.
 
 ```ts
-// features/core/error/data/services/SentryLogger.ts
 export class SentryLogger implements ILogger {
   error(error: Error, context?: Record<string, unknown>): void {
     sentryClient.captureException(error, { extra: context });
@@ -425,20 +418,15 @@ Do **not** add one when:
 - The error is already handled at the facade level (toast / inline state).
 - The route is simple and the root boundary is sufficient.
 
-### `AppCrashView` component
-
-Lives in `ui/components/errors/AppCrashView/`. Follows the same three-file convention (`AppCrashView.tsx`, `AppCrashView.logic.ts`, `AppCrashView.style.ts`). Displays a friendly message and a "Try again" button that calls `retry()`.
-
 ---
 
 ## Error-to-UI Mapping
 
-### `useErrorMessage` — `features/core/error/hooks/useErrorMessage.ts`
+### `useErrorMessage`
 
 A utility hook that translates a `BaseError` into a localized user-facing string. The view never renders `error.message` directly — it always goes through this hook.
 
 ```ts
-// features/core/error/hooks/useErrorMessage.ts
 export const useErrorMessage = (error: BaseError | null): string | null => {
   const { t } = useTranslation();
   if (!error) return null;
@@ -451,7 +439,6 @@ export const useErrorMessage = (error: BaseError | null): string | null => {
 The mapping object lives in `mappers/` — it translates domain `ErrorCode` values into i18n key strings, which is a presentation concern and cannot live in `domain/`:
 
 ```ts
-// features/core/error/mappers/errorCodeToMessageKey.ts
 export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
   [ErrorCode.NetworkFailure]:    'ERRORS.NETWORK',
   [ErrorCode.Unauthorized]:      'ERRORS.UNAUTHORIZED',
@@ -472,28 +459,6 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 
 ---
 
-## File Locations Summary
-
-| File | Location |
-|---|---|
-| `Result<T>`, `ok()`, `fail()` | `features/core/error/domain/entities/Result.ts` |
-| `BaseError` | `features/core/error/domain/entities/BaseError.ts` |
-| `ErrorCode` | `features/core/error/domain/entities/ErrorCode.ts` |
-| Feature-specific error classes | `features/<name>/domain/entities/errors/XxxError.ts` |
-| `ensureError` | `features/core/error/domain/utils/ensureError.ts` |
-| `ILogger` interface | `features/core/error/domain/entities/services/ILogger.ts` |
-| `BasicLogger` | `features/core/error/data/services/BasicLogger.ts` |
-| `SentryLogger` | `features/core/error/data/services/SentryLogger.ts` |
-| Sentry library wrapper | `features/core/error/libraries/sentryClient.ts` |
-| Error DI types / config / resolve | `features/core/error/di/` |
-| `useErrorMessage` | `features/core/error/hooks/useErrorMessage.ts` |
-| `errorCodeToMessageKey` | `features/core/error/mappers/errorCodeToMessageKey.ts` |
-| `AppCrashView` component | `ui/components/errors/AppCrashView/` |
-| Root `ErrorBoundary` | `app/_layout.tsx` (exported function) |
-| Route `ErrorBoundary` | Individual route files (exported function, as needed) |
-
----
-
 ## Rules
 
 1. **`Result<T>` at every layer boundary.** Functions that can fail return `Result<T>`, not a plain value and not a throw.
@@ -504,44 +469,3 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCode, string>> = {
 6. **Root boundary always present.** `app/_layout.tsx` always exports an `ErrorBoundary`.
 7. **Route boundaries for high-risk operations.** Add one when the feature can fail without taking down the rest of the app.
 8. **Toast for mutations, inline for forms, boundary for screens.** Match the error surface to the interaction model.
-
----
-
-## Frequently questioned patterns
-
-Patterns that look wrong at a glance but are intentional. Reference this section in code review responses.
-
-### Loading state not guarded by `try/finally` in facades
-
-Reviewers sometimes flag code like this:
-
-```ts
-const logout = async (): Promise<boolean> => {
-  setIsLoading(true);
-  const result = await repo.signOut();  // ← no try/finally around this
-  setIsLoading(false);
-  if (!result.success) {
-    showErrorToast(result.error);
-    return false;
-  }
-  return true;
-};
-```
-
-The suggested fix is usually:
-
-```ts
-try {
-  const result = await repo.signOut();
-  if (!result.success) { ... }
-  return true;
-} finally {
-  setIsLoading(false);
-}
-```
-
-**This is intentionally rejected.** The repository contract guarantees that no exception ever escapes a repository method — every repository wraps its operations in `try/catch` and returns `fail(ensureError(err))` on failure. `result` is always a `Result<T>`, never a throw. The `finally` guard is therefore unnecessary.
-
-If `repo.signOut()` did throw past its own `try/catch`, that would be a bug in the repository — and the correct fix is to make the repository honour its contract, not to silently swallow the exception in the facade. Adding `try/finally` to facades would mask repository bugs instead of surfacing them, and would need to be repeated at every call site across every facade.
-
-**What to check if this concern arises:** look at the repository implementation. Every async method must have a `try/catch` that returns `fail(ensureError(err))`. If that block is missing or incomplete, fix it there.
