@@ -1,3 +1,4 @@
+import { BaseError } from '@/features/core/error';
 import { isValid, parse } from 'date-fns';
 
 export class TranslateDateUseCase {
@@ -10,7 +11,7 @@ export class TranslateDateUseCase {
    * @throws If the input is missing or does not match any supported format.
    */
   private getDateInstance(date?: Date | string | null): Date {
-    if (!date) throw new Error('Missing date');
+    if (!date) throw new BaseError('Missing date');
 
     if (typeof date === 'string') {
       const formats = ['dd/MM/yyyy', 'MM/dd/yyyy', 'yyyy/dd/MM', 'yyyy-MM-dd', 'dd-MM-yyyy', 'MM-dd-yyyy'];
@@ -20,7 +21,7 @@ export class TranslateDateUseCase {
         if (isValid(parsedDate)) return parsedDate;
       }
 
-      throw new Error('Invalid date format');
+      throw new BaseError('Invalid date format');
     }
 
     return date;

@@ -1,6 +1,8 @@
 import { Routes } from '@/features/core/navigation';
-import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.data';
-import { useSelectBudgetPageLogic } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.logic';
+import {
+  BudgetData,
+  useSelectBudgetPageLogic,
+} from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.style';
 import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
