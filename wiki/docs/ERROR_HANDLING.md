@@ -321,7 +321,7 @@ export const GenerateTripPage = () => {
 
 ### The logger interface
 
-All use cases, repositories, and services depend on this interface — never on a concrete implementation.
+All use cases and services depend on this interface — never on a concrete implementation.
 
 ```ts
 export interface ILogger {
