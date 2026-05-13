@@ -1,9 +1,4 @@
-import type { SpringTransition } from 'react-native-ease';
 import type { CSSAnimationKeyframes } from 'react-native-reanimated';
-
-export const easeTransitions = {
-  buttonPress: { type: 'spring', damping: 500, stiffness: 1000, mass: 1 } satisfies SpringTransition,
-} as const;
 
 export const heartPulse: CSSAnimationKeyframes = {
   '0%': { transform: [{ scale: 1 }, { rotate: '0deg' }] },

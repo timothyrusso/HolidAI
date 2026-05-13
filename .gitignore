@@ -45,9 +45,7 @@ Google-Service.info.plist
 
 #claude
 plan.md
-MIGRATION_PLAN.md
-improvePerformancePlan.md
-mcpPlan.md
+plans/
 
 # architecture
 arch-report.html

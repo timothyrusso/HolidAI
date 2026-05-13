@@ -1,7 +1,5 @@
-import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
-import { useToast } from '@/features/core/toast';
-import { useGetUserTokens } from '@/features/user';
+import { useStartNewTrip } from '@/features/trips';
 import { CustomTabButton } from '@/ui/components/composite/CustomTabButton/CustomTabButton';
 import { CustomTabButtonWithText } from '@/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
 import { colors } from '@/ui/style/colors';
@@ -14,15 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet } from 'react-native';
 
 const TabLayout = () => {
-  const { userTokens } = useGetUserTokens();
-  const { showErrorToast } = useToast();
+  const { canStart } = useStartNewTrip();
   const { t } = useTranslation();
 
   const handlePress = () => {
-    if (userTokens === 0) {
-      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
-      return;
-    }
+    if (!canStart()) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     navigationService.toSearch();
   };

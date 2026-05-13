@@ -1,26 +1,25 @@
-import { logger } from '@/features/core/error';
-import { TranslationKeys } from '@/features/core/translations';
-import type { LocationInfo } from '@/features/trip-generation';
+import type { LocationInfo } from '@/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete.logic';
+import { usePlacesAutocompleteLogic } from '@/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete.logic';
 import { colors } from '@/ui/style/colors';
 import { spacing } from '@/ui/style/dimensions/spacing';
 import Constants from 'expo-constants';
 import type { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 type PlacesAutocompleteProps = {
   onPress: (locationInfo: LocationInfo) => void;
   placeholder?: string;
 };
+
 export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
   onPress,
   placeholder = 'SEARCH_PLACE_PAGE.SEARCH_PLACE',
 }) => {
-  const { i18n, t } = useTranslation();
+  const { translatedPlaceholder, language, handleFail, handleTimeout } = usePlacesAutocompleteLogic(placeholder);
 
   return (
     <GooglePlacesAutocomplete
-      placeholder={t(placeholder)}
+      placeholder={translatedPlaceholder}
       fetchDetails={true}
       onPress={(data, details = null) => {
         onPress({
@@ -33,7 +32,7 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
       }}
       query={{
         key: Constants.expoConfig?.extra?.googlePlacesApiKey,
-        language: i18n.language ?? TranslationKeys.defaultLanguage,
+        language,
         types: 'geocode',
       }}
       styles={{
@@ -46,7 +45,8 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
           backgroundColor: colors.primaryWhite,
         },
       }}
-      onFail={logger.error}
+      onFail={handleFail}
+      onTimeout={handleTimeout}
       autoFillOnNotFound={false}
       currentLocation={false}
       currentLocationLabel="Current location"
@@ -70,7 +70,6 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
       nearbyPlacesAPI="GooglePlacesSearch"
       numberOfLines={1}
       onNotFound={() => {}}
-      onTimeout={() => console.warn('google places autocomplete: request timeout')}
       predefinedPlaces={[]}
       predefinedPlacesAlwaysVisible={false}
       suppressDefaultStyles={false}

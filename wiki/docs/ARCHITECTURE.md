@@ -2,7 +2,7 @@
 
 > **Diagram:** [Architecture overview](diagrams/architecture.mermaid)
 
-> **Note on code examples:** All code examples in this document use generic, representative names (`Item`, `IItemRepository`, `FilterItemsUseCase`, `useGetItems`, etc.). They are intentionally disconnected from the actual project code. Their sole purpose is to illustrate patterns and rules — they are not templates to copy.
+> **Note on code examples:** All code examples in this document use generic, representative names (`Item`, `IItemRepository`, `FilterItemsUseCase`, `useGetItems`, etc.). They are intentionally disconnected from the actual project code. Their sole purpose is to illustrate patterns and rules, they are not templates to copy.
 
 ## Guiding Principles
 
@@ -10,7 +10,7 @@
 - **Inward dependencies** — outer layers depend on inner ones, never the reverse. `ui` → `facades/hooks/state` → `useCases` → `domain`.
 - **Abstraction over coupling** — feature code depends on interfaces, not concrete implementations. Swapping a library only affects its wrapper, not any feature.
 - **Two DI modes** — IoC container for stateless singletons (services, HTTP repos); hook-based repositories when the underlying SDK only exposes a React hook API and cannot be wrapped in a class singleton (e.g. reactive real-time backends like Convex, or auth SDKs like Clerk that are hook-only by design).
-- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features. Features are organised into dependency tiers — dependencies only flow downward, never between peers. See [Feature Dependency Tiers](#feature-dependency-tiers).
+- **Feature isolation** — features communicate only through `features/core/` or another feature's explicit public API (`index.ts`). Internal folders are never imported across features. Features are organised into dependency tiers, dependencies only flow downward, never between peers. See [Feature Dependency Tiers](#feature-dependency-tiers).
 - **Start simple, promote when needed** — components, facades, and hooks start local. They move to a shared location only when a second consumer appears.
 
 ---
@@ -30,7 +30,7 @@ The app uses two complementary dependency injection patterns:
 
 ### What is an IoC container?
 
-An **IoC (Inversion of Control) container** is a tool that manages the creation and wiring of class dependencies automatically. Without it, a class that needs a Logger and an HTTP client would have to create them itself (`new Logger()`, `new HttpClient()`) — tightly coupling it to concrete implementations. With an IoC container, the class simply declares what it needs in its constructor (typed to interfaces), and the container resolves and injects the right implementations at startup. This means:
+An **IoC (Inversion of Control) container** is a tool that manages the creation and wiring of class dependencies automatically. Without it, a class that needs a Logger and an HTTP client would have to create them itself (`new Logger()`, `new HttpClient()`) — tightly coupling it to concrete implementations. With an IoC container, the class simply declares what it needs in its constructor (typed to interfaces), and the container resolves and injects the right implementations __at startup__. This means:
 
 - Classes never call `new` on their dependencies
 - Swapping an implementation (e.g. a remote logger replacing the console logger) requires changing only the DI registration, not the class
@@ -49,15 +49,15 @@ features/<name>/
 │   │   ├── repositories/
 │   │   └── services/
 │   ├── schemas/
-│   └── utils/            (pure domain utility functions — no external imports)
+│   └── utils/            
 ├── data/
 │   ├── dtos/
 │   ├── adapters/
 │   ├── validators/
 │   ├── repositories/
 │   └── services/
-├── mappers/              (pure functions: domain type → presentation concern)
-├── di/               (only in features with injectable singletons)
+├── mappers/              
+├── di/   --> (only in features with injectable singletons)
 │   ├── types.ts
 │   ├── config.ts
 │   └── resolve.ts
@@ -69,8 +69,8 @@ features/<name>/
 ├── ui/
 │   ├── components/
 │   └── pages/
-├── index.ts              (public API — domain types, facades, utility hooks)
-└── pages.ts              (router entry point — page components only, for app/ routes)
+├── index.ts   --> (public API — domain types, facades, utility hooks)
+└── pages.ts   --> (router entry point — page components only, for app/ routes)
 ```
 
 ---
@@ -81,12 +81,13 @@ features/<name>/
 
 ```
 features/core/
-├── error/           → BaseError, ErrorCode, Result, ok/fail helpers, ensureError, ILogger, BasicLogger, SentryLogger
-├── storage/         → IStorage, LocalStorage, MMKV wrapper, zustandStorage adapter
-├── http/            → IHttpClient, HttpClient, fetch wrapper
-├── images/          → IImageRepository, ImageRepository, FetchImageUseCase, useGetImage facade
-├── state/           → createSelectors, registerStore, resetAllStores, createZustandStorage utilities; app-wide and modal state stores
-└── utils/           → generic utility hooks (useDebounce, etc.) and pure utility functions
+├── error/           
+├── storage/         
+├── http/            
+├── images/          
+├── state/         
+├── utils/           → generic utility hooks (useDebounce, etc.) and pure utility functions
+└── ...
 ```
 
 Each sub-module follows the same internal layer structure as any other feature — only the layers it actually needs:
@@ -113,7 +114,7 @@ features/core/<sub-module>/
 └── index.ts                 (public API of the sub-module)
 ```
 
-Every feature is **isolated**: `features/items/` cannot reach into `features/catalog/` internals. If logic or types are needed across features, they either:
+Every feature is **isolated**: for example, `features/items/` cannot reach into `features/catalog/` internals. If logic or types are needed across features, they either:
 
 - Move into `features/core/` (foundational infrastructure) or the relevant `core` sub-module
 - Or are exposed via the target feature's **public API** — an `index.ts` at the feature root that explicitly declares what is shareable
@@ -185,13 +186,13 @@ import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
 
 ```ts
 // features/core/error/index.ts
-export { logger } from './di/resolve';                          // IoC singleton — re-exported for cross-feature use
+export { logger } from './di/resolve';                  // IoC singleton — re-exported for cross-feature use
 export type { ILogger } from './domain/entities/services/ILogger';
 export { BaseError, ErrorCode, ensureError, ok, fail } from './domain/entities/Result';
 
 // features/core/images/index.ts
-export { fetchImageUseCase } from './di/resolve';               // IoC singleton — re-exported for cross-feature use
-export { useGetImage } from './facades/useGetImage';            // facade
+export { fetchImageUseCase } from './di/resolve';       // IoC singleton — re-exported for cross-feature use
+export { useGetImage } from './facades/useGetImage';    // facade
 ```
 
 ### When to use `core/` vs `index.ts`
@@ -345,9 +346,9 @@ Pure domain models — TypeScript interfaces, types, and constants that represen
 - Use `type` for unions, aliases, intersections, or **component props** — anything that is not a plain domain entity shape.
 
 ```ts
-interface Item { id: string; name: string; }          // ✅ domain entity shape → interface
-type ItemStatus = 'upcoming' | 'past' | 'ongoing';   // ✅ union → type
-type ItemWithStatus = Item & { status: ItemStatus };  // ✅ intersection → type
+interface Item { id: string; name: string; }               // ✅ domain entity shape → interface
+type ItemStatus = 'upcoming' | 'past' | 'ongoing';         // ✅ union → type
+type ItemWithStatus = Item & { status: ItemStatus };       // ✅ intersection → type
 type ItemCardProps = { item: Item; onPress: () => void };  // ✅ component props → type
 ```
 
@@ -496,13 +497,13 @@ Implementations of repository interfaces from `domain/entities/repositories/`.
 // features/items/data/repositories/useItemRepository.ts
 // e.g. using Convex + Clerk
 export const useItemRepository = (): IItemRepository => {
-  const { userId } = useAuth();                                                    // auth hook — direct import, documented exception
+  const { userId } = useAuth();                         // auth hook — direct import, documented exception
   const items = useQuery(api.items.getAllByUserId, { userId: userId ?? '' }); // Convex hook — direct import, documented exception
   const createMutation = useMutation(api.items.create);
   const toggleMutation = useMutation(api.items.toggleActive);
 
   return {
-    getItems: () => items,                                      // reactive query — returns undefined while loading
+    getItems: () => items,                             // reactive query — returns undefined while loading
 
     createItem: async (data) => {
       try {
@@ -551,12 +552,19 @@ export class ImageRepository implements IImageRepository {
 Implementations of service interfaces from `domain/entities/services/`. These are stateless, registered as singletons in the IoC container, and may use `libraries/` wrappers internally.
 
 ```ts
-// features/core/error/data/services/BasicLogger.ts
-// registered as singleton in di/config.ts via container.registerSingleton()
-export class BasicLogger implements ILogger {
-  log(message: string, ...args: unknown[]) { console.log(message, ...args); }
-  error(error: Error, context?: Record<string, unknown>) { console.error(error, context); }
-  warning(message: string, ...args: unknown[]) { console.warn(message, ...args); }
+// features/core/http/data/services/HttpClient.ts
+@injectable()
+export class HttpClient implements IHttpClient {
+  async get<T>(url: string): Promise<Result<T>> {
+    try {
+      const response = await fetch(url);
+      if (!response.ok)
+        return fail(new BaseError(`HTTP ${response.status}`, ErrorCode.NetworkFailure));
+      return ok(await response.json() as T);
+    } catch (err) {
+      return fail(ensureError(err));
+    }
+  }
 }
 ```
 
@@ -832,6 +840,15 @@ Facades are **coordination hooks** — they combine hook-based repositories and 
 
 **Promotion rule:** every hook-based repository access lives in a facade — even for page-specific logic. The promotion question is about the facade itself: if the same facade would be duplicated across two pages, extract it to `facades/` and import it from both. If it's new logic, write it directly in `facades/` from the start.
 
+The promotion rule is normally reactive ("two pages need it → promote"). But when you're writing brand-new code that involves a hook-based repository, that reactive question doesn't apply yet — so the rule simplifies to "just put it in facades/ from the start."
+
+For example:
+- You're building a new feature and writing useCreateItem for the first time → write it in
+  features/items/facades/useCreateItem.ts directly, don't start it in the page's .logic.ts and wait
+  for a second consumer.
+- You already have const { getItemById } = useGetItems() inline in one page's .logic.ts, and now a
+  second page needs it → that's the promotion scenario (extract it to facades/).
+
 **Concrete examples:**
 
 Stay in `.logic.ts` as a direct facade call (not promoted yet):
@@ -1056,7 +1073,7 @@ actions: {
   addItem: (item) => set(state => ({
     items: [...state.items.filter(i => i.id !== item.id), item]  // filtering logic — belongs in a use case
       .sort((a, b) => b.createdAt - a.createdAt)                 // sorting logic — belongs in a use case
-      .slice(0, MAX_ITEMS),                                       // capping logic — belongs in a use case
+      .slice(0, MAX_ITEMS),                                      // capping logic — belongs in a use case
   })),
 }
 ```
@@ -1253,52 +1270,6 @@ PageName/
 
 `PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers.
 
-It can import:
-
-- **Facades** (`features/<name>/facades/`) — for reused coordination of repos + use cases
-- **Hooks** (`features/<name>/hooks/`) — for reused utility logic
-- **Core hooks** (`features/core/utils` via `index.ts`) — for cross-feature utilities (debounce, formatting…) and core sub-module facades (e.g. `features/core/images` via its `index.ts`)
-- **Class use cases** (`features/<name>/di/resolve`) — for page-specific business logic (when not reused)
-- **State** (`features/<name>/state/`) — for local UI state
-
-When the same combination appears in more than one page, promote it to a facade in `facades/`.
-
-```ts
-// ✅ PageName.logic.ts — using a facade (coordination reused across pages)
-import { useGetItems } from '@/features/items/facades/useGetItems';
-import { useItemStore } from '@/features/items/state/itemStore';
-
-export const usePageNameLogic = () => {
-  const { upcomingItem, isLoading } = useGetItems();  // reused → promoted to facade
-  const { actions } = useItemStore();                 // local UI state
-
-  return { upcomingItem, isLoading, actions };
-};
-```
-
-```ts
-// ✅ PageName.logic.ts — using a class use case directly (page-specific, not yet promoted)
-import { filterItemsUseCase } from '@/features/items/di/resolve';
-import { useGetItems } from '@/features/items/facades/useGetItems';
-import { useItemStore } from '@/features/items/state/itemStore';
-
-export const usePageNameLogic = () => {
-  const { items } = useGetItems();                                 // data via facade
-  const upcoming = items ? filterItemsUseCase.execute(items) : undefined; // page-specific logic
-  const { actions } = useItemStore();
-
-  return { upcoming, actions };
-};
-```
-
-```ts
-// ❌ PageName.logic.ts — never imports hook-based repositories
-import { useItemRepository } from '@/features/items/data/repositories/useItemRepository';
-
-// ❌ PageName.logic.ts — never imports IoC repositories directly
-import { imageRepository } from '@/features/core/images/di/resolve';
-```
-
 ---
 
 ## DI Container
@@ -1340,7 +1311,7 @@ features/
 
 Features that use only hook-based repositories (e.g. items, entity) have no `di/` folder — they don't need one.
 
-`**factories/` subfolder** — optional, used when creating a dependency requires non-trivial setup (e.g. reading a config value, calling an SDK factory function). Each factory file is a pure module: it creates and exports one instance with no tsyringe imports and no `container` calls. `config.ts` imports from `factories/` and is the only file that registers with the container. This keeps factory logic testable in isolation and keeps all DI registrations visible in one place.
+**`factories/` subfolder** — optional, used when creating a dependency requires non-trivial setup (e.g. reading a config value, calling an SDK factory function). Each factory file is a pure module: it creates and exports one instance with no DI framework (es: tsyringe) imports and no `container` calls. `config.ts` imports from `factories/` and is the only file that registers with the container. This keeps factory logic testable in isolation and keeps all DI registrations visible in one place.
 
 **Inline in `config.ts` vs `factories/`** — use this rule to decide:
 
@@ -1417,7 +1388,7 @@ Never instantiate services directly — always import from `di/resolve.ts` (inte
 
 ### Pattern 1 — IoC container singletons (e.g. tsyringe)
 
-Used for: services, HTTP-based repositories, and use cases. All of these are **stateless** — they hold no mutable data between calls. Because they are stateless, registering them as singletons is correct: one instance is created at startup and reused for the entire app lifetime. If a class ever needed mutable internal state, it would need a transient lifetime (new instance per resolution) — but none of our IoC classes have that requirement.
+Used for: services, HTTP-based repositories, and use cases. All of these are **stateless** — they hold no mutable data between calls. One instance is created at startup and reused for the entire app lifetime. If a class ever needed mutable internal state, it would need a transient lifetime (new instance per resolution) — but none of our IoC classes have that requirement.
 
 All three follow the same three-file DI pattern inside the owning feature's `di/` folder:
 
@@ -1466,35 +1437,6 @@ The reactive backend client (e.g. Convex) exposes hooks that establish real-time
 
 
 No IoC container entry needed — the hook is the injection mechanism.
-
----
-
-## tsyringe Reference
-
-This section documents the tsyringe mechanisms used in this project, with verified definitions and the rules for how each is applied.
-
-> **Official docs:** [https://github.com/microsoft/tsyringe](https://github.com/microsoft/tsyringe)
-
-### Mechanism table
-
-
-| Mechanism                                     | What it does                                                                                                                        | When it is required                                                                                                                                                                                                                                                                 |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `reflect-metadata`                            | Enables the TypeScript decorator metadata needed by tsyringe to read constructor parameter types at runtime                         | Must be imported **once**, before any DI code runs. In this project it is imported at the top of every `di/config.ts` and `di/resolve.ts`.                                                                                                                                          |
-| `@injectable()`                               | Marks a class so tsyringe can read its constructor parameter metadata. Without it, tsyringe cannot inject constructor dependencies. | Required on any class whose constructor receives injected parameters. **Not needed** on classes with no constructor dependencies (e.g. pure stateless use cases).                                                                                                                   |
-| `@singleton()`                                | Shorthand decorator that combines `@injectable()` + singleton lifetime registration.                                                | **Not used in this project.** Explicit `container.registerSingleton()` in `di/config.ts` is preferred for clarity and consistency. Combining both is redundant — `registerSingleton()` documentation states it is the "Alternative to the `@singleton()` decorator".                |
-| `@inject(token)`                              | Tells tsyringe which token to use when resolving a specific constructor parameter.                                                  | Required when a constructor parameter is typed as an interface (interfaces are erased at runtime — tsyringe cannot infer the token automatically). Always used alongside `@injectable()`.                                                                                           |
-| `container.registerSingleton(token, Class)`   | Registers `Class` under `token` with singleton lifetime (one instance for the entire app).                                          | Used in every `di/config.ts` for services and use cases. Replaces the `@singleton()` decorator.                                                                                                                                                                                     |
-| `container.registerInstance(token, instance)` | Registers a pre-created object instance under `token`.                                                                              | Used when the object needs constructor arguments that are not themselves injected (e.g. `new MMKV({ id: 'app-storage' })`). The instance is created in the feature's composition root (inline in `di/config.ts` or in a `di/factories/` module) and registered from `di/config.ts`. |
-| `container.resolve<T>(token)`                 | Resolves and returns the registered instance for `token`.                                                                           | Called in `di/resolve.ts` to obtain the singleton and export it as a plain constant. Never called outside `di/resolve.ts`.                                                                                                                                                          |
-
-
-### Lifetime note: singleton vs transient
-
-tsyringe supports two main lifetimes:
-
-- **Singleton** — one instance is created on first resolution and reused forever. Used for all services and use cases in this project (all are stateless).
-- **Transient** — a new instance is created on every `container.resolve()` call. Not currently used. If a class ever held mutable internal state between calls it would need transient registration, but no such class exists.
 
 ### `reflect-metadata` import order rule
 
@@ -1632,20 +1574,6 @@ convex/
 
 ---
 
-## How a Screen Works (End to End)
-
-```
-app/(authenticated)/items/search.tsx
-  └── renders <SearchPage />                             ← features/items/ui/pages/
-        ├── uses useSearchPageLogic()                    ← SearchPage.logic.ts (ViewModel)
-        │     ├── reads/writes useItemStore()            ← features/items/state/
-        │     └── calls useGetImage()                   ← features/core/images/facades/ (core facade)
-        │           └── fetchImageUseCase.execute()      ← features/core/images/di/resolve (IoC container)
-        └── renders <PlacesAutocomplete />               ← ui/components/composite/
-```
-
----
-
 ## Documentation
 
 All public methods must have a TSDoc comment. This includes every `execute()` method on use cases, every method on repository and service interfaces, and any public facade or hook return value that is not self-evident from its name and type.
@@ -1722,9 +1650,9 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
   | `data/services/`                   | `libraries/` wrappers, domain service interfaces                                                                                                                                                                     | Wraps library calls; no error handling beyond what the library surface requires |
 
    **The one rule that never bends: IoC repositories must only be imported inside `useCases/` — never in `.logic.ts`, `facades/`, `hooks/`, or anywhere in `ui/`.**
-2. `**domain/` is pure.** No external library imports, no framework code, no side effects.
-3. `**data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
-4. `**libraries/` is consumed exclusively by `data/services/`.** Class-based repositories never import from `libraries/` — they receive service interfaces via constructor injection. Hook-based repositories are the sole documented exception: they import Convex and auth hooks directly because those hooks require the React lifecycle and cannot be wrapped in a class singleton.
+2. **`domain/` is pure.** No external library imports, no framework code, no side effects.
+3. **`data/` owns external systems.** Only `data/` imports from backend clients (e.g. Convex), HTTP libraries (e.g. ky), device storage SDKs (e.g. MMKV).
+4. **`libraries/` is consumed exclusively by `data/services/`.** Class-based repositories never import from `libraries/` — they receive service interfaces via constructor injection. Hook-based repositories are the sole documented exception: they import Convex and auth hooks directly because those hooks require the React lifecycle and cannot be wrapped in a class singleton.
 5. **Schemas in `domain/schemas/`.** Schemas (e.g. Zod) define domain rules — they are not infrastructure concerns.
 6. **Adapters transform, validators execute.** Adapters convert DTOs to entities; validators run schemas against data.
 7. **Pages are thin.** All logic in `.logic.ts` hooks, all styles in `.style.ts` files.
@@ -1734,71 +1662,3 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 11. **Feature isolation.** Features only import from `features/core/<sub-module>` (via its `index.ts`) or from another feature's public API (`index.ts`). Never reach into another feature's or core sub-module's internal folders (`data/`, `domain/`, `facades/`, etc.).
 12. **Always use `@/` path aliases.** Never use relative paths (`./` or `../`) anywhere in the project.
 13. **Errors are values.** Functions that can fail return `Result<T>`. See [ERROR_HANDLING.md](./ERROR_HANDLING.md) for the full contract — layer rules, logging, error boundaries, and UI mapping.
-
----
-
-## Patterns Reference
-
-This section briefly explains the design patterns used in this architecture. You do not need to know these patterns to work effectively on the project — the folder structure and rules above encode all the decisions for you. This section exists for context and to give names to what you are already doing.
-
-### Clean Architecture
-
-**What it is:** An architectural approach where code is organized in concentric layers, each with a clear responsibility. Dependencies always point inward — outer layers know about inner ones, but inner layers know nothing about outer ones.
-
-**How we use it:** `domain/` is the innermost layer — pure TypeScript, no external imports. `data/` wraps external systems and implements domain contracts. `useCases/` orchestrates domain logic. `facades/` and `ui/` sit on the outside. Swapping any outer layer (e.g. changing the backend) never touches the domain.
-
----
-
-### Repository Pattern
-
-**What it is:** An abstraction layer over data access. Instead of calling a database or HTTP API directly, you call a repository interface. The interface defines what data operations are available; the implementation decides how they work.
-
-**How we use it:** `domain/entities/repositories/` defines the interface (`IItemRepository`). `data/repositories/` provides the implementation — either a hook (for reactive backends) or a class (for HTTP APIs). Use cases call the interface and never know which implementation is running.
-
----
-
-### Dependency Inversion Principle (DIP)
-
-**What it is:** High-level modules should not depend on low-level modules. Both should depend on abstractions. In practice: your business logic depends on interfaces, not concrete classes.
-
-**How we use it:** Use cases receive `ILogger` and `IImageRepository` — interfaces defined in `domain/`. The IoC container injects the concrete implementations at startup. Swapping a logger from console to remote logging requires zero changes to any use case.
-
----
-
-### Inversion of Control (IoC) / Dependency Injection
-
-**What it is:** Instead of a class creating its own dependencies (`new Logger()`), dependencies are provided from the outside. An IoC container (e.g. tsyringe) manages creation and injection automatically based on registered types.
-
-**How we use it:** Classes declare their dependencies as constructor parameters typed to interfaces. `di/config.ts` registers the implementations. `di/resolve.ts` resolves the fully-wired instances at startup. No class ever calls `new` on its dependencies.
-
----
-
-### Facade Pattern
-
-**What it is:** A simplified interface over a complex subsystem. The facade hides internal complexity and exposes only what the caller needs.
-
-**How we use it:** `facades/` combines hook-based repositories (reactive data) with class use cases (business logic) into a single, named hook. The caller (`logic.ts`) calls `useGetItems()` without knowing that this involves a Convex subscription, an auth hook, and a filtering use case.
-
----
-
-### MVVM (Model–View–ViewModel)
-
-**What it is:** A UI pattern that separates the view (what you see) from its logic (what it does). The ViewModel is a layer between the view and the data that prepares data for display and handles user actions.
-
-**How we use it:** `PageName.tsx` is the View — pure JSX, no logic. `PageName.logic.ts` is the ViewModel — a custom hook that fetches data, computes derived state, and exposes action handlers. The View only consumes the ViewModel's output.
-
----
-
-### Public API / Barrel Export Pattern
-
-**What it is:** A module exposes only a curated set of exports via an entry point (`index.ts`). Internal implementation files are not directly importable by consumers.
-
-**How we use it:** Each feature that shares something with another feature has an `index.ts` that explicitly lists what is public. Consumers import from `@/features/catalog`, never from `@/features/catalog/data/repositories/...`. This keeps internal refactoring invisible to the outside.
-
----
-
-### Singleton Pattern
-
-**What it is:** A class that has exactly one instance for the lifetime of the application.
-
-**How we use it:** All IoC-registered classes (services, repositories, use cases) are stateless — they hold no mutable data. Because of this, registering them as singletons is both safe and efficient: one instance is created at startup and reused everywhere.

@@ -1,5 +1,7 @@
-import { type Language, TranslationKeys, useChangeLanguage } from '@/features/core/translations';
+import { type Language, Languages, TranslationKeys, useChangeLanguage } from '@/features/core/translations';
 import { useEffect, useState } from 'react';
+
+export { Languages };
 
 export const useChangeLanguagePageLogic = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(TranslationKeys.defaultLanguage);

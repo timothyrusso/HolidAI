@@ -4,7 +4,6 @@ import { ConvertFromUTCToLocaleUseCase } from '@/features/core/dates/useCases/Co
 import { FormatDateForPromptUseCase } from '@/features/core/dates/useCases/FormatDateForPromptUseCase';
 import { GetTimezoneFormattedDateUseCase } from '@/features/core/dates/useCases/GetTimezoneFormattedDateUseCase';
 import { GetTodayInLocalTimezoneUseCase } from '@/features/core/dates/useCases/GetTodayInLocalTimezoneUseCase';
-import { NormalizeDateToISOUseCase } from '@/features/core/dates/useCases/NormalizeDateToISOUseCase';
 import { TranslateDateUseCase } from '@/features/core/dates/useCases/TranslateDateUseCase';
 import { container } from 'tsyringe';
 
@@ -14,5 +13,4 @@ container.registerSingleton(DATES_TYPES.ConvertFromUTCToLocaleUseCase, ConvertFr
 container.registerSingleton(DATES_TYPES.FormatDateForPromptUseCase, FormatDateForPromptUseCase);
 container.registerSingleton(DATES_TYPES.GetTimezoneFormattedDateUseCase, GetTimezoneFormattedDateUseCase);
 container.registerSingleton(DATES_TYPES.GetTodayInLocalTimezoneUseCase, GetTodayInLocalTimezoneUseCase);
-container.registerSingleton(DATES_TYPES.NormalizeDateToISOUseCase, NormalizeDateToISOUseCase);
 container.registerSingleton(DATES_TYPES.TranslateDateUseCase, TranslateDateUseCase);

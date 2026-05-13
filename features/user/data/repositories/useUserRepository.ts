@@ -1,5 +1,4 @@
-import { ensureError, fail, ok } from '@/features/core/error';
-import { UserError } from '@/features/user/domain/entities/errors/UserError';
+import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
 import type { IUserRepository } from '@/features/user/domain/entities/repositories/IUserRepository';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 
@@ -27,7 +26,7 @@ export const useUserRepository = (): IUserRepository => {
     },
 
     deleteUser: async () => {
-      if (!user) return fail(new UserError('No user to delete'));
+      if (!user) return fail(new BaseError('No user to delete', ErrorCode.NotFound));
       try {
         await user.delete();
         return ok(undefined);

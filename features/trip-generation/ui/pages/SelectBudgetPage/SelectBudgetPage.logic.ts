@@ -4,6 +4,8 @@ import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+export { BudgetData };
+
 export const useSelectBudgetPageLogic = () => {
   const { tripActions } = useTripGenerationState();
   const { t } = useTranslation();

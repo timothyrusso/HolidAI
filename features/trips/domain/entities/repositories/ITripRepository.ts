@@ -1,3 +1,4 @@
+// Pragmatic exception to domain purity: see Trip.ts for rationale.
 import type { Id } from '@/convex/_generated/dataModel';
 import type { Result } from '@/features/core/error';
 import type { Trip, TripAiResp } from '@/features/trips/domain/entities/Trip';
