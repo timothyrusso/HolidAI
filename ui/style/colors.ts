@@ -14,7 +14,7 @@ export const colors = {
   primaryGreen: '#D8E2DC',
   primaryPink: '#FFCAD4',
   secondaryPink: '#F4ACB7',
-  primaryBlue: '#cae9ff',
+  primaryBlue: '#4361EE',
   secondaryBlue: '#96d0ff',
   tertiaryBlue: '#63b3ff',
   primaryRed: '#FFD9D9',

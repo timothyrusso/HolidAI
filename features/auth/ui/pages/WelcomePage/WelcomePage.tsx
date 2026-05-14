@@ -10,7 +10,7 @@ import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
 
 export const WelcomePage = () => {
-  const { handlePress, welcomePageImage } = useWelcomePageLogic();
+  const { handlePress, welcomePageImage, logoRound } = useWelcomePageLogic();
 
   return (
     <BasicView nameView={Routes.Welcome} isFullScreen statusBarStyle="dark">
@@ -18,14 +18,11 @@ export const WelcomePage = () => {
         <View style={styles.contentContainer}>
           <CustomImage source={welcomePageImage} style={styles.image} useBlur={false} />
           <View style={styles.textContainer}>
+            <CustomImage source={logoRound} style={styles.logoRound} useBlur={false} />
             <View style={styles.titleContainer}>
               <CustomText text="WELCOME.SUBTITLE_FIRST_LINE" style={styles.titleFirstLine} />
-              <View style={styles.secondLineContainer}>
-                <CustomText text="WELCOME.SUBTITLE_SECOND_LINE" style={styles.titleSecondLine} />
-                <CustomText text="WELCOME.SUBTITLE_THIRD_LINE" style={[styles.titleSecondLine, styles.peopleText]} />
-              </View>
+              <CustomText text="WELCOME.SUBTITLE_SECOND_LINE" style={styles.titleSecondLine} />
             </View>
-            <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
             <CustomButtonLarge
               title="WELCOME.BUTTON"
               onPress={handlePress}

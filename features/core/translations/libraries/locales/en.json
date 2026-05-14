@@ -65,11 +65,9 @@
     }
   },
   "WELCOME": {
-    "TITLE": "Plan your dream trips with artificial intelligence",
     "BUTTON": "GET STARTED",
-    "SUBTITLE_FIRST_LINE": "People don't take trips,",
-    "SUBTITLE_SECOND_LINE": "trips take",
-    "SUBTITLE_THIRD_LINE": " people"
+    "SUBTITLE_FIRST_LINE": "Your next adventure,",
+    "SUBTITLE_SECOND_LINE": " unlocked"
   },
   "SIGNIN": {
     "EMAIL_PLACEHOLDER": "Enter your email",

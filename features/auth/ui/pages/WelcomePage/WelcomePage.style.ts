@@ -15,34 +15,16 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  secondLineContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   titleFirstLine: {
-    fontFamily: fontFamily.interBold,
+    fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL3,
     textAlign: 'center',
-    lineHeight: spacing.Quintuple + spacing.Double,
   },
   titleSecondLine: {
-    fontFamily: fontFamily.interBold,
+    fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL3,
     textAlign: 'center',
-    lineHeight: spacing.Quintuple + spacing.Double,
-  },
-  peopleText: {
-    fontFamily: fontFamily.interBold,
-    fontSize: fontSize.XL3,
-    textAlign: 'center',
-    lineHeight: spacing.Quintuple + spacing.Double,
-    color: colors.tertiaryBlue,
-  },
-  subtitle: {
-    fontFamily: fontFamily.interMedium,
-    fontSize: fontSize.MD,
-    textAlign: 'center',
-    color: colors.primaryGrey,
+    color: colors.primaryBlue,
   },
   contentContainer: {
     width: '100%',
@@ -53,6 +35,11 @@ export const styles = StyleSheet.create({
     marginTop: SCREEN_HEIGHT < breakpoints.smallDevicesHeight ? 0 : '20%',
     width: '100%',
     height: images.welcomeImageHeight,
+    resizeMode: 'contain',
+  },
+  logoRound: {
+    width: images.logoRoundWidth,
+    height: images.logoRoundHeight,
     resizeMode: 'contain',
   },
   textContainer: {
