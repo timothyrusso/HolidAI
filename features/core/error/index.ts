@@ -1,8 +1,8 @@
 import type { FeatureTier } from '@/features/core/featureTier';
 export const FEATURE_TIER: FeatureTier = 0;
 
-export { logger } from '@/features/core/error/di/resolve';
 export { ERROR_TYPES } from '@/features/core/error/di/types';
+export { logger } from '@/features/core/error/di/resolve';
 export { BaseError } from '@/features/core/error/domain/entities/BaseError';
 export { ErrorCode } from '@/features/core/error/domain/entities/ErrorCode';
 export { fail, ok } from '@/features/core/error/domain/entities/Result';

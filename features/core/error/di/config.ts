@@ -1,17 +1,20 @@
-import 'reflect-metadata';
+import { ContainerModule } from 'inversify';
 
+import { container } from '@/di/container';
 import { BasicLogger } from '@/features/core/error/data/services/BasicLogger';
 import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
 import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
 import type { ISentryErrorClient } from '@/features/core/sentry';
-import { sentryClient } from '@/features/core/sentry';
-import { container } from 'tsyringe';
+import { sentryClientFactory } from '@/features/core/sentry/di/factories/sentryClientFactory';
 
-container.registerInstance<ISentryErrorClient>(ERROR_TYPES.SentryErrorClient, sentryClient);
+const errorModule = new ContainerModule(({ bind }) => {
+  bind<ISentryErrorClient>(ERROR_TYPES.SentryErrorClient).toConstantValue(sentryClientFactory);
+  if (__DEV__) {
+    bind<ILogger>(ERROR_TYPES.Logger).to(BasicLogger).inSingletonScope();
+  } else {
+    bind<ILogger>(ERROR_TYPES.Logger).to(SentryLogger).inSingletonScope();
+  }
+});
 
-if (__DEV__) {
-  container.registerSingleton<ILogger>(ERROR_TYPES.Logger, BasicLogger);
-} else {
-  container.registerSingleton<ILogger>(ERROR_TYPES.Logger, SentryLogger);
-}
+container.load(errorModule);

@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from 'inversify';
 
 import type { ISentryErrorClient } from '@/features/core/sentry/domain/entities/services/ISentryErrorClient';
 import type { ISentryPerfClient } from '@/features/core/sentry/domain/entities/services/ISentryPerfClient';

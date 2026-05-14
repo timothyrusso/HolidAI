@@ -1,1 +1,1 @@
-import './query';
+import '@/di/config/infra/query';

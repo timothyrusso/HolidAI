@@ -1,7 +1,12 @@
-import 'reflect-metadata';
+import { ContainerModule } from 'inversify';
 
-import { SentryClient } from '@/features/core/sentry/data/services/SentryClient';
+import { container } from '@/di/container';
+import type { SentryClient } from '@/features/core/sentry/data/services/SentryClient';
+import { sentryClientFactory } from '@/features/core/sentry/di/factories/sentryClientFactory';
 import { SENTRY_TYPES } from '@/features/core/sentry/di/types';
-import { container } from 'tsyringe';
 
-container.registerSingleton<SentryClient>(SENTRY_TYPES.SentryClient, SentryClient);
+const sentryModule = new ContainerModule(({ bind }) => {
+  bind<SentryClient>(SENTRY_TYPES.SentryClient).toConstantValue(sentryClientFactory);
+});
+
+container.load(sentryModule);

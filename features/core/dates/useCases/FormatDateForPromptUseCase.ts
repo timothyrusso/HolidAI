@@ -1,3 +1,6 @@
+import { injectable } from 'inversify';
+
+@injectable()
 export class FormatDateForPromptUseCase {
   /**
    * Formats a timezone-adjusted Date object to an ISO date string (YYYY-MM-DD)

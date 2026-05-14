@@ -1,8 +1,7 @@
-import 'reflect-metadata';
-
 import '@/features/core/http/di/config';
+
+import { container } from '@/di/container';
 import { HTTP_TYPES } from '@/features/core/http/di/types';
 import type { IHttpClient } from '@/features/core/http/domain/entities/services/IHttpClient';
-import { container } from 'tsyringe';
 
-export const httpClient = container.resolve<IHttpClient>(HTTP_TYPES.HttpClient);
+export const httpClient = container.get<IHttpClient>(HTTP_TYPES.HttpClient);

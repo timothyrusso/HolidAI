@@ -1,3 +1,6 @@
+import { injectable } from 'inversify';
+
+@injectable()
 export class GetTimezoneFormattedDateUseCase {
   /**
    * Adjusts the given date to the local timezone.

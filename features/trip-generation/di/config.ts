@@ -1,9 +1,11 @@
-import 'reflect-metadata';
+import { ContainerModule } from 'inversify';
 
-import '@/features/ai';
-import '@/features/core/error';
+import { container } from '@/di/container';
 import { TRIP_GEN_TYPES } from '@/features/trip-generation/di/types';
 import { GenerateTripUseCase } from '@/features/trip-generation/useCases/GenerateTripUseCase';
-import { container } from 'tsyringe';
 
-container.registerSingleton(TRIP_GEN_TYPES.GenerateTripUseCase, GenerateTripUseCase);
+const tripGenerationModule = new ContainerModule(({ bind }) => {
+  bind(TRIP_GEN_TYPES.GenerateTripUseCase).to(GenerateTripUseCase).inSingletonScope();
+});
+
+container.load(tripGenerationModule);

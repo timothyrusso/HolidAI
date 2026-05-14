@@ -1,7 +1,11 @@
-import { TYPES } from '@/di/types';
 import { QueryClient } from '@tanstack/react-query';
-import { container } from 'tsyringe';
+import { ContainerModule } from 'inversify';
 
-const queryInstance = new QueryClient();
+import { container } from '@/di/container';
+import { TYPES } from '@/di/types';
 
-container.registerInstance(TYPES.QUERY, queryInstance);
+const queryModule = new ContainerModule(({ bind }) => {
+  bind<QueryClient>(TYPES.QUERY).toConstantValue(new QueryClient());
+});
+
+container.load(queryModule);

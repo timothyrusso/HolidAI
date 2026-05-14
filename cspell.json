@@ -10,7 +10,7 @@
     "Pressable",
     "RNFB",
     "statsig",
-    "tsyringe",
+    "inversify",
     "zustand",
     "sourcery",
     "tsdoc"

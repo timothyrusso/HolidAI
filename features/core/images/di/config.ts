@@ -1,23 +1,23 @@
-import 'reflect-metadata';
+import Constants from 'expo-constants';
+import { ContainerModule } from 'inversify';
 
-import '@/features/core/error';
-import '@/features/core/http';
+import { container } from '@/di/container';
 import { GooglePlacesImageRepository } from '@/features/core/images/data/repositories/GooglePlacesImageRepository';
 import { UnsplashImageRepository } from '@/features/core/images/data/repositories/UnsplashImageRepository';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import { FetchGooglePlaceImageUseCase } from '@/features/core/images/useCases/FetchGooglePlaceImageUseCase';
 import { FetchGooglePlaceImagesUseCase } from '@/features/core/images/useCases/FetchGooglePlaceImagesUseCase';
 import { FetchUnsplashImageUseCase } from '@/features/core/images/useCases/FetchUnsplashImageUseCase';
-import Constants from 'expo-constants';
-import { container } from 'tsyringe';
 
-container.registerInstance(IMAGES_TYPES.UnsplashApiKey, Constants.expoConfig?.extra?.unsplashAccessKey ?? '');
-container.registerInstance(IMAGES_TYPES.GooglePlacesApiKey, Constants.expoConfig?.extra?.googlePlacesApiKey ?? '');
+const imagesModule = new ContainerModule(({ bind }) => {
+  bind<string>(IMAGES_TYPES.UnsplashApiKey).toConstantValue(Constants.expoConfig?.extra?.unsplashAccessKey ?? '');
+  bind<string>(IMAGES_TYPES.GooglePlacesApiKey).toConstantValue(Constants.expoConfig?.extra?.googlePlacesApiKey ?? '');
+  bind(IMAGES_TYPES.UnsplashImageRepository).to(UnsplashImageRepository).inSingletonScope();
+  bind(IMAGES_TYPES.GooglePlacesImageRepository).to(GooglePlacesImageRepository).inSingletonScope();
+  bind(IMAGES_TYPES.GooglePlacesImageListRepository).to(GooglePlacesImageRepository).inSingletonScope();
+  bind(IMAGES_TYPES.FetchUnsplashImageUseCase).to(FetchUnsplashImageUseCase).inSingletonScope();
+  bind(IMAGES_TYPES.FetchGooglePlaceImageUseCase).to(FetchGooglePlaceImageUseCase).inSingletonScope();
+  bind(IMAGES_TYPES.FetchGooglePlaceImagesUseCase).to(FetchGooglePlaceImagesUseCase).inSingletonScope();
+});
 
-container.registerSingleton(IMAGES_TYPES.UnsplashImageRepository, UnsplashImageRepository);
-container.registerSingleton(IMAGES_TYPES.GooglePlacesImageRepository, GooglePlacesImageRepository);
-container.registerSingleton(IMAGES_TYPES.GooglePlacesImageListRepository, GooglePlacesImageRepository);
-
-container.registerSingleton(IMAGES_TYPES.FetchUnsplashImageUseCase, FetchUnsplashImageUseCase);
-container.registerSingleton(IMAGES_TYPES.FetchGooglePlaceImageUseCase, FetchGooglePlaceImageUseCase);
-container.registerSingleton(IMAGES_TYPES.FetchGooglePlaceImagesUseCase, FetchGooglePlaceImagesUseCase);
+container.load(imagesModule);

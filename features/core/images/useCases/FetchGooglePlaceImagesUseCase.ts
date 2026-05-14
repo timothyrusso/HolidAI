@@ -4,7 +4,7 @@ import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 import type { IImageListRepository } from '@/features/core/images/domain/entities/repositories/IImageListRepository';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'inversify';
 
 @injectable()
 export class FetchGooglePlaceImagesUseCase {
