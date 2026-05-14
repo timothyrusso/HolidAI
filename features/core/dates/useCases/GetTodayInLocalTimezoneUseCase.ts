@@ -1,3 +1,6 @@
+import { injectable } from 'inversify';
+
+@injectable()
 export class GetTodayInLocalTimezoneUseCase {
   /**
    * Gets the current date and time adjusted to the local timezone.

@@ -1,7 +1,7 @@
 import type { Result } from '@/features/core/error';
 import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
 import type { IHttpClient } from '@/features/core/http/domain/entities/services/IHttpClient';
-import { injectable } from 'tsyringe';
+import { injectable } from 'inversify';
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 

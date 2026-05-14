@@ -1,5 +1,5 @@
+import { inject, injectable } from 'inversify';
 import type { MMKV } from 'react-native-mmkv';
-import { inject, injectable } from 'tsyringe';
 
 import { type Result, ensureError, fail, ok } from '@/features/core/error';
 import { STORAGE_TYPES } from '@/features/core/storage/di/types';

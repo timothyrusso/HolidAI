@@ -1,6 +1,6 @@
 import type { GoogleGenerativeAIProvider } from '@ai-sdk/google';
 import { Output, generateText } from 'ai';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'inversify';
 import type { ZodType, z } from 'zod';
 
 import { AI_TYPES } from '@/features/ai/di/types';

@@ -1,4 +1,4 @@
-import type { Weather } from '@/features/trips/ui/components/WeatherCard/WeatherCard.logic';
+import type { Weather } from '@/features/trips/domain/entities/Weather';
 import { styles } from '@/features/trips/ui/components/WeatherCard/WeatherCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';

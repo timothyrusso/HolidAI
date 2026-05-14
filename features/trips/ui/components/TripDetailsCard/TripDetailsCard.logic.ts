@@ -1,6 +1,5 @@
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 
-export type { TripDetails };
 import { useBudgetColorsMap } from '@/features/trips/hooks/useBudgetColorsMap';
 import { colors } from '@/ui/style/colors';
 import { useTranslation } from 'react-i18next';

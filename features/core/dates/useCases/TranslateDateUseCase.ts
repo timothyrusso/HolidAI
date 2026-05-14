@@ -1,6 +1,9 @@
-import { BaseError } from '@/features/core/error';
 import { isValid, parse } from 'date-fns';
+import { injectable } from 'inversify';
 
+import { BaseError } from '@/features/core/error';
+
+@injectable()
 export class TranslateDateUseCase {
   /**
    * Resolves a date value to a `Date` instance.

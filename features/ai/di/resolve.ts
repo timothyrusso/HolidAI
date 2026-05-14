@@ -1,8 +1,7 @@
-import 'reflect-metadata';
-
 import '@/features/ai/di/config';
+
 import { AI_TYPES } from '@/features/ai/di/types';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
-import { container } from 'tsyringe';
+import { container } from '@/features/core/container';
 
-export const geminiAiClient = container.resolve<IAiClient>(AI_TYPES.GeminiAiClient);
+export const geminiAiClient = container.get<IAiClient>(AI_TYPES.GeminiAiClient);

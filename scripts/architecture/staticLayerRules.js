@@ -2,22 +2,34 @@ const staticLayerRules = [
   {
     name: 'tsx-no-direct-layer-import',
     comment:
-      '.tsx files may only import the ViewModel (.logic.ts), UI components, and styles — never facades, domain, data, useCases, di, state, hooks, libraries, or mappers directly',
+      '.tsx files may only import the ViewModel (.logic.ts), UI components, and styles — never facades, data, useCases, di, state, hooks, libraries, or mappers directly. domain/ is allowed for import type only (see tsx-no-runtime-domain-import)',
     severity: 'error',
     from: { path: '\\.tsx$' },
     to: {
-      path: '/(facades|domain|data|useCases|di|state|hooks|libraries|mappers)/',
+      path: '/(facades|data|useCases|di|state|hooks|libraries|mappers)/',
+    },
+  },
+  {
+    name: 'tsx-no-runtime-domain-import',
+    comment:
+      '.tsx files may use import type from domain/ for prop annotations, but must never import runtime values from domain/ — all runtime logic flows through the ViewModel (.logic.ts)',
+    severity: 'error',
+    from: { path: '\\.tsx$' },
+    to: {
+      path: '/domain/',
+      dependencyTypesNot: ['type-only'],
     },
   },
   {
     name: 'tsx-no-cross-feature-public-api',
     comment:
-      '.tsx files must not import from a cross-feature public API (index.ts) — all cross-feature types and values must flow through the ViewModel (.logic.ts). Exceptions: features/core/navigation is allowed for Routes/Stacks constants used directly in BasicView; app/ route and layout files are thin entry points that are expected to import feature public APIs directly.',
+      '.tsx files must not import runtime values from a cross-feature public API (index.ts) — all cross-feature runtime values must flow through the ViewModel (.logic.ts). import type from any feature index.ts is allowed for prop annotations. Exceptions: features/core/navigation is allowed for Routes/Stacks constants used directly in BasicView; app/ route and layout files are thin entry points that are expected to import feature public APIs directly.',
     severity: 'error',
     from: { path: '\\.tsx$', pathNot: '^app/' },
     to: {
       path: '^features/.*/index\\.ts$',
       pathNot: '^features/core/navigation/',
+      dependencyTypesNot: ['type-only'],
     },
   },
   {

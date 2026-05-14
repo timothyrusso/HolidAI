@@ -21,7 +21,7 @@ This project follows a **feature-first Clean Architecture**. Each self-contained
 
 The app uses two complementary dependency injection patterns:
 
-- **IoC container singletons** (e.g. tsyringe) for stateless services: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
+- **IoC container singletons** (e.g. Inversify) for stateless services: Logger, Storage, AI client, HTTP client, image repositories. These are registered once at app startup inside each feature's own `di/` folder and resolved via the feature's `di/resolve.ts`.
 - **Hook-based repositories** when the underlying SDK only exposes a React hook API and cannot be wrapped in a class singleton. Two distinct cases apply:
   - **Reactive backends** (e.g. Convex) — the client exposes `useQuery`-style hooks that subscribe to real-time updates. Forcing them into a class singleton would lose reactivity.
   - **Hook-only SDKs** (e.g. Clerk) — the SDK exposes its API exclusively as React hooks (`useSignIn`, `useClerk`, etc.) with no class-friendly alternative. The operations may be async rather than reactive, but a class singleton is still not possible.
@@ -532,7 +532,7 @@ export const useItemRepository = (): IItemRepository => {
 
 ```ts
 // features/core/images/data/repositories/ImageRepository.ts
-// registered as singleton in di/config.ts via container.registerSingleton()
+// registered as singleton in di/config.ts via bind().to(Class).inSingletonScope()
 export class ImageRepository implements IImageRepository {
   constructor(private http: IHttpClient) {}  // service interface injected — never imports httpClient from libraries/ directly
 
@@ -764,7 +764,7 @@ export interface IImageRepository {
 }
 
 // 2. Use case — features/core/images/useCases/FetchImageUseCase.ts
-// registered in di/config.ts (e.g. using tsyringe @injectable())
+// registered in di/config.ts via bind().to(Class).inSingletonScope()
 export class FetchImageUseCase {
   constructor(
     private imageRepository: IImageRepository,
@@ -779,8 +779,7 @@ export class FetchImageUseCase {
 }
 
 // 3. Resolved — features/core/images/di/resolve.ts
-export const fetchImageUseCase =
-  container.resolve<FetchImageUseCase>(IMAGES_TYPES.FetchImageUseCase);
+export const fetchImageUseCase = container.get<FetchImageUseCase>(IMAGES_TYPES.FetchImageUseCase);
 
 // 4a. Consumed via facade (when reused across pages)
 // features/core/images/facades/useGetImage.ts
@@ -1244,7 +1243,7 @@ Factory instances created for testing must **not** call `registerStore` — only
 
 ### `ui/`
 
-React Native components and pages for this feature. `.tsx` files only import the ViewModel, and the global `ui/` — never directly from `domain/`, `data/`, or `useCases/`.
+React Native components and pages for this feature. `.tsx` files may only import: the ViewModel (`.logic.ts`), UI components, styles, and domain entity types via `import type` only — never runtime values from `domain/`, and never from `data/`, `useCases/`, `di/`, `facades/`, `hooks/`, or `state/` directly.
 
 #### `ui/components/`
 
@@ -1268,7 +1267,7 @@ PageName/
 └── PageName.style.ts   → StyleSheet definitions
 ```
 
-`PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers.
+`PageName.tsx` never imports repositories, use cases, facades, hooks, or runtime values from `domain/`. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers. The only direct `domain/` import allowed in `.tsx` is `import type` for prop annotations — it is erased at compile time and introduces no runtime coupling.
 
 ---
 
@@ -1283,7 +1282,7 @@ features/
 │   │   └── di/
 │   │       ├── types.ts    → ERROR_TYPES = { Logger: Symbol.for('Logger'), … }
 │   │       ├── config.ts   → registers BasicLogger or SentryLogger based on __DEV__
-│   │       └── resolve.ts  → export const logger = container.resolve<ILogger>(ERROR_TYPES.Logger)
+│   │       └── resolve.ts  → export const logger = container.get<ILogger>(ERROR_TYPES.Logger)
 │   ├── storage/
 │   │   └── di/
 │   │       ├── types.ts
@@ -1311,7 +1310,7 @@ features/
 
 Features that use only hook-based repositories (e.g. items, entity) have no `di/` folder — they don't need one.
 
-**`factories/` subfolder** — optional, used when creating a dependency requires non-trivial setup (e.g. reading a config value, calling an SDK factory function). Each factory file is a pure module: it creates and exports one instance with no DI framework (es: tsyringe) imports and no `container` calls. `config.ts` imports from `factories/` and is the only file that registers with the container. This keeps factory logic testable in isolation and keeps all DI registrations visible in one place.
+**`factories/` subfolder** — optional, used when creating a dependency requires non-trivial setup (e.g. reading a config value, calling an SDK factory function). Each factory file is a pure module: it creates and exports one instance with no DI framework (e.g. Inversify) imports and no `container` calls. `config.ts` imports from `factories/` and is the only file that registers with the container. This keeps factory logic testable in isolation and keeps all DI registrations visible in one place.
 
 **Inline in `config.ts` vs `factories/`** — use this rule to decide:
 
@@ -1328,27 +1327,33 @@ Features that use only hook-based repositories (e.g. items, entity) have no `di/
 The guiding question: *could this creation logic benefit from being tested or read in isolation?* If yes, it belongs in `factories/`. If it is a single `new Foo()` with no moving parts, inline in `config.ts` is fine.
 
 ```ts
-// di/factories/primary.ts — pure factory, no tsyringe
+// di/factories/primary.ts — pure factory, no Inversify
 const apiKey = Constants.expoConfig?.extra?.serviceApiKey;
 if (!apiKey) throw new Error('Missing service API key.');
 export const serviceProvider = createServiceProvider({ apiKey });
 
 // di/config.ts — only file that touches the container
-import { serviceProvider } from './factories/primary';
-container.registerInstance(AI_TYPES.PrimaryProvider, serviceProvider);
-container.registerSingleton<IAiClient>(AI_TYPES.PrimaryServiceClient, ServiceClient);
+import { ContainerModule } from 'inversify';
+import { container } from '@/features/core/container';
+import { serviceProvider } from '@/features/feature/di/factories/primary';
+
+const featureModule = new ContainerModule(({ bind }) => {
+  bind(FEATURE_TYPES.PrimaryProvider).toConstantValue(serviceProvider);
+  bind<FeatureClient>(FEATURE_TYPES.PrimaryServiceClient).to(ServiceClient).inSingletonScope();
+});
+
+container.load(featureModule);
 ```
 
-**Self-bootstrapping** — each feature's `resolve.ts` imports its own `config.ts` as the first import. This creates a hard dependency edge in the module graph: the bundler is forced to evaluate `config.ts` before `resolve.ts`'s body runs, regardless of what any other file does. No central orchestrator file is needed or used.
+**Self-bootstrapping** — each feature's `di/config.ts` self-registers into the shared container by calling `container.load(module)` at module evaluation time. Each `di/resolve.ts` imports its own `config.ts` as its first import — creating a hard dependency edge that forces the bundler to evaluate `config.ts` (and therefore run all `container.load()` calls) before any `container.get()` call. No central orchestrator file is needed or used.
 
 ```ts
 // features/core/dates/di/resolve.ts
-import 'reflect-metadata';
-import './config'; // ← guarantees registrations run before any container.resolve() call
+import '@/features/core/dates/di/config'; // ← guarantees registrations run before any container.get() call
 
-import { container } from 'tsyringe';
+import { container } from '@/features/core/container';
 // ...
-export const getTodayInLocalTimezoneUseCase = container.resolve<GetTodayInLocalTimezoneUseCase>(
+export const getTodayInLocalTimezoneUseCase = container.get<GetTodayInLocalTimezoneUseCase>(
   DATES_TYPES.GetTodayInLocalTimezoneUseCase,
 );
 ```
@@ -1386,7 +1391,7 @@ Never instantiate services directly — always import from `di/resolve.ts` (inte
 
 ## DI Patterns
 
-### Pattern 1 — IoC container singletons (e.g. tsyringe)
+### Pattern 1 — IoC container singletons (e.g. Inversify)
 
 Used for: services, HTTP-based repositories, and use cases. All of these are **stateless** — they hold no mutable data between calls. One instance is created at startup and reused for the entire app lifetime. If a class ever needed mutable internal state, it would need a transient lifetime (new instance per resolution) — but none of our IoC classes have that requirement.
 
@@ -1440,22 +1445,22 @@ No IoC container entry needed — the hook is the injection mechanism.
 
 ### `reflect-metadata` import order rule
 
-`reflect-metadata` must be imported **before** any class decorated with `@injectable()` or `@inject()` is evaluated, and before any `container.resolve()` call. In this project the rule is enforced structurally:
+`reflect-metadata` must be imported **before** any class decorated with `@injectable()` or `@inject()` is evaluated, and before any `container.get()` call. In this project, the rule is enforced structurally:
 
-1. `di/config.ts` starts with `import 'reflect-metadata'` and registers all classes.
-2. `di/resolve.ts` starts with `import 'reflect-metadata'` and `import './config'` — the `./config` import is a hard module-graph dependency that forces the bundler to evaluate `config.ts` (and therefore run all registrations) before the `resolve.ts` body runs.
+1. `features/core/container/container.ts` — the shared container — imports `reflect-metadata` as its very first line. Because every feature's `di/config.ts` imports the container, `reflect-metadata` is always evaluated first.
+2. Each `di/resolve.ts` imports its own `di/config.ts` as its first import — a hard module-graph dependency that forces the bundler to evaluate `config.ts` (and therefore run `container.load()`) before the `resolve.ts` body runs.
 
 This eliminates any runtime ordering risk without a central bootstrap file.
 
 ### Project rules
 
-- **Never use `@singleton()`** — use `container.registerSingleton()` in `di/config.ts` instead.
-- **Use `@injectable()` only when needed** — pure stateless use cases with no constructor parameters do not need it. Add it as soon as a constructor parameter is introduced.
+- **Never use `@singleton()`** — use `.inSingletonScope()` on the binding in the feature's `ContainerModule` instead.
+- **Always add `@injectable()`** to every class registered with `.to(Class)`. Inversify requires it on all injectable classes, including parameterless ones.
 - **Always pair `@injectable()` with `@inject(token)`** when the parameter type is an interface. Forgetting `@inject()` causes a silent resolution failure at runtime.
-- **Never call `container.resolve()` outside `di/resolve.ts`** — resolution happens once, the result is exported as a plain constant and consumed everywhere else.
-- **`di/config.ts` never calls `container.resolve()`.** Cross-feature dependencies (e.g. `logger`, `httpClient`) are declared via `@inject()` decorators on the class constructor — tsyringe resolves them automatically at injection time. If a feature's config requires another feature to be bootstrapped first (i.e. its tokens registered), add a side-effect import of that feature's `index.ts` at the top of `di/config.ts` (e.g. `import '@/features/core/http'`). This triggers the dependency's self-bootstrap without importing any resolved value. `container.resolve()` is only ever called in `di/resolve.ts`, and only for tokens the owning feature itself registered.
+- **Never call `container.get()` outside `di/resolve.ts`** — resolution happens once, the result is exported as a plain constant and consumed everywhere else.
+- **`di/config.ts` never calls `container.get()`.** Cross-feature dependencies (e.g. `logger`, `httpClient`) are declared via `@inject()` decorators on the class constructor — Inversify resolves them automatically at injection time. If a feature's config requires another feature to be bootstrapped first (i.e. its tokens registered), add a side-effect import of that feature's `di/config.ts` at the top of `di/config.ts` (e.g. `import '@/features/core/http/di/config'`). This triggers the dependency's self-bootstrap without importing any resolved value. `container.get()` is only ever called in `di/resolve.ts`, and only for tokens the owning feature itself registered.
 - **Constructors in IoC classes must be empty** — the body is always `{}`. The constructor only declares `@inject()`-decorated parameters, which TypeScript automatically assigns to private fields. No object creation, no validation, no logic, no side effects of any kind. All setup belongs in the feature's composition root (`di/config.ts` or `di/factories/`). Use `private readonly` on a parameter when the value is needed by class methods.
-- **All client/object creation belongs in the feature's composition root** — build dependencies either inline in `di/config.ts` or in a pure `di/factories/` module, then register the ready-to-use object from `di/config.ts` via `container.registerInstance()`. The class then receives the object directly.
+- **All client/object creation belongs in the feature's composition root** — build dependencies either inline in `di/config.ts` or in a pure `di/factories/` module, then register the ready-to-use object from `di/config.ts` via `bind().toConstantValue()`. The class then receives the object directly.
   This rule exists for three reasons:
   1. **Testability** — when everything enters via injection, any dependency can be swapped in a test without touching the class. If the constructor builds dependencies internally, they cannot be intercepted without mocking at the module level, which is fragile and couples tests to implementation details.
   2. **Single responsibility** — the class has one job: implement its interface. Deciding how to configure and build its dependencies is a different job that belongs to the composition root. Mixing both makes the class know too much about its own wiring.
@@ -1463,11 +1468,19 @@ This eliminates any runtime ordering risk without a central bootstrap file.
 
 ```ts
 // di/config.ts — validation, construction, and registration in the composition root
+import { ContainerModule } from 'inversify';
+import { container } from '@/features/core/container';
+
 const apiKey = Constants.expoConfig?.extra?.serviceApiKey;
 if (!apiKey) throw new Error('Missing API key.');
 const client = new SomeClient({ apiKey });  // built here, not in the class
-container.registerInstance(FEATURE_TYPES.SomeClient, client);
-container.registerSingleton<IService>(FEATURE_TYPES.Service, ConcreteService);
+
+const featureModule = new ContainerModule(({ bind }) => {
+  bind(FEATURE_TYPES.SomeClient).toConstantValue(client);
+  bind<IService>(FEATURE_TYPES.Service).to(ConcreteService).inSingletonScope();
+});
+
+container.load(featureModule);
 
 // data/services/ConcreteService.ts — constructor body is always empty
 @injectable()
@@ -1640,7 +1653,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 
   | Layer                              | Can import                                                                                                                                                                                                           | Error responsibility                                                            |
   | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-  | `.tsx`                             | ViewModel                                                                                                                                                                                                            | Renders error state from ViewModel — no raw error handling                      |
+  | `.tsx`                             | ViewModel, UI components, styles, and `import type` from `domain/` (prop annotations only — erased at compile time, no runtime coupling)                                                                            | Renders error state from ViewModel — no raw error handling                      |
   | `.logic.ts` (ViewModel)            | facades, hooks, core hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts` (page-specific), state                                                                     | Maps facade failure to view state — no `try/catch`, no logging                  |
   | `facades/`                         | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw          |
   | `hooks/`                           | domain types, state, external library hooks — **not** repos or use cases                                                                                                                                             | No error handling — hooks do not fail                                           |

@@ -1,3 +1,6 @@
+import { injectable } from 'inversify';
+
+@injectable()
 export class ConvertFromUTCToLocaleUseCase {
   /**
    * Converts a UTC date string to a localized date format.

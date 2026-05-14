@@ -1,3 +1,5 @@
+import { injectable } from 'inversify';
+
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
 
 /**
@@ -5,6 +7,7 @@ import type { ILogger } from '@/features/core/error/domain/entities/services/ILo
  * Registered in the IoC container for non-production environments.
  * In production, {@link SentryLogger} is used instead.
  */
+@injectable()
 export class BasicLogger implements ILogger {
   /** Writes a debug-level message to `console.debug`. */
   debug(message: string, ...args: unknown[]): void {

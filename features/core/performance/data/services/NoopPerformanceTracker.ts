@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from 'inversify';
 
 import type { MeasurementUnit } from '@/features/core/performance/domain/entities/MeasurementUnit';
 import type { SpanOptions } from '@/features/core/performance/domain/entities/SpanOptions';

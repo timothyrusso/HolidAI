@@ -9,7 +9,7 @@ import { type Result, fail, ok } from '@/features/core/error';
 import { ERROR_TYPES } from '@/features/core/error';
 import { generatedTripSchema } from '@/features/trip-generation/domain/schemas/GenerateTripSchema';
 import type { TripAiResp } from '@/features/trips';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'inversify';
 
 export type GenerateTripParams = {
   location: string;

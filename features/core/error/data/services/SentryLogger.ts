@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'inversify';
 
 import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';

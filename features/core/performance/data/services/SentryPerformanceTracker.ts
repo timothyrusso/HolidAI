@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from 'inversify';
 
 import { PERFORMANCE_TYPES } from '@/features/core/performance/di/types';
 import type { MeasurementUnit } from '@/features/core/performance/domain/entities/MeasurementUnit';

@@ -1,17 +1,20 @@
-import 'reflect-metadata';
+import { ContainerModule } from 'inversify';
 
+import { container } from '@/features/core/container';
 import { NoopPerformanceTracker } from '@/features/core/performance/data/services/NoopPerformanceTracker';
 import { SentryPerformanceTracker } from '@/features/core/performance/data/services/SentryPerformanceTracker';
 import { PERFORMANCE_TYPES } from '@/features/core/performance/di/types';
 import type { IPerformanceTracker } from '@/features/core/performance/domain/entities/services/IPerformanceTracker';
 import type { ISentryPerfClient } from '@/features/core/sentry';
-import { sentryClient } from '@/features/core/sentry';
-import { container } from 'tsyringe';
+import { sentryClientFactory } from '@/features/core/sentry';
 
-container.registerInstance<ISentryPerfClient>(PERFORMANCE_TYPES.SentryPerfClient, sentryClient);
+const performanceModule = new ContainerModule(({ bind }) => {
+  bind<ISentryPerfClient>(PERFORMANCE_TYPES.SentryPerfClient).toConstantValue(sentryClientFactory);
+  if (__DEV__) {
+    bind<IPerformanceTracker>(PERFORMANCE_TYPES.PerformanceTracker).to(NoopPerformanceTracker).inSingletonScope();
+  } else {
+    bind<IPerformanceTracker>(PERFORMANCE_TYPES.PerformanceTracker).to(SentryPerformanceTracker).inSingletonScope();
+  }
+});
 
-if (__DEV__) {
-  container.registerSingleton<IPerformanceTracker>(PERFORMANCE_TYPES.PerformanceTracker, NoopPerformanceTracker);
-} else {
-  container.registerSingleton<IPerformanceTracker>(PERFORMANCE_TYPES.PerformanceTracker, SentryPerformanceTracker);
-}
+container.load(performanceModule);
