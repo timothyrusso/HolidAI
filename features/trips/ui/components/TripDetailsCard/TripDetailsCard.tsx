@@ -1,4 +1,4 @@
-import type { TripDetails } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.logic';
+import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useTripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.logic';
 import { styles } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';

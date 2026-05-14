@@ -2,11 +2,22 @@ const staticLayerRules = [
   {
     name: 'tsx-no-direct-layer-import',
     comment:
-      '.tsx files may only import the ViewModel (.logic.ts), UI components, and styles — never facades, domain, data, useCases, di, state, hooks, libraries, or mappers directly',
+      '.tsx files may only import the ViewModel (.logic.ts), UI components, and styles — never facades, data, useCases, di, state, hooks, libraries, or mappers directly. domain/ is allowed for import type only (see tsx-no-runtime-domain-import)',
     severity: 'error',
     from: { path: '\\.tsx$' },
     to: {
-      path: '/(facades|domain|data|useCases|di|state|hooks|libraries|mappers)/',
+      path: '/(facades|data|useCases|di|state|hooks|libraries|mappers)/',
+    },
+  },
+  {
+    name: 'tsx-no-runtime-domain-import',
+    comment:
+      '.tsx files may use import type from domain/ for prop annotations, but must never import runtime values from domain/ — all runtime logic flows through the ViewModel (.logic.ts)',
+    severity: 'error',
+    from: { path: '\\.tsx$' },
+    to: {
+      path: '/domain/',
+      dependencyTypes: ['import'],
     },
   },
   {

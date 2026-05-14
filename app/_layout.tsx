@@ -47,7 +47,7 @@ export default wrap(function RootLayout() {
     }
   }, [ref]);
 
-  // biome-ignore lint/style/noNonNullAssertion: <following the convex docs: https://docs.convex.dev/quickstart/react-native>
+  // biome-ignore lint/style/noNonNullAssertion: following the convex docs: https://docs.convex.dev/quickstart/react-native
   const convex = new ConvexReactClient(Constants.expoConfig?.extra?.convexUrl!, {
     unsavedChangesWarning: false,
   });

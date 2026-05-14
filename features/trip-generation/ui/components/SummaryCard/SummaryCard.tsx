@@ -1,4 +1,4 @@
-import type { TravelerInfo } from '@/features/trip-generation/ui/components/SummaryCard/SummaryCard.logic';
+import type { TravelerInfo } from '@/features/trip-generation/domain/entities/TravelerInfo';
 import { style } from '@/features/trip-generation/ui/components/SummaryCard/SummaryCard.style';
 import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/ui/components/basic/CustomText/CustomText';

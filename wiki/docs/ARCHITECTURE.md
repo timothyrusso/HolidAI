@@ -1243,7 +1243,7 @@ Factory instances created for testing must **not** call `registerStore` — only
 
 ### `ui/`
 
-React Native components and pages for this feature. `.tsx` files only import the ViewModel, and the global `ui/` — never directly from `domain/`, `data/`, or `useCases/`.
+React Native components and pages for this feature. `.tsx` files may only import: the ViewModel (`.logic.ts`), UI components, styles, and domain entity types via `import type` only — never runtime values from `domain/`, and never from `data/`, `useCases/`, `di/`, `facades/`, `hooks/`, or `state/` directly.
 
 #### `ui/components/`
 
@@ -1267,7 +1267,7 @@ PageName/
 └── PageName.style.ts   → StyleSheet definitions
 ```
 
-`PageName.tsx` never imports repositories, use cases, or domain entities directly. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers.
+`PageName.tsx` never imports repositories, use cases, facades, hooks, or runtime values from `domain/`. All logic lives in `PageName.logic.ts`, which **is** the page's **ViewModel** — a custom hook that provides everything the view needs: data, derived state, and action handlers. The only direct `domain/` import allowed in `.tsx` is `import type` for prop annotations — it is erased at compile time and introduces no runtime coupling.
 
 ---
 
@@ -1653,7 +1653,7 @@ Relative paths make files fragile to moves and impossible to read at a glance. T
 
   | Layer                              | Can import                                                                                                                                                                                                           | Error responsibility                                                            |
   | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-  | `.tsx`                             | ViewModel                                                                                                                                                                                                            | Renders error state from ViewModel — no raw error handling                      |
+  | `.tsx`                             | ViewModel, UI components, styles, and `import type` from `domain/` (prop annotations only — erased at compile time, no runtime coupling)                                                                            | Renders error state from ViewModel — no raw error handling                      |
   | `.logic.ts` (ViewModel)            | facades, hooks, core hooks, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts` (page-specific), state                                                                     | Maps facade failure to view state — no `try/catch`, no logging                  |
   | `facades/`                         | hook-based repos, same-feature class use cases via `di/resolve` or cross-feature core singletons via `index.ts`, other facades, utility hooks from `features/core/utils` (via `index.ts`), same-feature state stores | Receives `Result<T>`, decides surface: toast / inline / boundary throw          |
   | `hooks/`                           | domain types, state, external library hooks — **not** repos or use cases                                                                                                                                             | No error handling — hooks do not fail                                           |

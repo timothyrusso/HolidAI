@@ -1,6 +1,7 @@
 import { Routes } from '@/features/core/navigation';
+import type { Trip } from '@/features/trips/domain/entities/Trip';
+import type { UniqueItem } from '@/features/trips/hooks/useUniqueItems';
 import { TripCard } from '@/features/trips/ui/components/TripCard/TripCard';
-import type { Trip, UniqueItem } from '@/features/trips/ui/pages/TripListPage/TripListPage.logic';
 import { useTripListPageLogic } from '@/features/trips/ui/pages/TripListPage/TripListPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripListPage/TripListPage.style';
 import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
