@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { NoopPerformanceTracker } from '@/features/core/performance/data/services/NoopPerformanceTracker';
 import { SentryPerformanceTracker } from '@/features/core/performance/data/services/SentryPerformanceTracker';
 import { PERFORMANCE_TYPES } from '@/features/core/performance/di/types';

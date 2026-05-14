@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { BasicLogger } from '@/features/core/error/data/services/BasicLogger';
 import { SentryLogger } from '@/features/core/error/data/services/SentryLogger';
 import { ERROR_TYPES } from '@/features/core/error/di/types';

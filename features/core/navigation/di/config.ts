@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { NavigationService } from '@/features/core/navigation/data/services/NavigationService';
 import { routerClient } from '@/features/core/navigation/di/factories/routerClient';
 import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';

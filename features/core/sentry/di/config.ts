@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import type { SentryClient } from '@/features/core/sentry/data/services/SentryClient';
 import { sentryClientFactory } from '@/features/core/sentry/di/factories/sentryClientFactory';
 import { SENTRY_TYPES } from '@/features/core/sentry/di/types';

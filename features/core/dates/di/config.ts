@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { DATES_TYPES } from '@/features/core/dates/di/types';
 import { ConvertFromUTCToLocaleUseCase } from '@/features/core/dates/useCases/ConvertFromUTCToLocaleUseCase';
 import { FormatDateForPromptUseCase } from '@/features/core/dates/useCases/FormatDateForPromptUseCase';

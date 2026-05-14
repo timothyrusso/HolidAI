@@ -1,7 +1,7 @@
 import { ContainerModule } from 'inversify';
 import type { MMKV } from 'react-native-mmkv';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { LocalStorage } from '@/features/core/storage/data/services/LocalStorage';
 import { mmkvClient } from '@/features/core/storage/di/factories/mmkvClient';
 import { STORAGE_TYPES } from '@/features/core/storage/di/types';

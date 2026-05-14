@@ -1,6 +1,6 @@
 import '@/features/core/dates/di/config';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { DATES_TYPES } from '@/features/core/dates/di/types';
 import type { ConvertFromUTCToLocaleUseCase } from '@/features/core/dates/useCases/ConvertFromUTCToLocaleUseCase';
 import type { FormatDateForPromptUseCase } from '@/features/core/dates/useCases/FormatDateForPromptUseCase';

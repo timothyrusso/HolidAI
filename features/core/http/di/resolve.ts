@@ -1,6 +1,6 @@
 import '@/features/core/http/di/config';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { HTTP_TYPES } from '@/features/core/http/di/types';
 import type { IHttpClient } from '@/features/core/http/domain/entities/services/IHttpClient';
 

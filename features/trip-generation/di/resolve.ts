@@ -1,6 +1,6 @@
 import '@/features/trip-generation/di/config';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { TRIP_GEN_TYPES } from '@/features/trip-generation/di/types';
 import type { GenerateTripUseCase } from '@/features/trip-generation/useCases/GenerateTripUseCase';
 

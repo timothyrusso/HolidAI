@@ -1,6 +1,6 @@
 import '@/features/core/navigation/di/config';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';
 import type { INavigationService } from '@/features/core/navigation/domain/entities/services/INavigationService';
 

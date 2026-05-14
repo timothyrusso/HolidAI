@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import { ContainerModule } from 'inversify';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { GooglePlacesImageRepository } from '@/features/core/images/data/repositories/GooglePlacesImageRepository';
 import { UnsplashImageRepository } from '@/features/core/images/data/repositories/UnsplashImageRepository';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';

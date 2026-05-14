@@ -1,6 +1,6 @@
 import '@/features/core/error/di/config';
 
-import { container } from '@/di/container';
+import { container } from '@/features/core/container';
 import { ERROR_TYPES } from '@/features/core/error/di/types';
 import type { ILogger } from '@/features/core/error/domain/entities/services/ILogger';
 

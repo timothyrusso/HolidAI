@@ -5,8 +5,8 @@ if (typeof window !== 'undefined' && !window.addEventListener) {
   window.removeEventListener = () => {};
 }
 
-import { queryClient } from '@/di/resolve';
 import { Stacks, screenOptions } from '@/features/core/navigation';
+import { queryClient } from '@/features/core/query';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
 import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
