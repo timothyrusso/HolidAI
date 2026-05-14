@@ -17,7 +17,7 @@ const staticLayerRules = [
     from: { path: '\\.tsx$' },
     to: {
       path: '/domain/',
-      dependencyTypes: ['import'],
+      dependencyTypesNot: ['type-only'],
     },
   },
   {
@@ -29,7 +29,7 @@ const staticLayerRules = [
     to: {
       path: '^features/.*/index\\.ts$',
       pathNot: '^features/core/navigation/',
-      dependencyTypes: ['import'],
+      dependencyTypesNot: ['type-only'],
     },
   },
   {

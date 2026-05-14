@@ -6,7 +6,7 @@ import { SentryPerformanceTracker } from '@/features/core/performance/data/servi
 import { PERFORMANCE_TYPES } from '@/features/core/performance/di/types';
 import type { IPerformanceTracker } from '@/features/core/performance/domain/entities/services/IPerformanceTracker';
 import type { ISentryPerfClient } from '@/features/core/sentry';
-import { sentryClientFactory } from '@/features/core/sentry/di/factories/sentryClientFactory';
+import { sentryClientFactory } from '@/features/core/sentry';
 
 const performanceModule = new ContainerModule(({ bind }) => {
   bind<ISentryPerfClient>(PERFORMANCE_TYPES.SentryPerfClient).toConstantValue(sentryClientFactory);
