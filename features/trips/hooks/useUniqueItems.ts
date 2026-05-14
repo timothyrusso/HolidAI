@@ -1,8 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 
-export type UniqueItem = {
-  uuid: string;
-};
+import type { UniqueItem } from '@/features/trips/domain/entities/UniqueItem';
 
 const uniqueItemBuilder = (): UniqueItem => ({
   uuid: randomUUID(),

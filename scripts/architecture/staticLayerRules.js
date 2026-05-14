@@ -23,12 +23,13 @@ const staticLayerRules = [
   {
     name: 'tsx-no-cross-feature-public-api',
     comment:
-      '.tsx files must not import from a cross-feature public API (index.ts) — all cross-feature types and values must flow through the ViewModel (.logic.ts). Exceptions: features/core/navigation is allowed for Routes/Stacks constants used directly in BasicView; app/ route and layout files are thin entry points that are expected to import feature public APIs directly.',
+      '.tsx files must not import runtime values from a cross-feature public API (index.ts) — all cross-feature runtime values must flow through the ViewModel (.logic.ts). import type from any feature index.ts is allowed for prop annotations. Exceptions: features/core/navigation is allowed for Routes/Stacks constants used directly in BasicView; app/ route and layout files are thin entry points that are expected to import feature public APIs directly.',
     severity: 'error',
     from: { path: '\\.tsx$', pathNot: '^app/' },
     to: {
       path: '^features/.*/index\\.ts$',
       pathNot: '^features/core/navigation/',
+      dependencyTypes: ['import'],
     },
   },
   {
