@@ -44,10 +44,10 @@ export const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     rowGap: spacing.Fourfold,
-    paddingBottom: spacing.Triple,
+    paddingBottom: spacing.separator80,
     paddingHorizontal: spacing.Fourfold,
   },
 });
