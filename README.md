@@ -36,11 +36,10 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Database**: Convex
 - **Client State Management**: Zustand
 - **Caching and Server State Management**: Tanstack Query
-- **Dependency Injection**: tsyringe
+- **Dependency Injection**: Inversify
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
 - **Internationalization**: i18next with react-i18next
-- **Push Notifications**: WIP - Expo Push Notifications
 - **Error Monitoring**: Sentry
 
 ## Screenshots
