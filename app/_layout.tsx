@@ -1,10 +1,3 @@
-// Polyfill for window.addEventListener untile official Convex fix is released
-// Reference: https://github.com/get-convex/convex-backend/issues/304
-if (typeof window !== 'undefined' && !window.addEventListener) {
-  window.addEventListener = () => {};
-  window.removeEventListener = () => {};
-}
-
 import { Stacks, screenOptions } from '@/features/core/navigation';
 import { queryClient } from '@/features/core/query';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
