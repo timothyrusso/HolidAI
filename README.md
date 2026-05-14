@@ -35,7 +35,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Authentication**: Clerk Authentication
 - **Database**: Convex
 - **Client State Management**: Zustand
-- **Caching and Server State Management**: Tanstack Query
+- **Caching and Server State Management**: TanStack Query
 - **Dependency Injection**: Inversify
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
