@@ -6,9 +6,8 @@ export const WelcomeCards = () => {
 
   return (
     <>
-      {cards.map((card, index) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: static list, never reorders
-        <WelcomeCard key={index} {...card} />
+      {cards.map(card => (
+        <WelcomeCard key={card.id} {...card} />
       ))}
     </>
   );

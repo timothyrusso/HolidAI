@@ -1,7 +1,8 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/ui/style/dimensions/spacing';
 import type { ImageProps } from 'expo-image';
 
-type CardConfig = {
+export type CardConfig = {
+  id: string;
   image: ImageProps['source'];
   size: 'small' | 'medium' | 'large';
   withPadding?: boolean;
@@ -17,6 +18,7 @@ type CardConfig = {
 
 const cards: CardConfig[] = [
   {
+    id: 'welcome-card-1',
     image: require('@/ui/assets/images/welcome_1.jpg'),
     size: 'small',
     withPadding: false,
@@ -27,6 +29,7 @@ const cards: CardConfig[] = [
     floatDuration: 1000,
   },
   {
+    id: 'welcome-card-2',
     image: require('@/ui/assets/images/welcome_2.jpg'),
     size: 'medium',
     withPadding: true,
@@ -37,6 +40,7 @@ const cards: CardConfig[] = [
     floatDuration: 1500,
   },
   {
+    id: 'welcome-card-3',
     image: require('@/ui/assets/images/welcome_3.jpg'),
     size: 'large',
     withPadding: true,
@@ -48,6 +52,7 @@ const cards: CardConfig[] = [
     photoEffect: true,
   },
   {
+    id: 'welcome-card-4',
     image: require('@/ui/assets/images/welcome_4.jpg'),
     size: 'medium',
     withPadding: false,
@@ -58,6 +63,7 @@ const cards: CardConfig[] = [
     floatDuration: 1700,
   },
   {
+    id: 'welcome-card-5',
     image: require('@/ui/assets/images/welcome_5.jpg'),
     size: 'medium',
     withPadding: false,
@@ -68,6 +74,7 @@ const cards: CardConfig[] = [
     floatDuration: 2200,
   },
   {
+    id: 'welcome-card-6',
     image: require('@/ui/assets/images/welcome_6.jpg'),
     size: 'medium',
     withPadding: false,
