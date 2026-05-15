@@ -11,6 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { reloadAppAsync } from 'expo';
+import { useAssets } from 'expo-asset';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
@@ -51,13 +52,25 @@ export default wrap(function RootLayout() {
     ...fontsConfig,
   });
 
+  const [welcomeAssets, welcomeAssetsError] = useAssets([
+    require('@/ui/assets/images/welcome_1.jpg'),
+    require('@/ui/assets/images/welcome_2.jpg'),
+    require('@/ui/assets/images/welcome_3.jpg'),
+    require('@/ui/assets/images/welcome_4.jpg'),
+    require('@/ui/assets/images/welcome_5.jpg'),
+    require('@/ui/assets/images/welcome_6.jpg'),
+    require('@/ui/assets/images/logo_round.png'),
+  ]);
+
+  const appReady = fontsLoaded && (!!welcomeAssets || !!welcomeAssetsError);
+
   useEffect(() => {
-    if (fontsLoaded) {
+    if (appReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded]);
+  }, [appReady]);
 
-  if (!fontsLoaded) {
+  if (!appReady) {
     return null;
   }
 

@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: spacing.Quintuple,
   },
   titleFirstLine: {
     fontFamily: fontFamily.interExtraBold,
