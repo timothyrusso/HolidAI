@@ -8,7 +8,7 @@
     "scheme": "holidai",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./ui/assets/images/icon.png",
+      "image": "./ui/assets/images/logo_round.png",
       "resizeMode": "contain",
       "backgroundColor": "#220059"
     },
@@ -53,9 +53,9 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#220059",
-          "image": "./ui/assets/images/icon.png",
+          "image": "./ui/assets/images/logo_round.png",
           "dark": {
-            "image": "./ui/assets/images/icon.png",
+            "image": "./ui/assets/images/logo_round.png",
             "backgroundColor": "#220059"
           },
           "ios": {

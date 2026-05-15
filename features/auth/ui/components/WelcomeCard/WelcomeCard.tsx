@@ -1,10 +1,11 @@
 import { useWelcomeCardLogic } from '@/features/auth/ui/components/WelcomeCard/WelcomeCard.logic';
 import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
+import type { ImageProps } from 'expo-image';
 import type { FC } from 'react';
 import Animated from 'react-native-reanimated';
 
 type WelcomeCardProps = {
-  image: string;
+  image: ImageProps['source'];
   size: 'small' | 'medium' | 'large';
   withPadding?: boolean;
   withBorderRadius?: boolean;
