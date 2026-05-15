@@ -1,3 +1,4 @@
+import { WelcomeCards } from '@/features/auth/ui/components/WelcomeCards/WelcomeCards';
 import { useWelcomePageLogic } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.logic';
 import { styles } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.style';
 import { Routes } from '@/features/core/navigation';
@@ -8,31 +9,42 @@ import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
 import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 export const WelcomePage = () => {
-  const { handlePress, welcomePageImage } = useWelcomePageLogic();
+  const {
+    handlePress,
+    logoRound,
+    subtitleAnimatedStyle,
+    cardsAnimatedStyle,
+    textContainerAnimatedStyle,
+    textElementsAnimatedStyle,
+  } = useWelcomePageLogic();
 
   return (
     <BasicView nameView={Routes.Welcome} isFullScreen statusBarStyle="dark">
       <CustomScrollView>
         <View style={styles.contentContainer}>
-          <CustomImage source={welcomePageImage} style={styles.image} useBlur={false} />
-          <View style={styles.textContainer}>
-            <View style={styles.titleContainer}>
-              <CustomText text="WELCOME.SUBTITLE_FIRST_LINE" style={styles.titleFirstLine} />
-              <View style={styles.secondLineContainer}>
-                <CustomText text="WELCOME.SUBTITLE_SECOND_LINE" style={styles.titleSecondLine} />
-                <CustomText text="WELCOME.SUBTITLE_THIRD_LINE" style={[styles.titleSecondLine, styles.peopleText]} />
+          <Animated.View style={cardsAnimatedStyle}>
+            <WelcomeCards />
+          </Animated.View>
+          <Animated.View style={[styles.textContainer, textContainerAnimatedStyle]}>
+            <CustomImage source={logoRound} style={styles.logoRound} useBlur={false} />
+            <Animated.View style={textElementsAnimatedStyle}>
+              <View style={styles.titleContainer}>
+                <CustomText text="WELCOME.SUBTITLE_FIRST_LINE" style={styles.titleFirstLine} />
+                <Animated.View style={subtitleAnimatedStyle}>
+                  <CustomText text="WELCOME.SUBTITLE_SECOND_LINE" style={styles.titleSecondLine} />
+                </Animated.View>
               </View>
-            </View>
-            <CustomText text="WELCOME.TITLE" style={styles.subtitle} />
-            <CustomButtonLarge
-              title="WELCOME.BUTTON"
-              onPress={handlePress}
-              style={styles.button}
-              buttonType={ButtonType.Main}
-            />
-          </View>
+              <CustomButtonLarge
+                title="WELCOME.BUTTON"
+                onPress={handlePress}
+                style={styles.button}
+                buttonType={ButtonType.Main}
+              />
+            </Animated.View>
+          </Animated.View>
         </View>
       </CustomScrollView>
     </BasicView>

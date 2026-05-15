@@ -28,4 +28,10 @@ export const components = {
   buttonNumberHeight: 30,
   animatedWordsHeight: 30,
   carouselImageSize: 200,
+  welcomeCardHeightSmall: 130,
+  welcomeCardHeightMedium: 180,
+  welcomeCardHeightLarge: 230,
+  welcomeCardWidthSmall: 100,
+  welcomeCardWidthMedium: 150,
+  welcomeCardWidthLarge: 200,
 };
