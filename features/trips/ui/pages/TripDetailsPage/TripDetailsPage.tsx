@@ -1,12 +1,11 @@
 import { Routes } from '@/features/core/navigation';
+import { AnimatedHeaderImage, BasicView } from '@/features/core/ui';
 import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import { DayItem } from '@/features/trips/ui/components/DayItem/DayItem';
 import { HeaderIcons } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons';
 import { ListHeaderComponent } from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent';
 import { useTripDetailsPageLogic } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.style';
-import { AnimatedHeaderImage } from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { Fragment } from 'react';
 import { SectionList, type SectionListData, View } from 'react-native';
 

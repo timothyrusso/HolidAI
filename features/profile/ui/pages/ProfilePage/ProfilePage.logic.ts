@@ -1,8 +1,8 @@
 import { navigationService } from '@/features/core/navigation';
+import { components } from '@/features/core/ui';
 import { useDeleteAccount } from '@/features/profile/facades/useDeleteAccount';
 import { useProfileData } from '@/features/profile/facades/useProfileData';
 import { useLogout } from '@/features/user';
-import { components } from '@/ui/style/dimensions/components';
 import { thumbs } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
 

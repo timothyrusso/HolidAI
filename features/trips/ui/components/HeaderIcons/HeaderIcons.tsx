@@ -1,9 +1,6 @@
+import { ButtonType, CustomIconButtonMedium, icons, spacing } from '@/features/core/ui';
 import { useHeaderIconsLogic } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.logic';
 import { heartPulseStyle, styles } from '@/features/trips/ui/components/HeaderIcons/HeaderIcons.style';
-import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
-import { spacing } from '@/ui/style/dimensions/spacing';
-import { icons } from '@/ui/style/icons';
 import { View } from 'react-native';
 
 export const HeaderIcons = () => {

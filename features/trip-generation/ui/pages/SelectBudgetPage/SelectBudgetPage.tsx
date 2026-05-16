@@ -1,14 +1,10 @@
 import { Routes } from '@/features/core/navigation';
+import { BasicView, CardType, CustomIconTextCard, CustomText, colors } from '@/features/core/ui';
 import {
   BudgetData,
   useSelectBudgetPageLogic,
 } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.style';
-import { CardType } from '@/ui/components/basic/CustomCard/CustomCard.logic';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { CustomIconTextCard } from '@/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { colors } from '@/ui/style/colors';
 import { FlatList, View } from 'react-native';
 
 const SeparatorItem = () => <View style={style.separator} />;

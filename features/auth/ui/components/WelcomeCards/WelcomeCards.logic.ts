@@ -1,4 +1,4 @@
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/ui/style/dimensions/spacing';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/features/core/ui';
 import type { ImageProps } from 'expo-image';
 
 export type CardConfig = {
@@ -19,7 +19,7 @@ export type CardConfig = {
 const cards: CardConfig[] = [
   {
     id: 'welcome-card-1',
-    image: require('@/ui/assets/images/welcome_1.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_1.jpg'),
     size: 'small',
     withPadding: false,
     withBorderRadius: true,
@@ -30,7 +30,7 @@ const cards: CardConfig[] = [
   },
   {
     id: 'welcome-card-2',
-    image: require('@/ui/assets/images/welcome_2.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_2.jpg'),
     size: 'medium',
     withPadding: true,
     withBorderRadius: true,
@@ -41,7 +41,7 @@ const cards: CardConfig[] = [
   },
   {
     id: 'welcome-card-3',
-    image: require('@/ui/assets/images/welcome_3.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_3.jpg'),
     size: 'large',
     withPadding: true,
     withBorderRadius: false,
@@ -53,7 +53,7 @@ const cards: CardConfig[] = [
   },
   {
     id: 'welcome-card-4',
-    image: require('@/ui/assets/images/welcome_4.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_4.jpg'),
     size: 'medium',
     withPadding: false,
     withBorderRadius: true,
@@ -64,7 +64,7 @@ const cards: CardConfig[] = [
   },
   {
     id: 'welcome-card-5',
-    image: require('@/ui/assets/images/welcome_5.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_5.jpg'),
     size: 'medium',
     withPadding: false,
     withBorderRadius: true,
@@ -75,7 +75,7 @@ const cards: CardConfig[] = [
   },
   {
     id: 'welcome-card-6',
-    image: require('@/ui/assets/images/welcome_6.jpg'),
+    image: require('@/features/core/ui/assets/images/welcome_6.jpg'),
     size: 'medium',
     withPadding: false,
     withBorderRadius: false,

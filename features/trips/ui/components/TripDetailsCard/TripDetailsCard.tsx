@@ -1,11 +1,7 @@
+import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useTripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.logic';
 import { styles } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.style';
-import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { colors } from '@/ui/style/colors';
-import { spacing } from '@/ui/style/dimensions/spacing';
-import { icons } from '@/ui/style/icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { View } from 'react-native';

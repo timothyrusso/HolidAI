@@ -1,14 +1,8 @@
+import { BaseSkeleton, CustomIcon, CustomImage, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
 import { useActivityItemLogic } from '@/features/trips/ui/components/ActivityItem/ActivityItem.logic';
 import { styles } from '@/features/trips/ui/components/ActivityItem/ActivityItem.style';
 import { NumberedMarker } from '@/features/trips/ui/components/NumberedMarker/NumberedMarker';
-import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
-import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { colors } from '@/ui/style/colors';
-import { spacing } from '@/ui/style/dimensions/spacing';
-import { icons } from '@/ui/style/icons';
 import { type FC, Fragment, memo } from 'react';
 import { Pressable, View } from 'react-native';
 
