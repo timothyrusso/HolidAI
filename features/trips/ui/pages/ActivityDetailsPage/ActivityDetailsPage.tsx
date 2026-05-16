@@ -1,18 +1,20 @@
 import { Routes } from '@/features/core/navigation';
+import {
+  AnimatedHeaderImage,
+  BasicView,
+  ButtonType,
+  CustomIcon,
+  CustomIconButtonMedium,
+  CustomScrollView,
+  CustomText,
+  colors,
+  icons,
+  spacing,
+} from '@/features/core/ui';
 import { ActivityDetailsBox } from '@/features/trips/ui/components/ActivityDetailsBox/ActivityDetailsBox';
 import { useActivityDetailsPageLogic } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.logic';
 import { styles as stylesFactory } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.style';
 import { ActivityImageCarousel } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel';
-import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomIcon } from '@/ui/components/basic/CustomIcon/CustomIcon';
-import { CustomIconButtonMedium } from '@/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { AnimatedHeaderImage } from '@/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
-import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
-import { colors } from '@/ui/style/colors';
-import { spacing } from '@/ui/style/dimensions/spacing';
-import { icons } from '@/ui/style/icons';
 import { Fragment } from 'react';
 import { View } from 'react-native';
 

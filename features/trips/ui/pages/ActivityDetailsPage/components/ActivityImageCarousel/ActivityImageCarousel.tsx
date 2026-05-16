@@ -1,7 +1,6 @@
+import { BaseSkeleton, CustomImage } from '@/features/core/ui';
 import type { ImageResult } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel.logic';
 import { styles } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel.style';
-import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
-import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
 import type { ListRenderItemInfo } from 'react-native';
 import { FlatList } from 'react-native';
 

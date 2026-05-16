@@ -2,12 +2,14 @@ import { WelcomeCards } from '@/features/auth/ui/components/WelcomeCards/Welcome
 import { useWelcomePageLogic } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.logic';
 import { styles } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.style';
 import { Routes } from '@/features/core/navigation';
-import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
-import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
+import {
+  BasicView,
+  ButtonType,
+  CustomButtonLarge,
+  CustomImage,
+  CustomScrollView,
+  CustomText,
+} from '@/features/core/ui';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 

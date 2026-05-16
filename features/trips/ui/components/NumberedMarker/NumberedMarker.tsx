@@ -1,5 +1,5 @@
+import { CustomText } from '@/features/core/ui';
 import { styles } from '@/features/trips/ui/components/NumberedMarker/NumberedMarker.style';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 

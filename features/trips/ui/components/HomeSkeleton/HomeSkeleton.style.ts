@@ -1,6 +1,4 @@
-import { colors } from '@/ui/style/colors';
-import { components } from '@/ui/style/dimensions/components';
-import { spacing } from '@/ui/style/dimensions/spacing';
+import { colors, components, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({

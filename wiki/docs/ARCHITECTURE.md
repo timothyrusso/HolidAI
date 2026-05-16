@@ -144,7 +144,7 @@ Not every feature needs an `index.ts` — only create one when another feature a
 | `di/resolve.ts` exports                  | DI internals — IoC resolution is always local to the owning feature                                |
 | State stores                             | Internal UI state — other features have no business reading or writing another feature's state     |
 | `libraries/` wrappers                    | Internal infrastructure — third-party library wrappers are an implementation detail                |
-| UI components                            | Promoted to global `ui/components/` when truly shared — never exported from a feature's public API |
+| UI components                            | Promoted to `features/core/ui/components/` when truly shared — never exported from a feature's public API |
 | Repository interfaces (`IXxxRepository`) | Internal contracts — the consuming feature needs the facade, not the plumbing behind it            |
 
 
@@ -202,8 +202,8 @@ export { useGetImage } from './facades/useGetImage';    // facade
 | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Foundational infrastructure needed by many features (logging, storage, HTTP, error types) | Move to the relevant `features/core/<sub-module>/`                                                                                                                                                                                                                          |
 | Logic or type needed by one specific feature                                              | Expose via `index.ts` of the owning feature                                                                                                                                                                                                                                 |
-| UI component needed by many features                                                      | Promote to global `ui/components/`                                                                                                                                                                                                                                          |
-| UI component needed by one other feature                                                  | Before sharing, ask: does the other feature need the component itself, or just the data? If it just needs the data, it can build its own version. If the component is truly needed as-is, promote it to global `ui/components/` — never export UI components via `index.ts` |
+| UI component needed by many features                                                      | Promote to `features/core/ui/components/`                                                                                                                                                                                                                                   |
+| UI component needed by one other feature                                                  | Before sharing, ask: does the other feature need the component itself, or just the data? If it just needs the data, it can build its own version. If the component is truly needed as-is, promote it to `features/core/ui/components/` — never export UI components via `index.ts` |
 
 > **When the consumer is a same-tier feature:** the table above does not apply — same-tier features cannot import from each other regardless of what is being shared. Extract the shared concept to a lower-tier feature, move it to `features/core/` if it is infrastructural, or introduce a Tier 3 orchestration feature. See [Feature Dependency Tiers](#feature-dependency-tiers).
 
@@ -1254,7 +1254,7 @@ ComponentName/
 └── ComponentName.style.ts   → StyleSheet definitions
 ```
 
-Feature-specific React Native components. They follow a **promotion rule**: a component always starts in the feature that needs it. The moment a second feature needs the same component, it gets promoted to the global `ui/components/`. This prevents premature abstraction while keeping duplication visible — before building a new component, check `ui/components/` first, then the feature you're drawing inspiration from.
+Feature-specific React Native components. They follow a **promotion rule**: a component always starts in the feature that needs it. The moment a second feature needs the same component, it gets promoted to `features/core/ui/components/`. This prevents premature abstraction while keeping duplication visible — before building a new component, check `features/core/ui/components/` first, then the feature you're drawing inspiration from.
 
 #### `ui/pages/`
 
@@ -1498,12 +1498,12 @@ export class ConcreteService implements IService {
 
 ---
 
-## Global UI (`/ui`)
+## Global UI (`features/core/ui/`)
 
-Reusable building blocks shared across multiple features.
+Reusable building blocks shared across multiple features. Lives in `features/core/ui/` as a Tier 0 core sub-module. Its public API is `features/core/ui/index.ts` — import from `@/features/core/ui` everywhere.
 
 ```
-ui/
+features/core/ui/
 ├── components/
 │   ├── basic/      → Atomic: buttons, text, icons, inputs…
 │   ├── composite/  → Composed: headers, scroll views, autocomplete…

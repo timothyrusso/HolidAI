@@ -27,7 +27,7 @@ module.exports = {
         collapsePattern: 'node_modules/(?:@[^/]+/[^/]+|[^/]+)',
       },
       archi: {
-        collapsePattern: '^(?:features|ui|di|convex|app|types)/[^/]+|node_modules/(?:@[^/]+/[^/]+|[^/]+)',
+        collapsePattern: '^(?:features|di|convex|app|types)/[^/]+|node_modules/(?:@[^/]+/[^/]+|[^/]+)',
       },
       text: {
         highlightFocused: true,

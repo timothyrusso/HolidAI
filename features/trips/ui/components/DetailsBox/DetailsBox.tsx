@@ -1,11 +1,7 @@
+import { ButtonType, CustomButtonMedium, CustomText, PlatformOS, blur } from '@/features/core/ui';
 import { useDetailsBoxLogic } from '@/features/trips/ui/components/DetailsBox/DetailsBox.logic';
 import { styles } from '@/features/trips/ui/components/DetailsBox/DetailsBox.style';
 import { MainPlacesList } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList';
-import { PlatformOS } from '@/ui/PlatformOS';
-import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomButtonMedium } from '@/ui/components/basic/CustomButton/CustomButtonMedium';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { blur } from '@/ui/style/blur';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import type { FC, RefObject } from 'react';
