@@ -49,3 +49,6 @@ plans/
 
 # architecture
 arch-report.html
+
+# vscode
+.vscode/
