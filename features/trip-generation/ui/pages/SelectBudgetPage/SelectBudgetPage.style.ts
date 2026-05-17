@@ -1,6 +1,4 @@
-import { fontSize } from '@/ui/style/dimensions/fontSize';
-import { SCREEN_WIDTH, spacing } from '@/ui/style/dimensions/spacing';
-import { fontFamily } from '@/ui/style/fontFamily';
+import { SCREEN_WIDTH, fontFamily, fontSize, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({

@@ -1,8 +1,5 @@
 <div align="center">
-        <img src="ui/assets/images/logo_round.png" width="94" height="94" alt="HolidAI Icon" style="border-radius: 50%;">
-    <h1>
-            HolidAI
-    </h1>
+        <img src="features/core/ui/assets/images/logo_round.png" width="94" height="94" alt="HolidAI Icon" style="border-radius: 50%;">
 </div>
 
 A smart travel planning assistant that leverages Google Gemini AI to create personalized trip itineraries. Simply input your destination, travel dates, budget, and number of travelers to receive customized travel plans tailored specifically to your needs - eliminating hours of research and planning.

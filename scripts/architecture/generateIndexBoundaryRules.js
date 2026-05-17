@@ -10,7 +10,7 @@ function generateIndexBoundaryRules(featureTiers) {
       },
       to: {
         path: `^${featurePath}/`,
-        pathNot: `^${featurePath}/(index|pages)\\.ts$`,
+        pathNot: `^${featurePath}/(index|pages)\\.ts$|^${featurePath}/assets/`,
       },
     };
   });

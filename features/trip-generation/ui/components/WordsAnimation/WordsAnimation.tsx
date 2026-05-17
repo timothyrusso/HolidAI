@@ -1,5 +1,5 @@
+import { wordKeyframes } from '@/features/core/ui';
 import { styles } from '@/features/trip-generation/ui/components/WordsAnimation/WordsAnimation.style';
-import { wordKeyframes } from '@/ui/style/animations';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 

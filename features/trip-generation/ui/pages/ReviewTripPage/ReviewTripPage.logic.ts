@@ -9,7 +9,7 @@ export type TripRecap = {
   icon: string;
 };
 
-const animation = require('@/ui/assets/lottie/photo_animation.json');
+const animation = require('@/features/core/ui/assets/lottie/photo_animation.json');
 
 export const useReviewTripPageLogic = () => {
   const { tripSelectors } = useTripGenerationState();

@@ -1,10 +1,7 @@
 import { Routes } from '@/features/core/navigation';
+import { BasicView, CustomText, LottieAnimation, PlacesAutocomplete } from '@/features/core/ui';
 import { useSearchPageLogic } from '@/features/trip-generation/ui/pages/SearchPlacePage/SearchPlacePage.logic';
 import { styles } from '@/features/trip-generation/ui/pages/SearchPlacePage/SearchPlacePage.style';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { LottieAnimation } from '@/ui/components/basic/LottieAnimation/LottieAnimation';
-import { PlacesAutocomplete } from '@/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
 
 export const SearchPlacePage = () => {

@@ -1,11 +1,8 @@
 import { Routes } from '@/features/core/navigation';
+import { BasicView, CustomScrollView, CustomText, LottieAnimation } from '@/features/core/ui';
 import { SummaryCard } from '@/features/trip-generation/ui/components/SummaryCard/SummaryCard';
 import { useReviewTripPageLogic } from '@/features/trip-generation/ui/pages/ReviewTripPage/ReviewTripPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/ReviewTripPage/ReviewTripPage.style';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { LottieAnimation } from '@/ui/components/basic/LottieAnimation/LottieAnimation';
-import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { View } from 'react-native';
 
 export const ReviewTripPage = () => {

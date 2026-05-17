@@ -1,5 +1,5 @@
+import { rotate } from '@/features/core/ui';
 import { styles } from '@/features/trip-generation/ui/components/AnimatedBlocks/AnimatedBlocks.style';
-import { rotate } from '@/ui/style/animations';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 

@@ -1,5 +1,4 @@
-import { heartPulse } from '@/ui/style/animations';
-import { spacing } from '@/ui/style/dimensions/spacing';
+import { heartPulse, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({

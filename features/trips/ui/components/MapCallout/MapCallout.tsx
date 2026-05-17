@@ -1,6 +1,6 @@
+import { CustomText } from '@/features/core/ui';
 import { useMapCalloutLogic } from '@/features/trips/ui/components/MapCallout/MapCallout.logic';
 import { styles } from '@/features/trips/ui/components/MapCallout/MapCallout.style';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
 import type { FC } from 'react';
 import { View } from 'react-native';
 import { Callout } from 'react-native-maps';

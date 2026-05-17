@@ -1,5 +1,5 @@
+import { icons } from '@/features/core/ui';
 import { BudgetOptions } from '@/features/trips';
-import { icons } from '@/ui/style/icons';
 
 const budgetIcons = [icons.cash, icons.bag, icons.card, icons.diamond];
 

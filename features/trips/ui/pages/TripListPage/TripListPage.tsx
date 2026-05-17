@@ -1,11 +1,10 @@
 import { Routes } from '@/features/core/navigation';
+import { BaseSkeleton, BasicView } from '@/features/core/ui';
 import type { Trip } from '@/features/trips/domain/entities/Trip';
 import type { UniqueItem } from '@/features/trips/domain/entities/UniqueItem';
 import { TripCard } from '@/features/trips/ui/components/TripCard/TripCard';
 import { useTripListPageLogic } from '@/features/trips/ui/pages/TripListPage/TripListPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripListPage/TripListPage.style';
-import { BaseSkeleton } from '@/ui/components/basic/BaseSkeleton/BaseSkeleton';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { FlatList } from 'react-native';
 
 const renderItem = (item: Trip | UniqueItem) => {

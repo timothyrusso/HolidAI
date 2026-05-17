@@ -1,5 +1,4 @@
-import { components } from '@/ui/style/dimensions/components';
-import { SCREEN_WIDTH, spacing } from '@/ui/style/dimensions/spacing';
+import { SCREEN_WIDTH, components, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({

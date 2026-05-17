@@ -1,0 +1,91 @@
+import { colors } from '@/features/core/ui/style/colors';
+import { fontSize } from '@/features/core/ui/style/dimensions/fontSize';
+import { images } from '@/features/core/ui/style/dimensions/images';
+import { spacing } from '@/features/core/ui/style/dimensions/spacing';
+import { fontFamily } from '@/features/core/ui/style/fontFamily';
+import type { Animated, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+export const style = (
+  chipsAlignment: ViewStyle['justifyContent'],
+  animatedHeaderHeight?: Animated.AnimatedInterpolation<string | number>,
+  animatedOpacity?: Animated.AnimatedInterpolation<string | number>,
+) =>
+  StyleSheet.create({
+    image: {
+      width: '100%',
+      height: images.fullScreenImageHeight,
+      flex: 1,
+    },
+    header: {
+      width: '100%',
+      height: animatedHeaderHeight,
+      position: 'absolute',
+      top: 0,
+      zIndex: 3,
+    },
+    iconsContainer: { zIndex: 2, width: '100%', position: 'absolute' },
+    titleContainer: {
+      position: 'absolute',
+      bottom: spacing.Quintuple,
+      paddingHorizontal: spacing.Fourfold,
+      zIndex: 1,
+      opacity: animatedOpacity,
+    },
+    title: {
+      color: colors.primaryBlack,
+      fontSize: fontSize.LG,
+      fontFamily: fontFamily.interBold,
+      backgroundColor: colors.primaryWhite,
+      borderRadius: spacing.Fourfold,
+      paddingVertical: spacing.Single,
+      paddingHorizontal: spacing.Triple,
+      textAlign: 'center',
+      maxWidth: '80%',
+    },
+    chipsContainer: {
+      flexDirection: 'row',
+      gap: spacing.Single,
+      width: '100%',
+      justifyContent: chipsAlignment,
+      alignItems: 'center',
+    },
+    detailsChipRow: {
+      flexDirection: 'row',
+      gap: spacing.Single,
+    },
+    budgetChipLabel: {
+      color: colors.primaryBlack,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
+      textAlign: 'center',
+    },
+    travelersChipLabel: {
+      color: colors.primaryBlack,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
+      textAlign: 'center',
+    },
+    dateChipLabel: {
+      color: colors.primaryBlack,
+      fontSize: fontSize.XS,
+      fontFamily: fontFamily.interBold,
+      textAlign: 'center',
+    },
+    detailsChip: {
+      backgroundColor: colors.primaryBlue,
+      borderRadius: spacing.Fourfold,
+      flexDirection: 'row',
+      gap: spacing.Single,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: spacing.Single,
+      paddingHorizontal: spacing.Triple,
+      height: spacing.Quintuple,
+    },
+    imageSkeleton: {
+      width: '100%',
+      height: images.fullScreenImageHeight,
+      backgroundColor: colors.primaryGrey,
+    },
+  });

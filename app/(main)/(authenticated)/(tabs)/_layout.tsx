@@ -1,11 +1,6 @@
 import { navigationService } from '@/features/core/navigation';
+import { CustomTabButton, CustomTabButtonWithText, colors, icons, shadows, spacing } from '@/features/core/ui';
 import { useStartNewTrip } from '@/features/trips';
-import { CustomTabButton } from '@/ui/components/composite/CustomTabButton/CustomTabButton';
-import { CustomTabButtonWithText } from '@/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
-import { colors } from '@/ui/style/colors';
-import { spacing } from '@/ui/style/dimensions/spacing';
-import { icons } from '@/ui/style/icons';
-import { shadows } from '@/ui/style/shadows';
 import * as Haptics from 'expo-haptics';
 import { TabList, TabSlot, TabTrigger, Tabs } from 'expo-router/ui';
 import { useTranslation } from 'react-i18next';

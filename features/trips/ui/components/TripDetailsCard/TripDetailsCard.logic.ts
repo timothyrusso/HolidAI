@@ -1,7 +1,7 @@
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 
+import { colors } from '@/features/core/ui';
 import { useBudgetColorsMap } from '@/features/trips/hooks/useBudgetColorsMap';
-import { colors } from '@/ui/style/colors';
 import { useTranslation } from 'react-i18next';
 
 type UseTripDetailsCardParams = {

@@ -1,9 +1,4 @@
-import { colors } from '@/ui/style/colors';
-import { breakpoints } from '@/ui/style/dimensions/breakpoints';
-import { fontSize } from '@/ui/style/dimensions/fontSize';
-import { images } from '@/ui/style/dimensions/images';
-import { SCREEN_HEIGHT, spacing } from '@/ui/style/dimensions/spacing';
-import { fontFamily } from '@/ui/style/fontFamily';
+import { SCREEN_HEIGHT, breakpoints, colors, fontFamily, fontSize, images, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({

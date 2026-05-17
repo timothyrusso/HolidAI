@@ -1,10 +1,9 @@
+import { RootAppCrashView } from '@/features/core/error/pages';
 import { Stacks, screenOptions } from '@/features/core/navigation';
 import { queryClient } from '@/features/core/query';
 import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
-import { RootAppCrashView } from '@/ui/components/errors/RootAppCrashView/RootAppCrashView';
-import { ToastProvider } from '@/ui/components/providers/ToastProvider';
-import { fontsConfig } from '@/ui/style/fontFamily';
+import { ToastProvider, fontsConfig } from '@/features/core/ui';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -53,13 +52,13 @@ export default wrap(function RootLayout() {
   });
 
   const [welcomeAssets, welcomeAssetsError] = useAssets([
-    require('@/ui/assets/images/welcome_1.jpg'),
-    require('@/ui/assets/images/welcome_2.jpg'),
-    require('@/ui/assets/images/welcome_3.jpg'),
-    require('@/ui/assets/images/welcome_4.jpg'),
-    require('@/ui/assets/images/welcome_5.jpg'),
-    require('@/ui/assets/images/welcome_6.jpg'),
-    require('@/ui/assets/images/logo_round.png'),
+    require('@/features/core/ui/assets/images/welcome_1.jpg'),
+    require('@/features/core/ui/assets/images/welcome_2.jpg'),
+    require('@/features/core/ui/assets/images/welcome_3.jpg'),
+    require('@/features/core/ui/assets/images/welcome_4.jpg'),
+    require('@/features/core/ui/assets/images/welcome_5.jpg'),
+    require('@/features/core/ui/assets/images/welcome_6.jpg'),
+    require('@/features/core/ui/assets/images/logo_round.png'),
   ]);
 
   const appReady = fontsLoaded && (!!welcomeAssets || !!welcomeAssetsError);

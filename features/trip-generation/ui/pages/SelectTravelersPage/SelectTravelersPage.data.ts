@@ -1,5 +1,5 @@
+import { icons } from '@/features/core/ui';
 import { TravelerOptions } from '@/features/trip-generation/domain/entities/TravelerOptions';
-import { icons } from '@/ui/style/icons';
 
 const travelerIcons = [icons.airplane, icons.heartOutline, icons.home, icons.boat];
 

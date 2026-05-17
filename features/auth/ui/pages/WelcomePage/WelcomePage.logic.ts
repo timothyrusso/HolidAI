@@ -1,8 +1,8 @@
 import { navigationService } from '@/features/core/navigation';
-import { SCREEN_HEIGHT } from '@/ui/style/dimensions/spacing';
+import { SCREEN_HEIGHT } from '@/features/core/ui';
 import { Easing, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 
-const logoRound = require('@/ui/assets/images/logo_round.png');
+const logoRound = require('@/features/core/ui/assets/images/logo_round.png');
 
 const SUBTITLE_ENTRANCE_DURATION = 600;
 const SUBTITLE_ENTRANCE_DELAY = 400;

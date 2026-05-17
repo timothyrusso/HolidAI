@@ -1,16 +1,18 @@
+import { ResetPasswordModal } from '@/features/auth/ui/components/ResetPasswordModal/ResetPasswordModal';
 import { useSignInPageLogic } from '@/features/auth/ui/pages/SignInPage/SignInPage.logic';
 import { styles } from '@/features/auth/ui/pages/SignInPage/SignInPage.style';
 import { Routes } from '@/features/core/navigation';
-import { ButtonType } from '@/ui/components/basic/CustomButton/CustomButton.logic';
-import { CustomButtonLarge } from '@/ui/components/basic/CustomButton/CustomButtonLarge';
-import { CustomText } from '@/ui/components/basic/CustomText/CustomText';
-import { CustomTextButton } from '@/ui/components/basic/CustomTextButton/CustomTextButton';
-import { CustomTextInput } from '@/ui/components/basic/CustomTextInput/CustomTextInput';
-import { CustomScrollView } from '@/ui/components/composite/CustomScrollView/CustomScrollView';
-import { ActionModal } from '@/ui/components/dialogs/ActionModal/ActionModal';
-import { InfoModal } from '@/ui/components/dialogs/InfoModal/InfoModal';
-import { ResetPasswordModal } from '@/ui/components/dialogs/ResetPasswordModal/ResetPasswordModal';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
+import {
+  ActionModal,
+  BasicView,
+  ButtonType,
+  CustomButtonLarge,
+  CustomScrollView,
+  CustomText,
+  CustomTextButton,
+  CustomTextInput,
+  InfoModal,
+} from '@/features/core/ui';
 import { View } from 'react-native';
 
 export const SignInPage = () => {

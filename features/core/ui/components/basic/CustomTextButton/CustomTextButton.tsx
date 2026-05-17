@@ -1,0 +1,19 @@
+import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
+import { styles } from '@/features/core/ui/components/basic/CustomTextButton/CustomTextButton.style';
+import type { FC } from 'react';
+import { Pressable, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+
+type CustomTextButtonProps = {
+  onPress: () => void;
+  title: string;
+  style?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+};
+
+export const CustomTextButton: FC<CustomTextButtonProps> = ({ onPress, title, style, textStyle }) => {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.main, style, pressed && styles.pressed]}>
+      <CustomText text={title} style={textStyle} />
+    </Pressable>
+  );
+};

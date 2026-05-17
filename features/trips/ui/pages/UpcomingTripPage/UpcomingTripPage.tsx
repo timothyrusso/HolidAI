@@ -1,12 +1,10 @@
 import { Routes } from '@/features/core/navigation';
+import { BasicView, CustomImage, PlatformOS } from '@/features/core/ui';
 import { DetailsBox } from '@/features/trips/ui/components/DetailsBox/DetailsBox';
 import { EmptyListContainer } from '@/features/trips/ui/components/EmptyListContainer/EmptyListContainer';
 import { HomeSkeleton } from '@/features/trips/ui/components/HomeSkeleton/HomeSkeleton';
 import { useUpcomingTripPageLogic } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.logic';
 import { styles } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.style';
-import { PlatformOS } from '@/ui/PlatformOS';
-import { CustomImage } from '@/ui/components/basic/CustomImage/CustomImage';
-import { BasicView } from '@/ui/components/view/BasicView/BasicView';
 import { BlurTargetView } from 'expo-blur';
 import { useRef } from 'react';
 import { Platform, View } from 'react-native';

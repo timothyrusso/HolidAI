@@ -4,11 +4,11 @@
     "slug": "holidai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./ui/assets/images/icon.png",
+    "icon": "./features/core/ui/assets/images/icon.png",
     "scheme": "holidai",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./ui/assets/images/logo_round.png",
+      "image": "./features/core/ui/assets/images/logo_round.png",
       "resizeMode": "contain",
       "backgroundColor": "#220059"
     },
@@ -21,14 +21,14 @@
       "package": "com.app.travelplanner",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./ui/assets/images/android-icon.png",
+        "foregroundImage": "./features/core/ui/assets/images/android-icon.png",
         "backgroundColor": "#220059"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./ui/assets/images/favicon.png"
+      "favicon": "./features/core/ui/assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
@@ -53,13 +53,13 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#220059",
-          "image": "./ui/assets/images/logo_round.png",
+          "image": "./features/core/ui/assets/images/logo_round.png",
           "dark": {
-            "image": "./ui/assets/images/logo_round.png",
+            "image": "./features/core/ui/assets/images/logo_round.png",
             "backgroundColor": "#220059"
           },
           "ios": {
-            "imageWidth": 150,
+            "imageWidth": 100,
             "resizeMode": "contain"
           },
           "android": {
