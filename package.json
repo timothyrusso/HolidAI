@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.1",
-    "@clerk/clerk-expo": "2.18.3",
+    "@clerk/expo": "^3.2.12",
     "@dicebear/collection": "^9.2.2",
     "@dicebear/core": "^9.2.2",
     "@expo/vector-icons": "^15.0.3",

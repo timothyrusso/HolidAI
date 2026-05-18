@@ -9,8 +9,6 @@ import { SvgXml } from 'react-native-svg';
 
 export const ProfilePage = () => {
   const {
-    handleLogout,
-    handleDeleteAccount,
     avatar,
     isUserLoading,
     username,
@@ -20,9 +18,8 @@ export const ProfilePage = () => {
     isTripDataLoading,
     goToChangeLanguage,
     goToShowAllTrips,
-    isDeleteAccountLoading,
-    isLogoutLoading,
     userTokens,
+    presentUserProfile,
   } = useProfilePageLogic();
 
   return (
@@ -62,14 +59,9 @@ export const ProfilePage = () => {
             firstTitle="PROFILE.BUTTON.CHANGE_LANGUAGE"
             firstOnPress={goToChangeLanguage}
             firstIcon={icons.language}
-            secondTitle="PROFILE.BUTTON.DELETE_ACCOUNT"
-            secondOnPress={handleDeleteAccount}
-            secondIcon={icons.delete}
-            secondIsLoading={isDeleteAccountLoading}
-            thirdTitle="GLOBAL.BUTTON.LOGOUT"
-            thirdOnPress={handleLogout}
-            thirdIcon={icons.logout}
-            thirdIsLoading={isLogoutLoading}
+            secondTitle="PROFILE.BUTTON.ACCOUNT_SETTINGS"
+            secondOnPress={presentUserProfile}
+            secondIcon={icons.settings}
           />
         </View>
       </CustomScrollView>

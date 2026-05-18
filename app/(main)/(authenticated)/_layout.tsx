@@ -1,6 +1,6 @@
 import { GenericCrashView } from '@/features/core/error/pages';
 import { Routes, Stacks, screenOptions } from '@/features/core/navigation';
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/expo';
 import { type ErrorBoundaryProps, Redirect, Stack } from 'expo-router';
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {

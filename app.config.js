@@ -46,6 +46,6 @@ export default ({ config }) => {
       },
       googleServicesFile: GOOGLE_SERVICES_JSON ?? GOOGLE_SERVICES_JSON_LOCAL_PATH,
     },
-    plugins: ['expo-web-browser'],
+    plugins: ['expo-web-browser', ['@clerk/expo', { includeAppleSignIn: false, theme: './clerk-theme.json' }]],
   };
 };
