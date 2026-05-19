@@ -51,11 +51,11 @@
     "LABEL": {
       "TOTAL_TRIPS": "Total Trips",
       "FAVORITE_TRIPS": "Favorite Trips",
-      "REMAINING_TOKENS": "Remaining Tokens",
-      "ACCOUNT_SETTINGS": "Account Settings"
+      "REMAINING_TOKENS": "Remaining Tokens"
     },
     "BUTTON": {
-      "CHANGE_LANGUAGE": "Change Language"
+      "CHANGE_LANGUAGE": "Change Language",
+      "ACCOUNT_SETTINGS": "Account Settings"
     }
   },
   "CHANGE_LANGUAGE": {
