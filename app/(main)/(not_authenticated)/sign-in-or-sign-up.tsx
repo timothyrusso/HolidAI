@@ -1,4 +1,4 @@
-import { SignInOrUpPage } from '@/features/auth/ui/pages/SignInOrUpPage/SignInOrUpPage';
+import { SignInOrUpPage } from '@/features/auth/pages';
 
 export default function SignInOrSignUp() {
   return <SignInOrUpPage />;
