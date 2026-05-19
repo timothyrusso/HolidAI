@@ -1540,12 +1540,12 @@ File-based routing. Route files are **thin entry points** — they import and re
 ```
 app/
 └── (main)/
-    ├── (login)/           → Public screens: welcome, sign-in, sign-up
-    └── (authenticated)/   → Protected screens (requires auth)
-        ├── (tabs)/        → Tab navigator: home, profile
-        ├── create-item/   → Multi-step item creation wizard
-        ├── items/         → Show all items
-        └── profile/       → Language settings
+    ├── (not_authenticated)/     → Public screens: welcome, sign-in, sign-up
+    └── (authenticated)/         → Protected screens (requires auth)
+        ├── (tabs)/              → Tab navigator: home, profile
+        ├── create-item/         → Multi-step item creation wizard
+        ├── items/               → Show all items
+        └── profile/             → Language settings
 ```
 
 Route files import page components exclusively from the feature's `pages.ts` entry point — never from `index.ts` or internal paths:

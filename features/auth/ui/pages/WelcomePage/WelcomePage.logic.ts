@@ -56,7 +56,7 @@ export const useWelcomePageLogic = () => {
       withTiming(-(SCREEN_HEIGHT / 7), { duration: CENTER_ANIMATION_DURATION, easing: Easing.inOut(Easing.quad) }),
     );
 
-    setTimeout(() => navigationService.toSignIn(), CARDS_EXIT_DURATION + CENTER_ANIMATION_DURATION);
+    setTimeout(() => navigationService.toSignInOrSignUp(), CARDS_EXIT_DURATION + CENTER_ANIMATION_DURATION);
   };
 
   return {

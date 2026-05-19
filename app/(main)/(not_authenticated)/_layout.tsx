@@ -7,15 +7,9 @@ export default function LoginLayout() {
     <Stack>
       <Stack.Screen name={Routes.Welcome} options={{ headerShown: false }} />
       <Stack.Screen
-        name={Routes.SignIn}
+        name={Routes.SignInOrSignUp}
         options={{
           header: () => <CustomHeader title="SIGNIN.TITLE" />,
-        }}
-      />
-      <Stack.Screen
-        name={Routes.SignUp}
-        options={{
-          header: () => <CustomHeader title="SIGNUP.TITLE" />,
         }}
       />
     </Stack>

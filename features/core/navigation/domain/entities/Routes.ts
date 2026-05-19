@@ -1,7 +1,6 @@
 export const Routes = {
   Welcome: 'welcome',
-  SignUp: 'sign-up',
-  SignIn: 'sign-in',
+  SignInOrSignUp: 'sign-in-or-sign-up',
   HomePage: 'home-page',
   Search: 'search-place',
   SelectTraveler: 'select-traveler',

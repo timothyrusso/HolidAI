@@ -2,7 +2,7 @@ export const Stacks = {
   Tabs: '(tabs)',
   Main: '(main)',
   Profile: 'profile',
-  Login: '(login)',
+  NotAuthenticated: '(not_authenticated)',
   Authenticated: '(authenticated)',
   CreateTrip: 'create-trip',
   HomePage: 'home-page',
