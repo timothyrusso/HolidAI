@@ -73,7 +73,7 @@ export const ButtonsContainer: FC<ButtonsContainerProps> = ({
         </View>
         <CustomIcon name={icons.arrowRight} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
       </Pressable>
-      {thirdTitle && thirdIcon && (
+      {thirdTitle && thirdIcon && thirdOnPress && (
         <Pressable
           style={({ pressed }) => [
             style.button,

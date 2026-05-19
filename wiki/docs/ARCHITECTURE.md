@@ -1540,7 +1540,7 @@ File-based routing. Route files are **thin entry points** — they import and re
 ```
 app/
 └── (main)/
-    ├── (not_authenticated)/     → Public screens: welcome, sign-in, sign-up
+    ├── (not_authenticated)/     → Public screens: welcome, sign-in-or-sign-up
     └── (authenticated)/         → Protected screens (requires auth)
         ├── (tabs)/              → Tab navigator: home, profile
         ├── create-item/         → Multi-step item creation wizard
