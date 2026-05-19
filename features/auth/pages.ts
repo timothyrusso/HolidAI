@@ -1,3 +1,2 @@
-export { SignInPage } from '@/features/auth/ui/pages/SignInPage/SignInPage';
-export { SignUpPage } from '@/features/auth/ui/pages/SignUpPage/SignUpPage';
+export { SignInOrUpPage } from '@/features/auth/ui/pages/SignInOrUpPage/SignInOrUpPage';
 export { WelcomePage } from '@/features/auth/ui/pages/WelcomePage/WelcomePage';

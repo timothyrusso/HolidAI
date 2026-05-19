@@ -1,5 +1,5 @@
 import { api } from '@/convex/_generated/api';
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import { useQuery } from 'convex/react';
 
 export const useGetUserTokens = () => {

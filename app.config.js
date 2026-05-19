@@ -14,6 +14,7 @@ export default ({ config }) => {
     CLERK_PUBLISHABLE_KEY,
     CONVEX_URL,
     SENTRY_DSN,
+    APPLE_TEAM_ID,
   } = process.env;
 
   return {
@@ -33,6 +34,7 @@ export default ({ config }) => {
       ...config.ios,
       googleServicesFile: GOOGLE_SERVICES_PLIST ?? GOOGLE_SERVICES_PLIST_LOCAL_PATH,
       googleMapsApiKey: GOOGLE_MAPS_API_KEY_IOS,
+      developmentTeam: APPLE_TEAM_ID,
     },
     android: {
       ...config.android,
@@ -46,6 +48,6 @@ export default ({ config }) => {
       },
       googleServicesFile: GOOGLE_SERVICES_JSON ?? GOOGLE_SERVICES_JSON_LOCAL_PATH,
     },
-    plugins: ['expo-web-browser'],
+    plugins: ['expo-web-browser', ['@clerk/expo', { appleSignIn: false, theme: './clerk-theme.json' }]],
   };
 };

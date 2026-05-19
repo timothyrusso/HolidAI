@@ -42,4 +42,5 @@ export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   cafe: 'cafe-outline',
   eye: 'eye-outline',
   eyeOff: 'eye-off-outline',
+  settings: 'settings-outline',
 } as const;

@@ -55,7 +55,7 @@
     },
     "BUTTON": {
       "CHANGE_LANGUAGE": "Change Language",
-      "DELETE_ACCOUNT": "Delete Account"
+      "ACCOUNT_SETTINGS": "Account Settings"
     }
   },
   "CHANGE_LANGUAGE": {

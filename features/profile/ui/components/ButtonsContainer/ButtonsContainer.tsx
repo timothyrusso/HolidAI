@@ -12,9 +12,9 @@ type ButtonsContainerProps = {
   secondOnPress: () => void;
   secondIcon: IoniconsName;
   secondIsLoading?: boolean;
-  thirdTitle: string;
-  thirdOnPress: () => void;
-  thirdIcon: IoniconsName;
+  thirdTitle?: string;
+  thirdOnPress?: () => void;
+  thirdIcon?: IoniconsName;
   thirdIsLoading?: boolean;
 };
 
@@ -73,29 +73,31 @@ export const ButtonsContainer: FC<ButtonsContainerProps> = ({
         </View>
         <CustomIcon name={icons.arrowRight} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
       </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.button,
-          style.topBorder,
-          pressed && !thirdIsLoading && style.pressed,
-          thirdIsLoading && style.isLoading,
-        ]}
-        onPress={thirdOnPress}
-        disabled={thirdIsLoading}
-      >
-        {thirdIsLoading ? (
-          <ActivityIndicator size="small" color={colors.primaryBlack} />
-        ) : (
-          <Fragment>
-            <View style={style.titleContainer}>
-              <CustomIcon name={thirdIcon} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
+      {thirdTitle && thirdIcon && thirdOnPress && (
+        <Pressable
+          style={({ pressed }) => [
+            style.button,
+            style.topBorder,
+            pressed && !thirdIsLoading && style.pressed,
+            thirdIsLoading && style.isLoading,
+          ]}
+          onPress={thirdOnPress}
+          disabled={thirdIsLoading}
+        >
+          {thirdIsLoading ? (
+            <ActivityIndicator size="small" color={colors.primaryBlack} />
+          ) : (
+            <Fragment>
+              <View style={style.titleContainer}>
+                <CustomIcon name={thirdIcon} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
 
-              <CustomText text={thirdTitle} style={style.title} />
-            </View>
-            <CustomIcon name={icons.arrowRight} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
-          </Fragment>
-        )}
-      </Pressable>
+                <CustomText text={thirdTitle} style={style.title} />
+              </View>
+              <CustomIcon name={icons.arrowRight} size={spacing.TripleAndHalf} color={colors.primaryBlack} />
+            </Fragment>
+          )}
+        </Pressable>
+      )}
     </View>
   );
 };

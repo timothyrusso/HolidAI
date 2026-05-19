@@ -1,7 +1,7 @@
 import { api } from '@/convex/_generated/api';
 import { ensureError, fail, ok } from '@/features/core/error';
 import type { ITripRepository } from '@/features/trips/domain/entities/repositories/ITripRepository';
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import { useMutation, useQuery } from 'convex/react';
 
 export const useTripRepository = (): ITripRepository => {

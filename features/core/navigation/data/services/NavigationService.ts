@@ -18,11 +18,8 @@ export class NavigationService implements INavigationService {
   toWelcome() {
     this.client.replace(`/${Routes.Welcome}`);
   }
-  toSignIn() {
-    this.client.replace(`/${Routes.SignIn}`);
-  }
-  toSignUp() {
-    this.client.replace(`/${Routes.SignUp}`);
+  toSignInOrSignUp() {
+    this.client.replace(`/${Routes.SignInOrSignUp}`);
   }
 
   toSearch() {

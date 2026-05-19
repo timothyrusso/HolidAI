@@ -6,7 +6,7 @@ import { generateTripUseCase } from '@/features/trip-generation/di/resolve';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import { useEffect, useState } from 'react';
 
 export const useGenerateTripPageLogic = () => {
