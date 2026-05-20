@@ -4,6 +4,12 @@
 
 A smart travel planning assistant that leverages Google Gemini AI to create personalized trip itineraries. Simply input your destination, travel dates, budget, and number of travelers to receive customized travel plans tailored specifically to your needs - eliminating hours of research and planning.
 
+## AI Generation Pipeline
+
+<div align="center">
+  <img src="features/core/ui/assets/images/AI_Generation_Pipeline.png" alt="AI Generation Pipeline" width="100%">
+</div>
+
 ## AI Model
 
 HolidAI is powered by Google's Gemini 2.5 Flash model, a state-of-the-art large language model specifically optimized for fast, efficient responses while maintaining high-quality outputs. The model is particularly well-suited for travel planning tasks due to its:
