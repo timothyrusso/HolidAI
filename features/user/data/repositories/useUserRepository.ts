@@ -11,7 +11,7 @@ export const useUserRepository = (): IUserRepository => {
       user
         ? {
             id: user.id,
-            firstName: user.firstName,
+            username: user.username,
             email: user.primaryEmailAddress?.emailAddress,
             profileImageUrl: user.imageUrl,
           }

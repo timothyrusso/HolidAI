@@ -7,7 +7,7 @@ export const components = {
   bottomMenuHeight: 90 + (Platform.OS.match(PlatformOS.ios) ? 20 : 0),
   modalFooterHeight: 90,
   tripCardImageHeight: 200,
-  profileImageHeight: 150,
+  profileImageHeight: 100,
   createResetPasswordModalHeight: 496,
   changeResetPasswordModalHeight: 320,
   mapHeight: 300,
