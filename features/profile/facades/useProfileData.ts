@@ -11,6 +11,7 @@ export const useProfileData = () => {
     userId: user?.id,
     username: user?.firstName,
     email: user?.email,
+    profileImageUrl: user?.profileImageUrl,
     totalTrips,
     favoriteTrips,
     userTokens,

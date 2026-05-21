@@ -1,18 +1,15 @@
 import { Stacks } from '@/features/core/navigation';
-import { BaseSkeleton, BasicView, CustomScrollView, CustomText, components, icons } from '@/features/core/ui';
+import { BaseSkeleton, BasicView, CustomImage, CustomScrollView, CustomText, icons } from '@/features/core/ui';
 import { ButtonsContainer } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer';
 import { UserDataBox } from '@/features/profile/ui/components/UserDataBox/UserDataBox';
 import { useProfilePageLogic } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.logic';
 import { styles } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.style';
 import { View } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 
 export const ProfilePage = () => {
   const {
-    avatar,
     isUserLoading,
     username,
-    email,
     totalTrips,
     favoriteTrips,
     isTripDataLoading,
@@ -20,6 +17,7 @@ export const ProfilePage = () => {
     goToShowAllTrips,
     userTokens,
     presentUserProfile,
+    profileImage,
   } = useProfilePageLogic();
 
   return (
@@ -29,17 +27,13 @@ export const ProfilePage = () => {
           <View style={styles.avatarContainer}>
             <BaseSkeleton style={styles.avatarSkeleton} />
             <BaseSkeleton style={styles.nameSkeleton} />
-            <BaseSkeleton style={styles.emailSkeleton} />
           </View>
         ) : (
           <>
-            <View style={styles.avatarContainer}>
-              <View style={styles.avatar}>
-                <SvgXml xml={avatar} width={components.profileImageHeight} height={components.profileImageHeight} />
-              </View>
+            <View style={styles.avatar}>
+              <CustomImage source={{ uri: profileImage }} style={styles.avatarImage} />
             </View>
             {username && <CustomText text={username} style={styles.name} />}
-            {email && <CustomText text={email} style={styles.email} />}
           </>
         )}
         {isTripDataLoading ? (

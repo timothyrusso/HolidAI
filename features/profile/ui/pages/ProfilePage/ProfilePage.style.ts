@@ -1,4 +1,4 @@
-import { colors, components, fontFamily, fontSize, spacing } from '@/features/core/ui';
+import { components, fontFamily, fontSize, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -11,20 +11,19 @@ export const styles = StyleSheet.create({
     height: components.profileImageHeight,
     borderRadius: components.profileImageHeight / 2,
     overflow: 'hidden',
-    backgroundColor: colors.secondaryPink,
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: spacing.Fourfold,
+    alignSelf: 'center',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   name: {
     fontSize: fontSize.XL2,
     fontFamily: fontFamily.interBold,
     textAlign: 'center',
-  },
-  email: {
-    fontSize: fontSize.SM,
-    fontFamily: fontFamily.interRegular,
-    textAlign: 'center',
-    paddingTop: spacing.Triple,
     paddingBottom: spacing.Fourfold,
   },
   settingsContainer: {
@@ -45,14 +44,6 @@ export const styles = StyleSheet.create({
     borderRadius: spacing.Double,
     alignSelf: 'center',
     marginTop: spacing.Double,
-  },
-  emailSkeleton: {
-    width: '55%',
-    height: spacing.Double + spacing.Minimal,
-    borderRadius: spacing.Double,
-    alignSelf: 'center',
-    marginTop: spacing.Triple,
-    marginBottom: spacing.Fourfold,
   },
   skeletonContainer: {
     marginHorizontal: spacing.Fourfold,

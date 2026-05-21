@@ -13,6 +13,7 @@ export const useUserRepository = (): IUserRepository => {
             id: user.id,
             firstName: user.firstName,
             email: user.primaryEmailAddress?.emailAddress,
+            profileImageUrl: user.imageUrl,
           }
         : undefined,
 
