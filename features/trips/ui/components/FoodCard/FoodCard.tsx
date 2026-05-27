@@ -42,8 +42,8 @@ export const FoodCard: FC<FoodCardProps> = ({ food }) => {
         </View>
         <FlatList
           data={dishItems}
-          renderItem={({ item }) => <DishItem dish={item.dish} searchTerm={item.searchTerm} />}
-          keyExtractor={item => item.dish}
+          renderItem={({ item }) => <DishItem dish={item} />}
+          keyExtractor={item => item.name}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.contentContainer}

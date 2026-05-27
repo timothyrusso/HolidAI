@@ -1,15 +1,6 @@
 import type { Food } from '@/features/trips/domain/entities/Food';
+import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
 
-export type DishItem = {
-  dish: string;
-  searchTerm: string;
-};
-
-export const useFoodCardLogic = (food: Food) => {
-  const dishItems: DishItem[] = food.typicalDishes.map((dish, i) => ({
-    dish,
-    searchTerm: food.typicalDishesSearchTerms?.[i] ?? dish,
-  }));
-
-  return { dishItems };
+export const useFoodCardLogic = (food: Food): { dishItems: TypicalDish[] } => {
+  return { dishItems: food.typicalDishes };
 };

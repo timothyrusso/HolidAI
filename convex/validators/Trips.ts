@@ -47,11 +47,19 @@ export const Weather = v.object({
   weatherOutdoorActivitiesNotes: v.string(),
 });
 
+export const TypicalDish = v.object({
+  name: v.string(),
+  searchTerm: v.string(),
+  description: v.string(),
+  ingredients: v.array(v.string()),
+  isGlutenFree: v.boolean(),
+  isVegetarian: v.boolean(),
+});
+
 export const Food = v.object({
   foodGeneralNotes: v.string(),
   foodBudgetNotes: v.string(),
-  typicalDishes: v.array(v.string()),
-  typicalDishesSearchTerms: v.array(v.string()),
+  typicalDishes: v.array(TypicalDish),
 });
 
 export const TripAiResp = v.object({
