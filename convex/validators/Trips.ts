@@ -51,6 +51,7 @@ export const Food = v.object({
   foodGeneralNotes: v.string(),
   foodBudgetNotes: v.string(),
   typicalDishes: v.array(v.string()),
+  typicalDishesSearchTerms: v.array(v.string()),
 });
 
 export const TripAiResp = v.object({

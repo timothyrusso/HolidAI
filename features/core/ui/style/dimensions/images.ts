@@ -4,4 +4,5 @@ export const images = {
   welcomeImageHeight: 400,
   logoRoundHeight: 80,
   logoRoundWidth: 80,
+  dishImageSize: 80,
 };

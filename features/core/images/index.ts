@@ -5,6 +5,7 @@ export {
   fetchGooglePlaceImageUseCase,
   fetchGooglePlaceImagesUseCase,
   fetchUnsplashImageUseCase,
+  fetchWikimediaDishImageUseCase,
 } from '@/features/core/images/di/resolve';
 export type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 export type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
@@ -14,3 +15,4 @@ export type { UrlType as UrlTypeValue } from '@/features/core/images/domain/enti
 export { useGetGooglePlaceImage } from '@/features/core/images/facades/useGetGooglePlaceImage';
 export { useGetGooglePlaceImages } from '@/features/core/images/facades/useGetGooglePlaceImages';
 export { useGetUnsplashImage } from '@/features/core/images/facades/useGetUnsplashImage';
+export { useGetWikimediaDishImage } from '@/features/core/images/facades/useGetWikimediaDishImage';

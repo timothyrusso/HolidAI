@@ -58,6 +58,15 @@ export const generatedTripSchema = z.object({
   food: z.object({
     foodGeneralNotes: z.string(),
     foodBudgetNotes: z.string(),
-    typicalDishes: z.array(z.string()),
+    typicalDishes: z
+      .array(z.string())
+      .describe(
+        'Local name of each dish in its native language. Just the dish name — no qualifiers, no parentheses, no descriptions, no cooking methods. E.g. "Casoncelli", "Papanași", "Pierogi Ruskie".',
+      ),
+    typicalDishesSearchTerms: z
+      .array(z.string())
+      .describe(
+        'Search-optimized English term for each dish in typicalDishes, same order, 1:1 mapping. Lowercase, no diacritics, no special characters, no articles, max 3 words. E.g. "casoncelli", "papanasi", "pierogi ruskie".',
+      ),
   }),
 });

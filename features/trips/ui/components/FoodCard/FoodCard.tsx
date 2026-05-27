@@ -1,6 +1,8 @@
 import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { Food } from '@/features/trips/domain/entities/Food';
+import { useFoodCardLogic } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
+import { DishItem } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
 import { FlatList, View } from 'react-native';
@@ -10,6 +12,8 @@ type FoodCardProps = {
 };
 
 export const FoodCard: FC<FoodCardProps> = ({ food }) => {
+  const { dishItems } = useFoodCardLogic(food);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -37,11 +41,9 @@ export const FoodCard: FC<FoodCardProps> = ({ food }) => {
           <CustomText text="MY_TRIP.TYPICAL_DISHES" style={styles.subtitle} />
         </View>
         <FlatList
-          data={food.typicalDishes}
-          renderItem={({ item }) => (
-            <CustomText text={item} style={styles.foodItem} numberOfLines={1} ellipsizeMode="tail" />
-          )}
-          keyExtractor={item => item}
+          data={dishItems}
+          renderItem={({ item }) => <DishItem dish={item.dish} searchTerm={item.searchTerm} />}
+          keyExtractor={item => item.dish}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.contentContainer}
