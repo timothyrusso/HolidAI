@@ -36,7 +36,7 @@ export const ListHeaderComponent: FC<ListHeaderComponentProps> = memo(
             title="TRIP_DETAILS.BUDGET_NOTES"
             icon={icons.card}
             notes={budgetNotes}
-            backgroundColor={colors.primaryBlue}
+            backgroundColor={colors.secondaryBlue}
           />
         )}
         {transportationNotes && (

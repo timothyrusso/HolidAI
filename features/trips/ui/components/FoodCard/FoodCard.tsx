@@ -1,4 +1,4 @@
-import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
+import { CustomButtonSmall, CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { Food } from '@/features/trips/domain/entities/Food';
 import { useFoodCardLogic } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
@@ -12,7 +12,7 @@ type FoodCardProps = {
 };
 
 export const FoodCard: FC<FoodCardProps> = ({ food }) => {
-  const { dishItems } = useFoodCardLogic(food);
+  const { dishItems, handleOpenModal } = useFoodCardLogic(food);
 
   return (
     <View style={styles.container}>
@@ -49,6 +49,7 @@ export const FoodCard: FC<FoodCardProps> = ({ food }) => {
           contentContainerStyle={styles.contentContainer}
           style={styles.list}
         />
+        <CustomButtonSmall title="MY_TRIP.TYPICAL_DISHES_DETAILS" onPress={handleOpenModal} />
       </View>
     </View>
   );

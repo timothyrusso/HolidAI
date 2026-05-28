@@ -1,0 +1,5 @@
+export const Modals = {
+  TypicalDishes: 'typical-dishes-modal',
+} as const;
+
+export type Modals = (typeof Modals)[keyof typeof Modals];

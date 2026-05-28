@@ -1,4 +1,4 @@
-import { Routes, navigationService } from '@/features/core/navigation';
+import { Modals, Routes, navigationService } from '@/features/core/navigation';
 import { CustomHeader, icons } from '@/features/core/ui';
 import { Stack } from 'expo-router';
 
@@ -70,6 +70,16 @@ export default function CreateTripLayout() {
         name={Routes.ActivityDetails}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={Modals.TypicalDishes}
+        options={{
+          presentation: 'formSheet',
+          headerShown: false,
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.5, 1.0],
+          sheetInitialDetentIndex: 0,
         }}
       />
     </Stack>
