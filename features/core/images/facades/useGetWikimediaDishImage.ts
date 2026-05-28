@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchWikimediaDishImageUseCase } from '@/features/core/images/di/resolve';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 
-const fallback: ImageResult = { url: require('@/features/core/ui/assets/images/no-image-placeholder.jpg') };
+const fallback: ImageResult = { url: require('@/features/core/ui/assets/images/food_placeholder.jpg') };
 
 export const useGetWikimediaDishImage = (dish: string) => {
   const { data, isLoading, isError } = useQuery<ImageResult>({
