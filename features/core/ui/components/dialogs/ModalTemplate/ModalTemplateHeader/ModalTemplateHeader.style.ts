@@ -6,20 +6,15 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     width: '100%',
-    alignItems: 'center',
     paddingHorizontal: spacing.Quintuple,
-    paddingVertical: spacing.Fourfold,
-  },
-  actionContainer: {
-    width: '100%',
-    marginBottom: spacing.SingleAndHalf,
+    paddingVertical: spacing.Quintuple,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     textAlign: 'center',
-    fontFamily: fontFamily.interMedium,
+    fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL2,
-  },
-  cancelIcon: {
-    alignSelf: 'flex-end',
   },
 });

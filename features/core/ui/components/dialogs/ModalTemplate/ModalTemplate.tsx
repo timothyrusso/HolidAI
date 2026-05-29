@@ -5,9 +5,14 @@ import { ModalFixedFooter } from '@/features/core/ui/components/dialogs/ModalTem
 import { ModalFooter } from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateFooter';
 import { ModalHeader } from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateHeader/ModalTemplateHeader';
 import type { PropsWithChildren } from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { View } from 'react-native';
 
-export const ModalTemplate = ({ children }: PropsWithChildren) => <View style={styles.main}>{children}</View>;
+type ModalTemplateProps = PropsWithChildren<{ style?: StyleProp<ViewStyle> }>;
+
+export const ModalTemplate = ({ children, style }: ModalTemplateProps) => (
+  <View style={[styles.main, style]}>{children}</View>
+);
 
 ModalTemplate.Header = ModalHeader;
 ModalTemplate.Content = ModalContent;
