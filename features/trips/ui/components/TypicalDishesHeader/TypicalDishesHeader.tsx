@@ -6,15 +6,17 @@ import { View } from 'react-native';
 
 type TypicalDishesHeaderProps = {
   location: string;
+  dishNumber: number;
 };
 
-export const TypicalDishesHeader: FC<TypicalDishesHeaderProps> = ({ location }) => {
+export const TypicalDishesHeader: FC<TypicalDishesHeaderProps> = ({ location, dishNumber }) => {
   const { location: displayLocation } = useTypicalDishesHeaderLogic(location);
 
   return (
     <View style={styles.container}>
       <CustomIcon name={icons.location} size={spacing.Triple} color={colors.secondaryGreen} />
       <CustomText text={displayLocation} style={styles.location} />
+      <CustomText text={`✦  ${dishNumber} dishes`} style={styles.dishNumber} />
     </View>
   );
 };

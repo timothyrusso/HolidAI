@@ -2,10 +2,9 @@ import { CustomButtonSmall, CustomIcon, CustomText, colors, icons, spacing } fro
 import type { Food } from '@/features/trips/domain/entities/Food';
 import { useFoodCardLogic } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
-import { DishItem } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 
 type FoodCardProps = {
   food: Food;
@@ -13,7 +12,7 @@ type FoodCardProps = {
 };
 
 export const FoodCard: FC<FoodCardProps> = ({ food, tripId }) => {
-  const { dishItems, handleOpenModal } = useFoodCardLogic(food, tripId);
+  const { handleOpenModal } = useFoodCardLogic(tripId);
 
   return (
     <View style={styles.container}>
@@ -41,15 +40,7 @@ export const FoodCard: FC<FoodCardProps> = ({ food, tripId }) => {
           <CustomIcon name={icons.cafe} size={spacing.Triple} color={colors.secondaryGreen} />
           <CustomText text="MY_TRIP.TYPICAL_DISHES" style={styles.subtitle} />
         </View>
-        <FlatList
-          data={dishItems}
-          renderItem={({ item }) => <DishItem dish={item} />}
-          keyExtractor={item => item.name}
-          numColumns={2}
-          columnWrapperStyle={styles.columnWrapper}
-          contentContainerStyle={styles.contentContainer}
-          style={styles.list}
-        />
+
         <CustomButtonSmall title="MY_TRIP.TYPICAL_DISHES_DETAILS" onPress={handleOpenModal} />
       </View>
     </View>

@@ -47,11 +47,4 @@ export const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: spacing.Double,
   },
-  columnWrapper: {
-    gap: spacing.Triple,
-  },
-  list: {
-    rowGap: spacing.SingleAndHalf,
-    marginLeft: spacing.Quintuple,
-  },
 });

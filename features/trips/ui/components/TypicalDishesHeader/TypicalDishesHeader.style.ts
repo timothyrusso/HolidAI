@@ -1,4 +1,4 @@
-import { fontFamily, fontSize, spacing } from '@/features/core/ui';
+import { colors, fontFamily, fontSize, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -10,5 +10,10 @@ export const styles = StyleSheet.create({
   location: {
     fontSize: fontSize.XL,
     fontFamily: fontFamily.interRegular,
+  },
+  dishNumber: {
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interBold,
+    color: colors.primaryGrey,
   },
 });

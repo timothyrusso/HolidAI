@@ -7,7 +7,10 @@ export const useTypicalDishesModalPageLogic = () => {
   const { trip } = useGetTripById(tripId);
 
   const location = trip?.tripAiResp.tripDetails.location.split(',')[0] ?? '';
+  const food = trip?.tripAiResp?.food;
+  const dishNumber = food?.typicalDishes.length ?? 0;
+
   const handleClose = () => navigationService.back();
 
-  return { handleClose, location };
+  return { handleClose, location, dishNumber, dishItems: food?.typicalDishes };
 };
