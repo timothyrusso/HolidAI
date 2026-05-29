@@ -13,15 +13,20 @@ export const ModalHeader = ({
   titleStyle = undefined,
   action,
   preventClosing = false,
+  children,
 }: {
   title?: string;
   titleStyle?: StyleProp<TextStyle>;
   action: () => void;
   preventClosing?: boolean;
+  children?: React.ReactElement;
 }) => {
   return (
     <View style={styles.container}>
-      {title && <CustomText style={titleStyle ? titleStyle : styles.title} text={title} />}
+      <View style={styles.titleContainer}>
+        {title && <CustomText style={titleStyle ? titleStyle : styles.title} text={title} />}
+        {children}
+      </View>
       {!preventClosing && (
         <CustomIconButtonMedium
           iconName={icons.close}

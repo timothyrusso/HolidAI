@@ -9,10 +9,11 @@ import { FlatList, View } from 'react-native';
 
 type FoodCardProps = {
   food: Food;
+  tripId: string;
 };
 
-export const FoodCard: FC<FoodCardProps> = ({ food }) => {
-  const { dishItems, handleOpenModal } = useFoodCardLogic(food);
+export const FoodCard: FC<FoodCardProps> = ({ food, tripId }) => {
+  const { dishItems, handleOpenModal } = useFoodCardLogic(food, tripId);
 
   return (
     <View style={styles.container}>

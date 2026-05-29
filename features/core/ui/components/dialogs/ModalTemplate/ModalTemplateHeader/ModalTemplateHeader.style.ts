@@ -17,4 +17,8 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL2,
   },
+  titleContainer: {
+    alignItems: 'flex-start',
+    rowGap: spacing.Single,
+  },
 });

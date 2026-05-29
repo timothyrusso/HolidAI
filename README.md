@@ -7,7 +7,7 @@ A smart travel planning assistant that leverages Google Gemini AI to create pers
 ## AI Generation Pipeline
 
 <div align="center">
-  <img src="features/core/ui/assets/images/AI_Generation_Pipeline.png" alt="AI Generation Pipeline" width="100%">
+  <img src="wiki/docs/diagrams/AI_Generation_Pipeline.png" alt="AI Generation Pipeline" width="100%">
 </div>
 
 ## AI Model

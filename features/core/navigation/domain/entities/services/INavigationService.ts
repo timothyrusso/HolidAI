@@ -24,7 +24,7 @@ export interface INavigationService {
   // Other screens
   toTripList(): void;
   toChangeLanguage(): void;
-  toTypicalDishesModal(): void;
+  toTypicalDishesModal(params: { tripId: string }): void;
 
   back(): void;
 
