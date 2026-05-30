@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   body: {
+    flex: 1,
     width: '100%',
     marginBottom: spacing.separator40,
     paddingHorizontal: spacing.Quintuple,

@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.Single,
+    gap: spacing.Double,
   },
   image: {
     width: images.dishImageSize,
@@ -14,17 +15,20 @@ export const styles = StyleSheet.create({
   skeleton: {
     width: images.dishImageSize,
     height: images.dishImageSize,
-    borderRadius: spacing.Double,
+    borderRadius: images.dishImageSize,
   },
-  label: {
-    fontFamily: fontFamily.interBold,
+  title: {
+    fontFamily: fontFamily.interMedium,
     color: colors.primaryBlack,
-    backgroundColor: colors.primaryGreen,
-    borderWidth: 1,
-    borderColor: colors.primaryGreen,
-    borderRadius: spacing.SingleAndHalf,
-    paddingHorizontal: spacing.Single,
     paddingVertical: spacing.Minimal,
-    textAlign: 'center',
+  },
+  description: {
+    fontFamily: fontFamily.interRegular,
+    color: colors.primaryGrey,
+    paddingBottom: spacing.Single,
+  },
+  textContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
   },
 });

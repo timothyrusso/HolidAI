@@ -12,12 +12,17 @@ export const DishItem: FC<DishItemProps> = ({ dish }) => {
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <BaseSkeleton style={styles.skeleton} />
-      ) : (
-        <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
-      )}
-      <CustomText text={dish.name} style={styles.label} numberOfLines={1} ellipsizeMode="tail" />
+      <View>
+        {isLoading ? (
+          <BaseSkeleton style={styles.skeleton} />
+        ) : (
+          <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
+        )}
+      </View>
+      <View style={styles.textContainer}>
+        <CustomText text={dish.name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
+        <CustomText text={dish.description} style={styles.description} numberOfLines={3} ellipsizeMode="tail" />
+      </View>
     </View>
   );
 };
