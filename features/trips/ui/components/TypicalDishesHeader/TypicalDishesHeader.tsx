@@ -10,13 +10,13 @@ type TypicalDishesHeaderProps = {
 };
 
 export const TypicalDishesHeader: FC<TypicalDishesHeaderProps> = ({ location, dishNumber }) => {
-  const { location: displayLocation } = useTypicalDishesHeaderLogic(location);
+  const { location: displayLocation, dishLabel } = useTypicalDishesHeaderLogic(location, dishNumber);
 
   return (
     <View style={styles.container}>
       <CustomIcon name={icons.location} size={spacing.Triple} color={colors.secondaryGreen} />
       <CustomText text={displayLocation} style={styles.location} />
-      <CustomText text={`✦  ${dishNumber} dishes`} style={styles.dishNumber} />
+      <CustomText text={`✦  ${dishNumber} ${dishLabel}`} style={styles.dishNumber} />
     </View>
   );
 };
