@@ -47,4 +47,13 @@ export const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: spacing.Double,
   },
+  button: {
+    backgroundColor: colors.secondaryGreen,
+    borderRadius: spacing.Double,
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginTop: spacing.Double,
+    paddingHorizontal: spacing.Double,
+  },
 });

@@ -18,4 +18,18 @@ export const styles = StyleSheet.create({
     fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL2,
   },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: spacing.Single,
+  },
+  location: {
+    fontSize: fontSize.LG,
+    fontFamily: fontFamily.interRegular,
+  },
+  dishNumber: {
+    fontSize: fontSize.SM,
+    fontFamily: fontFamily.interBold,
+    color: colors.primaryGrey,
+  },
 });
