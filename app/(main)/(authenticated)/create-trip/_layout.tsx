@@ -1,7 +1,6 @@
-import { Modals, Routes, navigationService } from '@/features/core/navigation';
+import { Modals, Routes, formSheetOptions, navigationService } from '@/features/core/navigation';
 import { CustomHeader, icons, spacing } from '@/features/core/ui';
 import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
 
 export default function CreateTripLayout() {
   return (
@@ -75,14 +74,7 @@ export default function CreateTripLayout() {
       />
       <Stack.Screen
         name={Modals.TypicalDishes}
-        options={{
-          presentation: 'formSheet',
-          headerShown: false,
-          sheetGrabberVisible: true,
-          sheetAllowedDetents: Platform.select({ android: [0.5, 0.92], default: [0.5, 1.0] }),
-          sheetInitialDetentIndex: 0,
-          sheetCornerRadius: spacing.Fourfold,
-        }}
+        options={formSheetOptions}
       />
     </Stack>
   );
