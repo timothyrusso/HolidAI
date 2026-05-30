@@ -9,7 +9,12 @@ import { styles } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripP
 import { useRef } from 'react';
 import { Platform, View } from 'react-native';
 
-const basicViewProps = { nameView: Routes.HomePage, isFullScreen: true, isMenuVisible: true, statusBarStyle: 'light' } as const;
+const basicViewProps = {
+  nameView: Routes.HomePage,
+  isFullScreen: true,
+  isMenuVisible: true,
+  statusBarStyle: 'light',
+} as const;
 
 export const UpcomingTripPage = () => {
   const { lastCreatedTrip, isLoading, image, imageBlurHash, location, tripId, tripStartDate, totalTrips } =
@@ -18,11 +23,19 @@ export const UpcomingTripPage = () => {
   const blurTargetRef = useRef<View | null>(null);
 
   if (isLoading) {
-    return <BasicView {...basicViewProps}><HomeSkeleton /></BasicView>;
+    return (
+      <BasicView {...basicViewProps}>
+        <HomeSkeleton />
+      </BasicView>
+    );
   }
 
   if (!lastCreatedTrip) {
-    return <BasicView {...basicViewProps}><EmptyListContainer /></BasicView>;
+    return (
+      <BasicView {...basicViewProps}>
+        <EmptyListContainer />
+      </BasicView>
+    );
   }
 
   return (

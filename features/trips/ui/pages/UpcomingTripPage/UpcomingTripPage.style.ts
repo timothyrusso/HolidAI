@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-detailsBox: {
+  detailsBox: {
     marginBottom: spacing.separator120,
     boxShadow: shadows.highShadow,
   },
