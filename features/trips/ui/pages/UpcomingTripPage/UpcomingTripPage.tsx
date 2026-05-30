@@ -1,13 +1,15 @@
 import { Routes } from '@/features/core/navigation';
-import { BasicView, CustomImage, PlatformOS } from '@/features/core/ui';
+import { BasicView, PlatformOS } from '@/features/core/ui';
 import { DetailsBox } from '@/features/trips/ui/components/DetailsBox/DetailsBox';
 import { EmptyListContainer } from '@/features/trips/ui/components/EmptyListContainer/EmptyListContainer';
+import { HeroImage } from '@/features/trips/ui/components/HeroImage/HeroImage';
 import { HomeSkeleton } from '@/features/trips/ui/components/HomeSkeleton/HomeSkeleton';
 import { useUpcomingTripPageLogic } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.logic';
 import { styles } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.style';
-import { BlurTargetView } from 'expo-blur';
 import { useRef } from 'react';
 import { Platform, View } from 'react-native';
+
+const basicViewProps = { nameView: Routes.HomePage, isFullScreen: true, isMenuVisible: true, statusBarStyle: 'light' } as const;
 
 export const UpcomingTripPage = () => {
   const { lastCreatedTrip, isLoading, image, imageBlurHash, location, tripId, tripStartDate, totalTrips } =
@@ -15,39 +17,27 @@ export const UpcomingTripPage = () => {
 
   const blurTargetRef = useRef<View | null>(null);
 
+  if (isLoading) {
+    return <BasicView {...basicViewProps}><HomeSkeleton /></BasicView>;
+  }
+
+  if (!lastCreatedTrip) {
+    return <BasicView {...basicViewProps}><EmptyListContainer /></BasicView>;
+  }
+
   return (
-    <BasicView nameView={Routes.HomePage} isFullScreen isMenuVisible statusBarStyle="light">
-      {isLoading ? (
-        <HomeSkeleton />
-      ) : lastCreatedTrip ? (
-        <View style={styles.container}>
-          {Platform.OS === PlatformOS.android ? (
-            <BlurTargetView ref={blurTargetRef} style={styles.image}>
-              <CustomImage
-                source={typeof image === 'string' ? { uri: image } : image}
-                style={styles.image}
-                placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
-              />
-            </BlurTargetView>
-          ) : (
-            <CustomImage
-              source={typeof image === 'string' ? { uri: image } : image}
-              style={styles.image}
-              placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
-            />
-          )}
-          <DetailsBox
-            location={location}
-            tripId={tripId}
-            tripStartDate={tripStartDate}
-            style={styles.detailsBox}
-            totalTrips={totalTrips}
-            blurTargetRef={Platform.OS === PlatformOS.android ? blurTargetRef : undefined}
-          />
-        </View>
-      ) : (
-        <EmptyListContainer />
-      )}
+    <BasicView {...basicViewProps}>
+      <View style={styles.container}>
+        <HeroImage image={image} imageBlurHash={imageBlurHash} blurTargetRef={blurTargetRef} />
+        <DetailsBox
+          location={location}
+          tripId={tripId}
+          tripStartDate={tripStartDate}
+          style={styles.detailsBox}
+          totalTrips={totalTrips}
+          blurTargetRef={Platform.OS === PlatformOS.android ? blurTargetRef : undefined}
+        />
+      </View>
     </BasicView>
   );
 };
