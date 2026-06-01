@@ -14,7 +14,7 @@ const Separator = () => <View style={styles.separator} />;
 export const TypicalDishesList: FC<TypicalDishesListProps> = ({ dishItems }) => (
   <>
     {dishItems?.map((item, index) => (
-      <Fragment key={item.name}>
+      <Fragment key={item.searchTerm}>
         {index > 0 && <Separator />}
         <DishItem dish={item} />
       </Fragment>
