@@ -6,7 +6,7 @@ export const useTypicalDishesModalPageLogic = () => {
   const { tripId } = useLocalSearchParams<{ tripId: string }>();
   const { trip } = useGetTripById(tripId);
 
-  const location = trip?.tripAiResp.tripDetails.location.split(',')[0] ?? '';
+  const location = trip?.tripAiResp?.tripDetails?.location?.split(',')[0] ?? '';
   const food = trip?.tripAiResp?.food;
   const dishNumber = food?.typicalDishes.length ?? 0;
 
