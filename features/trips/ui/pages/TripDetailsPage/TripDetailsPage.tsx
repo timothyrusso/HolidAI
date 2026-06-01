@@ -74,6 +74,7 @@ export const TripDetailsPage = () => {
               weather={weather}
               tripDetails={tripDetails}
               food={food}
+              tripId={id}
             />
           }
         />

@@ -4,12 +4,11 @@ import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  modalView: {
+  main: {
     flex: 1,
-    justifyContent: 'flex-end',
-    margin: 0,
   },
   body: {
+    flex: 1,
     width: '100%',
     marginBottom: spacing.separator40,
     paddingHorizontal: spacing.Quintuple,

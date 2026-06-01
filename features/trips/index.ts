@@ -3,6 +3,7 @@ export const FEATURE_TIER: FeatureTier = 2;
 
 export type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 export type { Food } from '@/features/trips/domain/entities/Food';
+export type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
 export type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
 export type { Trip, TripAiResp } from '@/features/trips/domain/entities/Trip';
 export type { UniqueItem } from '@/features/trips/domain/entities/UniqueItem';

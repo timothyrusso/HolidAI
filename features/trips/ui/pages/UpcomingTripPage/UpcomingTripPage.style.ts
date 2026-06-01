@@ -6,11 +6,6 @@ export const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
-  image: {
-    width: '100%',
-    flex: 1,
-    resizeMode: 'cover',
-  },
   detailsBox: {
     marginBottom: spacing.separator120,
     boxShadow: shadows.highShadow,

@@ -52,11 +52,8 @@ export * from '@/features/core/ui/components/composite/CustomTabButtonWithText/C
 export * from '@/features/core/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete';
 
 // Dialog components
-export * from '@/features/core/ui/components/dialogs/ActionModal/ActionModal';
-export * from '@/features/core/ui/components/dialogs/InfoModal/InfoModal';
 export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplate';
 export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateBody';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateContainer/ModalTemplateContainer';
 export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateContent';
 export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateFixedFooter';
 export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateFooter';

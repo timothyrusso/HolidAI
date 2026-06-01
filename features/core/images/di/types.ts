@@ -7,4 +7,6 @@ export const IMAGES_TYPES = {
   FetchUnsplashImageUseCase: Symbol.for('Images.FetchUnsplashImageUseCase'),
   FetchGooglePlaceImageUseCase: Symbol.for('Images.FetchGooglePlaceImageUseCase'),
   FetchGooglePlaceImagesUseCase: Symbol.for('Images.FetchGooglePlaceImagesUseCase'),
+  WikimediaDishImageRepository: Symbol.for('Images.WikimediaDishImageRepository'),
+  FetchWikimediaDishImageUseCase: Symbol.for('Images.FetchWikimediaDishImageUseCase'),
 } as const;

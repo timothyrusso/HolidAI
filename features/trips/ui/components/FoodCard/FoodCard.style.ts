@@ -1,4 +1,4 @@
-import { SCREEN_WIDTH, colors, fontFamily, fontSize, spacing } from '@/features/core/ui';
+import { colors, fontFamily, fontSize, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -44,26 +44,16 @@ export const styles = StyleSheet.create({
     color: colors.primaryBlack,
     paddingHorizontal: spacing.Quintuple + spacing.Minimal,
   },
-  foodItem: {
-    fontFamily: fontFamily.interBold,
-    color: colors.primaryBlack,
-    backgroundColor: colors.primaryGreen,
-    borderWidth: 1,
-    borderColor: colors.primaryGreen,
-    borderRadius: spacing.SingleAndHalf,
-    paddingHorizontal: spacing.Single,
-    paddingVertical: spacing.Minimal,
-    width: (SCREEN_WIDTH - spacing.Quintuple * 4) / 2,
-    textAlign: 'center',
-  },
   contentContainer: {
     paddingBottom: spacing.Double,
   },
-  columnWrapper: {
-    gap: spacing.Triple,
+  button: {
+    backgroundColor: colors.secondaryGreen,
+    borderRadius: spacing.Double,
   },
-  list: {
-    rowGap: spacing.SingleAndHalf,
-    marginLeft: spacing.Quintuple,
+  buttonContainer: {
+    alignItems: 'center',
+    marginTop: spacing.Double,
+    paddingHorizontal: spacing.Double,
   },
 });

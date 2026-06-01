@@ -1,4 +1,5 @@
 import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';
+import { Modals } from '@/features/core/navigation/domain/entities/Modals';
 import { Routes } from '@/features/core/navigation/domain/entities/Routes';
 import { Stacks } from '@/features/core/navigation/domain/entities/Stacks';
 import type { INavigationService } from '@/features/core/navigation/domain/entities/services/INavigationService';
@@ -59,6 +60,9 @@ export class NavigationService implements INavigationService {
   }
   toChangeLanguage() {
     this.client.push(`/${Stacks.Profile}/${Routes.ChangeLanguage}`);
+  }
+  toTypicalDishesModal({ tripId }: { tripId: string }) {
+    this.client.push({ pathname: `/${Stacks.CreateTrip}/${Modals.TypicalDishes}`, params: { tripId } });
   }
 
   back() {

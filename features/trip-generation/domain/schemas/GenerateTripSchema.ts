@@ -58,6 +58,27 @@ export const generatedTripSchema = z.object({
   food: z.object({
     foodGeneralNotes: z.string(),
     foodBudgetNotes: z.string(),
-    typicalDishes: z.array(z.string()),
+    typicalDishes: z.array(
+      z.object({
+        name: z
+          .string()
+          .describe(
+            'Local name of the dish in its native language. Just the dish name — no qualifiers, no parentheses, no descriptions, no cooking methods. E.g. "Casoncelli", "Papanași", "Pierogi Ruskie".',
+          ),
+        searchTerm: z
+          .string()
+          .describe(
+            'Search-optimized English term for Wikimedia Commons image lookup. Lowercase, no diacritics, no special characters, no articles, max 3 words. E.g. "casoncelli", "papanasi", "pierogi ruskie".',
+          ),
+        description: z
+          .string()
+          .describe(
+            'Description of the dish. Minimum 20 words, maximum 50 words. Should include main ingredients and cooking method.',
+          ),
+        ingredients: z.array(z.string()).describe('Main ingredients of the dish.'),
+        isGlutenFree: z.boolean().describe('Whether the dish is gluten free.'),
+        isVegetarian: z.boolean().describe('Whether the dish is vegetarian.'),
+      }),
+    ),
   }),
 });

@@ -1,15 +1,19 @@
-import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
+import { CustomButtonMedium, CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { Food } from '@/features/trips/domain/entities/Food';
+import { useFoodCardLogic } from '@/features/trips/ui/components/FoodCard/FoodCard.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/FoodCard.style';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { FC } from 'react';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 
 type FoodCardProps = {
   food: Food;
+  tripId: string;
 };
 
-export const FoodCard: FC<FoodCardProps> = ({ food }) => {
+export const FoodCard: FC<FoodCardProps> = ({ food, tripId }) => {
+  const { handleOpenModal } = useFoodCardLogic(tripId);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -32,21 +36,9 @@ export const FoodCard: FC<FoodCardProps> = ({ food }) => {
           <CustomText text="MY_TRIP.GENERAL_NOTES" style={styles.subtitle} />
         </View>
         <CustomText text={food.foodGeneralNotes} style={styles.contentValue} />
-        <View style={styles.subtitleContainer}>
-          <CustomIcon name={icons.cafe} size={spacing.Triple} color={colors.secondaryGreen} />
-          <CustomText text="MY_TRIP.TYPICAL_DISHES" style={styles.subtitle} />
+        <View style={styles.buttonContainer}>
+          <CustomButtonMedium title="MY_TRIP.TYPICAL_DISHES" onPress={handleOpenModal} style={styles.button} />
         </View>
-        <FlatList
-          data={food.typicalDishes}
-          renderItem={({ item }) => (
-            <CustomText text={item} style={styles.foodItem} numberOfLines={1} ellipsizeMode="tail" />
-          )}
-          keyExtractor={item => item}
-          numColumns={2}
-          columnWrapperStyle={styles.columnWrapper}
-          contentContainerStyle={styles.contentContainer}
-          style={styles.list}
-        />
       </View>
     </View>
   );

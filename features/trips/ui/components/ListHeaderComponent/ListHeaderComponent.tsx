@@ -21,22 +21,23 @@ type ListHeaderComponentProps = {
   weather?: Weather;
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;
   food?: Food;
+  tripId: string;
 };
 
 export const ListHeaderComponent: FC<ListHeaderComponentProps> = memo(
-  ({ region, allCoordinates, budgetNotes, transportationNotes, weather, tripDetails, food }) => {
+  ({ region, allCoordinates, budgetNotes, transportationNotes, weather, tripDetails, food, tripId }) => {
     return (
       <View style={style.container}>
         <TripDetailsCard tripDetails={tripDetails} />
         {allCoordinates && <MapListHeaderComponent region={region} allCoordinates={allCoordinates} />}
         {weather && <WeatherCard weather={weather} />}
-        {food && <FoodCard food={food} />}
+        {food && <FoodCard food={food} tripId={tripId} />}
         {budgetNotes && (
           <NotesCard
             title="TRIP_DETAILS.BUDGET_NOTES"
             icon={icons.card}
             notes={budgetNotes}
-            backgroundColor={colors.primaryBlue}
+            backgroundColor={colors.secondaryBlue}
           />
         )}
         {transportationNotes && (

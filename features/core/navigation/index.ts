@@ -2,8 +2,10 @@ import type { FeatureTier } from '@/features/core/featureTier';
 export const FEATURE_TIER: FeatureTier = 0;
 
 export { navigationService } from '@/features/core/navigation/di/resolve';
+export { Modals } from '@/features/core/navigation/domain/entities/Modals';
 export { Routes } from '@/features/core/navigation/domain/entities/Routes';
 export type { INavigationService } from '@/features/core/navigation/domain/entities/services/INavigationService';
 export type { NavigationHref } from '@/features/core/navigation/domain/entities/services/IRouterClient';
 export { Stacks } from '@/features/core/navigation/domain/entities/Stacks';
+export { formSheetOptions } from '@/features/core/navigation/libraries/formSheetOptions';
 export { screenOptions } from '@/features/core/navigation/libraries/screenOptions';

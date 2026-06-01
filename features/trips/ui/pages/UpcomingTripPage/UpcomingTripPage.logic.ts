@@ -6,7 +6,7 @@ export const useUpcomingTripPageLogic = () => {
   const { upcomingTrip, isLoading } = useGetUpcomingTrip();
   const { totalTrips } = useGetTrips();
 
-  const location = upcomingTrip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
+  const location = upcomingTrip?.tripAiResp?.tripDetails?.location?.split(',')[0] ?? '';
 
   const { data: unsplashImage } = useGetUnsplashImage(location, UrlType.FULL);
 
@@ -17,7 +17,7 @@ export const useUpcomingTripPageLogic = () => {
     imageBlurHash: unsplashImage?.blurHash,
     location,
     tripId: upcomingTrip?._id ?? '',
-    tripStartDate: upcomingTrip?.tripAiResp.tripDetails.startDate ?? '',
+    tripStartDate: upcomingTrip?.tripAiResp?.tripDetails?.startDate ?? '',
     totalTrips,
   };
 };

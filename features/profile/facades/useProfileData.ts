@@ -9,8 +9,9 @@ export const useProfileData = () => {
 
   return {
     userId: user?.id,
-    username: user?.firstName,
+    username: user?.username,
     email: user?.email,
+    profileImageUrl: user?.profileImageUrl,
     totalTrips,
     favoriteTrips,
     userTokens,

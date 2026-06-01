@@ -8,7 +8,7 @@
     "scheme": "holidai",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./features/core/ui/assets/images/logo_round.png",
+      "image": "./features/core/ui/assets/images/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#220059"
     },
@@ -53,13 +53,13 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#220059",
-          "image": "./features/core/ui/assets/images/logo_round.png",
+          "image": "./features/core/ui/assets/images/logo.png",
+          "imageWidth": 150,
           "dark": {
-            "image": "./features/core/ui/assets/images/logo_round.png",
+            "image": "./features/core/ui/assets/images/logo.png",
             "backgroundColor": "#220059"
           },
           "ios": {
-            "imageWidth": 100,
             "resizeMode": "contain"
           },
           "android": {
