@@ -64,7 +64,7 @@ export class WikimediaDishImageRepository implements IImageRepository {
 
   private isAllowedImageExtension(url: string): boolean {
     const lower = url.toLowerCase();
-    return ALLOWED_IMAGE_EXTENSIONS.some(ext => lower.includes(ext));
+    return ALLOWED_IMAGE_EXTENSIONS.some(ext => lower.endsWith(ext));
   }
 
   private hasFoodCategory(page: WikimediaPageDTO, dish: string): boolean {
