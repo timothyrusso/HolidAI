@@ -73,6 +73,7 @@ export default function CreateTripLayout() {
         }}
       />
       <Stack.Screen name={Modals.TypicalDishes} options={formSheetOptions} />
+      <Stack.Screen name={Modals.DishDetails} options={formSheetOptions} />
     </Stack>
   );
 }

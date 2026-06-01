@@ -3,15 +3,15 @@ import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
 import { useDishItemLogic } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem.style';
 import type { FC } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-type DishItemProps = { dish: TypicalDish };
+type DishItemProps = { dish: TypicalDish; onPress: () => void };
 
-export const DishItem: FC<DishItemProps> = ({ dish }) => {
+export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
   const { image, isLoading } = useDishItemLogic(dish.searchTerm);
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <View>
         {isLoading ? (
           <BaseSkeleton style={styles.skeleton} />
@@ -23,6 +23,6 @@ export const DishItem: FC<DishItemProps> = ({ dish }) => {
         <CustomText text={dish.name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
         <CustomText text={dish.description} style={styles.description} numberOfLines={3} ellipsizeMode="tail" />
       </View>
-    </View>
+    </Pressable>
   );
 };
