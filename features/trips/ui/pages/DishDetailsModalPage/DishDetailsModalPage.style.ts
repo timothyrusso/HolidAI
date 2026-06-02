@@ -1,4 +1,4 @@
-import { colors, fontFamily, fontSize, images, shadows, spacing } from '@/features/core/ui';
+import { colors, fontFamily, fontSize, images, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -9,21 +9,18 @@ export const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.primaryWhite,
   },
-  imageWrapper: {
-    width: images.dishFullImageSize,
-    height: images.dishFullImageSize,
-    borderRadius: images.dishFullImageSize,
-    boxShadow: shadows.highShadow,
-  },
   image: {
     width: images.dishFullImageSize,
     height: images.dishFullImageSize,
     borderRadius: images.dishFullImageSize,
+    borderWidth: spacing.MinimalDouble,
+    borderColor: colors.primaryBlack,
   },
   bodyContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    columnGap: spacing.Fourfold,
+    columnGap: spacing.Double,
+    marginBottom: spacing.Triple,
   },
   description: {
     flex: 1,

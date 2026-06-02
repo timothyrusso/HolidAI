@@ -11,7 +11,7 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
   const { image, isLoading } = useDishItemLogic(dish.searchTerm);
 
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]} onPress={onPress}>
       <View>
         {isLoading ? (
           <BaseSkeleton style={styles.skeleton} />

@@ -11,8 +11,9 @@ export const useDishDetailsModalPageLogic = () => {
   const dish = trip?.tripAiResp?.food?.typicalDishes.find(d => d.searchTerm === searchTerm);
   const dishName = dish?.name ?? '';
   const dishDescription = dish?.description ?? '';
+  const dishIngredients = dish?.ingredients ?? [];
 
   const handleClose = () => navigationService.back();
 
-  return { dishName, dishDescription, handleClose, image: data?.url, imageIsLoading: isLoading };
+  return { dishName, dishDescription, dishIngredients, handleClose, image: data?.url, imageIsLoading: isLoading };
 };

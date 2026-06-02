@@ -1,4 +1,4 @@
-import { colors, fontFamily, images, spacing } from '@/features/core/ui';
+import { colors, fontFamily, images, opacity, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -6,11 +6,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.Double,
+    backgroundColor: colors.secondaryGrey,
+    padding: spacing.Double,
+    borderRadius: spacing.Fourfold,
   },
   image: {
     width: images.dishImageSize,
     height: images.dishImageSize,
     borderRadius: images.dishImageSize,
+    borderWidth: spacing.Minimal,
+    borderColor: colors.primaryBlack,
   },
   skeleton: {
     width: images.dishImageSize,
@@ -30,5 +35,8 @@ export const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     alignItems: 'flex-start',
+  },
+  pressed: {
+    opacity: opacity.default,
   },
 });
