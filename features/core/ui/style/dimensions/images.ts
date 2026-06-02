@@ -5,4 +5,5 @@ export const images = {
   logoRoundHeight: 80,
   logoRoundWidth: 80,
   dishImageSize: 80,
+  dishFullImageSize: 150,
 };

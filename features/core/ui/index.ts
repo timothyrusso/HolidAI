@@ -41,6 +41,7 @@ export * from '@/features/core/ui/components/basic/LinearGradientText/LinearGrad
 export * from '@/features/core/ui/components/basic/LottieAnimation/LottieAnimation';
 
 // Composite components
+export * from '@/features/core/ui/components/composite/BottomSheetHeader/BottomSheetHeader';
 export * from '@/features/core/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 export * from '@/features/core/ui/components/composite/CardWithImage/CardWithImage';
 export * from '@/features/core/ui/components/composite/CustomHeader/CustomHeader';
