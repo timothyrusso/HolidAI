@@ -1,4 +1,4 @@
-import { BaseSkeleton, BottomSheetHeader, CustomImage, CustomText } from '@/features/core/ui';
+import { Badge, BaseSkeleton, BottomSheetHeader, CustomImage, CustomText, colors, icons } from '@/features/core/ui';
 import { IngredientsList } from '@/features/trips/ui/components/IngredientsList/IngredientsList';
 import { useDishDetailsModalPageLogic } from '@/features/trips/ui/pages/DishDetailsModalPage/DishDetailsModalPage.logic';
 import { styles } from '@/features/trips/ui/pages/DishDetailsModalPage/DishDetailsModalPage.style';
@@ -20,6 +20,11 @@ export const DishDetailsModalPage = () => {
         <IngredientsList title="Ingredients" ingredients={dishIngredients} />
       </View>
       <CustomText text={dishDescription} style={styles.description} />
+      <View style={styles.badgesContainer}>
+        <Badge label="Gluten-Free" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
+        <Badge label="Vegan" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
+        <Badge label="Vegetarian" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
+      </View>
     </ScrollView>
   );
 };

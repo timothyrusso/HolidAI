@@ -21,10 +21,20 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     columnGap: spacing.Double,
     marginBottom: spacing.Triple,
+    alignItems: 'center',
   },
   description: {
     flex: 1,
     fontFamily: fontFamily.interRegular,
     fontSize: fontSize.MD,
+    lineHeight: fontSize.MD * 1.5,
+  },
+  badgesContainer: {
+    flexDirection: 'row',
+    gap: spacing.Single,
+    marginTop: spacing.Double,
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.Double,
+    paddingVertical: spacing.Single,
   },
 });

@@ -19,4 +19,5 @@ export const colors = {
   tertiaryBlue: '#63b3ff',
   primaryRed: '#FFD9D9',
   secondaryGreen: '#8AFF8A',
+  tertiaryGreen: '#57C17B',
 } as const;
