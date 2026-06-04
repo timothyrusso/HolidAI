@@ -10,7 +10,6 @@ export const styles = (active: boolean, backgroundColor: string) =>
     container: {
       alignItems: 'center',
       gap: spacing.Single,
-      backgroundColor: active ? backgroundColor : colors.secondaryGrey,
     },
     circleWrapper: {
       width: components.badgeCircleSize,
@@ -22,6 +21,7 @@ export const styles = (active: boolean, backgroundColor: string) =>
       borderRadius: components.badgeCircleSize / 2,
       alignItems: 'center',
       justifyContent: 'center',
+      backgroundColor: active ? backgroundColor : colors.primaryRed,
     },
     checkBadge: {
       position: 'absolute',
@@ -33,6 +33,10 @@ export const styles = (active: boolean, backgroundColor: string) =>
       backgroundColor: colors.primaryWhite,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    badgeImage: {
+      width: components.badgeCircleSize * 0.6,
+      height: components.badgeCircleSize * 0.6,
     },
     label: {
       fontSize: fontSize.XS,

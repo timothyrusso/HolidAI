@@ -13,7 +13,7 @@ type BottomSheetHeaderProps = {
 
 export const BottomSheetHeader: FC<BottomSheetHeaderProps> = ({ title, onClose }) => (
   <View style={styles.container}>
-    <CustomText text={title} style={styles.title} />
+    <CustomText text={title} style={styles.title} numberOfLines={2} ellipsizeMode="tail" />
     <CustomIconButtonMedium iconName={icons.close} buttonType={ButtonType.Quaternary} onPress={onClose} />
   </View>
 );

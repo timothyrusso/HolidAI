@@ -5,4 +5,5 @@ export interface TypicalDish {
   ingredients: string[];
   isGlutenFree: boolean;
   isVegetarian: boolean;
+  isVegan: boolean;
 }

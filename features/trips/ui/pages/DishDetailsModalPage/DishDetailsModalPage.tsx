@@ -1,12 +1,24 @@
-import { Badge, BaseSkeleton, BottomSheetHeader, CustomImage, CustomText, colors, icons } from '@/features/core/ui';
+import { Badge, BaseSkeleton, BottomSheetHeader, CustomImage, CustomText, colors } from '@/features/core/ui';
 import { IngredientsList } from '@/features/trips/ui/components/IngredientsList/IngredientsList';
 import { useDishDetailsModalPageLogic } from '@/features/trips/ui/pages/DishDetailsModalPage/DishDetailsModalPage.logic';
 import { styles } from '@/features/trips/ui/pages/DishDetailsModalPage/DishDetailsModalPage.style';
 import { ScrollView, View } from 'react-native';
 
 export const DishDetailsModalPage = () => {
-  const { dishName, dishDescription, dishIngredients, handleClose, image, imageIsLoading } =
-    useDishDetailsModalPageLogic();
+  const {
+    dishName,
+    dishDescription,
+    dishIngredients,
+    handleClose,
+    image,
+    imageIsLoading,
+    isVegetarian,
+    isGlutenFree,
+    isVegan,
+    glutenFreeImage,
+    veganImage,
+    vegetarianImage,
+  } = useDishDetailsModalPageLogic();
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
@@ -21,9 +33,19 @@ export const DishDetailsModalPage = () => {
       </View>
       <CustomText text={dishDescription} style={styles.description} />
       <View style={styles.badgesContainer}>
-        <Badge label="Gluten-Free" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
-        <Badge label="Vegan" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
-        <Badge label="Vegetarian" icon={icons.cash} backgroundColor={colors.tertiaryGreen} />
+        <Badge
+          label="MY_TRIP.GLUTEN_FREE"
+          image={glutenFreeImage}
+          backgroundColor={colors.tertiaryGreen}
+          active={isGlutenFree}
+        />
+        <Badge label="MY_TRIP.VEGAN" image={veganImage} backgroundColor={colors.tertiaryGreen} active={isVegan} />
+        <Badge
+          label="MY_TRIP.VEGETARIAN"
+          image={vegetarianImage}
+          backgroundColor={colors.tertiaryGreen}
+          active={isVegetarian}
+        />
       </View>
     </ScrollView>
   );

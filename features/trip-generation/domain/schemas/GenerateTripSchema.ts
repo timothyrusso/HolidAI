@@ -78,6 +78,7 @@ export const generatedTripSchema = z.object({
         ingredients: z.array(z.string()).describe('Main ingredients of the dish.'),
         isGlutenFree: z.boolean().describe('Whether the dish is gluten free.'),
         isVegetarian: z.boolean().describe('Whether the dish is vegetarian.'),
+        isVegan: z.boolean().describe('Whether the dish is vegan.'),
       }),
     ),
   }),

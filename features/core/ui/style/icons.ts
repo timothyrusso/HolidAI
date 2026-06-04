@@ -2,6 +2,7 @@ import type { Ionicons } from '@expo/vector-icons';
 
 export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   close: 'close',
+  closeCircle: 'close-circle',
   location: 'location',
   locationOutline: 'location-outline',
   globeOutline: 'globe-outline',

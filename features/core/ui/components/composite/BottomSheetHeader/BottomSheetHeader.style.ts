@@ -14,5 +14,6 @@ export const styles = StyleSheet.create({
   title: {
     fontFamily: fontFamily.interExtraBold,
     fontSize: fontSize.XL2,
+    maxWidth: '90%',
   },
 });
