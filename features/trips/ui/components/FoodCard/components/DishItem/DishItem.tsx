@@ -8,7 +8,17 @@ import { Pressable, View } from 'react-native';
 type DishItemProps = { dish: TypicalDish; onPress: () => void };
 
 export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
-  const { image, isLoading } = useDishItemLogic(dish.searchTerm);
+  const {
+    image,
+    isLoading,
+    glutenFreeImage,
+    veganImage,
+    vegetarianImage,
+    hasBadge,
+    isGlutenFree,
+    isVegan,
+    isVegetarian,
+  } = useDishItemLogic(dish);
 
   return (
     <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]} onPress={onPress}>
@@ -21,7 +31,19 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
       </View>
       <View style={styles.textContainer}>
         <CustomText text={dish.name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
-        <CustomText text={dish.description} style={styles.description} numberOfLines={3} ellipsizeMode="tail" />
+        <CustomText
+          text={dish.description}
+          style={styles.description}
+          numberOfLines={hasBadge ? 2 : 3}
+          ellipsizeMode="tail"
+        />
+        {hasBadge && (
+          <View style={styles.badgeContainer}>
+            {isGlutenFree && <CustomImage source={glutenFreeImage} style={styles.badge} />}
+            {isVegan && <CustomImage source={veganImage} style={styles.badge} />}
+            {isVegetarian && <CustomImage source={vegetarianImage} style={styles.badge} />}
+          </View>
+        )}
       </View>
     </Pressable>
   );

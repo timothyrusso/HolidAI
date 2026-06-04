@@ -39,4 +39,13 @@ export const styles = StyleSheet.create({
   pressed: {
     opacity: opacity.default,
   },
+  badge: {
+    width: spacing.FourfoldAndHalf,
+    height: spacing.FourfoldAndHalf,
+  },
+  badgeContainer: {
+    flexDirection: 'row',
+    columnGap: spacing.Minimal,
+    left: -spacing.MinimalDouble,
+  },
 });
