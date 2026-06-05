@@ -29,7 +29,7 @@ export const DishDetailsModalPage = () => {
         ) : (
           <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
         )}
-        <IngredientsList title="Ingredients" ingredients={dishIngredients} />
+        <IngredientsList title="MY_TRIP.INGREDIENTS" ingredients={dishIngredients} />
       </View>
       <CustomText text={dishDescription} style={styles.description} />
       <View style={styles.badgesContainer}>

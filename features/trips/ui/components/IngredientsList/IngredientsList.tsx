@@ -10,7 +10,7 @@ type IngredientsListProps = {
 
 export const IngredientsList: FC<IngredientsListProps> = ({ title, ingredients }) => (
   <View style={styles.container}>
-    <CustomText text={title.toLocaleUpperCase()} style={styles.title} />
+    <CustomText text={title} style={styles.title} />
     <View style={styles.chipsRow}>
       {ingredients.map(ingredient => (
         <Cheap
