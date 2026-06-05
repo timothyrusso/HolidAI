@@ -18,6 +18,9 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
     isGlutenFree,
     isVegan,
     isVegetarian,
+    glutenFreeLabel,
+    veganLabel,
+    vegetarianLabel,
   } = useDishItemLogic(dish);
 
   return (
@@ -44,9 +47,13 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
         />
         {hasBadge && (
           <View style={styles.badgeContainer}>
-            {isGlutenFree && <CustomImage source={glutenFreeImage} style={styles.badge} />}
-            {isVegan && <CustomImage source={veganImage} style={styles.badge} />}
-            {isVegetarian && <CustomImage source={vegetarianImage} style={styles.badge} />}
+            {isGlutenFree && (
+              <CustomImage source={glutenFreeImage} style={styles.badge} accessibilityLabel={glutenFreeLabel} />
+            )}
+            {isVegan && <CustomImage source={veganImage} style={styles.badge} accessibilityLabel={veganLabel} />}
+            {isVegetarian && (
+              <CustomImage source={vegetarianImage} style={styles.badge} accessibilityLabel={vegetarianLabel} />
+            )}
           </View>
         )}
       </View>

@@ -19,5 +19,8 @@ export const useDishItemLogic = (dish: TypicalDish) => {
     isGlutenFree: dish.isGlutenFree,
     isVegan: dish.isVegan,
     isVegetarian: dish.isVegetarian,
+    glutenFreeLabel: 'MY_TRIP.GLUTEN_FREE',
+    veganLabel: 'MY_TRIP.VEGAN',
+    vegetarianLabel: 'MY_TRIP.VEGETARIAN',
   };
 };
