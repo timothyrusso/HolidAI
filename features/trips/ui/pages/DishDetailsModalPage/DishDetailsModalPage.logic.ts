@@ -1,4 +1,4 @@
-import { useGetWikimediaDishImage } from '@/features/core/images/facades/useGetWikimediaDishImage';
+import { useGetWikimediaDishImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useLocalSearchParams } from 'expo-router';
