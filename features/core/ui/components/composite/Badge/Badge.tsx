@@ -23,7 +23,7 @@ export const Badge: FC<BadgeProps> = ({ label, image, backgroundColor, active })
     <View style={styles.container}>
       <View style={styles.circleWrapper}>
         <View style={styles.circle}>
-          <CustomImage source={image} style={styles.badgeImage} />
+          <CustomImage source={image} style={styles.badgeImage} accessibilityLabel={label} />
         </View>
         <View style={styles.checkBadge}>
           <CustomIcon
