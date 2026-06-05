@@ -21,7 +21,12 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
   } = useDishItemLogic(dish);
 
   return (
-    <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]} onPress={onPress}>
+    <Pressable
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={dish.name}
+    >
       <View>
         {isLoading ? (
           <BaseSkeleton style={styles.skeleton} />
