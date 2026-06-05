@@ -10,14 +10,16 @@ type CheapProps = {
   title: string;
   color: string;
   icon?: IoniconsName;
+  uppercase?: boolean;
 };
 
-export const Cheap: FC<CheapProps> = ({ title, color, icon }) => {
+export const Cheap: FC<CheapProps> = ({ title, color, icon, uppercase = true }) => {
   const styles = cheapStyles(color);
+
   return (
     <View style={styles.container}>
       {icon && <CustomIcon name={icon} size={spacing.Triple} color={colors.primaryBlack} />}
-      <CustomText text={title.toUpperCase()} style={styles.title} />
+      <CustomText text={uppercase ? title.toUpperCase() : title} style={styles.title} />
     </View>
   );
 };

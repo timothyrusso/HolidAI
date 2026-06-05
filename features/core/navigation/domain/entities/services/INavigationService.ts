@@ -25,6 +25,7 @@ export interface INavigationService {
   toTripList(): void;
   toChangeLanguage(): void;
   toTypicalDishesModal(params: { tripId: string }): void;
+  toDishDetailsModal(params: { tripId: string; searchTerm: string }): void;
 
   back(): void;
 

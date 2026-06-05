@@ -3,15 +3,33 @@ import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
 import { useDishItemLogic } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem.logic';
 import { styles } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem.style';
 import type { FC } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-type DishItemProps = { dish: TypicalDish };
+type DishItemProps = { dish: TypicalDish; onPress: () => void };
 
-export const DishItem: FC<DishItemProps> = ({ dish }) => {
-  const { image, isLoading } = useDishItemLogic(dish.searchTerm);
+export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
+  const {
+    image,
+    isLoading,
+    glutenFreeImage,
+    veganImage,
+    vegetarianImage,
+    hasBadge,
+    isGlutenFree,
+    isVegan,
+    isVegetarian,
+    glutenFreeLabel,
+    veganLabel,
+    vegetarianLabel,
+  } = useDishItemLogic(dish);
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={dish.name}
+    >
       <View>
         {isLoading ? (
           <BaseSkeleton style={styles.skeleton} />
@@ -21,8 +39,24 @@ export const DishItem: FC<DishItemProps> = ({ dish }) => {
       </View>
       <View style={styles.textContainer}>
         <CustomText text={dish.name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
-        <CustomText text={dish.description} style={styles.description} numberOfLines={3} ellipsizeMode="tail" />
+        <CustomText
+          text={dish.description}
+          style={styles.description}
+          numberOfLines={hasBadge ? 2 : 3}
+          ellipsizeMode="tail"
+        />
+        {hasBadge && (
+          <View style={styles.badgeContainer}>
+            {isGlutenFree && (
+              <CustomImage source={glutenFreeImage} style={styles.badge} accessibilityLabel={glutenFreeLabel} />
+            )}
+            {isVegan && <CustomImage source={veganImage} style={styles.badge} accessibilityLabel={veganLabel} />}
+            {isVegetarian && (
+              <CustomImage source={vegetarianImage} style={styles.badge} accessibilityLabel={vegetarianLabel} />
+            )}
+          </View>
+        )}
       </View>
-    </View>
+    </Pressable>
   );
 };

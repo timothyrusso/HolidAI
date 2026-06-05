@@ -1,4 +1,4 @@
-import { colors, fontFamily, fontSize, spacing } from '@/features/core/ui';
+import { colors, fontFamily, fontSize, opacity, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -55,5 +55,32 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.Double,
     paddingHorizontal: spacing.Double,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.Single,
+  },
+  typicalDishesBox: {
+    padding: spacing.Double,
+    backgroundColor: colors.secondaryGrey,
+    borderRadius: spacing.Double,
+    marginTop: spacing.Double,
+    marginHorizontal: spacing.Double,
+  },
+  pressed: {
+    opacity: opacity.default,
+  },
+  boxText: {
+    fontFamily: fontFamily.interMedium,
+    color: colors.primaryBlack,
+  },
+  boxButton: {
+    marginTop: spacing.Single,
+    fontFamily: fontFamily.interBold,
+    alignSelf: 'flex-end',
+    backgroundColor: colors.primaryWhite,
+    padding: spacing.Single,
+    borderRadius: spacing.Double,
   },
 });

@@ -7,9 +7,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.Quintuple,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.secondaryGreen,
-    paddingBottom: spacing.Double,
   },
   headerContent: {
     gap: spacing.Single,

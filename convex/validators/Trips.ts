@@ -54,6 +54,7 @@ export const TypicalDish = v.object({
   ingredients: v.array(v.string()),
   isGlutenFree: v.boolean(),
   isVegetarian: v.boolean(),
+  isVegan: v.boolean(),
 });
 
 export const Food = v.object({

@@ -35,10 +35,15 @@
     "DISHES_one": "dish",
     "DISHES_other": "dishes",
     "TYPICAL_DISHES": "Typical Dishes",
+    "INGREDIENTS": "INGREDIENTS",
+    "GLUTEN_FREE": "GLUTEN-FREE",
+    "VEGAN": "VEGAN",
+    "VEGETARIAN": "VEGETARIAN",
     "PROFILE": "Profile",
     "MY_TRIPS": "My Trips",
     "LOGO": "HolidAI",
-    "UPCOMING_TRIP": "Upcoming trip:"
+    "UPCOMING_TRIP": "Upcoming trip:",
+    "MORE_DETAILS": "More details"
   },
   "ACTIVITY_DETAILS": {
     "USEFUL_TIPS": "Useful Tips",

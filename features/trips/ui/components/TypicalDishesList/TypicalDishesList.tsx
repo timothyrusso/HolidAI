@@ -7,16 +7,17 @@ import { View } from 'react-native';
 
 type TypicalDishesListProps = {
   dishItems: TypicalDish[] | undefined;
+  onDishPress: (searchTerm: string) => void;
 };
 
 const Separator = () => <View style={styles.separator} />;
 
-export const TypicalDishesList: FC<TypicalDishesListProps> = ({ dishItems }) => (
+export const TypicalDishesList: FC<TypicalDishesListProps> = ({ dishItems, onDishPress }) => (
   <>
     {dishItems?.map((item, index) => (
       <Fragment key={item.searchTerm}>
         {index > 0 && <Separator />}
-        <DishItem dish={item} />
+        <DishItem dish={item} onPress={() => onDishPress(item.searchTerm)} />
       </Fragment>
     ))}
   </>
