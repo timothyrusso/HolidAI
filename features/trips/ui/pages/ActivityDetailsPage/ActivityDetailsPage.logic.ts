@@ -1,11 +1,9 @@
-import { useGetGooglePlaceImages } from '@/features/core/images';
+import { buildPlacePhotoUrlUseCase } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
-
-const MAX_IMAGES = 5;
 
 export const useActivityDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
@@ -22,27 +20,16 @@ export const useActivityDetailsPageLogic = () => {
     useNativeDriver: false,
   });
 
-  const locationTitle = activity?.placeName;
-
-  const location = trip?.tripAiResp.tripDetails.location.split(',')[0];
-
-  const imageLocationName = activity?.placeName && location ? `${activity.placeName}, ${location}` : '';
-
-  const { data: allImages, isLoading: isImageLoading } = useGetGooglePlaceImages(imageLocationName, MAX_IMAGES + 1);
-
-  const mainDescription = activity?.placeDetailsLongDescription;
-
-  const activityInsights = activity?.placeSecretsAndInsights;
-
-  const rating = activity?.rating;
-
-  const bestTimeToVisit = activity?.bestTimeToVisit;
+  const photoResourceNames = activity?.photoResourceNames ?? [];
+  const mainPhotoUrl = photoResourceNames[0]
+    ? buildPlacePhotoUrlUseCase.execute(photoResourceNames[0], 500)
+    : undefined;
+  const carouselImages = photoResourceNames
+    .slice(1)
+    .map(name => ({ url: buildPlacePhotoUrlUseCase.execute(name, 500) }));
 
   const ticketPricing = activity?.ticketPricing ?? null;
   const currency = trip?.tripAiResp.tripDetails.currency ?? 'N/A';
-
-  const latitude = activity?.geoCoordinates.latitude;
-  const longitude = activity?.geoCoordinates.longitude;
 
   const goBackHandler = () => {
     navigationService.back();
@@ -51,18 +38,17 @@ export const useActivityDetailsPageLogic = () => {
   return {
     scrollOffsetY,
     handleScroll,
-    locationTitle,
-    imageData: allImages[0]?.url,
-    isImageLoading,
-    mainDescription,
-    activityInsights,
+    locationTitle: activity?.placeName,
+    imageData: mainPhotoUrl,
+    mainDescription: activity?.placeDetailsLongDescription,
+    activityInsights: activity?.placeSecretsAndInsights,
     goBackHandler,
-    rating,
-    bestTimeToVisit,
+    rating: activity?.rating,
+    bestTimeToVisit: activity?.bestTimeToVisit,
     ticketPricing,
     currency,
-    latitude,
-    longitude,
-    carouselImages: allImages.slice(1),
+    latitude: activity?.geoCoordinates.latitude,
+    longitude: activity?.geoCoordinates.longitude,
+    carouselImages,
   };
 };

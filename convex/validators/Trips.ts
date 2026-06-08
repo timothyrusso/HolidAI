@@ -16,6 +16,7 @@ export const ScheduleItem = v.object({
   geoCoordinates: GeoCoordinates,
   placeName: v.string(),
   activity: v.string(),
+  photoResourceNames: v.array(v.string()),
 });
 
 export const DayPlan = v.object({

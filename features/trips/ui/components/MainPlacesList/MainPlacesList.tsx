@@ -12,7 +12,7 @@ export const MainPlacesList = () => {
   ) : (
     <FlatList
       data={listItems}
-      renderItem={({ item, index }) => <MainListItem id={item?.id} index={index} />}
+      renderItem={({ item, index }) => <MainListItem index={index} photoResourceName={item?.photoResourceName} />}
       style={styles.container}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}

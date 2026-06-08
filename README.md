@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="margin-bottom: 10px;">
         <img src="features/core/ui/assets/images/logo_round.png" width="94" height="94" alt="HolidAI Icon" style="border-radius: 50%;">
 </div>
 

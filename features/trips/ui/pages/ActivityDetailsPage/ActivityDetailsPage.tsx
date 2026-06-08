@@ -13,7 +13,7 @@ import {
 } from '@/features/core/ui';
 import { ActivityDetailsBox } from '@/features/trips/ui/components/ActivityDetailsBox/ActivityDetailsBox';
 import { useActivityDetailsPageLogic } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.logic';
-import { styles as stylesFactory } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.style';
+import { styles } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.style';
 import { ActivityImageCarousel } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel';
 import { Fragment } from 'react';
 import { View } from 'react-native';
@@ -24,7 +24,6 @@ export const ActivityDetailsPage = () => {
     handleScroll,
     locationTitle,
     imageData,
-    isImageLoading,
     mainDescription,
     activityInsights,
     goBackHandler,
@@ -37,15 +36,12 @@ export const ActivityDetailsPage = () => {
     carouselImages,
   } = useActivityDetailsPageLogic();
 
-  const styles = stylesFactory(isImageLoading);
-
   return (
     <Fragment>
       <AnimatedHeaderImage
         value={scrollOffsetY}
         imageUrl={imageData}
         title={locationTitle}
-        isLoading={isImageLoading}
         chipsAlignment="flex-end"
         headerIcons={
           <CustomIconButtonMedium
@@ -79,7 +75,7 @@ export const ActivityDetailsPage = () => {
                 <CustomText text={activityInsights} style={styles.insightDescription} />
               </View>
             )}
-            <ActivityImageCarousel images={carouselImages} isLoading={isImageLoading} />
+            <ActivityImageCarousel images={carouselImages} />
           </View>
         </CustomScrollView>
       </BasicView>

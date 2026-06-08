@@ -2,7 +2,7 @@ import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
-import { generateTripUseCase } from '@/features/trip-generation/di/resolve';
+import { enrichTripWithPhotosUseCase, generateTripUseCase } from '@/features/trip-generation/di/resolve';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';
@@ -52,9 +52,11 @@ export const useGenerateTripPageLogic = () => {
       return;
     }
 
+    const enrichedResult = await enrichTripWithPhotosUseCase.execute(result.data);
+
     const addTripResult = await addTrip({
       userId: user?.id ?? 'unknown_user',
-      tripAiResp: result.data,
+      tripAiResp: enrichedResult.success ? enrichedResult.data : result.data,
       isFavorite: false,
     });
 

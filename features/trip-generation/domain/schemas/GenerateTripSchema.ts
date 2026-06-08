@@ -39,6 +39,7 @@ export const generatedTripSchema = z.object({
           }),
           placeName: z.string(),
           activity: z.string().describe('Should include the name of the place'),
+          photoResourceNames: z.array(z.string()).default([]),
         }),
       ),
     }),

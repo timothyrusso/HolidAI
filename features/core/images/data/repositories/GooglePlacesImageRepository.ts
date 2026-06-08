@@ -11,10 +11,11 @@ import type { ImageFetchOptions } from '@/features/core/images/domain/entities/I
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 import type { IImageListRepository } from '@/features/core/images/domain/entities/repositories/IImageListRepository';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
+import type { IPhotoNamesRepository } from '@/features/core/images/domain/entities/repositories/IPhotoNamesRepository';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class GooglePlacesImageRepository implements IImageRepository, IImageListRepository {
+export class GooglePlacesImageRepository implements IImageRepository, IImageListRepository, IPhotoNamesRepository {
   constructor(
     @inject(HTTP_TYPES.HttpClient) private readonly http: IHttpClient,
     @inject(IMAGES_TYPES.GooglePlacesApiKey) private readonly apiKey: string,
@@ -34,6 +35,12 @@ export class GooglePlacesImageRepository implements IImageRepository, IImageList
     const photosResult = await this.fetchPhotos(placeName);
     if (!photosResult.success) return photosResult;
     return ok(photosResult.data.slice(0, count).map(photo => ({ url: this.buildMediaUrl(photo.name, maxWidthPx) })));
+  }
+
+  async getPhotoNames(placeName: string, count: number): Promise<Result<string[]>> {
+    const result = await this.fetchPhotos(placeName);
+    if (!result.success) return result;
+    return ok(result.data.slice(0, count).map(photo => photo.name));
   }
 
   private async fetchPhotos(placeName: string): Promise<Result<GooglePlacePhotoDTO[]>> {
