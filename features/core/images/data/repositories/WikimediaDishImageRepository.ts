@@ -9,6 +9,7 @@ import type {
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 import { FOOD_CATEGORY_KEYWORDS } from '@/features/core/images/domain/entities/foodCategoryKeywords';
+import { IMAGE_RESOLUTION } from '@/features/core/images/domain/entities/imageResolutions';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
 import { inject, injectable } from 'inversify';
 
@@ -22,7 +23,7 @@ export class WikimediaDishImageRepository implements IImageRepository {
   constructor(@inject(HTTP_TYPES.HttpClient) private readonly http: IHttpClient) {}
 
   async getImage(dish: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
-    const urlWidth = options?.maxWidthPx ?? 800;
+    const urlWidth = options?.maxWidthPx ?? IMAGE_RESOLUTION.high;
     const params = new URLSearchParams({
       action: 'query',
       generator: 'search',

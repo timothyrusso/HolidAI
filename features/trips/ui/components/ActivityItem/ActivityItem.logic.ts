@@ -1,4 +1,4 @@
-import { buildPlacePhotoUrlUseCase } from '@/features/core/images';
+import { IMAGE_RESOLUTION, buildPlacePhotoUrlUseCase } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ export const useActivityItemLogic = (scheduleItem: ScheduleItem, tripId: string)
   const resourceName = scheduleItem.photoResourceNames?.[0];
 
   return {
-    image: resourceName ? buildPlacePhotoUrlUseCase.execute(resourceName, 500) : undefined,
+    image: resourceName ? buildPlacePhotoUrlUseCase.execute(resourceName, IMAGE_RESOLUTION.medium) : undefined,
     t,
     handlePress,
   };

@@ -1,4 +1,4 @@
-import { buildPlacePhotoUrlUseCase } from '@/features/core/images';
+import { IMAGE_RESOLUTION, buildPlacePhotoUrlUseCase } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useLocalSearchParams } from 'expo-router';
@@ -22,11 +22,11 @@ export const useActivityDetailsPageLogic = () => {
 
   const photoResourceNames = activity?.photoResourceNames ?? [];
   const mainPhotoUrl = photoResourceNames[0]
-    ? buildPlacePhotoUrlUseCase.execute(photoResourceNames[0], 500)
+    ? buildPlacePhotoUrlUseCase.execute(photoResourceNames[0], IMAGE_RESOLUTION.medium)
     : undefined;
   const carouselImages = photoResourceNames
     .slice(1)
-    .map(name => ({ url: buildPlacePhotoUrlUseCase.execute(name, 500) }));
+    .map(name => ({ url: buildPlacePhotoUrlUseCase.execute(name, IMAGE_RESOLUTION.medium) }));
 
   const ticketPricing = activity?.ticketPricing ?? null;
   const currency = trip?.tripAiResp.tripDetails.currency ?? 'N/A';

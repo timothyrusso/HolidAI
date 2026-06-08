@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { fetchGooglePlaceImageUseCase } from '@/features/core/images/di/resolve';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
+import { IMAGE_RESOLUTION } from '@/features/core/images/domain/entities/imageResolutions';
 
 const fallback: ImageResult = { url: require('@/features/core/ui/assets/images/no-image-placeholder.jpg') };
 
-export const useGetGooglePlaceImage = (placeName: string, maxWidthPx = 500) => {
+export const useGetGooglePlaceImage = (placeName: string, maxWidthPx = IMAGE_RESOLUTION.medium) => {
   const { data, isLoading, isError } = useQuery<ImageResult>({
     queryKey: ['google-place-image', placeName, maxWidthPx],
     queryFn: async () => {
