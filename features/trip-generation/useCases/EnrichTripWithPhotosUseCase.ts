@@ -14,6 +14,12 @@ export class EnrichTripWithPhotosUseCase {
     @inject(IMAGES_TYPES.FetchPhotoNamesUseCase) private readonly fetchPhotoNamesUseCase: FetchPhotoNamesUseCase,
   ) {}
 
+  /**
+   * Enriches each schedule item of a trip with Google Places photo resource names.
+   * @param tripAiResp - The generated trip to enrich.
+   * @returns A `Result` with the trip whose schedule items carry `photoResourceNames`
+   * (empty arrays where lookup fails).
+   */
   async execute(tripAiResp: TripAiResp): Promise<Result<TripAiResp>> {
     const location = tripAiResp.tripDetails.location.split(',')[0];
 

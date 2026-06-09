@@ -3,6 +3,7 @@
 // an adapter layer at every data boundary — a significant refactoring with high breakage risk
 // for minimal architectural gain, since Id<'trips'> carries no runtime behavior.
 import type { Id } from '@/convex/_generated/dataModel';
+import type { CoverImage } from '@/features/trips/domain/entities/CoverImage';
 import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 import type { Food } from '@/features/trips/domain/entities/Food';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
@@ -15,6 +16,7 @@ export interface TripAiResp {
   tripDetails: TripDetails;
   weather: Weather;
   food: Food;
+  coverImage: CoverImage;
 }
 
 export interface Trip {

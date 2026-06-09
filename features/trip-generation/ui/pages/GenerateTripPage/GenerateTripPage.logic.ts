@@ -4,6 +4,7 @@ import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
 import {
   enrichDishesWithImagesUseCase,
+  enrichTripWithCoverImageUseCase,
   enrichTripWithPhotosUseCase,
   generateTripUseCase,
 } from '@/features/trip-generation/di/resolve';
@@ -56,14 +57,16 @@ export const useGenerateTripPageLogic = () => {
       return;
     }
 
-    const [photosResult, dishesResult] = await Promise.all([
+    const [photosResult, dishesResult, coverResult] = await Promise.all([
       enrichTripWithPhotosUseCase.execute(result.data),
       enrichDishesWithImagesUseCase.execute(result.data),
+      enrichTripWithCoverImageUseCase.execute(result.data),
     ]);
 
     const enrichedData = {
       ...(photosResult.success ? photosResult.data : result.data),
       food: dishesResult.success ? dishesResult.data.food : result.data.food,
+      coverImage: coverResult.success ? coverResult.data.coverImage : { url: '', blurHash: '' },
     };
 
     const addTripResult = await addTrip({

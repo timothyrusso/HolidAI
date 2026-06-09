@@ -12,6 +12,11 @@ export class EnrichDishesWithImagesUseCase {
     private readonly fetchWikimediaDishImageUseCase: FetchWikimediaDishImageUseCase,
   ) {}
 
+  /**
+   * Enriches each typical dish of a trip with a Wikimedia image URL.
+   * @param tripAiResp - The generated trip to enrich.
+   * @returns A `Result` with the trip whose dishes carry `imageUrl` (empty string where lookup fails).
+   */
   async execute(tripAiResp: TripAiResp): Promise<Result<TripAiResp>> {
     const enrichedDishes = await Promise.all(
       tripAiResp.food.typicalDishes.map(async dish => {

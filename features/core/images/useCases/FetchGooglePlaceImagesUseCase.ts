@@ -13,6 +13,13 @@ export class FetchGooglePlaceImagesUseCase {
     @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
   ) {}
 
+  /**
+   * Fetches multiple Google Places images for a place.
+   * @param resourceName - The place identifier/name to fetch images for.
+   * @param count - The maximum number of images to return.
+   * @param options - Optional fetch options (e.g. resolution).
+   * @returns A `Result` with an array of `ImageResult` (empty if none); failure is logged.
+   */
   async execute(resourceName: string, count: number, options?: ImageFetchOptions): Promise<Result<ImageResult[]>> {
     const result = await this.imageRepository.getImages(resourceName, count, options);
     if (!result.success) this.logger.error(result.error, { resourceName });

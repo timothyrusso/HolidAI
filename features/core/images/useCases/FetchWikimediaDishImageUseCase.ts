@@ -13,6 +13,12 @@ export class FetchWikimediaDishImageUseCase {
     @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
   ) {}
 
+  /**
+   * Fetches a Wikimedia Commons image for a dish.
+   * @param dish - The dish search term used for the Wikimedia lookup.
+   * @param options - Optional fetch options (e.g. resolution).
+   * @returns A `Result` with the `ImageResult`, or `null` when no image is found; failure is logged.
+   */
   async execute(dish: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
     const result = await this.repository.getImage(dish, options);
     if (!result.success) this.logger.error(result.error, { dish });

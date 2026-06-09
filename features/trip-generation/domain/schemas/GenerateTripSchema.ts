@@ -80,7 +80,9 @@ export const generatedTripSchema = z.object({
         isGlutenFree: z.boolean().describe('Whether the dish is gluten free.'),
         isVegetarian: z.boolean().describe('Whether the dish is vegetarian.'),
         isVegan: z.boolean().describe('Whether the dish is vegan.'),
+        imageUrl: z.string().default(''),
       }),
     ),
   }),
+  coverImage: z.object({ url: z.string().default(''), blurHash: z.string().default('') }),
 });

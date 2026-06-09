@@ -65,6 +65,11 @@ export const Food = v.object({
   typicalDishes: v.array(TypicalDish),
 });
 
+export const CoverImage = v.object({
+  url: v.string(),
+  blurHash: v.string(),
+});
+
 export const TripAiResp = v.object({
   budgetNotes: v.string(),
   dayPlans: v.array(DayPlan),
@@ -72,6 +77,7 @@ export const TripAiResp = v.object({
   tripDetails: TripDetails,
   weather: Weather,
   food: Food,
+  coverImage: CoverImage,
 });
 
 export const Trips = v.object({
