@@ -1,4 +1,3 @@
-import { useGetWikimediaDishImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useLocalSearchParams } from 'expo-router';
@@ -9,7 +8,6 @@ const vegetarianImage = require('@/features/core/ui/assets/images/vegetarian.png
 
 export const useDishDetailsModalPageLogic = () => {
   const { tripId, searchTerm } = useLocalSearchParams<{ tripId: string; searchTerm: string }>();
-  const { data, isLoading } = useGetWikimediaDishImage(searchTerm);
   const { trip } = useGetTripById(tripId);
 
   const dish = trip?.tripAiResp?.food?.typicalDishes.find(d => d.searchTerm === searchTerm);
@@ -21,8 +19,7 @@ export const useDishDetailsModalPageLogic = () => {
     dishDescription: dish?.description ?? '',
     dishIngredients: dish?.ingredients ?? [],
     handleClose,
-    image: data?.url,
-    imageIsLoading: isLoading,
+    image: dish?.imageUrl,
     isVegetarian: dish?.isVegetarian ?? false,
     isGlutenFree: dish?.isGlutenFree ?? false,
     isVegan: dish?.isVegan ?? false,

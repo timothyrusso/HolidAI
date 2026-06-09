@@ -16,7 +16,7 @@ import { inject, injectable } from 'inversify';
 const BASE_URL = 'https://commons.wikimedia.org/w/api.php';
 const USER_AGENT = 'HolidAI/1.0 (https://github.com/timothyrusso/holidai)';
 const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png'] as const;
-const MIN_IMAGE_DIMENSION_PX = 400;
+const MIN_IMAGE_DIMENSION_PX = IMAGE_RESOLUTION.low;
 
 @injectable()
 export class WikimediaDishImageRepository implements IImageRepository {
