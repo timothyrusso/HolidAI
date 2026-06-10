@@ -1,4 +1,5 @@
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
+import { buildGooglePlacesMediaUrl } from '@/features/core/images/domain/utils/buildGooglePlacesMediaUrl';
 import { inject, injectable } from 'inversify';
 
 @injectable()
@@ -12,6 +13,6 @@ export class BuildPlacePhotoUrlUseCase {
    * @returns The fully-qualified Google Places media URL including the API key and width.
    */
   execute(resourceName: string, maxWidthPx: number): string {
-    return `https://places.googleapis.com/v1/${resourceName}/media?key=${this.apiKey}&maxWidthPx=${maxWidthPx}`;
+    return buildGooglePlacesMediaUrl(resourceName, this.apiKey, maxWidthPx);
   }
 }
