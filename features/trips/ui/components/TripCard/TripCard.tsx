@@ -5,7 +5,7 @@ import { styles } from '@/features/trips/ui/components/TripCard/TripCard.style';
 import { Pressable, View } from 'react-native';
 
 export const TripCard = ({ item }: { item: Trip }) => {
-  const { imageUrl, imageBlurHash, location, onCardPress, isFavorite } = useTripCardLogic(item);
+  const { imageUrl, imageBlurHash, location, onCardPress, isFavorite, retryCoverImage } = useTripCardLogic(item);
 
   return (
     <Pressable style={({ pressed }) => [styles.container, pressed ? styles.pressed : {}]} onPress={onCardPress}>
@@ -13,6 +13,7 @@ export const TripCard = ({ item }: { item: Trip }) => {
         source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
         style={styles.image}
         placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
+        onError={retryCoverImage}
       />
       <View style={styles.iconContainer}>
         <CustomIcon

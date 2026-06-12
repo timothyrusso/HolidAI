@@ -1,5 +1,7 @@
+import type { Id } from '@/convex/_generated/dataModel';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
+import { useRetryDishImage } from '@/features/trips/facades/useRetryDishImage';
 import { useLocalSearchParams } from 'expo-router';
 
 const glutenFreeImage = require('@/features/core/ui/assets/images/gluten_free.png');
@@ -11,6 +13,8 @@ export const useDishDetailsModalPageLogic = () => {
   const { trip } = useGetTripById(tripId);
 
   const dish = trip?.tripAiResp?.food?.typicalDishes.find(d => d.searchTerm === searchTerm);
+
+  const { retryDishImage } = useRetryDishImage(tripId as Id<'trips'>, searchTerm ?? '');
 
   const handleClose = () => navigationService.back();
 
@@ -26,5 +30,6 @@ export const useDishDetailsModalPageLogic = () => {
     glutenFreeImage,
     veganImage,
     vegetarianImage,
+    retryDishImage,
   };
 };

@@ -17,13 +17,18 @@ export const DishDetailsModalPage = () => {
     glutenFreeImage,
     veganImage,
     vegetarianImage,
+    retryDishImage,
   } = useDishDetailsModalPageLogic();
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer} style={styles.container}>
       <BottomSheetHeader title={dishName} onClose={handleClose} />
       <View style={styles.bodyContainer}>
-        <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
+        <CustomImage
+          source={typeof image === 'string' ? { uri: image } : image}
+          style={styles.image}
+          onError={retryDishImage}
+        />
         <IngredientsList title="MY_TRIP.INGREDIENTS" ingredients={dishIngredients} />
       </View>
       <CustomText text={dishDescription} style={styles.description} />

@@ -17,8 +17,17 @@ const basicViewProps = {
 } as const;
 
 export const UpcomingTripPage = () => {
-  const { lastCreatedTrip, isLoading, image, imageBlurHash, location, tripId, tripStartDate, totalTrips } =
-    useUpcomingTripPageLogic();
+  const {
+    lastCreatedTrip,
+    isLoading,
+    image,
+    imageBlurHash,
+    location,
+    tripId,
+    tripStartDate,
+    totalTrips,
+    retryCoverImage,
+  } = useUpcomingTripPageLogic();
 
   const blurTargetRef = useRef<View | null>(null);
 
@@ -41,7 +50,12 @@ export const UpcomingTripPage = () => {
   return (
     <BasicView {...basicViewProps}>
       <View style={styles.container}>
-        <HeroImage image={image} imageBlurHash={imageBlurHash} blurTargetRef={blurTargetRef} />
+        <HeroImage
+          image={image}
+          imageBlurHash={imageBlurHash}
+          blurTargetRef={blurTargetRef}
+          onError={retryCoverImage}
+        />
         <DetailsBox
           location={location}
           tripId={tripId}

@@ -34,6 +34,7 @@ export const ActivityDetailsPage = () => {
     latitude,
     longitude,
     carouselImages,
+    retryActivityImage,
   } = useActivityDetailsPageLogic();
 
   return (
@@ -43,6 +44,7 @@ export const ActivityDetailsPage = () => {
         imageUrl={imageData}
         title={locationTitle}
         chipsAlignment="flex-end"
+        onError={retryActivityImage}
         headerIcons={
           <CustomIconButtonMedium
             iconName={icons.arrowBack}
@@ -75,7 +77,7 @@ export const ActivityDetailsPage = () => {
                 <CustomText text={activityInsights} style={styles.insightDescription} />
               </View>
             )}
-            <ActivityImageCarousel images={carouselImages} />
+            <ActivityImageCarousel images={carouselImages} onError={retryActivityImage} />
           </View>
         </CustomScrollView>
       </BasicView>

@@ -1,36 +1,34 @@
 import { BaseSkeleton } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
-import { DEFAULT_BLURHASH } from '@/features/core/ui/style/blur';
-import { Image, type ImageProps } from 'expo-image';
+import {
+  type CustomImageProps,
+  useCustomImageLogic,
+} from '@/features/core/ui/components/basic/CustomImage/CustomImage.logic';
+import { Image } from 'expo-image';
 import type { FC } from 'react';
-import { useState } from 'react';
-
-const errorFallback = require('@/features/core/ui/assets/images/no-image-placeholder.jpg');
-
-type CustomImageProps = ImageProps & {
-  useBlur?: boolean;
-  blurhash?: string;
-  isLoading?: boolean;
-  fallbackImage?: number | { uri: string };
-  onError?: () => void;
-};
 
 export const CustomImage: FC<CustomImageProps> = ({
-  useBlur = true,
-  blurhash = DEFAULT_BLURHASH,
+  useBlur,
+  blurhash,
   placeholder,
   source,
   isLoading = false,
   style,
-  fallbackImage = errorFallback,
-  onError: customOnError,
+  fallbackImage,
+  onError,
   ...props
 }) => {
-  const [hasError, setHasError] = useState<boolean>(false);
-  const resolvedPlaceholder = placeholder ?? (useBlur ? { blurhash } : undefined);
-
-  const onError = () => {
-    setHasError(true);
-  };
+  const {
+    resolvedPlaceholder,
+    resolvedSource,
+    onError: handleError,
+  } = useCustomImageLogic({
+    useBlur,
+    blurhash,
+    placeholder,
+    source,
+    fallbackImage,
+    onError,
+  });
 
   return isLoading ? (
     <BaseSkeleton style={style} />
@@ -38,8 +36,8 @@ export const CustomImage: FC<CustomImageProps> = ({
     <Image
       placeholder={resolvedPlaceholder}
       transition={200}
-      source={hasError || !source ? fallbackImage : source}
-      onError={customOnError ?? onError}
+      source={resolvedSource}
+      onError={handleError}
       style={style}
       {...props}
     />
