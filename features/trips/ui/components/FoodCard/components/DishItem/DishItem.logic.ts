@@ -8,6 +8,8 @@ export const useDishItemLogic = (dish: TypicalDish) => {
   const hasBadge = dish.isGlutenFree || dish.isVegan || dish.isVegetarian;
 
   return {
+    name: dish.name,
+    description: dish.description,
     image: dish.imageUrl,
     glutenFreeImage,
     veganImage,

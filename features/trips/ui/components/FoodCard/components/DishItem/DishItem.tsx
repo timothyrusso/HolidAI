@@ -9,6 +9,8 @@ type DishItemProps = { dish: TypicalDish; onPress: () => void };
 
 export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
   const {
+    name,
+    description,
     image,
     glutenFreeImage,
     veganImage,
@@ -27,15 +29,15 @@ export const DishItem: FC<DishItemProps> = ({ dish, onPress }) => {
       style={({ pressed }) => [styles.container, pressed && styles.pressed]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={dish.name}
+      accessibilityLabel={name}
     >
       <View>
         <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
       </View>
       <View style={styles.textContainer}>
-        <CustomText text={dish.name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
+        <CustomText text={name} style={styles.title} numberOfLines={1} ellipsizeMode="tail" />
         <CustomText
-          text={dish.description}
+          text={description}
           style={styles.description}
           numberOfLines={hasBadge ? 2 : 3}
           ellipsizeMode="tail"
