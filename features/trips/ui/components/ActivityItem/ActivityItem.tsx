@@ -15,11 +15,12 @@ type ActivityItemProps = {
 
 export const ActivityItem: FC<ActivityItemProps> = memo(
   ({ scheduleItem, day, tripId, currency }) => {
-    const { image, t, handlePress } = useActivityItemLogic(scheduleItem, tripId);
+    const { image, t, handlePress, placeNumberID, placeName, bestTimeToVisit, rating, priceLabel, placeDetails } =
+      useActivityItemLogic(scheduleItem, tripId, currency);
 
     return (
       <Pressable style={({ pressed }) => [styles.container, pressed && styles.pressed]} onPress={handlePress}>
-        <NumberedMarker number={scheduleItem.placeNumberID} style={styles.marker} />
+        <NumberedMarker number={placeNumberID} style={styles.marker} />
         <View style={styles.innerContainer}>
           <CustomImage source={typeof image === 'string' ? { uri: image } : image} style={styles.image} />
           <CustomText text={`${t('MY_TRIP.DAY')} ${day}`} style={styles.day} />
@@ -28,15 +29,10 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
           <View style={styles.headerContainer}>
             <View style={styles.timeContainer}>
               <CustomIcon name={icons.clock} size={spacing.Fourfold} color={colors.primaryBlack} />
-              <CustomText
-                text={scheduleItem.bestTimeToVisit}
-                style={styles.time}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              />
+              <CustomText text={bestTimeToVisit} style={styles.time} numberOfLines={1} ellipsizeMode="tail" />
             </View>
             <View style={styles.ratingContainer}>
-              <CustomText text={scheduleItem.rating.toString()} style={styles.rating} />
+              <CustomText text={rating} style={styles.rating} />
               <CustomIcon
                 name={icons.star}
                 size={spacing.Double + spacing.MinimalDouble}
@@ -45,19 +41,12 @@ export const ActivityItem: FC<ActivityItemProps> = memo(
               />
             </View>
           </View>
-          <CustomText text={scheduleItem.placeName} style={styles.place} />
-          <CustomText text={scheduleItem.placeDetails} style={styles.description} />
-          {scheduleItem.ticketPricing !== null && (
+          <CustomText text={placeName} style={styles.place} />
+          <CustomText text={placeDetails} style={styles.description} />
+          {priceLabel !== null && (
             <View style={styles.priceContainer}>
               <CustomIcon name={icons.card} size={spacing.Fourfold} color={colors.primaryBlack} />
-              <CustomText
-                text={
-                  scheduleItem.ticketPricing === 0
-                    ? t('ACTIVITY_DETAILS.FREE')
-                    : `${scheduleItem.ticketPricing} ${currency}`
-                }
-                style={styles.price}
-              />
+              <CustomText text={priceLabel} style={styles.price} />
             </View>
           )}
         </View>
