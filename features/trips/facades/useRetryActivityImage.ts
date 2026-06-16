@@ -7,7 +7,7 @@ import { useCallback, useRef } from 'react';
 const MAX_PHOTOS = 6;
 
 export const useRetryActivityImage = (
-  tripId: Id<'trips'>,
+  tripId: Id<'trips'> | undefined,
   placeNumberID: number,
   placeName: string,
   location: string,
@@ -18,6 +18,7 @@ export const useRetryActivityImage = (
 
   const retryActivityImage = useCallback(
     async (failedUrl: string) => {
+      if (!tripId) return;
       if (retriedUrls.current.has(failedUrl)) return;
       const connectivity = await checkConnectivityUseCase.execute();
       if (!(connectivity.success && connectivity.data)) return;

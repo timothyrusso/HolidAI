@@ -4,13 +4,14 @@ import { checkConnectivityUseCase } from '@/features/core/network';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
 import { useCallback, useRef } from 'react';
 
-export const useRetryCoverImage = (tripId: Id<'trips'>, location: string) => {
+export const useRetryCoverImage = (tripId: Id<'trips'> | undefined, location: string) => {
   const repo = useTripRepository();
   // Tracks URLs already retried this mount, so a broken image is re-fetched at most once.
   const retriedUrls = useRef<Set<string>>(new Set());
 
   const retryCoverImage = useCallback(
     async (failedUrl: string) => {
+      if (!tripId) return;
       if (retriedUrls.current.has(failedUrl)) return;
       const connectivity = await checkConnectivityUseCase.execute();
       if (!(connectivity.success && connectivity.data)) return;

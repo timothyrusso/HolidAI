@@ -1,4 +1,3 @@
-import type { Id } from '@/convex/_generated/dataModel';
 import { useGetTrips } from '@/features/trips/facades/useGetTrips';
 import { useGetUpcomingTrip } from '@/features/trips/facades/useGetUpcomingTrip';
 import { useRetryCoverImage } from '@/features/trips/facades/useRetryCoverImage';
@@ -12,7 +11,7 @@ export const useUpcomingTripPageLogic = () => {
 
   const coverImage = upcomingTrip?.tripAiResp?.coverImage;
 
-  const { retryCoverImage } = useRetryCoverImage(tripId as Id<'trips'>, location);
+  const { retryCoverImage } = useRetryCoverImage(tripId, location);
 
   return {
     lastCreatedTrip: upcomingTrip,
