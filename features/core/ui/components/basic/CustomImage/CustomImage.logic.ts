@@ -12,6 +12,14 @@ export type CustomImageProps = Omit<ImageProps, 'onError'> & {
   onError?: (failedUri: string) => void;
 };
 
+const resolveSourceUri = (source: CustomImageProps['source']): string | null => {
+  if (typeof source === 'string') return source;
+  if (typeof source === 'object' && source !== null && 'uri' in source) {
+    return (source as { uri: string }).uri;
+  }
+  return null;
+};
+
 export const useCustomImageLogic = ({
   useBlur = true,
   blurhash = DEFAULT_BLURHASH,
@@ -23,7 +31,7 @@ export const useCustomImageLogic = ({
   const [erroredUri, setErroredUri] = useState<string | null>(null);
 
   const resolvedPlaceholder = placeholder ?? (useBlur ? { blurhash } : undefined);
-  const uri = typeof source === 'object' && source !== null && 'uri' in source ? (source as { uri: string }).uri : null;
+  const uri = resolveSourceUri(source);
   const hasError = uri !== null && uri === erroredUri;
 
   const onError = () => {
