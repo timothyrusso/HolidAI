@@ -1,2 +1,3 @@
+export { AccountSettingsPage } from '@/features/profile/ui/pages/AccountSettingsPage/AccountSettingsPage';
 export { ChangeLanguagePage } from '@/features/profile/ui/pages/ChangeLanguagePage/ChangeLanguagePage';
 export { ProfilePage } from '@/features/profile/ui/pages/ProfilePage/ProfilePage';

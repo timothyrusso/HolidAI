@@ -11,6 +11,7 @@ export const Routes = {
   TripDetails: 'trip-details',
   ShowAllTrips: 'show-all-trips',
   ChangeLanguage: 'change-language',
+  AccountSettings: 'account-settings',
   ActivityDetails: 'activity-details',
 } as const;
 

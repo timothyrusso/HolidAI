@@ -1,5 +1,5 @@
 import { PlatformOS, colors } from '@/features/core/ui';
-import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import type { NativeStackNavigationOptions } from 'expo-router';
 import { Platform } from 'react-native';
 
 export const screenOptions: NativeStackNavigationOptions = {

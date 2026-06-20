@@ -17,6 +17,12 @@ export default function ProfileLayout() {
           ),
         }}
       />
+      <Stack.Screen
+        name={Routes.AccountSettings}
+        options={{
+          header: () => <CustomHeader icon={icons.arrowBack} onPress={() => navigationService.back()} />,
+        }}
+      />
     </Stack>
   );
 }

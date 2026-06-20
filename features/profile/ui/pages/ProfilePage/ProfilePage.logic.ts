@@ -1,16 +1,18 @@
 import { navigationService } from '@/features/core/navigation';
 import { components } from '@/features/core/ui';
 import { useProfileData } from '@/features/profile/facades/useProfileData';
-import { useUserProfileModal } from '@clerk/expo';
 
 export const useProfilePageLogic = () => {
   const { userId, username, profileImageUrl, totalTrips, favoriteTrips, userTokens, isTripsLoading } = useProfileData();
-  const { presentUserProfile } = useUserProfileModal();
 
   const isUserLoading = !userId;
 
   const goToChangeLanguage = () => {
     navigationService.toChangeLanguage();
+  };
+
+  const goToAccountSettings = () => {
+    navigationService.toAccountSettings();
   };
 
   const goToShowAllTrips = () => {
@@ -29,6 +31,6 @@ export const useProfilePageLogic = () => {
     userTokens,
     goToChangeLanguage,
     goToShowAllTrips,
-    presentUserProfile,
+    goToAccountSettings,
   };
 };

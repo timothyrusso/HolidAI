@@ -61,6 +61,9 @@ export class NavigationService implements INavigationService {
   toChangeLanguage() {
     this.client.push(`/${Stacks.Profile}/${Routes.ChangeLanguage}`);
   }
+  toAccountSettings() {
+    this.client.push(`/${Stacks.Profile}/${Routes.AccountSettings}`);
+  }
   toTypicalDishesModal(params: { tripId: string }) {
     this.client.push({ pathname: `/${Stacks.CreateTrip}/${Modals.TypicalDishes}`, params });
   }
