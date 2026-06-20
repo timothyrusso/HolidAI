@@ -77,7 +77,7 @@ export const ActivityDetailsPage = () => {
                 <CustomText text={activityInsights} style={styles.insightDescription} />
               </View>
             )}
-            <ActivityImageCarousel images={carouselImages} onError={retryActivityImage} />
+            <ActivityImageCarousel images={carouselImages} />
           </View>
         </CustomScrollView>
       </BasicView>

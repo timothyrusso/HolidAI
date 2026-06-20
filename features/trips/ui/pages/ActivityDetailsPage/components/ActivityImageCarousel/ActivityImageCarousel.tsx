@@ -9,15 +9,12 @@ const MIN_IMAGES = 2;
 
 type ActivityImageCarouselProps = {
   images: ImageResult[];
-  onError?: (failedUri: string) => void;
 };
 
-export const ActivityImageCarousel = ({ images, onError }: ActivityImageCarouselProps) => {
+export const ActivityImageCarousel = ({ images }: ActivityImageCarouselProps) => {
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<ImageResult>) => (
-      <CustomImage source={item.url} style={styles.image} onError={onError} />
-    ),
-    [onError],
+    ({ item }: ListRenderItemInfo<ImageResult>) => <CustomImage source={item.url} style={styles.image} />,
+    [],
   );
 
   if (images.length < MIN_IMAGES) return null;
