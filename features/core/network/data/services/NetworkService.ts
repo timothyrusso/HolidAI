@@ -9,7 +9,8 @@ export class NetworkService implements INetworkService {
   async isConnected(): Promise<Result<boolean>> {
     try {
       const state = await Network.getNetworkStateAsync();
-      return ok(state.isConnected === true);
+      const isOnline = state.isInternetReachable ?? state.isConnected;
+      return ok(isOnline === true);
     } catch (err) {
       return fail(new BaseError('Failed to read network state', ErrorCode.NetworkFailure, { cause: ensureError(err) }));
     }
