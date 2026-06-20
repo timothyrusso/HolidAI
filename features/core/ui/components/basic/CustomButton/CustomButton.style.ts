@@ -17,7 +17,7 @@ export const styleButton = (
   buttonType: ButtonType,
   buttonState: ButtonState,
   getButtonStyles: (buttonType: ButtonType, buttonState: ButtonState) => ButtonStyles,
-  height = components.buttonLargeHeight,
+  height: number = components.buttonLargeHeight,
   leftIcon?: IoniconsName,
   rightIcon?: IoniconsName,
 ) => {

@@ -16,7 +16,7 @@ export const ProfilePage = () => {
     goToChangeLanguage,
     goToShowAllTrips,
     userTokens,
-    presentUserProfile,
+    goToAccountSettings,
     profileImage,
   } = useProfilePageLogic();
 
@@ -54,7 +54,7 @@ export const ProfilePage = () => {
             firstOnPress={goToChangeLanguage}
             firstIcon={icons.language}
             secondTitle="PROFILE.BUTTON.ACCOUNT_SETTINGS"
-            secondOnPress={presentUserProfile}
+            secondOnPress={goToAccountSettings}
             secondIcon={icons.settings}
           />
         </View>
