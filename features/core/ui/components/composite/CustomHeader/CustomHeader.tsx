@@ -8,7 +8,7 @@ import type { FC } from 'react';
 import { View } from 'react-native';
 
 type CustomHeaderProps = {
-  title: string;
+  title?: string;
   icon?: keyof typeof Ionicons.glyphMap;
   onPress?: () => void;
 };
@@ -27,7 +27,7 @@ export const CustomHeader: FC<CustomHeaderProps> = ({ title, icon, onPress }) =>
           style={styleComponent.icon}
         />
       )}
-      <CustomText text={title} style={styleComponent.title} />
+      {title && <CustomText text={title} style={styleComponent.title} />}
     </View>
   );
 };

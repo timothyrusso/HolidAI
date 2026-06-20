@@ -1,4 +1,4 @@
-import { Modals, Routes, formSheetOptions, navigationService } from '@/features/core/navigation';
+import { Routes, navigationService } from '@/features/core/navigation';
 import { CustomHeader, icons } from '@/features/core/ui';
 import { Stack } from 'expo-router';
 
@@ -17,7 +17,12 @@ export default function ProfileLayout() {
           ),
         }}
       />
-      <Stack.Screen name={Modals.AccountSettings} options={formSheetOptions} />
+      <Stack.Screen
+        name={Routes.AccountSettings}
+        options={{
+          header: () => <CustomHeader icon={icons.arrowBack} onPress={() => navigationService.back()} />,
+        }}
+      />
     </Stack>
   );
 }
