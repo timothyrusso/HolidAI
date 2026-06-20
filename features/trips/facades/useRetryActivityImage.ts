@@ -19,9 +19,9 @@ export const useRetryActivityImage = (
   const retryActivityImage = useCallback(
     async (failedUrl: string) => {
       if (!tripId) return;
-      if (retriedUrls.current.has(failedUrl)) return;
       const connectivity = await checkConnectivityUseCase.execute();
       if (!(connectivity.success && connectivity.data)) return;
+      if (retriedUrls.current.has(failedUrl)) return;
       retriedUrls.current.add(failedUrl);
 
       const result = await fetchPhotoNamesUseCase.execute(`${placeName}, ${location}`, MAX_PHOTOS);

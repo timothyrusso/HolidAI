@@ -12,9 +12,9 @@ export const useRetryCoverImage = (tripId: Id<'trips'> | undefined, location: st
   const retryCoverImage = useCallback(
     async (failedUrl: string) => {
       if (!tripId) return;
-      if (retriedUrls.current.has(failedUrl)) return;
       const connectivity = await checkConnectivityUseCase.execute();
       if (!(connectivity.success && connectivity.data)) return;
+      if (retriedUrls.current.has(failedUrl)) return;
       retriedUrls.current.add(failedUrl);
 
       const result = await fetchUnsplashImageUseCase.execute(location, { urlType: UrlType.REGULAR });

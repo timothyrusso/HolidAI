@@ -12,9 +12,9 @@ export const useRetryDishImage = (tripId: Id<'trips'> | undefined, searchTerm: s
   const retryDishImage = useCallback(
     async (failedUrl: string) => {
       if (!tripId) return;
-      if (retriedUrls.current.has(failedUrl)) return;
       const connectivity = await checkConnectivityUseCase.execute();
       if (!(connectivity.success && connectivity.data)) return;
+      if (retriedUrls.current.has(failedUrl)) return;
       retriedUrls.current.add(failedUrl);
 
       const result = await fetchWikimediaDishImageUseCase.execute(searchTerm);
