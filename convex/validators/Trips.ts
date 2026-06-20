@@ -16,6 +16,7 @@ export const ScheduleItem = v.object({
   geoCoordinates: GeoCoordinates,
   placeName: v.string(),
   activity: v.string(),
+  photoResourceNames: v.array(v.string()),
 });
 
 export const DayPlan = v.object({
@@ -55,12 +56,18 @@ export const TypicalDish = v.object({
   isGlutenFree: v.boolean(),
   isVegetarian: v.boolean(),
   isVegan: v.boolean(),
+  imageUrl: v.string(),
 });
 
 export const Food = v.object({
   foodGeneralNotes: v.string(),
   foodBudgetNotes: v.string(),
   typicalDishes: v.array(TypicalDish),
+});
+
+export const CoverImage = v.object({
+  url: v.string(),
+  blurHash: v.string(),
 });
 
 export const TripAiResp = v.object({
@@ -70,6 +77,7 @@ export const TripAiResp = v.object({
   tripDetails: TripDetails,
   weather: Weather,
   food: Food,
+  coverImage: CoverImage,
 });
 
 export const Trips = v.object({

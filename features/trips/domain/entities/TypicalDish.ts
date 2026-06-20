@@ -6,4 +6,5 @@ export interface TypicalDish {
   isGlutenFree: boolean;
   isVegetarian: boolean;
   isVegan: boolean;
+  imageUrl: string;
 }

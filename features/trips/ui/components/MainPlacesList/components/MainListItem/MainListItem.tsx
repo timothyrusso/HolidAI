@@ -5,12 +5,12 @@ import type { FC } from 'react';
 import { View } from 'react-native';
 
 type MainListItemProps = {
-  id: string;
   index: number;
+  photoResourceName?: string;
 };
 
-export const MainListItem: FC<MainListItemProps> = ({ id, index }) => {
-  const { data, MIN_MAIN_LIST_ITEM_INDEX } = useMainListItemLogic(id);
+export const MainListItem: FC<MainListItemProps> = ({ index, photoResourceName }) => {
+  const { data, MIN_MAIN_LIST_ITEM_INDEX } = useMainListItemLogic(photoResourceName);
 
   return index === MIN_MAIN_LIST_ITEM_INDEX ? (
     <View style={styles.lastItem}>

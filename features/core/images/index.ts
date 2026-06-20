@@ -2,11 +2,18 @@ import type { FeatureTier } from '@/features/core/featureTier';
 export const FEATURE_TIER: FeatureTier = 0;
 
 export {
+  buildPlacePhotoUrlUseCase,
   fetchGooglePlaceImageUseCase,
   fetchGooglePlaceImagesUseCase,
+  fetchPhotoNamesUseCase,
   fetchUnsplashImageUseCase,
   fetchWikimediaDishImageUseCase,
 } from '@/features/core/images/di/resolve';
+export { IMAGES_TYPES } from '@/features/core/images/di/types';
+export type { FetchPhotoNamesUseCase } from '@/features/core/images/useCases/FetchPhotoNamesUseCase';
+export type { FetchUnsplashImageUseCase } from '@/features/core/images/useCases/FetchUnsplashImageUseCase';
+export type { FetchWikimediaDishImageUseCase } from '@/features/core/images/useCases/FetchWikimediaDishImageUseCase';
+export { IMAGE_RESOLUTION } from '@/features/core/images/domain/entities/imageResolutions';
 export type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 export type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 export type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';

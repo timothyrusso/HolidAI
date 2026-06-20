@@ -1,5 +1,4 @@
 import { translateDateUseCase } from '@/features/core/dates';
-import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
@@ -27,9 +26,9 @@ export const useTripDetailsPageLogic = () => {
 
   const location = trip?.tripAiResp.tripDetails.location?.split(',')[0] ?? '';
 
-  const { data: unsplashImage } = useGetUnsplashImage(location, UrlType.REGULAR);
-  const imageUrl = unsplashImage?.url;
-  const imageBlurHash = unsplashImage?.blurHash;
+  const coverImage = trip?.tripAiResp.coverImage;
+  const imageUrl = coverImage?.url;
+  const imageBlurHash = coverImage?.blurHash || undefined;
 
   const allCoordinates = trip?.tripAiResp?.dayPlans.flatMap((dayPlan, dayIndex) =>
     dayPlan.schedule.map((item, scheduleIndex) => ({

@@ -1,17 +1,19 @@
-import { UrlType, useGetUnsplashImage } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import type { Trip } from '@/features/trips/domain/entities/Trip';
+import { useRetryCoverImage } from '@/features/trips/facades/useRetryCoverImage';
 
 export const useTripCardLogic = (item: Trip) => {
   const location = item.tripAiResp.tripDetails.location.split(',')[0];
 
-  const { data: unsplashImage } = useGetUnsplashImage(location, UrlType.REGULAR);
-  const imageUrl = unsplashImage?.url;
-  const imageBlurHash = unsplashImage?.blurHash;
+  const coverImage = item.tripAiResp.coverImage;
+  const imageUrl = coverImage?.url;
+  const imageBlurHash = coverImage?.blurHash || undefined;
+
+  const { retryCoverImage } = useRetryCoverImage(item._id, location);
 
   const onCardPress = () => navigationService.toTripDetails({ id: item._id });
 
   const isFavorite = item.isFavorite;
 
-  return { imageUrl, imageBlurHash, location, onCardPress, isFavorite };
+  return { imageUrl, imageBlurHash, location, onCardPress, isFavorite, retryCoverImage };
 };

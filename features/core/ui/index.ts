@@ -53,14 +53,6 @@ export * from '@/features/core/ui/components/composite/CustomTabButton/CustomTab
 export * from '@/features/core/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
 export * from '@/features/core/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete';
 
-// Dialog components
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplate';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateBody';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateContent';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateFixedFooter';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateFooter';
-export * from '@/features/core/ui/components/dialogs/ModalTemplate/ModalTemplateHeader/ModalTemplateHeader';
-
 // Providers
 export * from '@/features/core/ui/components/providers/ToastProvider';
 

@@ -9,31 +9,44 @@ import type {
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
+import { IMAGE_RESOLUTION } from '@/features/core/images/domain/entities/imageResolutions';
 import type { IImageListRepository } from '@/features/core/images/domain/entities/repositories/IImageListRepository';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
+import type { IPhotoNamesRepository } from '@/features/core/images/domain/entities/repositories/IPhotoNamesRepository';
+import { buildGooglePlacesMediaUrl } from '@/features/core/images/domain/utils/buildGooglePlacesMediaUrl';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export class GooglePlacesImageRepository implements IImageRepository, IImageListRepository {
+export class GooglePlacesImageRepository implements IImageRepository, IImageListRepository, IPhotoNamesRepository {
   constructor(
     @inject(HTTP_TYPES.HttpClient) private readonly http: IHttpClient,
     @inject(IMAGES_TYPES.GooglePlacesApiKey) private readonly apiKey: string,
   ) {}
 
   async getImage(placeName: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
-    const maxWidthPx = options?.maxWidthPx ?? 500;
+    const maxWidthPx = options?.maxWidthPx ?? IMAGE_RESOLUTION.medium;
     const photosResult = await this.fetchPhotos(placeName);
     if (!photosResult.success) return photosResult;
     const photoName = photosResult.data[0]?.name;
     if (!photoName) return ok(null);
-    return ok({ url: this.buildMediaUrl(photoName, maxWidthPx) });
+    return ok({ url: buildGooglePlacesMediaUrl(photoName, this.apiKey, maxWidthPx) });
   }
 
   async getImages(placeName: string, count: number, options?: ImageFetchOptions): Promise<Result<ImageResult[]>> {
-    const maxWidthPx = options?.maxWidthPx ?? 500;
+    const maxWidthPx = options?.maxWidthPx ?? IMAGE_RESOLUTION.medium;
     const photosResult = await this.fetchPhotos(placeName);
     if (!photosResult.success) return photosResult;
-    return ok(photosResult.data.slice(0, count).map(photo => ({ url: this.buildMediaUrl(photo.name, maxWidthPx) })));
+    return ok(
+      photosResult.data
+        .slice(0, count)
+        .map(photo => ({ url: buildGooglePlacesMediaUrl(photo.name, this.apiKey, maxWidthPx) })),
+    );
+  }
+
+  async getPhotoNames(placeName: string, count: number): Promise<Result<string[]>> {
+    const result = await this.fetchPhotos(placeName);
+    if (!result.success) return result;
+    return ok(result.data.slice(0, count).map(photo => photo.name));
   }
 
   private async fetchPhotos(placeName: string): Promise<Result<GooglePlacePhotoDTO[]>> {
@@ -44,9 +57,5 @@ export class GooglePlacesImageRepository implements IImageRepository, IImageList
     );
     if (!result.success) return result;
     return ok(result.data.places?.[0]?.photos ?? []);
-  }
-
-  private buildMediaUrl(photoName: string, maxWidthPx: number): string {
-    return `https://places.googleapis.com/v1/${photoName}/media?key=${this.apiKey}&maxWidthPx=${maxWidthPx}`;
   }
 }

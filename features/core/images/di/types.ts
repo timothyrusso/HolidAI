@@ -4,9 +4,12 @@ export const IMAGES_TYPES = {
   UnsplashImageRepository: Symbol.for('Images.UnsplashImageRepository'),
   GooglePlacesImageRepository: Symbol.for('Images.GooglePlacesImageRepository'),
   GooglePlacesImageListRepository: Symbol.for('Images.GooglePlacesImageListRepository'),
+  GooglePlacesPhotoNamesRepository: Symbol.for('Images.GooglePlacesPhotoNamesRepository'),
   FetchUnsplashImageUseCase: Symbol.for('Images.FetchUnsplashImageUseCase'),
   FetchGooglePlaceImageUseCase: Symbol.for('Images.FetchGooglePlaceImageUseCase'),
   FetchGooglePlaceImagesUseCase: Symbol.for('Images.FetchGooglePlaceImagesUseCase'),
   WikimediaDishImageRepository: Symbol.for('Images.WikimediaDishImageRepository'),
   FetchWikimediaDishImageUseCase: Symbol.for('Images.FetchWikimediaDishImageUseCase'),
+  BuildPlacePhotoUrlUseCase: Symbol.for('Images.BuildPlacePhotoUrlUseCase'),
+  FetchPhotoNamesUseCase: Symbol.for('Images.FetchPhotoNamesUseCase'),
 } as const;

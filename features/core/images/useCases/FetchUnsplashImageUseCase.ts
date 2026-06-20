@@ -13,6 +13,12 @@ export class FetchUnsplashImageUseCase {
     @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
   ) {}
 
+  /**
+   * Fetches an Unsplash image for a search term.
+   * @param resourceName - The search term (e.g. a destination/location name).
+   * @param options - Optional fetch options (e.g. `urlType` resolution).
+   * @returns A `Result` with the `ImageResult`, or `null` when no image is found; failure is logged.
+   */
   async execute(resourceName: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
     const result = await this.imageRepository.getImage(resourceName, options);
     if (!result.success) this.logger.error(result.error, { resourceName });

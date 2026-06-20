@@ -14,4 +14,5 @@ export interface ScheduleItem {
   geoCoordinates: GeoCoordinates;
   placeName: string;
   activity: string;
+  photoResourceNames: string[];
 }

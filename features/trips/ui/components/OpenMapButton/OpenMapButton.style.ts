@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     columnGap: spacing.SingleAndHalf,
   },
   icon: {
-    backgroundColor: colors.primaryBlue,
+    backgroundColor: colors.tertiaryBlue,
     borderRadius: spacing.Triple,
     padding: spacing.Single,
   },

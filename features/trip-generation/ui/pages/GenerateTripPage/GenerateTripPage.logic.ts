@@ -2,7 +2,12 @@ import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
-import { generateTripUseCase } from '@/features/trip-generation/di/resolve';
+import {
+  enrichDishesWithImagesUseCase,
+  enrichTripWithCoverImageUseCase,
+  enrichTripWithPhotosUseCase,
+  generateTripUseCase,
+} from '@/features/trip-generation/di/resolve';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';
@@ -52,9 +57,21 @@ export const useGenerateTripPageLogic = () => {
       return;
     }
 
+    const [photosResult, dishesResult, coverResult] = await Promise.all([
+      enrichTripWithPhotosUseCase.execute(result.data),
+      enrichDishesWithImagesUseCase.execute(result.data),
+      enrichTripWithCoverImageUseCase.execute(result.data),
+    ]);
+
+    const enrichedData = {
+      ...(photosResult.success ? photosResult.data : result.data),
+      food: dishesResult.success ? dishesResult.data.food : result.data.food,
+      coverImage: coverResult.success ? coverResult.data.coverImage : { url: '', blurHash: '' },
+    };
+
     const addTripResult = await addTrip({
       userId: user?.id ?? 'unknown_user',
-      tripAiResp: result.data,
+      tripAiResp: enrichedData,
       isFavorite: false,
     });
 

@@ -1,19 +1,45 @@
-import { DEFAULT_BLURHASH } from '@/features/core/ui/style/blur';
-import { Image, type ImageProps } from 'expo-image';
+import { BaseSkeleton } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
+import {
+  type CustomImageProps,
+  useCustomImageLogic,
+} from '@/features/core/ui/components/basic/CustomImage/CustomImage.logic';
+import { Image } from 'expo-image';
 import type { FC } from 'react';
 
-type CustomImageProps = ImageProps & {
-  useBlur?: boolean;
-  blurhash?: string;
-};
-
 export const CustomImage: FC<CustomImageProps> = ({
-  useBlur = true,
-  blurhash = DEFAULT_BLURHASH,
+  useBlur,
+  blurhash,
   placeholder,
+  source,
+  isLoading = false,
+  style,
+  fallbackImage,
+  onError,
   ...props
 }) => {
-  const resolvedPlaceholder = placeholder ?? (useBlur ? { blurhash } : undefined);
+  const {
+    resolvedPlaceholder,
+    resolvedSource,
+    onError: handleError,
+  } = useCustomImageLogic({
+    useBlur,
+    blurhash,
+    placeholder,
+    source,
+    fallbackImage,
+    onError,
+  });
 
-  return <Image placeholder={resolvedPlaceholder} transition={200} {...props} />;
+  return isLoading ? (
+    <BaseSkeleton style={style} />
+  ) : (
+    <Image
+      placeholder={resolvedPlaceholder}
+      transition={200}
+      source={resolvedSource}
+      onError={handleError}
+      style={style}
+      {...props}
+    />
+  );
 };

@@ -29,6 +29,11 @@ export class GenerateTripUseCase {
     @inject(ERROR_TYPES.Logger) private readonly logger: ILogger,
   ) {}
 
+  /**
+   * Generates a structured trip plan from the user's inputs via the AI client.
+   * @param params - Trip generation inputs (location, dates, travelers, budget, locale).
+   * @returns A `Result` with the generated `TripAiResp` on success, or a failure (logged) on error.
+   */
   async execute(params: GenerateTripParams): Promise<Result<TripAiResp>> {
     const prompt = travelPlanPrompt
       .replaceAll('{location}', params.location)

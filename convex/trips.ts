@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { TripAiResp } from './validators/Trips';
+import { CoverImage, TripAiResp } from './validators/Trips';
 
 export const getAllTripsbyUserId = query({
   args: { userId: v.string() },
@@ -48,6 +48,58 @@ export const toggleFavoriteTrip = mutation({
       isFavorite: args.isFavorite,
     });
     return;
+  },
+});
+
+export const updateActivityPhotos = mutation({
+  args: { id: v.id('trips'), placeNumberID: v.number(), photoResourceNames: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    const trip = await ctx.db.get('trips', args.id);
+    if (!trip) throw new Error('Trip not found');
+    await ctx.db.replace('trips', args.id, {
+      ...trip,
+      tripAiResp: {
+        ...trip.tripAiResp,
+        dayPlans: trip.tripAiResp.dayPlans.map(dayPlan => ({
+          ...dayPlan,
+          schedule: dayPlan.schedule.map(item =>
+            item.placeNumberID === args.placeNumberID ? { ...item, photoResourceNames: args.photoResourceNames } : item,
+          ),
+        })),
+      },
+    });
+  },
+});
+
+export const updateDishImage = mutation({
+  args: { id: v.id('trips'), searchTerm: v.string(), imageUrl: v.string() },
+  handler: async (ctx, args) => {
+    const trip = await ctx.db.get('trips', args.id);
+    if (!trip) throw new Error('Trip not found');
+    await ctx.db.replace('trips', args.id, {
+      ...trip,
+      tripAiResp: {
+        ...trip.tripAiResp,
+        food: {
+          ...trip.tripAiResp.food,
+          typicalDishes: trip.tripAiResp.food.typicalDishes.map(dish =>
+            dish.searchTerm === args.searchTerm ? { ...dish, imageUrl: args.imageUrl } : dish,
+          ),
+        },
+      },
+    });
+  },
+});
+
+export const updateCoverImage = mutation({
+  args: { id: v.id('trips'), coverImage: CoverImage },
+  handler: async (ctx, args) => {
+    const trip = await ctx.db.get('trips', args.id);
+    if (!trip) throw new Error('Trip not found');
+    await ctx.db.replace('trips', args.id, {
+      ...trip,
+      tripAiResp: { ...trip.tripAiResp, coverImage: args.coverImage },
+    });
   },
 });
 

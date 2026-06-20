@@ -17,6 +17,7 @@ interface AnimatedHeaderImageProps {
   isLoading?: boolean;
   headerIcons?: ReactElement;
   chipsAlignment?: ViewStyle['justifyContent'];
+  onError?: (failedUri: string) => void;
 }
 
 export const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
@@ -28,6 +29,7 @@ export const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
   isLoading,
   headerIcons,
   chipsAlignment = 'space-between',
+  onError,
 }) => {
   const HEADER_MAX_HEIGHT = images.fullScreenImageHeight;
   const HEADER_MIN_HEIGHT = images.fullScreenMinImageHeight;
@@ -65,6 +67,7 @@ export const AnimatedHeaderImage: FC<AnimatedHeaderImageProps> = ({
             source={typeof imageUrl === 'string' ? { uri: imageUrl } : imageUrl}
             style={styles.image}
             placeholder={imageBlurHash ? { blurhash: imageBlurHash } : undefined}
+            onError={onError}
           />
         )}
       </View>

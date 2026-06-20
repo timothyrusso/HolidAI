@@ -20,8 +20,8 @@ export class HttpClient implements IHttpClient {
         );
       }
       return ok((await response.json()) as T);
-    } catch (e) {
-      const error = ensureError(e);
+    } catch (err) {
+      const error = ensureError(err);
       if (error.name === 'AbortError') {
         return fail(new BaseError('Request timed out', ErrorCode.NetworkFailure, { cause: error, context: { url } }));
       }

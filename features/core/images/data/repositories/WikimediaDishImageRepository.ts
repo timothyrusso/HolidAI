@@ -9,20 +9,21 @@ import type {
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 import { FOOD_CATEGORY_KEYWORDS } from '@/features/core/images/domain/entities/foodCategoryKeywords';
+import { IMAGE_RESOLUTION } from '@/features/core/images/domain/entities/imageResolutions';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
 import { inject, injectable } from 'inversify';
 
 const BASE_URL = 'https://commons.wikimedia.org/w/api.php';
 const USER_AGENT = 'HolidAI/1.0 (https://github.com/timothyrusso/holidai)';
 const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png'] as const;
-const MIN_IMAGE_DIMENSION_PX = 400;
+const MIN_IMAGE_DIMENSION_PX = IMAGE_RESOLUTION.low;
 
 @injectable()
 export class WikimediaDishImageRepository implements IImageRepository {
   constructor(@inject(HTTP_TYPES.HttpClient) private readonly http: IHttpClient) {}
 
   async getImage(dish: string, options?: ImageFetchOptions): Promise<Result<ImageResult | null>> {
-    const urlWidth = options?.maxWidthPx ?? 800;
+    const urlWidth = options?.maxWidthPx ?? IMAGE_RESOLUTION.high;
     const params = new URLSearchParams({
       action: 'query',
       generator: 'search',
