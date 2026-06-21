@@ -22,7 +22,7 @@ export class HttpClient implements IHttpClient {
       return ok((await response.json()) as T);
     } catch (err) {
       const error = ensureError(err);
-      if (error.name === 'AbortError') {
+      if (controller.signal.aborted) {
         return fail(new BaseError('Request timed out', ErrorCode.NetworkFailure, { cause: error, context: { url } }));
       }
       return fail(

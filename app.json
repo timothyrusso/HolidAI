@@ -36,10 +36,12 @@
       "react-native-map-link",
       "expo-font",
       "expo-secure-store",
+      "@react-native-vector-icons/ionicons",
       [
         "expo-build-properties",
         {
           "ios": {
+            "deploymentTarget": "17.0",
             "useFrameworks": "static",
             "extraPods": [
               { "name": "GoogleUtilities", "modular_headers": true },

@@ -1,11 +1,12 @@
 import { styles } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon.style';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@react-native-vector-icons/ionicons';
+import type { ComponentProps } from 'react';
 import type { ViewProps } from 'react-native';
 import { type GestureResponderEvent, type OpaqueColorValue, type StyleProp, View, type ViewStyle } from 'react-native';
 
 export const DEFAULT_ICON_SIZE = 30;
 
-export type IoniconsName = keyof typeof Ionicons.glyphMap;
+export type IoniconsName = ComponentProps<typeof Ionicons>['name'];
 
 export type CustomIconProps = {
   disabled?: boolean;
