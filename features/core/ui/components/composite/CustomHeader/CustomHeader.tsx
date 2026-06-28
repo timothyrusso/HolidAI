@@ -1,15 +1,15 @@
 import { ButtonType } from '@/features/core/ui/components/basic/CustomButton/CustomButton.logic';
+import type { IoniconsName } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomIconButtonMedium } from '@/features/core/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
 import { useCustomHeaderLogic } from '@/features/core/ui/components/composite/CustomHeader/CustomHeader.logic';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
-import type { Ionicons } from '@expo/vector-icons';
 import type { FC } from 'react';
 import { View } from 'react-native';
 
 type CustomHeaderProps = {
   title?: string;
-  icon?: keyof typeof Ionicons.glyphMap;
+  icon?: IoniconsName;
   onPress?: () => void;
 };
 

@@ -1,6 +1,6 @@
-import type { Ionicons } from '@expo/vector-icons';
+import type { IoniconsName } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon';
 
-export const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
+export const icons: Record<string, IoniconsName> = {
   close: 'close',
   closeCircle: 'close-circle',
   location: 'location',
