@@ -11,7 +11,8 @@
       "coverage/**",
       "scripts/**",
       ".expo/**",
-      "convex/_generated/**"
+      "convex/_generated/**",
+      ".claude/workflows/**"
     ]
   },
   "formatter": {
@@ -58,6 +59,7 @@
         "all": true,
         "noExplicitAny": "error",
         "noConsoleLog": "off",
+        "noConsole": "error",
         "noEmptyBlockStatements": "off"
       },
       "complexity": { "all": true, "noForEach": "off" }
