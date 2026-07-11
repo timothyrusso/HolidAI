@@ -1,0 +1,38 @@
+name: Update Claude skills
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC — at most once a week
+  workflow_dispatch: {} # allow manual runs
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Update project skills to latest upstream
+        run: npx --yes skills update --project --yes
+
+      - name: Open a PR if anything changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'chore(deps): update Claude skills'
+          title: 'chore: update Claude skills'
+          body: |
+            Automated weekly `skills update --project`.
+
+            Review the changed `skills-lock.json` and skill files (`.agents/skills/**`,
+            `.claude/skills/**`) before merging.
+            
+          branch: chore/update-claude-skills
+          delete-branch: true
+          labels: dependencies
