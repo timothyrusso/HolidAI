@@ -2,6 +2,7 @@
 name: explorer
 description: Read-only pre-implementation explorer for the HolidAI React Native app. Given a feature issue, maps it onto the architecture — target feature and dependency tier, the exact files/layers to touch, the closest existing pattern to mirror, integration points, and risks — and returns a structured report to inform the plan and hand to the implementer. Does NOT write code.
 model: sonnet
+color: cyan
 tools:
   - Read
   - Grep

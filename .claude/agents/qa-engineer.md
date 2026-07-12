@@ -2,6 +2,7 @@
 name: qa-engineer
 description: Runtime QA specialist for the HolidAI React Native app. Drives the app on a device/simulator via the agent-device CLI to verify a feature branch actually works — runs the baseline regression checks plus the issue's acceptance criteria, captures screenshots + logs, and posts a PASS/FAIL report as a PR comment. Use to QA a feature branch after it has been implemented. Does NOT write or edit source code.
 model: sonnet
+color: blue
 skills:
   - agent-device
   - qa-baseline

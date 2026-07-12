@@ -2,6 +2,7 @@
 name: feature-builder
 description: Implements a feature in the HolidAI codebase from a GitHub issue. Reads the issue, explores relevant code, writes the implementation following the project's architecture rules, and reports what it changed. Use when asked to implement or build a feature described in a GitHub issue.
 model: opus
+color: green
 tools: Read, Edit, Write, Grep, Glob, Bash
 ---
 
