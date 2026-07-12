@@ -19,6 +19,9 @@ workflow). See [Entry points](#entry-points).
   only the per-machine binary + env vars are needed.
 - **`gh`** authenticated for the HolidAI repository.
 - The iOS app buildable/runnable on a simulator (the QA stage drives it via agent-device).
+- **CodeGraph** — `npm install` (pins the `@colbymchenry/codegraph` devDependency), then
+  `npx codegraph init` once to build the local index (`.codegraph/`, gitignored, auto-synced).
+  The committed `.mcp.json` gives `explorer`/`feature-builder` the code-intelligence MCP.
 
 ---
 
@@ -35,6 +38,7 @@ workflow). See [Entry points](#entry-points).
 | `qa-baseline` | `.claude/skills/qa-baseline/SKILL.md` | Standing regression checks run for *every* feature (startup, render, navigation). |
 | `implement-issue` | `.claude/skills/implement-issue/SKILL.md` | Interactive, human-gated orchestrator. |
 | `implement-issue-auto` | `.claude/workflows/implement-issue-auto.js` | Unattended, deterministic orchestrator (no gates; QA opt-in) — reuses the same agents. |
+| CodeGraph | `.mcp.json` + `@colbymchenry/codegraph` | Code-intelligence MCP (symbols, call paths, blast radius) that `explorer`/`feature-builder` query instead of grepping. Local index in `.codegraph/` (gitignored). |
 
 Each agent reads the deep architecture docs — [`ARCHITECTURE.md`](ARCHITECTURE.md) and
 [`ERROR_HANDLING.md`](ERROR_HANDLING.md) — rather than duplicating the rules.

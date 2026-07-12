@@ -13,7 +13,9 @@
     "inversify",
     "zustand",
     "sourcery",
-    "tsdoc"
+    "tsdoc",
+    "codegraph",
+    "mcp"
   ],
   "flagWords": [
     "hte"
