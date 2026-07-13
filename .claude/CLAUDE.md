@@ -2,6 +2,13 @@
 
 Follow these rules on every task that involves writing or modifying code. If a situation is not covered here, ask the user.
 
+## Reference documentation
+
+Deep architecture references live in `wiki/docs/` — consult the relevant one (don't duplicate it here). The rules below are the terse, always-on non-negotiables; the docs are the full rationale, examples, and documented exceptions.
+
+- `wiki/docs/ARCHITECTURE.md` — the authoritative codebase map: feature-first Clean Architecture, folder structure, dependency tiers, the two DI modes, and public-API rules.
+- `wiki/docs/ERROR_HANDLING.md` — the authoritative error-handling reference (`Result<T>`, `BaseError`, `ensureError`, logging, error boundaries). Read before writing any failure path.
+
 ## Non-negotiable rules
 
 - Always use `@/` path aliases. Never use relative paths (`./` or `../`).

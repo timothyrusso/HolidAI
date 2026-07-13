@@ -1,0 +1,63 @@
+name: Feature
+description: Describe a feature to be implemented, with clear, testable acceptance criteria.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please complete every required section and keep the structure intact.
+        A clear description and testable acceptance criteria make the feature faster to
+        build and easier to verify.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Everything needed to build the feature - what it does, expected behaviour, and any constraints. Be specific and self-contained.
+      placeholder: |
+        As a user, I want ...
+        The feature should ...
+        Constraints / edge cases: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: A checklist of observable, verifiable outcomes. Each item should be independently testable on the device.
+      placeholder: |
+        - [ ] Given ... when ... then ...
+        - [ ] The <screen> shows ...
+        - [ ] Tapping <element> navigates to ...
+    validations:
+      required: true
+
+  - type: input
+    id: screens-affected
+    attributes:
+      label: Screens affected
+      description: Which screens or features this touches.
+      placeholder: e.g. SavedTrips, DestinationSearch
+    validations:
+      required: false
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: Anything explicitly NOT part of this issue, to keep the change focused.
+      placeholder: |
+        - ...
+    validations:
+      required: false
+
+  - type: input
+    id: design-link
+    attributes:
+      label: Design link
+      description: Link to the design (Figma, Claude design, Notion, etc.), if any.
+      placeholder: https://...
+    validations:
+      required: false

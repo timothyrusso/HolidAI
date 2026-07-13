@@ -133,11 +133,12 @@ To obtain these values:
 
 ## Documentation
 
-Architecture, error handling, and coding conventions are documented in [`wiki/docs/`](wiki/docs/).
+Architecture, error handling, coding conventions, and the AI-assisted development workflow are documented in [`wiki/docs/`](wiki/docs/).
 
 - [Architecture](wiki/docs/ARCHITECTURE.md)
 - [Error Handling](wiki/docs/ERROR_HANDLING.md)
 - [Performance Conventions](wiki/docs/PERFORMANCE_CONVENTIONS.md)
+- [Agentic Workflow](wiki/docs/AGENTIC_WORKFLOW.md) — AI-assisted issue-to-PR pipeline (`/implement-issue`)
 
 ---
 

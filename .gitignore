@@ -50,5 +50,8 @@ plans/
 # architecture
 arch-report.html
 
+# codegraph (generated local index; regenerate with `npx codegraph init`)
+.codegraph/
+
 # vscode
 .vscode/
