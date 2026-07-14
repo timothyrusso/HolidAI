@@ -1,5 +1,5 @@
-import type { IRouterClient } from '@/features/core/navigation/domain/entities/services/IRouterClient';
 import { type Href, router } from 'expo-router';
+import type { IRouterClient } from '@/features/core/navigation/domain/entities/services/IRouterClient';
 
 export const routerClient: IRouterClient = {
   push: href => router.push(href as Href),

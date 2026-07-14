@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { BaseError, ErrorCode } from '@/features/core/error';
 import { useToast } from '@/features/core/toast';
 import { useDeleteAllTrips } from '@/features/trips';
 import { useDeleteUser, useGetUser } from '@/features/user';
-import { useState } from 'react';
 
 export const useDeleteAccount = () => {
   const { user } = useGetUser();

@@ -1,6 +1,6 @@
-import { Routes, navigationService } from '@/features/core/navigation';
-import { CustomHeader, icons } from '@/features/core/ui';
 import { Stack } from 'expo-router';
+import { navigationService, Routes } from '@/features/core/navigation';
+import { CustomHeader, icons } from '@/features/core/ui';
 
 export default function ProfileLayout() {
   return (

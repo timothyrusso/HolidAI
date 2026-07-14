@@ -1,9 +1,9 @@
+import { StyleSheet } from 'react-native';
 import { colors } from '@/features/core/ui/style/colors';
 import { components } from '@/features/core/ui/style/dimensions/components';
 import { fontSize } from '@/features/core/ui/style/dimensions/fontSize';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { fontFamily } from '@/features/core/ui/style/fontFamily';
-import { StyleSheet } from 'react-native';
 
 export const styles = (isPassword: boolean) =>
   StyleSheet.create({

@@ -1,8 +1,8 @@
+import { useLocalSearchParams } from 'expo-router';
 import type { Id } from '@/convex/_generated/dataModel';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useRetryDishImage } from '@/features/trips/facades/useRetryDishImage';
-import { useLocalSearchParams } from 'expo-router';
 
 const glutenFreeImage = require('@/features/core/ui/assets/images/gluten_free.png');
 const veganImage = require('@/features/core/ui/assets/images/vegan.png');

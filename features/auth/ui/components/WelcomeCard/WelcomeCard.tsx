@@ -1,8 +1,8 @@
-import { useWelcomeCardLogic } from '@/features/auth/ui/components/WelcomeCard/WelcomeCard.logic';
-import { CustomImage } from '@/features/core/ui';
 import type { ImageProps } from 'expo-image';
 import type { FC } from 'react';
 import Animated from 'react-native-reanimated';
+import { useWelcomeCardLogic } from '@/features/auth/ui/components/WelcomeCard/WelcomeCard.logic';
+import { CustomImage } from '@/features/core/ui';
 
 type WelcomeCardProps = {
   image: ImageProps['source'];

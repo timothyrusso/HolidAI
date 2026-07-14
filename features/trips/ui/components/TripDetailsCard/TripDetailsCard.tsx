@@ -1,10 +1,10 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import type { FC } from 'react';
+import { View } from 'react-native';
 import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useTripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.logic';
 import { styles } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard.style';
-import { LinearGradient } from 'expo-linear-gradient';
-import type { FC } from 'react';
-import { View } from 'react-native';
 
 type TripDetailsCardProps = {
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;

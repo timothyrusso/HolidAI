@@ -1,7 +1,7 @@
-import { IMAGE_RESOLUTION, buildPlacePhotoUrlUseCase } from '@/features/core/images';
+import { useTranslation } from 'react-i18next';
+import { buildPlacePhotoUrlUseCase, IMAGE_RESOLUTION } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
-import { useTranslation } from 'react-i18next';
 
 export const useActivityItemLogic = (scheduleItem: ScheduleItem, tripId: string, currency: string) => {
   const { t } = useTranslation();

@@ -1,10 +1,10 @@
+import { View } from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
 import { Routes } from '@/features/core/navigation';
 import { BasicView, CustomScrollView, CustomText, colors } from '@/features/core/ui';
 import { DateBox } from '@/features/trip-generation/ui/components/DateBox/DateBox';
 import { useSelectDatesPageLogic } from '@/features/trip-generation/ui/pages/SelectDatesPage/SelectDatesPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectDatesPage/SelectDatesPage.style';
-import { View } from 'react-native';
-import CalendarPicker from 'react-native-calendar-picker';
 
 export const SelectDatesPage = () => {
   const {

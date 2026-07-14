@@ -1,5 +1,5 @@
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/features/core/ui';
 import type { ImageProps } from 'expo-image';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/features/core/ui';
 
 export type CardConfig = {
   id: string;

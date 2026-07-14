@@ -1,7 +1,7 @@
-import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
-import { styles } from '@/features/core/ui/components/basic/CustomTextButton/CustomTextButton.style';
 import type { FC } from 'react';
 import { Pressable, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
+import { styles } from '@/features/core/ui/components/basic/CustomTextButton/CustomTextButton.style';
 
 type CustomTextButtonProps = {
   onPress: () => void;

@@ -1,7 +1,7 @@
-import { Cheap, CustomText, colors, icons } from '@/features/core/ui';
-import { styles } from '@/features/trips/ui/components/IngredientsList/IngredientsList.style';
 import type { FC } from 'react';
 import { View } from 'react-native';
+import { Cheap, CustomText, colors, icons } from '@/features/core/ui';
+import { styles } from '@/features/trips/ui/components/IngredientsList/IngredientsList.style';
 
 type IngredientsListProps = {
   title: string;

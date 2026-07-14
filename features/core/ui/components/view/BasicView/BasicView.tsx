@@ -1,12 +1,11 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import type { PropsWithChildren } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { CustomButtonLarge } from '@/features/core/ui/components/basic/CustomButton/CustomButtonLarge';
 import type { BasicViewProps } from '@/features/core/ui/components/view/BasicView/BasicView.logic';
 import { useBasicViewLogic } from '@/features/core/ui/components/view/BasicView/BasicView.logic';
-import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 
 export const BasicView = (props: PropsWithChildren<BasicViewProps>) => {
   const {

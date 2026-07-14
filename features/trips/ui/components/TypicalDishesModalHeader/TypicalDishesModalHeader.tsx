@@ -1,8 +1,8 @@
+import type { FC } from 'react';
+import { View } from 'react-native';
 import { ButtonType, CustomIcon, CustomIconButtonMedium, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import { useTypicalDishesModalHeaderLogic } from '@/features/trips/ui/components/TypicalDishesModalHeader/TypicalDishesModalHeader.logic';
 import { styles } from '@/features/trips/ui/components/TypicalDishesModalHeader/TypicalDishesModalHeader.style';
-import type { FC } from 'react';
-import { View } from 'react-native';
 
 type TypicalDishesModalHeaderProps = {
   location: string;

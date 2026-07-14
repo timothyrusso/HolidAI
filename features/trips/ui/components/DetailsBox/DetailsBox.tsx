@@ -1,11 +1,11 @@
-import { ButtonType, CustomButtonMedium, CustomText, PlatformOS, blur } from '@/features/core/ui';
-import { useDetailsBoxLogic } from '@/features/trips/ui/components/DetailsBox/DetailsBox.logic';
-import { styles } from '@/features/trips/ui/components/DetailsBox/DetailsBox.style';
-import { MainPlacesList } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import type { FC, RefObject } from 'react';
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
+import { ButtonType, blur, CustomButtonMedium, CustomText, PlatformOS } from '@/features/core/ui';
+import { useDetailsBoxLogic } from '@/features/trips/ui/components/DetailsBox/DetailsBox.logic';
+import { styles } from '@/features/trips/ui/components/DetailsBox/DetailsBox.style';
+import { MainPlacesList } from '@/features/trips/ui/components/MainPlacesList/MainPlacesList';
 
 type DetailsBoxProps = {
   location: string;

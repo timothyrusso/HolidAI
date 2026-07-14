@@ -1,10 +1,10 @@
+import { StyleSheet } from 'react-native';
 import { colors } from '@/features/core/ui/style/colors';
 import { fontSize } from '@/features/core/ui/style/dimensions/fontSize';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { fontFamily } from '@/features/core/ui/style/fontFamily';
 import { opacity } from '@/features/core/ui/style/opacity';
 import { shadows } from '@/features/core/ui/style/shadows';
-import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   button: {

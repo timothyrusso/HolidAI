@@ -1,8 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import type { BaseError } from '@/features/core/error';
 import { errorCodeToMessageKey } from '@/features/core/error';
 import { ToastType } from '@/features/core/toast/domain/entities/ToastType';
 import { toastClient } from '@/features/core/toast/libraries/toastClient';
-import { useTranslation } from 'react-i18next';
 
 export const useToast = () => {
   const { t } = useTranslation();

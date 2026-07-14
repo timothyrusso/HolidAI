@@ -1,8 +1,8 @@
+import { type FC, Fragment } from 'react';
+import { Pressable, View } from 'react-native';
 import { CustomText } from '@/features/core/ui';
 import { styles } from '@/features/profile/ui/components/UserDataBox/UserDataBox.style';
 import type { Trip } from '@/features/trips';
-import { type FC, Fragment } from 'react';
-import { Pressable, View } from 'react-native';
 
 type UserDataBoxProps = {
   totalTrips: number;

@@ -1,5 +1,5 @@
-import { components, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { components, spacing } from '@/features/core/ui';
 
 export const styles = StyleSheet.create({
   animation: {

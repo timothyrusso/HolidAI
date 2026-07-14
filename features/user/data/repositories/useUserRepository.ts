@@ -1,6 +1,6 @@
+import { useClerk, useUser } from '@clerk/expo';
 import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
 import type { IUserRepository } from '@/features/user/domain/entities/repositories/IUserRepository';
-import { useClerk, useUser } from '@clerk/expo';
 
 export const useUserRepository = (): IUserRepository => {
   const { signOut } = useClerk();

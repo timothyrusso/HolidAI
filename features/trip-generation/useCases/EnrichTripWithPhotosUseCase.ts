@@ -1,9 +1,8 @@
 import { inject, injectable } from 'inversify';
-
-import { ok } from '@/features/core/error';
 import type { Result } from '@/features/core/error';
-import { IMAGES_TYPES } from '@/features/core/images';
+import { ok } from '@/features/core/error';
 import type { FetchPhotoNamesUseCase } from '@/features/core/images';
+import { IMAGES_TYPES } from '@/features/core/images';
 import type { TripAiResp } from '@/features/trips';
 
 const MAX_PHOTOS = 6;

@@ -1,4 +1,4 @@
-import { IMAGE_RESOLUTION, buildPlacePhotoUrlUseCase } from '@/features/core/images';
+import { buildPlacePhotoUrlUseCase, IMAGE_RESOLUTION } from '@/features/core/images';
 
 const MIN_MAIN_LIST_ITEM_INDEX = 3;
 

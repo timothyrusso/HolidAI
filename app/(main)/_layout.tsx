@@ -1,5 +1,5 @@
-import { Stacks } from '@/features/core/navigation';
 import { Stack } from 'expo-router';
+import { Stacks } from '@/features/core/navigation';
 
 export default function AppLayout() {
   return (

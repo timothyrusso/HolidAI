@@ -1,3 +1,6 @@
+import type { FC } from 'react';
+import type { ImageSourcePropType } from 'react-native';
+import { View } from 'react-native';
 import { CustomIcon } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomImage } from '@/features/core/ui/components/basic/CustomImage/CustomImage';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
@@ -5,9 +8,6 @@ import { styles as badgeStyle } from '@/features/core/ui/components/composite/Ba
 import { colors } from '@/features/core/ui/style/colors';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { icons } from '@/features/core/ui/style/icons';
-import type { FC } from 'react';
-import type { ImageSourcePropType } from 'react-native';
-import { View } from 'react-native';
 
 type BadgeProps = {
   label: string;

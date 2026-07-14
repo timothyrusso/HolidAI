@@ -1,11 +1,10 @@
+import { useLocalSearchParams } from 'expo-router';
+import { useRef } from 'react';
+import { Animated } from 'react-native';
 import { translateDateUseCase } from '@/features/core/dates';
 import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
-
-import { useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
-import { Animated } from 'react-native';
 
 export interface AllCoordinates {
   title: string;

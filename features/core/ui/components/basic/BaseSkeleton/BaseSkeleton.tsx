@@ -1,7 +1,7 @@
-import { useBaseSkeletonLogic } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton.logic';
 import type { ReactElement } from 'react';
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useBaseSkeletonLogic } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton.logic';
 
 export type BaseSkeletonProps = ViewProps & {
   children?: ReactElement;

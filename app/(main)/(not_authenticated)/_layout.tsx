@@ -1,5 +1,5 @@
-import { Routes } from '@/features/core/navigation';
 import { Stack } from 'expo-router';
+import { Routes } from '@/features/core/navigation';
 
 export default function LoginLayout() {
   return (

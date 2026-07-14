@@ -1,9 +1,9 @@
+import { FlatList, View } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import { BasicView, CardType, CustomIconTextCard, CustomText, colors } from '@/features/core/ui';
 import { TravelersNumberSelector } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector';
 import { useSelectTravelersPageLogic } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.style';
-import { FlatList, View } from 'react-native';
 
 const SeparatorItem = () => <View style={style.separator} />;
 

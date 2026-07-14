@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import type { Result } from '@/features/core/error';
 import { ok } from '@/features/core/error';
 import type { IHttpClient } from '@/features/core/http';
@@ -6,9 +7,8 @@ import type { UnsplashSearchResponseDTO } from '@/features/core/images/data/dtos
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
-import { UrlType } from '@/features/core/images/domain/entities/UrlType';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
-import { inject, injectable } from 'inversify';
+import { UrlType } from '@/features/core/images/domain/entities/UrlType';
 
 @injectable()
 export class UnsplashImageRepository implements IImageRepository {

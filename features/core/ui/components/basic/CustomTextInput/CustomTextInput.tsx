@@ -1,11 +1,11 @@
+import type { FC } from 'react';
+import { TextInput, type TextInputProps, View } from 'react-native';
 import { ButtonType } from '@/features/core/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIconButtonMedium } from '@/features/core/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { useCustomTextInputLogic } from '@/features/core/ui/components/basic/CustomTextInput/CustomTextInput.logic';
 import { styles as inputStyles } from '@/features/core/ui/components/basic/CustomTextInput/CustomTextInput.style';
 import { colors } from '@/features/core/ui/style/colors';
 import { icons } from '@/features/core/ui/style/icons';
-import type { FC } from 'react';
-import { TextInput, type TextInputProps, View } from 'react-native';
 
 type CustomTextInputProps = TextInputProps & {
   placeholder: string;

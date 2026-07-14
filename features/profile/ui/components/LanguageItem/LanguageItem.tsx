@@ -1,7 +1,7 @@
-import { BaseSkeleton, CustomIcon, CustomText, icons } from '@/features/core/ui';
-import { styles as stylesFactory } from '@/features/profile/ui/components/LanguageItem/LanguageItem.style';
 import type { FC } from 'react';
 import { Pressable } from 'react-native';
+import { BaseSkeleton, CustomIcon, CustomText, icons } from '@/features/core/ui';
+import { styles as stylesFactory } from '@/features/profile/ui/components/LanguageItem/LanguageItem.style';
 
 type LanguageItemProps = {
   language: string;

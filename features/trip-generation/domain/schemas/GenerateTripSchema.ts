@@ -1,5 +1,5 @@
-import { normalizeDateToISO } from '@/features/trip-generation/domain/schemas/normalizeDateToISO';
 import { z } from 'zod';
+import { normalizeDateToISO } from '@/features/trip-generation/domain/schemas/normalizeDateToISO';
 
 export const generatedTripSchema = z.object({
   tripDetails: z.object({

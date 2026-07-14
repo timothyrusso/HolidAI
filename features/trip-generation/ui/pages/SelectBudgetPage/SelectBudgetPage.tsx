@@ -1,3 +1,4 @@
+import { FlatList, View } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import { BasicView, CardType, CustomIconTextCard, CustomText, colors } from '@/features/core/ui';
 import {
@@ -5,7 +6,6 @@ import {
   useSelectBudgetPageLogic,
 } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.style';
-import { FlatList, View } from 'react-native';
 
 const SeparatorItem = () => <View style={style.separator} />;
 

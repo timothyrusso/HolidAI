@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { Platform, View } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import { BasicView, PlatformOS } from '@/features/core/ui';
 import { DetailsBox } from '@/features/trips/ui/components/DetailsBox/DetailsBox';
@@ -6,8 +8,6 @@ import { HeroImage } from '@/features/trips/ui/components/HeroImage/HeroImage';
 import { HomeSkeleton } from '@/features/trips/ui/components/HomeSkeleton/HomeSkeleton';
 import { useUpcomingTripPageLogic } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.logic';
 import { styles } from '@/features/trips/ui/pages/UpcomingTripPage/UpcomingTripPage.style';
-import { useRef } from 'react';
-import { Platform, View } from 'react-native';
 
 const basicViewProps = {
   nameView: Routes.HomePage,

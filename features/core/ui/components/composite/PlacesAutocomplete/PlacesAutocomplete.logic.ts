@@ -1,7 +1,7 @@
-import { logger } from '@/features/core/error';
-import { TranslationKeys } from '@/features/core/translations';
 import { useTranslation } from 'react-i18next';
 import type { Point } from 'react-native-google-places-autocomplete';
+import { logger } from '@/features/core/error';
+import { TranslationKeys } from '@/features/core/translations';
 
 export interface LocationInfo {
   name: string;

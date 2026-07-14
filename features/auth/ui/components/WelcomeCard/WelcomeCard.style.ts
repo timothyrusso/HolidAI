@@ -1,5 +1,5 @@
-import { shadows, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { shadows, spacing } from '@/features/core/ui';
 
 export const styles = (
   height: number,

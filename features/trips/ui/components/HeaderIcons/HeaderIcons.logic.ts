@@ -1,9 +1,9 @@
+import { useLocalSearchParams } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { navigationService } from '@/features/core/navigation';
 import { useDeleteTrip } from '@/features/trips/facades/useDeleteTrip';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useToggleFavoriteTrip } from '@/features/trips/facades/useToggleFavoriteTrip';
-import { useLocalSearchParams } from 'expo-router';
-import { useCallback, useState } from 'react';
 
 export const useHeaderIconsLogic = () => {
   const { id, fromGenerate } = useLocalSearchParams<{ id: string; fromGenerate?: string }>();

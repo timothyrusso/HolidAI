@@ -1,16 +1,16 @@
+import Constants from 'expo-constants';
+import { ContainerModule } from 'inversify';
 import { container } from '@/features/core/container';
 import { GooglePlacesImageRepository } from '@/features/core/images/data/repositories/GooglePlacesImageRepository';
 import { UnsplashImageRepository } from '@/features/core/images/data/repositories/UnsplashImageRepository';
 import { WikimediaDishImageRepository } from '@/features/core/images/data/repositories/WikimediaDishImageRepository';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import { BuildPlacePhotoUrlUseCase } from '@/features/core/images/useCases/BuildPlacePhotoUrlUseCase';
-import { FetchGooglePlaceImageUseCase } from '@/features/core/images/useCases/FetchGooglePlaceImageUseCase';
 import { FetchGooglePlaceImagesUseCase } from '@/features/core/images/useCases/FetchGooglePlaceImagesUseCase';
+import { FetchGooglePlaceImageUseCase } from '@/features/core/images/useCases/FetchGooglePlaceImageUseCase';
 import { FetchPhotoNamesUseCase } from '@/features/core/images/useCases/FetchPhotoNamesUseCase';
 import { FetchUnsplashImageUseCase } from '@/features/core/images/useCases/FetchUnsplashImageUseCase';
 import { FetchWikimediaDishImageUseCase } from '@/features/core/images/useCases/FetchWikimediaDishImageUseCase';
-import Constants from 'expo-constants';
-import { ContainerModule } from 'inversify';
 
 const imagesModule = new ContainerModule(({ bind }) => {
   bind<string>(IMAGES_TYPES.UnsplashApiKey).toConstantValue(Constants.expoConfig?.extra?.unsplashAccessKey ?? '');

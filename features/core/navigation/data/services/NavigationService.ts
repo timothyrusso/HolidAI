@@ -1,10 +1,10 @@
+import { inject, injectable } from 'inversify';
 import { NAVIGATION_TYPES } from '@/features/core/navigation/di/types';
 import { Modals } from '@/features/core/navigation/domain/entities/Modals';
 import { Routes } from '@/features/core/navigation/domain/entities/Routes';
 import { Stacks } from '@/features/core/navigation/domain/entities/Stacks';
 import type { INavigationService } from '@/features/core/navigation/domain/entities/services/INavigationService';
 import type { IRouterClient, NavigationHref } from '@/features/core/navigation/domain/entities/services/IRouterClient';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class NavigationService implements INavigationService {

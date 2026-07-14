@@ -1,5 +1,5 @@
-import { SCREEN_WIDTH, components, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { components, SCREEN_WIDTH, spacing } from '@/features/core/ui';
 
 export const styles = StyleSheet.create({
   container: {

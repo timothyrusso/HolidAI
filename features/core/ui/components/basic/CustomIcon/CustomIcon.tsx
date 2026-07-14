@@ -1,8 +1,8 @@
-import { styles } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon.style';
 import { Ionicons } from '@react-native-vector-icons/ionicons';
 import type { ComponentProps } from 'react';
 import type { ViewProps } from 'react-native';
 import { type GestureResponderEvent, type OpaqueColorValue, type StyleProp, View, type ViewStyle } from 'react-native';
+import { styles } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon.style';
 
 export const DEFAULT_ICON_SIZE = 30;
 
