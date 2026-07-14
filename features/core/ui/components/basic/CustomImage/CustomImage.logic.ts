@@ -1,6 +1,6 @@
-import { DEFAULT_BLURHASH } from '@/features/core/ui/style/blur';
 import type { ImageProps } from 'expo-image';
 import { useState } from 'react';
+import { DEFAULT_BLURHASH } from '@/features/core/ui/style/blur';
 
 const errorFallback = require('@/features/core/ui/assets/images/no-image-placeholder.jpg');
 

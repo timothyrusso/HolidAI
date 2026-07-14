@@ -1,9 +1,9 @@
-import { PlatformOS } from '@/features/core/ui/PlatformOS';
-import { style } from '@/features/core/ui/components/composite/CustomHeader/CustomHeader.style';
-import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { match } from 'ts-pattern';
+import { style } from '@/features/core/ui/components/composite/CustomHeader/CustomHeader.style';
+import { PlatformOS } from '@/features/core/ui/PlatformOS';
+import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 
 /**
  * CustomHeaderContainer logic

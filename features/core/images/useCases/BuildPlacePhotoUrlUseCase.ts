@@ -1,6 +1,6 @@
+import { inject, injectable } from 'inversify';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import { buildGooglePlacesMediaUrl } from '@/features/core/images/domain/utils/buildGooglePlacesMediaUrl';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class BuildPlacePhotoUrlUseCase {

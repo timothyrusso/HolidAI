@@ -1,5 +1,5 @@
 import type { GoogleGenerativeAIProvider } from '@ai-sdk/google';
-import { Output, generateText } from 'ai';
+import { generateText, Output } from 'ai';
 import { inject, injectable } from 'inversify';
 import type { ZodType, z } from 'zod';
 
@@ -9,7 +9,7 @@ import { GeminiExtractionError } from '@/features/ai/domain/entities/errors/Gemi
 import { GeminiSearchError } from '@/features/ai/domain/entities/errors/GeminiSearchError';
 import type { IAiClient } from '@/features/ai/domain/entities/services/IAiClient';
 import { SpanKeys } from '@/features/ai/domain/utils/SpanKeys';
-import { type Result, ensureError, fail, ok } from '@/features/core/error';
+import { ensureError, fail, ok, type Result } from '@/features/core/error';
 import type { IPerformanceTracker } from '@/features/core/performance';
 import { PERFORMANCE_TYPES } from '@/features/core/performance';
 

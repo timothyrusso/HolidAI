@@ -1,8 +1,8 @@
+import * as Network from 'expo-network';
+import { injectable } from 'inversify';
 import type { Result } from '@/features/core/error';
 import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
 import type { INetworkService } from '@/features/core/network/domain/entities/services/INetworkService';
-import * as Network from 'expo-network';
-import { injectable } from 'inversify';
 
 @injectable()
 export class NetworkService implements INetworkService {

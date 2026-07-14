@@ -11,31 +11,31 @@ import type { ILogger } from '@/features/core/error/domain/entities/services/ILo
 export class BasicLogger implements ILogger {
   /** Writes a debug-level message to `console.debug`. */
   debug(message: string, ...args: unknown[]): void {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: development logger intentionally writes to the console
     console.debug(message, ...args);
   }
 
   /** Writes an info-level message to `console.info`. */
   info(message: string, ...args: unknown[]): void {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: development logger intentionally writes to the console
     console.info(message, ...args);
   }
 
   /** Writes a warning-level message to `console.warn`. */
   warning(message: string, ...args: unknown[]): void {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: development logger intentionally writes to the console
     console.warn(message, ...args);
   }
 
   /** Writes a log-level message to `console.log`. */
   log(message: string, ...args: unknown[]): void {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: development logger intentionally writes to the console
     console.log(message, ...args);
   }
 
   /** Writes an error and optional context to `console.error`. */
   error(error: Error, context?: Record<string, unknown>): void {
-    // biome-ignore lint/suspicious/noConsole: <explanation>
+    // biome-ignore lint/suspicious/noConsole: development logger intentionally writes to the console
     console.error(error, context);
   }
 }

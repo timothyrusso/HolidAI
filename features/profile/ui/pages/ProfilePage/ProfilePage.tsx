@@ -1,10 +1,10 @@
+import { View } from 'react-native';
 import { Stacks } from '@/features/core/navigation';
 import { BaseSkeleton, BasicView, CustomImage, CustomScrollView, CustomText, icons } from '@/features/core/ui';
 import { ButtonsContainer } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer';
 import { UserDataBox } from '@/features/profile/ui/components/UserDataBox/UserDataBox';
 import { useProfilePageLogic } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.logic';
 import { styles } from '@/features/profile/ui/pages/ProfilePage/ProfilePage.style';
-import { View } from 'react-native';
 
 export const ProfilePage = () => {
   const {

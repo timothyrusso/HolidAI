@@ -1,8 +1,8 @@
+import { Pressable, View } from 'react-native';
 import { CustomIcon, CustomImage, CustomText, colors, icons, spacing } from '@/features/core/ui';
 import type { Trip } from '@/features/trips/domain/entities/Trip';
 import { useTripCardLogic } from '@/features/trips/ui/components/TripCard/TripCard.logic';
 import { styles } from '@/features/trips/ui/components/TripCard/TripCard.style';
-import { Pressable, View } from 'react-native';
 
 export const TripCard = ({ item }: { item: Trip }) => {
   const { imageUrl, imageBlurHash, location, onCardPress, isFavorite, retryCoverImage } = useTripCardLogic(item);

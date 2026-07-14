@@ -1,7 +1,7 @@
+import { FlatList, View } from 'react-native';
 import { CardType, CustomNumberButton } from '@/features/core/ui';
 import { useTravelersNumberSelectorLogic } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector.logic';
 import { styles } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector.style';
-import { FlatList, View } from 'react-native';
 
 const Separator = () => <View style={styles.separator} />;
 

@@ -1,10 +1,10 @@
+import { inject, injectable } from 'inversify';
 import type { ILogger, Result } from '@/features/core/error';
 import { ERROR_TYPES } from '@/features/core/error';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { ImageFetchOptions } from '@/features/core/images/domain/entities/ImageFetchOptions';
 import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class FetchGooglePlaceImageUseCase {

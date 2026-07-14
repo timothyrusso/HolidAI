@@ -1,3 +1,5 @@
+import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { WelcomeCards } from '@/features/auth/ui/components/WelcomeCards/WelcomeCards';
 import { useWelcomePageLogic } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.logic';
 import { styles } from '@/features/auth/ui/pages/WelcomePage/WelcomePage.style';
@@ -10,8 +12,6 @@ import {
   CustomScrollView,
   CustomText,
 } from '@/features/core/ui';
-import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
 
 export const WelcomePage = () => {
   const {

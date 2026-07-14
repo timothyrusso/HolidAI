@@ -1,12 +1,12 @@
+import { persist } from 'zustand/middleware';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 import { createSelectors } from '@/features/core/state/libraries/createSelectors';
 import { registerStore } from '@/features/core/state/libraries/createStore';
 import { createZustandStorage } from '@/features/core/state/libraries/createZustandStorage';
 import type { IStorage } from '@/features/core/storage';
 import { storage as defaultStorage } from '@/features/core/storage';
 import { TranslationKeys } from '@/features/core/translations';
-import { persist } from 'zustand/middleware';
-import { shallow } from 'zustand/shallow';
-import { createWithEqualityFn } from 'zustand/traditional';
 
 export type AppState = {
   language: string;

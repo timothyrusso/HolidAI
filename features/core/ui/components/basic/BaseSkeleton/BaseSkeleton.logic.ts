@@ -1,5 +1,5 @@
-import { colors } from '@/features/core/ui/style/colors';
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import { colors } from '@/features/core/ui/style/colors';
 
 export const useBaseSkeletonLogic = () => {
   const opacity = useSharedValue(1);

@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { type QueryCtx, internalMutation, mutation, query } from './_generated/server';
+import { internalMutation, mutation, type QueryCtx, query } from './_generated/server';
 
 const DEFAULT_TOKENS = 10;
 

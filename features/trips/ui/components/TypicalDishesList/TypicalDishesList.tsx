@@ -1,9 +1,9 @@
-import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
-import { DishItem } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem';
-import { styles } from '@/features/trips/ui/components/TypicalDishesList/TypicalDishesList.style';
 import type { FC } from 'react';
 import { Fragment } from 'react';
 import { View } from 'react-native';
+import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
+import { DishItem } from '@/features/trips/ui/components/FoodCard/components/DishItem/DishItem';
+import { styles } from '@/features/trips/ui/components/TypicalDishesList/TypicalDishesList.style';
 
 type TypicalDishesListProps = {
   dishItems: TypicalDish[] | undefined;

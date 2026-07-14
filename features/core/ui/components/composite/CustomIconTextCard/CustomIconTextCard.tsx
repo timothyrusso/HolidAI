@@ -1,3 +1,4 @@
+import type { StyleProp, ViewStyle } from 'react-native';
 import { CustomCard, type CustomCardProps } from '@/features/core/ui/components/basic/CustomCard/CustomCard';
 import { CustomIcon, type IoniconsName } from '@/features/core/ui/components/basic/CustomIcon/CustomIcon';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
@@ -6,7 +7,6 @@ import {
   useCustomIconTextCardLogic,
 } from '@/features/core/ui/components/composite/CustomIconTextCard/CustomIconTextCard.logic';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
-import type { StyleProp, ViewStyle } from 'react-native';
 
 export type CustomIconTextCardProps = CustomIconCardLogicProps &
   CustomCardProps & {

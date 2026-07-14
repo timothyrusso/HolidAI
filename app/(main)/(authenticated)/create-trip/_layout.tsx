@@ -1,6 +1,6 @@
-import { Modals, Routes, formSheetOptions, navigationService } from '@/features/core/navigation';
-import { CustomHeader, icons } from '@/features/core/ui';
 import { Stack } from 'expo-router';
+import { formSheetOptions, Modals, navigationService, Routes } from '@/features/core/navigation';
+import { CustomHeader, icons } from '@/features/core/ui';
 
 export default function CreateTripLayout() {
   return (

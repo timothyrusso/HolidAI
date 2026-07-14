@@ -1,8 +1,8 @@
+import { useCallback, useRef } from 'react';
 import type { Id } from '@/convex/_generated/dataModel';
 import { fetchPhotoNamesUseCase } from '@/features/core/images';
 import { checkConnectivityUseCase } from '@/features/core/network';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
-import { useCallback, useRef } from 'react';
 
 const MAX_PHOTOS = 6;
 

@@ -1,10 +1,10 @@
+import { Image } from 'expo-image';
+import type { FC } from 'react';
 import { BaseSkeleton } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
 import {
   type CustomImageProps,
   useCustomImageLogic,
 } from '@/features/core/ui/components/basic/CustomImage/CustomImage.logic';
-import { Image } from 'expo-image';
-import type { FC } from 'react';
 
 export const CustomImage: FC<CustomImageProps> = ({
   useBlur,

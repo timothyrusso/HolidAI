@@ -1,10 +1,10 @@
+import type { Animated, ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors } from '@/features/core/ui/style/colors';
 import { fontSize } from '@/features/core/ui/style/dimensions/fontSize';
 import { images } from '@/features/core/ui/style/dimensions/images';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 import { fontFamily } from '@/features/core/ui/style/fontFamily';
-import type { Animated, ViewStyle } from 'react-native';
-import { StyleSheet } from 'react-native';
 
 export const style = (
   chipsAlignment: ViewStyle['justifyContent'],

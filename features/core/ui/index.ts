@@ -2,23 +2,6 @@ import type { FeatureTier } from '@/features/core/featureTier';
 
 export const FEATURE_TIER: FeatureTier = 0;
 
-// Style tokens
-export * from '@/features/core/ui/style/animations';
-export * from '@/features/core/ui/style/blur';
-export * from '@/features/core/ui/style/colors';
-export * from '@/features/core/ui/style/dimensions/breakpoints';
-export * from '@/features/core/ui/style/dimensions/components';
-export * from '@/features/core/ui/style/dimensions/fontSize';
-export * from '@/features/core/ui/style/dimensions/images';
-export * from '@/features/core/ui/style/dimensions/spacing';
-export * from '@/features/core/ui/style/fontFamily';
-export * from '@/features/core/ui/style/icons';
-export * from '@/features/core/ui/style/opacity';
-export * from '@/features/core/ui/style/shadows';
-
-// Platform
-export * from '@/features/core/ui/PlatformOS';
-
 // Basic components
 export * from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
 export * from '@/features/core/ui/components/basic/Cheap/Cheap';
@@ -39,11 +22,10 @@ export * from '@/features/core/ui/components/basic/CustomTextButton/CustomTextBu
 export * from '@/features/core/ui/components/basic/CustomTextInput/CustomTextInput';
 export * from '@/features/core/ui/components/basic/LinearGradientText/LinearGradientText';
 export * from '@/features/core/ui/components/basic/LottieAnimation/LottieAnimation';
-
+export * from '@/features/core/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 // Composite components
 export * from '@/features/core/ui/components/composite/Badge/Badge';
 export * from '@/features/core/ui/components/composite/BottomSheetHeader/BottomSheetHeader';
-export * from '@/features/core/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
 export * from '@/features/core/ui/components/composite/CardWithImage/CardWithImage';
 export * from '@/features/core/ui/components/composite/CustomHeader/CustomHeader';
 export * from '@/features/core/ui/components/composite/CustomIconTextCard/CustomIconTextCard';
@@ -52,9 +34,22 @@ export * from '@/features/core/ui/components/composite/CustomScrollView/CustomSc
 export * from '@/features/core/ui/components/composite/CustomTabButton/CustomTabButton';
 export * from '@/features/core/ui/components/composite/CustomTabButtonWithText/CustomTabButtonWithText';
 export * from '@/features/core/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete';
-
 // Providers
 export * from '@/features/core/ui/components/providers/ToastProvider';
-
 // View components
 export * from '@/features/core/ui/components/view/BasicView/BasicView';
+// Platform
+export * from '@/features/core/ui/PlatformOS';
+// Style tokens
+export * from '@/features/core/ui/style/animations';
+export * from '@/features/core/ui/style/blur';
+export * from '@/features/core/ui/style/colors';
+export * from '@/features/core/ui/style/dimensions/breakpoints';
+export * from '@/features/core/ui/style/dimensions/components';
+export * from '@/features/core/ui/style/dimensions/fontSize';
+export * from '@/features/core/ui/style/dimensions/images';
+export * from '@/features/core/ui/style/dimensions/spacing';
+export * from '@/features/core/ui/style/fontFamily';
+export * from '@/features/core/ui/style/icons';
+export * from '@/features/core/ui/style/opacity';
+export * from '@/features/core/ui/style/shadows';

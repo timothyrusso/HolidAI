@@ -1,7 +1,7 @@
-import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
-import { styles } from '@/features/trips/ui/components/OpenMapButton/OpenMapButton.style';
 import type { FC } from 'react';
 import { Pressable, type StyleProp, type ViewStyle } from 'react-native';
+import { CustomIcon, CustomText, colors, icons, spacing } from '@/features/core/ui';
+import { styles } from '@/features/trips/ui/components/OpenMapButton/OpenMapButton.style';
 
 type OpenMapButtonProps = {
   onPress: () => void;

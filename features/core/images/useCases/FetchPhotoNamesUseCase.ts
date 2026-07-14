@@ -1,8 +1,8 @@
+import { inject, injectable } from 'inversify';
 import type { ILogger, Result } from '@/features/core/error';
 import { ERROR_TYPES } from '@/features/core/error';
 import { IMAGES_TYPES } from '@/features/core/images/di/types';
 import type { IPhotoNamesRepository } from '@/features/core/images/domain/entities/repositories/IPhotoNamesRepository';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class FetchPhotoNamesUseCase {

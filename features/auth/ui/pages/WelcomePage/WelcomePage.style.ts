@@ -1,5 +1,5 @@
-import { SCREEN_HEIGHT, breakpoints, colors, fontFamily, fontSize, images, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { breakpoints, colors, fontFamily, fontSize, images, SCREEN_HEIGHT, spacing } from '@/features/core/ui';
 
 export const styles = StyleSheet.create({
   button: {

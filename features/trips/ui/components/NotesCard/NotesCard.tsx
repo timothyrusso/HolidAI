@@ -1,7 +1,7 @@
-import { CustomIcon, CustomText, type IoniconsName, colors, spacing } from '@/features/core/ui';
-import { styles as stylesFactory } from '@/features/trips/ui/components/NotesCard/NotesCard.style';
 import { type FC, Fragment } from 'react';
 import { View } from 'react-native';
+import { CustomIcon, CustomText, colors, type IoniconsName, spacing } from '@/features/core/ui';
+import { styles as stylesFactory } from '@/features/trips/ui/components/NotesCard/NotesCard.style';
 
 type NotesCardProps = {
   title: string;

@@ -1,5 +1,5 @@
-import { Cheap, colors, icons } from '@/features/core/ui';
 import { type FC, Fragment } from 'react';
+import { Cheap, colors, icons } from '@/features/core/ui';
 
 type HeaderChipsProps = {
   travelers: number;

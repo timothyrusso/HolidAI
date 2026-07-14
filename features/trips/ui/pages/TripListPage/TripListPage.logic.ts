@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTrips } from '@/features/trips/facades/useGetTrips';
 import { useUniqueItems } from '@/features/trips/hooks/useUniqueItems';
-import { useEffect } from 'react';
 
 export const useTripListPageLogic = () => {
   const { getUniqueItems } = useUniqueItems();

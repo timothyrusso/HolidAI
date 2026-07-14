@@ -1,6 +1,6 @@
+import { useUser } from '@clerk/expo';
 import { useToast } from '@/features/core/toast';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
-import { useUser } from '@clerk/expo';
 
 export const useDeleteAllTrips = () => {
   const { deleteAllTrips } = useTripRepository();

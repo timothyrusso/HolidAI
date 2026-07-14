@@ -1,8 +1,8 @@
+import { inject, injectable } from 'inversify';
 import type { ILogger, Result } from '@/features/core/error';
 import { ERROR_TYPES } from '@/features/core/error';
 import { NETWORK_TYPES } from '@/features/core/network/di/types';
 import type { INetworkService } from '@/features/core/network/domain/entities/services/INetworkService';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class CheckConnectivityUseCase {

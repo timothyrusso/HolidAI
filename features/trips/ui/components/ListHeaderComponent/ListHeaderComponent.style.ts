@@ -1,5 +1,5 @@
-import { spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { spacing } from '@/features/core/ui';
 
 export const style = StyleSheet.create({
   container: {

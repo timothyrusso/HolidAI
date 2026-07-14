@@ -1,9 +1,9 @@
+import { inject, injectable } from 'inversify';
 import type { Result } from '@/features/core/error';
 import { ok } from '@/features/core/error';
 import type { FetchUnsplashImageUseCase } from '@/features/core/images';
 import { IMAGES_TYPES, UrlType } from '@/features/core/images';
 import type { TripAiResp } from '@/features/trips';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class EnrichTripWithCoverImageUseCase {

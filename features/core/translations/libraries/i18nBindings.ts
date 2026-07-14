@@ -1,10 +1,10 @@
+import * as Localization from 'expo-localization';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 import { storage } from '@/features/core/storage';
 import { TranslationKeys } from '@/features/core/translations/domain/entities/TranslationKeys';
 import translationEn from '@/features/core/translations/libraries/locales/en.json';
 import translationIt from '@/features/core/translations/libraries/locales/it.json';
-import * as Localization from 'expo-localization';
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
 
 const resources = {
   it: { translation: translationIt },

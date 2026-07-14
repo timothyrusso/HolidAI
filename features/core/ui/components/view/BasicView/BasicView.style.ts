@@ -1,6 +1,6 @@
+import { StyleSheet } from 'react-native';
 import { colors } from '@/features/core/ui/style/colors';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
-import { StyleSheet } from 'react-native';
 
 export const styles = (paddingTop: number, paddingBottom: number) =>
   StyleSheet.create({

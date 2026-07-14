@@ -1,10 +1,10 @@
-import { PlatformOS, colors, spacing } from '@/features/core/ui';
+import { Platform, View } from 'react-native';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
+import { colors, PlatformOS, spacing } from '@/features/core/ui';
 import { MapCallout } from '@/features/trips/ui/components/MapCallout/MapCallout';
 import { styles } from '@/features/trips/ui/components/MapListHeaderComponent/MapListHeaderComponent.style';
 import { NumberedMarker } from '@/features/trips/ui/components/NumberedMarker/NumberedMarker';
 import type { AllCoordinates } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.logic';
-import { Platform, View } from 'react-native';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE, type Region } from 'react-native-maps';
 
 type MapListHeaderComponentProps = {
   region: Region;

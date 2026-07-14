@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { resetAllStores } from '@/features/core/state';
 import { useToast } from '@/features/core/toast';
 import { useUserRepository } from '@/features/user/data/repositories/useUserRepository';
-import { useState } from 'react';
 
 export const useLogout = () => {
   const repo = useUserRepository();

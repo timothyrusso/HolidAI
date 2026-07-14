@@ -1,7 +1,7 @@
-import { CustomIcon, CustomText, type IoniconsName, colors, icons, spacing } from '@/features/core/ui';
-import { style } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer.style';
 import { type FC, Fragment } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
+import { CustomIcon, CustomText, colors, type IoniconsName, icons, spacing } from '@/features/core/ui';
+import { style } from '@/features/profile/ui/components/ButtonsContainer/ButtonsContainer.style';
 
 type ButtonsContainerProps = {
   firstTitle: string;

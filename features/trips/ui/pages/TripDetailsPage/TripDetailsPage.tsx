@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+import { SectionList, type SectionListData, View } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import { AnimatedHeaderImage, BasicView } from '@/features/core/ui';
 import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
@@ -6,8 +8,6 @@ import { HeaderIcons } from '@/features/trips/ui/components/HeaderIcons/HeaderIc
 import { ListHeaderComponent } from '@/features/trips/ui/components/ListHeaderComponent/ListHeaderComponent';
 import { useTripDetailsPageLogic } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.logic';
 import { styles } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.style';
-import { Fragment } from 'react';
-import { SectionList, type SectionListData, View } from 'react-native';
 
 export const TripDetailsPage = () => {
   const {

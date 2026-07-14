@@ -1,10 +1,10 @@
+import type { FC } from 'react';
+import { View } from 'react-native';
 import { ButtonType } from '@/features/core/ui/components/basic/CustomButton/CustomButton.logic';
 import { CustomIconButtonMedium } from '@/features/core/ui/components/basic/CustomIconButton/CustomIconButtonMedium';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
 import { styles } from '@/features/core/ui/components/composite/BottomSheetHeader/BottomSheetHeader.style';
 import { icons } from '@/features/core/ui/style/icons';
-import type { FC } from 'react';
-import { View } from 'react-native';
 
 type BottomSheetHeaderProps = {
   title: string;

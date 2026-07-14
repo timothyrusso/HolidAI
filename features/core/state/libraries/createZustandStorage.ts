@@ -1,5 +1,5 @@
-import type { IStorage } from '@/features/core/storage';
 import { createJSONStorage } from 'zustand/middleware';
+import type { IStorage } from '@/features/core/storage';
 
 /**
  * Adapts {@link IStorage} to the interface expected by Zustand's persist middleware.

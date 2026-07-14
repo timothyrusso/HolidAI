@@ -1,8 +1,8 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { navigationService } from '@/features/core/navigation';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.data';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 export { BudgetData };
 

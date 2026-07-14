@@ -1,18 +1,19 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "android/**",
-      "ios/**",
-      "node_modules/**",
-      "dist/**",
-      "coverage/**",
-      "scripts/**",
-      ".expo/**",
-      "convex/_generated/**",
-      ".claude/workflows/**"
+    "includes": [
+      "**",
+      "!**/android/**",
+      "!**/ios/**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/coverage/**",
+      "!**/scripts/**",
+      "!**/.expo/**",
+      "!**/convex/_generated/**",
+      "!**/.claude/workflows/**"
     ]
   },
   "formatter": {
@@ -25,27 +26,27 @@
     "lineWidth": 120,
     "attributePosition": "auto",
     "bracketSpacing": true,
-    "ignore": [
-      "./.bundle",
-      "./.vscode",
-      "./android",
-      "./ios",
-      "./src/assets",
-      "**/*.json",
-      "**/*.lock",
-      "expo-env.d.ts"
+    "includes": [
+      "**",
+      "!.bundle",
+      "!.vscode",
+      "!android",
+      "!ios",
+      "!src/assets",
+      "!**/*.json",
+      "!**/*.lock",
+      "!**/expo-env.d.ts"
     ]
   },
-  "organizeImports": { "enabled": true },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "useImportType": "error"
       },
       "correctness": {
-        "all": true,
         "useExhaustiveDependencies": "off",
         "noUndeclaredDependencies": "off",
         "useImportExtensions": "off",
@@ -56,13 +57,11 @@
         }
       },
       "suspicious": {
-        "all": true,
         "noExplicitAny": "error",
-        "noConsoleLog": "off",
         "noConsole": "error",
         "noEmptyBlockStatements": "off"
       },
-      "complexity": { "all": true, "noForEach": "off" }
+      "complexity": { "noForEach": "off" }
     }
   },
   "javascript": {
@@ -92,7 +91,7 @@
   },
   "overrides": [
     {
-      "include": ["biome.json"],
+      "includes": ["**/biome.json"],
       "linter": { "enabled": false }
     },
     {
@@ -103,7 +102,10 @@
       }
     },
     {
-      "include": ["features/core/state/libraries/createSelectors.ts", "features/core/state/libraries/createStore.ts"],
+      "includes": [
+        "**/features/core/state/libraries/createSelectors.ts",
+        "**/features/core/state/libraries/createStore.ts"
+      ],
       "linter": {
         "rules": {
           "correctness": {

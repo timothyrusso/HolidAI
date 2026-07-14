@@ -1,9 +1,8 @@
 import { useRef } from 'react';
 import type { ScrollView } from 'react-native';
-
-import { useGradualKeyboardAnimation } from '@/features/core/ui/components/composite/CustomScrollView/useGradualKeyboardAnimation';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useGradualKeyboardAnimation } from '@/features/core/ui/components/composite/CustomScrollView/useGradualKeyboardAnimation';
 
 export const useCustomScrollViewLogic = (resetScroll = false) => {
   const { height } = useGradualKeyboardAnimation();

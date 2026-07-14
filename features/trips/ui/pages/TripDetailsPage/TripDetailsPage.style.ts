@@ -1,5 +1,5 @@
-import { PlatformOS, colors, fontFamily, fontSize, images, spacing } from '@/features/core/ui';
 import { Platform, StyleSheet } from 'react-native';
+import { colors, fontFamily, fontSize, images, PlatformOS, spacing } from '@/features/core/ui';
 
 export const styles = StyleSheet.create({
   subTitle: {

@@ -1,12 +1,10 @@
-import { CustomImage } from '@/features/core/ui/components/basic/CustomImage/CustomImage';
 import type { FC, ReactElement } from 'react';
 import { Animated, View, type ViewStyle } from 'react-native';
-
-import { images } from '@/features/core/ui/style/dimensions/images';
-
 import { BaseSkeleton } from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
+import { CustomImage } from '@/features/core/ui/components/basic/CustomImage/CustomImage';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
 import { style } from '@/features/core/ui/components/composite/AnimatedHeaderImage/AnimatedHeaderImage.style';
+import { images } from '@/features/core/ui/style/dimensions/images';
 
 interface AnimatedHeaderImageProps {
   value: Animated.Value;

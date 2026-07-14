@@ -1,5 +1,5 @@
-import { colors, components, fontFamily, fontSize, spacing } from '@/features/core/ui';
 import { StyleSheet } from 'react-native';
+import { colors, components, fontFamily, fontSize, spacing } from '@/features/core/ui';
 
 export const styles = StyleSheet.create({
   callout: {

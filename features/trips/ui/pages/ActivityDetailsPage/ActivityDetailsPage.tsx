@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+import { View } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import {
   AnimatedHeaderImage,
@@ -15,8 +17,6 @@ import { ActivityDetailsBox } from '@/features/trips/ui/components/ActivityDetai
 import { useActivityDetailsPageLogic } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.logic';
 import { styles } from '@/features/trips/ui/pages/ActivityDetailsPage/ActivityDetailsPage.style';
 import { ActivityImageCarousel } from '@/features/trips/ui/pages/ActivityDetailsPage/components/ActivityImageCarousel/ActivityImageCarousel';
-import { Fragment } from 'react';
-import { View } from 'react-native';
 
 export const ActivityDetailsPage = () => {
   const {

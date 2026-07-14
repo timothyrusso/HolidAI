@@ -1,8 +1,8 @@
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 import { createSelectors, registerStore } from '@/features/core/state';
 import type { DatesInfo } from '@/features/trip-generation/domain/entities/DatesInfo';
 import type { LocationInfo } from '@/features/trip-generation/domain/entities/LocationInfo';
-import { shallow } from 'zustand/shallow';
-import { createWithEqualityFn } from 'zustand/traditional';
 
 export type TripGenerationState = {
   locationInfo: LocationInfo;

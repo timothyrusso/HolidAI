@@ -1,6 +1,6 @@
+import { useLocalSearchParams } from 'expo-router';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
-import { useLocalSearchParams } from 'expo-router';
 
 export const useTypicalDishesModalPageLogic = () => {
   const { tripId } = useLocalSearchParams<{ tripId: string }>();

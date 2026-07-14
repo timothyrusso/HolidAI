@@ -1,7 +1,7 @@
-import { logger } from '@/features/core/error/di/resolve';
-import { type NavigationHref, navigationService } from '@/features/core/navigation';
 import type { ErrorBoundaryProps } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { logger } from '@/features/core/error/di/resolve';
+import { type NavigationHref, navigationService } from '@/features/core/navigation';
 
 type GenericCrashViewLogicProps = ErrorBoundaryProps & {
   redirectTo: NavigationHref;

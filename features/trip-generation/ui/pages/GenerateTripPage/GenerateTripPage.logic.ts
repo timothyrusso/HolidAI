@@ -1,3 +1,5 @@
+import { useUser } from '@clerk/expo';
+import { useEffect, useState } from 'react';
 import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
@@ -11,8 +13,6 @@ import {
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';
-import { useUser } from '@clerk/expo';
-import { useEffect, useState } from 'react';
 
 export const useGenerateTripPageLogic = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

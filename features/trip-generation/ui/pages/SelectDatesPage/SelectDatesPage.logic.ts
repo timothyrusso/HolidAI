@@ -1,3 +1,5 @@
+import { differenceInDays } from 'date-fns';
+import { useState } from 'react';
 import {
   getTimezoneFormattedDateUseCase,
   getTodayInLocalTimezoneUseCase,
@@ -7,8 +9,6 @@ import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { useGetUserTokens } from '@/features/user';
-import { differenceInDays } from 'date-fns';
-import { useState } from 'react';
 
 export const useSelectDatesPageLogic = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);

@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import { navigationService } from '@/features/core/navigation';
 import type { LocationInfo } from '@/features/trip-generation/domain/entities/LocationInfo';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
-import { useState } from 'react';
 
 const animation = require('@/features/core/ui/assets/lottie/search_animation.json');
 

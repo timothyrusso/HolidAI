@@ -1,9 +1,3 @@
-import { RootAppCrashView } from '@/features/core/error/pages';
-import { Stacks, screenOptions } from '@/features/core/navigation';
-import { queryClient } from '@/features/core/query';
-import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
-import { initI18n } from '@/features/core/translations';
-import { ToastProvider, fontsConfig } from '@/features/core/ui';
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -16,6 +10,12 @@ import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { RootAppCrashView } from '@/features/core/error/pages';
+import { Stacks, screenOptions } from '@/features/core/navigation';
+import { queryClient } from '@/features/core/query';
+import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
+import { initI18n } from '@/features/core/translations';
+import { fontsConfig, ToastProvider } from '@/features/core/ui';
 
 initSentry();
 initI18n();
@@ -41,6 +41,7 @@ export default wrap(function RootLayout() {
   }, [ref]);
 
   // biome-ignore lint/style/noNonNullAssertion: following the convex docs: https://docs.convex.dev/quickstart/react-native
+  // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: following the convex docs: https://docs.convex.dev/quickstart/react-native
   const convex = new ConvexReactClient(Constants.expoConfig?.extra?.convexUrl!, {
     unsavedChangesWarning: false,
   });

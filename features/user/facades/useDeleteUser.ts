@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { useToast } from '@/features/core/toast';
 import { useUserRepository } from '@/features/user/data/repositories/useUserRepository';
-import { useState } from 'react';
 
 export const useDeleteUser = () => {
   const repo = useUserRepository();

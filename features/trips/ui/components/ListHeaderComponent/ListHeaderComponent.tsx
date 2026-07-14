@@ -1,3 +1,6 @@
+import { type FC, memo } from 'react';
+import { View } from 'react-native';
+import type { Region } from 'react-native-maps';
 import { colors, icons } from '@/features/core/ui';
 import type { Food } from '@/features/trips/domain/entities/Food';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
@@ -9,9 +12,6 @@ import { NotesCard } from '@/features/trips/ui/components/NotesCard/NotesCard';
 import { TripDetailsCard } from '@/features/trips/ui/components/TripDetailsCard/TripDetailsCard';
 import { WeatherCard } from '@/features/trips/ui/components/WeatherCard/WeatherCard';
 import type { AllCoordinates } from '@/features/trips/ui/pages/TripDetailsPage/TripDetailsPage.logic';
-import { type FC, memo } from 'react';
-import { View } from 'react-native';
-import type { Region } from 'react-native-maps';
 
 type ListHeaderComponentProps = {
   region: Region;

@@ -1,10 +1,10 @@
+import type { StyleProp, ViewStyle } from 'react-native';
 import { CustomCard, type CustomCardProps } from '@/features/core/ui/components/basic/CustomCard/CustomCard';
 import { CustomText } from '@/features/core/ui/components/basic/CustomText/CustomText';
 import {
   type CustomNumberButtonLogicProps,
   useCustomNumberButtonLogic,
 } from '@/features/core/ui/components/composite/CustomNumberButton/CustomNumberButton.logic';
-import type { StyleProp, ViewStyle } from 'react-native';
 
 export type CustomNumberButtonProps = CustomNumberButtonLogicProps &
   CustomCardProps & {

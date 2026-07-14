@@ -1,7 +1,7 @@
-import { colorBgPulse } from '@/features/core/ui';
-import { styles } from '@/features/trip-generation/ui/components/AnimatedColorsBackground/AnimatedColorsBackground.style';
 import { Fragment } from 'react';
 import Animated from 'react-native-reanimated';
+import { colorBgPulse } from '@/features/core/ui';
+import { styles } from '@/features/trip-generation/ui/components/AnimatedColorsBackground/AnimatedColorsBackground.style';
 
 const COLORS = ['#fa7f7c', '#b58df1', '#ffe780', '#82cab2', '#87cce8'];
 const BORDER_CYCLE = 1000;

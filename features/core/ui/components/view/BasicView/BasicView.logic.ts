@@ -2,8 +2,8 @@ import { Platform, StatusBar, type StyleProp, type ViewStyle } from 'react-nativ
 import { match } from 'ts-pattern';
 
 import { logger } from '@/features/core/error';
-import { PlatformOS } from '@/features/core/ui/PlatformOS';
 import { styles } from '@/features/core/ui/components/view/BasicView/BasicView.style';
+import { PlatformOS } from '@/features/core/ui/PlatformOS';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 
 export type BasicViewProps = {

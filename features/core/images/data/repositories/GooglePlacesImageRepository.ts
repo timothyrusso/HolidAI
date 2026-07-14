@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import type { Result } from '@/features/core/error';
 import { ok } from '@/features/core/error';
 import type { IHttpClient } from '@/features/core/http';
@@ -14,7 +15,6 @@ import type { IImageListRepository } from '@/features/core/images/domain/entitie
 import type { IImageRepository } from '@/features/core/images/domain/entities/repositories/IImageRepository';
 import type { IPhotoNamesRepository } from '@/features/core/images/domain/entities/repositories/IPhotoNamesRepository';
 import { buildGooglePlacesMediaUrl } from '@/features/core/images/domain/utils/buildGooglePlacesMediaUrl';
-import { inject, injectable } from 'inversify';
 
 @injectable()
 export class GooglePlacesImageRepository implements IImageRepository, IImageListRepository, IPhotoNamesRepository {

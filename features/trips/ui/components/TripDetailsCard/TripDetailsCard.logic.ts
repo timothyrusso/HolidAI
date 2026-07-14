@@ -1,8 +1,8 @@
-import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
+import { useTranslation } from 'react-i18next';
 
 import { colors } from '@/features/core/ui';
+import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useBudgetColorsMap } from '@/features/trips/hooks/useBudgetColorsMap';
-import { useTranslation } from 'react-i18next';
 
 type UseTripDetailsCardParams = {
   tripDetails: Omit<TripDetails, 'locale' | 'location'>;

@@ -1,11 +1,11 @@
-import type { Id } from '@/convex/_generated/dataModel';
-import { IMAGE_RESOLUTION, buildPlacePhotoUrlUseCase } from '@/features/core/images';
-import { navigationService } from '@/features/core/navigation';
-import { useGetTripById } from '@/features/trips/facades/useGetTripById';
-import { useRetryActivityImage } from '@/features/trips/facades/useRetryActivityImage';
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
+import type { Id } from '@/convex/_generated/dataModel';
+import { buildPlacePhotoUrlUseCase, IMAGE_RESOLUTION } from '@/features/core/images';
+import { navigationService } from '@/features/core/navigation';
+import { useGetTripById } from '@/features/trips/facades/useGetTripById';
+import { useRetryActivityImage } from '@/features/trips/facades/useRetryActivityImage';
 
 export const useActivityDetailsPageLogic = () => {
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
