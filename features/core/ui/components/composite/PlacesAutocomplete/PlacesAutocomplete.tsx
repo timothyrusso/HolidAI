@@ -1,10 +1,10 @@
+import Constants from 'expo-constants';
+import type { FC } from 'react';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import type { LocationInfo } from '@/features/core/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete.logic';
 import { usePlacesAutocompleteLogic } from '@/features/core/ui/components/composite/PlacesAutocomplete/PlacesAutocomplete.logic';
 import { colors } from '@/features/core/ui/style/colors';
 import { spacing } from '@/features/core/ui/style/dimensions/spacing';
-import Constants from 'expo-constants';
-import type { FC } from 'react';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 type PlacesAutocompleteProps = {
   onPress: (locationInfo: LocationInfo) => void;
@@ -25,7 +25,7 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
         onPress({
           name: data.description,
           coordinates: details?.geometry.location,
-          // @ts-ignore
+          // @ts-expect-error
           photoRef: details?.photos?.[0].photo_reference,
           url: details?.url,
         });

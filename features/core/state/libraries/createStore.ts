@@ -18,7 +18,9 @@ const storeResetFns = new Set<() => void>();
  * call the relevant store's persist middleware `clearStorage` separately if needed.
  */
 export const resetAllStores = () => {
-  storeResetFns.forEach(fn => fn());
+  storeResetFns.forEach(fn => {
+    fn();
+  });
 };
 
 /**
