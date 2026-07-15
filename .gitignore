@@ -54,4 +54,5 @@ arch-report.html
 .codegraph/
 
 # vscode
-.vscode/
+.vscode/*
+!.vscode/settings.json
