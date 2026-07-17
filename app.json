@@ -7,11 +7,6 @@
     "icon": "./features/core/ui/assets/images/icon.png",
     "scheme": "holidai",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./features/core/ui/assets/images/logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#220059"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.app.travelplanner",
