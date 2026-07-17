@@ -36,17 +36,6 @@ jobs:
       matrix:
         node: [22.x]
     steps:
-      - name: Free disk space
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
-          android: false
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
-
       - name: Setup repo
         uses: actions/checkout@v6
 
@@ -96,9 +85,6 @@ jobs:
           mkdir -p /home/runner/work/HolidAI/HolidAI/android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > /home/runner/work/HolidAI/HolidAI/android/app/google-services.json
           ls -la /home/runner/work/HolidAI/HolidAI/android/app/
-
-          # Disk space before the build (helps confirm packaging failures caused by exhaustion)
-          df -h
 
           # Do the build
           eas build --local \
