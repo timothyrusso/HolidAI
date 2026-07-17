@@ -90,6 +90,20 @@ phase('Build')
 const build = await agent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
 log(`Built issue #${issue} → ${build.prUrl}`)
 
+// PR wiring — metadata only (assignee + project). Never touches the PR body/title (owned by
+// .github/workflows/setup-pr.yml). Best-effort: the project-add step needs the `project` token
+// scope, which may be missing — it degrades to a logged remediation and never aborts the run.
+const wirePrompt = `PR wiring for the pull request ${build.prUrl}. Change METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly two things with the \`gh\` CLI:
+1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
+2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — print the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
+Report which of the two steps succeeded and whether the remediation was needed.`
+try {
+  phase('Wire PR')
+  await agent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}` })
+} catch (e) {
+  log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
+}
+
 let { review, qa } = await verify()
 let fixAttempts = 0
 
