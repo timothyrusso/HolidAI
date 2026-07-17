@@ -1,7 +1,6 @@
 export default ({ config }) => {
   const {
     GOOGLE_PLACES_API_KEY,
-    GOOGLE_MAPS_API_KEY_IOS,
     GOOGLE_MAPS_API_KEY_ANDROID,
     GOOGLE_SERVICES_PLIST,
     GOOGLE_SERVICES_PLIST_LOCAL_PATH,
@@ -14,7 +13,6 @@ export default ({ config }) => {
     CLERK_PUBLISHABLE_KEY,
     CONVEX_URL,
     SENTRY_DSN,
-    APPLE_TEAM_ID,
   } = process.env;
 
   return {
@@ -33,8 +31,6 @@ export default ({ config }) => {
     ios: {
       ...config.ios,
       googleServicesFile: GOOGLE_SERVICES_PLIST ?? GOOGLE_SERVICES_PLIST_LOCAL_PATH,
-      googleMapsApiKey: GOOGLE_MAPS_API_KEY_IOS,
-      developmentTeam: APPLE_TEAM_ID,
     },
     android: {
       ...config.android,
