@@ -15,7 +15,7 @@ export const styles = (isSelected: boolean) =>
       height: spacing.separator80,
     },
     pressed: {
-      opacity: opacity.default,
+      opacity: opacity.opacity60,
     },
     language: {
       fontSize: fontSize.LG,

@@ -32,7 +32,7 @@ export const styleButton = (
       backgroundColor: buttonStyles.backgroundColor,
     },
     pressed: {
-      opacity: opacity.default,
+      opacity: opacity.opacity60,
     },
   });
 };

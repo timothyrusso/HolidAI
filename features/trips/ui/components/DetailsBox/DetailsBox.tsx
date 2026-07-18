@@ -61,7 +61,7 @@ export const DetailsBox: FC<DetailsBoxProps> = ({
     return (
       <MaskedView style={[styles.androidWrapper, style]} maskElement={<View style={styles.mask} />}>
         <BlurView
-          intensity={blur.high}
+          intensity={blur.intensity50}
           style={styles.androidBlur}
           blurMethod="dimezisBlurView"
           blurTarget={blurTargetRef}
@@ -74,7 +74,12 @@ export const DetailsBox: FC<DetailsBoxProps> = ({
   }
 
   return (
-    <BlurView intensity={blur.high} style={[styles.detailsContainer, style]} blurMethod="dimezisBlurView" tint="dark">
+    <BlurView
+      intensity={blur.intensity50}
+      style={[styles.detailsContainer, style]}
+      blurMethod="dimezisBlurView"
+      tint="dark"
+    >
       {content}
     </BlurView>
   );

@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
   capStatusContainer: {
     backgroundColor: colors.primary,

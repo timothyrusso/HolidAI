@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
   badge: {
     width: spacing.FourfoldAndHalf,

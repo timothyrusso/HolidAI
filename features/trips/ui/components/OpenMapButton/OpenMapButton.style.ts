@@ -23,6 +23,6 @@ export const styles = StyleSheet.create({
     color: colors.primaryBlack,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
 });
