@@ -1,5 +1,4 @@
-import { useAuth } from '@clerk/expo';
-import { type ErrorBoundaryProps, Redirect, Stack } from 'expo-router';
+import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import { GenericCrashView } from '@/features/core/error/pages';
 import { Routes, Stacks, screenOptions } from '@/features/core/navigation';
 
@@ -8,10 +7,6 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 }
 
 export default function AuthLayout() {
-  const { isSignedIn } = useAuth();
-
-  if (!isSignedIn) return <Redirect href={`/${Routes.Welcome}`} />;
-
   return (
     <Stack screenOptions={screenOptions}>
       <Stack.Screen name={Stacks.Tabs} />
