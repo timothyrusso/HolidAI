@@ -57,3 +57,39 @@ index c790d20..5a28a67 100644
      r: 0,
      g: 0,
      b: 0,
+diff --git a/node_modules/react-native-really-awesome-button/src/themed/colors.js b/node_modules/react-native-really-awesome-button/src/themed/colors.js
+index d1f144e..123a9da 100644
+--- a/node_modules/react-native-really-awesome-button/src/themed/colors.js
++++ b/node_modules/react-native-really-awesome-button/src/themed/colors.js
+@@ -1,5 +1,6 @@
+ /* eslint-disable no-sequences */
+ /* eslint-disable no-bitwise */
++let pSBCr;
+ export default (p, c0, c1, l) => {
+   let r,
+     g,
+@@ -20,8 +21,8 @@ export default (p, c0, c1, l) => {
+     (c1 && !a)
+   )
+     return null;
+-  if (!this.pSBCr)
+-    this.pSBCr = (d) => {
++  if (!pSBCr)
++    pSBCr = (d) => {
+       let n = d.length,
+         x = {};
+       if (n > 9) {
+@@ -56,11 +57,11 @@ export default (p, c0, c1, l) => {
+     };
+   (h = c0.length > 9),
+     (h = a ? (c1.length > 9 ? true : c1 == 'c' ? !h : false) : h),
+-    (f = this.pSBCr(c0)),
++    (f = pSBCr(c0)),
+     (P = p < 0),
+     (t =
+       c1 && c1 != 'c'
+-        ? this.pSBCr(c1)
++        ? pSBCr(c1)
+         : P
+         ? { r: 0, g: 0, b: 0, a: -1 }
+         : { r: 255, g: 255, b: 255, a: -1 }),
