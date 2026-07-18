@@ -1,0 +1,59 @@
+diff --git a/node_modules/react-native-really-awesome-button/lib/commonjs/themed/colors.js b/node_modules/react-native-really-awesome-button/lib/commonjs/themed/colors.js
+index b699388..67414ed 100644
+--- a/node_modules/react-native-really-awesome-button/lib/commonjs/themed/colors.js
++++ b/node_modules/react-native-really-awesome-button/lib/commonjs/themed/colors.js
+@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
+ exports.default = void 0;
+ /* eslint-disable no-sequences */
+ /* eslint-disable no-bitwise */
++let pSBCr;
+ var _default = (p, c0, c1, l) => {
+   let r,
+     g,
+@@ -18,7 +19,7 @@ var _default = (p, c0, c1, l) => {
+     m = Math.round,
+     a = typeof c1 === 'string';
+   if (typeof p !== 'number' || p < -1 || p > 1 || typeof c0 !== 'string' || c0[0] !== 'r' && c0[0] !== '#' || c1 && !a) return null;
+-  if (!(void 0).pSBCr) (void 0).pSBCr = d => {
++  if (!pSBCr) pSBCr = d => {
+     let n = d.length,
+       x = {};
+     if (n > 9) {
+@@ -33,7 +34,7 @@ var _default = (p, c0, c1, l) => {
+     }
+     return x;
+   };
+-  h = c0.length > 9, h = a ? c1.length > 9 ? true : c1 == 'c' ? !h : false : h, f = (void 0).pSBCr(c0), P = p < 0, t = c1 && c1 != 'c' ? (void 0).pSBCr(c1) : P ? {
++  h = c0.length > 9, h = a ? c1.length > 9 ? true : c1 == 'c' ? !h : false : h, f = pSBCr(c0), P = p < 0, t = c1 && c1 != 'c' ? pSBCr(c1) : P ? {
+     r: 0,
+     g: 0,
+     b: 0,
+diff --git a/node_modules/react-native-really-awesome-button/lib/module/themed/colors.js b/node_modules/react-native-really-awesome-button/lib/module/themed/colors.js
+index c790d20..5a28a67 100644
+--- a/node_modules/react-native-really-awesome-button/lib/module/themed/colors.js
++++ b/node_modules/react-native-really-awesome-button/lib/module/themed/colors.js
+@@ -1,5 +1,6 @@
+ /* eslint-disable no-sequences */
+ /* eslint-disable no-bitwise */
++let pSBCr;
+ export default ((p, c0, c1, l) => {
+   let r,
+     g,
+@@ -12,7 +13,7 @@ export default ((p, c0, c1, l) => {
+     m = Math.round,
+     a = typeof c1 === 'string';
+   if (typeof p !== 'number' || p < -1 || p > 1 || typeof c0 !== 'string' || c0[0] !== 'r' && c0[0] !== '#' || c1 && !a) return null;
+-  if (!this.pSBCr) this.pSBCr = d => {
++  if (!pSBCr) pSBCr = d => {
+     let n = d.length,
+       x = {};
+     if (n > 9) {
+@@ -27,7 +28,7 @@ export default ((p, c0, c1, l) => {
+     }
+     return x;
+   };
+-  h = c0.length > 9, h = a ? c1.length > 9 ? true : c1 == 'c' ? !h : false : h, f = this.pSBCr(c0), P = p < 0, t = c1 && c1 != 'c' ? this.pSBCr(c1) : P ? {
++  h = c0.length > 9, h = a ? c1.length > 9 ? true : c1 == 'c' ? !h : false : h, f = pSBCr(c0), P = p < 0, t = c1 && c1 != 'c' ? pSBCr(c1) : P ? {
+     r: 0,
+     g: 0,
+     b: 0,
