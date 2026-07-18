@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: spacing.Double,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
   boxText: {
     fontFamily: fontFamily.interMedium,

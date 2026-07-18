@@ -25,6 +25,6 @@ export const styles = StyleSheet.create({
     color: colors.primary,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
 });

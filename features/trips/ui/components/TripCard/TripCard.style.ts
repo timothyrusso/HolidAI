@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     paddingTop: spacing.Double,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
   iconContainer: {
     position: 'absolute',
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     height: spacing.Quintuple,
     justifyContent: 'center',
     alignItems: 'center',
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
     borderWidth: 1,
     borderColor: colors.secondaryGrey,
   },

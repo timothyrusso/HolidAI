@@ -34,6 +34,9 @@ ios/
 *.ipa
 .qodo
 
+# test / QA coverage output
+coverage/
+
 google-services.json
 GoogleService-Info.plist
 **/google-services.json

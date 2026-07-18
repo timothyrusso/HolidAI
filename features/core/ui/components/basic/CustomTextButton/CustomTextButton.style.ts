@@ -7,6 +7,6 @@ export const styles = StyleSheet.create({
     paddingTop: spacing.Double,
   },
   pressed: {
-    opacity: opacity.default,
+    opacity: opacity.opacity60,
   },
 });

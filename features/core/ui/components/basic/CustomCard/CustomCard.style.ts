@@ -18,6 +18,6 @@ export const styles = ({ backgroundColor, borderColor, borderWidth }: CustomCard
       borderColor,
     },
     pressed: {
-      opacity: opacity.default,
+      opacity: opacity.opacity60,
     },
   });
