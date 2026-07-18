@@ -27,20 +27,14 @@ const worktree = opts.worktree === true
 const MAX_FIX = typeof opts.maxFix === 'number' ? opts.maxFix : DEFAULT_MAX_FIX_ROUNDS // hard counter; change DEFAULT_MAX_FIX_ROUNDS above to adjust the cap
 const iso = worktree ? { isolation: 'worktree' } : {}
 
-// --- Run metrics (best-effort) ---------------------------------------------
-// Per-agent metrics for the final PR-comment report. Every value degrades to `n/a`: a
-// missing or odd runtime signal is reported as `n/a`, never thrown — metrics never fail the run.
 const MODEL_BY_AGENT = {
   'feature-builder': 'opus',
   'code-reviewer': 'opus',
   'qa-engineer': 'sonnet',
 }
-const metrics = [] // one row per tracked agent() run, in execution order
-const seenLabels = {} // disambiguate repeated roles (re-review, re-QA, fix rounds)
+const metrics = []
+const seenLabels = {}
 
-// budget.spent() is the only token signal the runtime exposes; snapshotting it before/after
-// each agent() call yields per-agent deltas. Wall-clock time is NOT available (scripts cannot
-// call Date.now()), so it is always reported as `n/a` rather than fabricated.
 function spent() {
   try {
     if (typeof budget === 'undefined' || !budget || typeof budget.spent !== 'function') return null
@@ -64,7 +58,7 @@ function tokenDelta(before, after) {
   const d = a - b
   return Number.isFinite(d) && d >= 0 ? d : 'n/a'
 }
-// Wrap agent() so every tracked run records model / codegraph / time / tokens for the report.
+
 async function trackedAgent(prompt, agentOpts) {
   const before = spent()
   const result = await agent(prompt, agentOpts)
@@ -74,8 +68,8 @@ async function trackedAgent(prompt, agentOpts) {
   metrics.push({
     agent: n > 1 ? `${label} (#${n})` : label,
     model: MODEL_BY_AGENT[agentOpts.agentType] || 'n/a',
-    codegraph: 'n/a', // real usage isn't observable from the workflow runtime
-    time: 'n/a', // scripts can't read the clock (no Date.now())
+    codegraph: 'n/a',
+    time: 'n/a',
     tokens: tokenDelta(before, spent()),
   })
   return result
@@ -172,9 +166,6 @@ phase('Build')
 const build = await trackedAgent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
 log(`Built issue #${issue} → ${build.prUrl}`)
 
-// PR wiring — metadata only (assignee + project). Never touches the PR body/title (owned by
-// .github/workflows/setup-pr.yml). Best-effort: the project-add step needs the `project` token
-// scope, which may be missing — it degrades to a logged remediation and never aborts the run.
 const wirePrompt = `PR wiring for the pull request ${build.prUrl}. Change METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly two things with the \`gh\` CLI:
 1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
 2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — print the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
@@ -200,9 +191,6 @@ while (blockingFrom(review, qa).length > 0 && fixAttempts < MAX_FIX) {
 
 const outstanding = blockingFrom(review, qa)
 
-// Final metrics report — posted as a NEW PR comment (never the PR body, which setup-pr.yml owns).
-// The workflow script has no Bash, so an agent() step runs `gh pr comment`. Best-effort: if
-// anything here fails it is logged and swallowed, never aborting the run.
 try {
   const report = buildMetricsReport()
   phase('Report')
