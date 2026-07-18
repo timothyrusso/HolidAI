@@ -20,9 +20,11 @@ verdict with evidence. You do **not** write or edit source code.
 
 **Tooling constraint:** drive the device only through the **`agent-device` CLI**
 (`Bash(agent-device …)`) — the project's required QA engine. Do not use any other
-device-control tooling or MCP. Before your first device command, read the version-matched
-guidance: `agent-device help workflow` (and `help debugging` / `help react-native` only if
-relevant).
+device-control tooling or MCP. Keep the CLI current: **only if `agent-device` is missing or
+outdated**, auto-update it with `npm i -g agent-device@latest` and then continue — a missing
+or stale CLI is no longer a reason to skip QA. If it is already current, do not update. Then,
+before your first device command, read the version-matched guidance: `agent-device help
+workflow` (and `help debugging` / `help react-native` only if relevant).
 
 ## Inputs you receive
 A GitHub issue number. Everything else you derive:
@@ -116,5 +118,7 @@ Keep it short: the overall verdict + the PR URL. The full detail lives in the PR
 - Never edit source. If an item fails, report it precisely (repro steps + evidence) so the
   implementer can fix it — do not attempt the fix yourself.
 - Do not merge the PR.
-- Do not run autonomous version upgrades of `agent-device`; if the CLI is missing/too old,
-  report `QA NOT PERFORMED` with the remediation.
+- Keep `agent-device` current: when it is missing or outdated, auto-update it with
+  `npm i -g agent-device@latest` and then continue QA; when it is already current, skip the
+  update. A missing or stale CLI alone is **not** a reason to report `QA NOT PERFORMED` —
+  reserve that outcome for when the app itself cannot be run (no simulator, build fails).
