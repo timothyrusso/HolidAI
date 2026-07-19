@@ -23,7 +23,6 @@ export type Custom3DButtonProps = {
   borderWidth?: number;
   borderRadius?: number;
   raisedColor?: string;
-  shadowColor?: string;
   raiseLevel?: number;
   height?: number;
   width?: number;
@@ -46,7 +45,6 @@ export const Custom3DButton = ({
   borderWidth = CUSTOM_3D_BUTTON_DEFAULTS.borderWidth,
   borderRadius = CUSTOM_3D_BUTTON_DEFAULTS.borderRadius,
   raisedColor = CUSTOM_3D_BUTTON_DEFAULTS.raisedColor,
-  shadowColor = CUSTOM_3D_BUTTON_DEFAULTS.shadowColor,
   raiseLevel = CUSTOM_3D_BUTTON_DEFAULTS.raiseLevel,
   height = CUSTOM_3D_BUTTON_DEFAULTS.height,
   width,
@@ -55,7 +53,7 @@ export const Custom3DButton = ({
   textSize = CUSTOM_3D_BUTTON_DEFAULTS.textSize,
   textFontFamily = CUSTOM_3D_BUTTON_DEFAULTS.textFontFamily,
 }: Custom3DButtonProps) => {
-  const { tapGesture, contentAnimatedStyle, shadowAnimatedStyle } = useCustom3DButtonLogic({
+  const { tapGesture, contentAnimatedStyle } = useCustom3DButtonLogic({
     onPress,
     disabled,
     isLoading,
@@ -68,7 +66,6 @@ export const Custom3DButton = ({
     borderWidth,
     borderRadius,
     raisedColor,
-    shadowColor,
     raiseLevel,
     height,
     width,
@@ -82,7 +79,6 @@ export const Custom3DButton = ({
   return (
     <GestureDetector gesture={tapGesture}>
       <View style={styles.container}>
-        <Animated.View style={[styles.shadow, shadowAnimatedStyle]} />
         <View style={styles.bottomFace} />
         <Animated.View style={[styles.content, contentAnimatedStyle]}>
           <View style={styles.topFace}>

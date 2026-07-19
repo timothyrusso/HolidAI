@@ -4,8 +4,6 @@ import { spacing } from '@/features/core/ui/style/dimensions/spacing';
 
 const DISABLED_OPACITY = 0.5;
 const FULL_OPACITY = 1;
-const SHADOW_HORIZONTAL_INSET: DimensionValue = '1%';
-const HALF = 2;
 
 type Custom3DButtonStyleParams = {
   backgroundColor: string;
@@ -13,7 +11,6 @@ type Custom3DButtonStyleParams = {
   borderWidth: number;
   borderRadius: number;
   raisedColor: string;
-  shadowColor: string;
   raiseLevel: number;
   height: number;
   width: number | undefined;
@@ -30,7 +27,6 @@ export const custom3DButtonStyles = ({
   borderWidth,
   borderRadius,
   raisedColor,
-  shadowColor,
   raiseLevel,
   height,
   width,
@@ -51,15 +47,6 @@ export const custom3DButtonStyles = ({
       height,
       width: containerWidth,
       opacity: isDisabled ? DISABLED_OPACITY : FULL_OPACITY,
-    },
-    shadow: {
-      position: 'absolute',
-      left: SHADOW_HORIZONTAL_INSET,
-      right: SHADOW_HORIZONTAL_INSET,
-      bottom: -raiseLevel / HALF,
-      height: faceHeight,
-      borderRadius,
-      backgroundColor: shadowColor,
     },
     bottomFace: {
       position: 'absolute',

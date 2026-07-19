@@ -11,7 +11,6 @@ export const CUSTOM_3D_BUTTON_DEFAULTS = {
   borderWidth: 2,
   borderRadius: 8,
   raisedColor: '#018B87',
-  shadowColor: '#C4C4C4',
   raiseLevel: 6,
   height: 41,
   textColor: '#FFFFFF',
@@ -20,7 +19,6 @@ export const CUSTOM_3D_BUTTON_DEFAULTS = {
   iconSize: 18,
 } as const;
 
-const HALF = 2;
 // Press-in: ~200ms ease-out translate down (mirrors the library's ANIMATED_TIMING_IN + Easing.out(cubic)).
 const PRESS_IN_TIMING = { duration: 200, easing: Easing.out(Easing.cubic) };
 // Release: spring tuned by eye to feel like the library's Animated spring (tension 100 / friction 6.75).
@@ -68,11 +66,5 @@ export const useCustom3DButtonLogic = ({ onPress, disabled, isLoading, raiseLeve
     return { transform: [{ translateY }] };
   });
 
-  const shadowAnimatedStyle = useAnimatedStyle(() => {
-    const offset = -raiseLevel / HALF;
-    const translateY = isLoading ? offset : pressProgress.value * offset;
-    return { transform: [{ translateY }] };
-  });
-
-  return { tapGesture, contentAnimatedStyle, shadowAnimatedStyle };
+  return { tapGesture, contentAnimatedStyle };
 };
