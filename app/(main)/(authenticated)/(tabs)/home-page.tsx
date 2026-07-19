@@ -1,59 +1,67 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Custom3DButton } from '@/features/core/ui';
+import { StyleSheet, View } from 'react-native';
+import AwesomeButton from 'react-native-really-awesome-button';
+import { Custom3DButton, fontFamily } from '@/features/core/ui';
 import { UpcomingTripPage } from '@/features/trips/pages';
 
 // ── TEMPORARY (issue #394) ─────────────────────────────────────────────────
-// Throwaway Custom3DButton validation demo. Delete this whole block — the
-// styles below, the demo <ScrollView>, and the extra imports — once validated.
-const handleDemoPress = () => {
-  // biome-ignore lint/suspicious/noConsole: temporary issue-394 demo feedback, removed with the demo block
-  console.log('[issue-394] Custom3DButton pressed');
+// Throwaway side-by-side comparison: our <Custom3DButton> (NEW) vs the
+// react-native-really-awesome-button library (OLD), both in the STANDARD
+// state and tuned to the same PRIMARY look. Delete this whole block — the two
+// handlers, the styles below, the overlay <View>s, and the AwesomeButton +
+// fontFamily imports — once the comparison is done. This branch is NOT merged.
+const handleNewPress = () => {
+  // biome-ignore lint/suspicious/noConsole: temporary issue-394 comparison demo
+  console.log('[issue-394] NEW (custom) pressed');
 };
 
-// The tab bar floats absolutely (bottom offset 32 + height 60); clear it plus
-// a little breathing room so the last demo button stays tappable.
-const DEMO_TAB_BAR_CLEARANCE = 108;
+const handleOldPress = () => {
+  // biome-ignore lint/suspicious/noConsole: temporary issue-394 comparison demo
+  console.log('[issue-394] OLD (library) pressed');
+};
 
 const demoStyles = StyleSheet.create({
-  home: {
-    flex: 2,
+  newButton: {
+    position: 'absolute',
+    top: 200,
+    left: 0,
+    right: 0,
   },
-  demo: {
-    flex: 1,
-  },
-  demoContent: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    gap: 12,
+  oldButton: {
+    position: 'absolute',
+    top: 400,
+    left: 0,
+    right: 0,
   },
 });
 // ───────────────────────────────────────────────────────────────────────────
 
 export default function HomePageTab() {
-  const insets = useSafeAreaInsets();
-
   return (
     <View style={styles.root}>
-      <View style={demoStyles.home}>
-        <UpcomingTripPage />
-      </View>
+      <UpcomingTripPage />
       {/* TEMPORARY (issue #394) — remove with the demo constants above. */}
-      <ScrollView
-        style={demoStyles.demo}
-        contentContainerStyle={[demoStyles.demoContent, { paddingBottom: DEMO_TAB_BAR_CLEARANCE + insets.bottom }]}
-      >
-        <Custom3DButton onPress={handleDemoPress}>PRIMARY</Custom3DButton>
-        <Custom3DButton onPress={handleDemoPress} disabled>
-          DISABLED
-        </Custom3DButton>
-        <Custom3DButton onPress={handleDemoPress} isLoading>
-          LOADING
-        </Custom3DButton>
-        <Custom3DButton onPress={handleDemoPress} leftIcon="airplane" rightIcon="arrow-forward">
-          ICONS
-        </Custom3DButton>
-      </ScrollView>
+      <View style={demoStyles.newButton}>
+        <Custom3DButton onPress={handleNewPress}>NEW</Custom3DButton>
+      </View>
+      <View style={demoStyles.oldButton}>
+        <AwesomeButton
+          width={null}
+          stretch
+          height={41}
+          backgroundColor="#000000"
+          borderColor="#01C5C0"
+          borderRadius={8}
+          backgroundDarker="#018B87"
+          raiseLevel={6}
+          backgroundShadow="transparent"
+          textColor="#FFFFFF"
+          textSize={14}
+          textFontFamily={fontFamily.interBold}
+          onPress={handleOldPress}
+        >
+          OLD
+        </AwesomeButton>
+      </View>
     </View>
   );
 }
