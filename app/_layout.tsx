@@ -9,6 +9,8 @@ import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
 import { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { RootAppCrashView } from '@/features/core/error/pages';
 import { Stacks, screenOptions } from '@/features/core/navigation';
@@ -75,17 +77,25 @@ export default wrap(function RootLayout() {
   }
 
   return (
-    <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>
-      <ClerkLoaded>
-        <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-          <QueryClientProvider client={queryClient}>
-            <KeyboardProvider>
-              <InitialLayout />
-              <ToastProvider />
-            </KeyboardProvider>
-          </QueryClientProvider>
-        </ConvexProviderWithClerk>
-      </ClerkLoaded>
-    </ClerkProvider>
+    <GestureHandlerRootView style={styles.root}>
+      <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>
+        <ClerkLoaded>
+          <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+            <QueryClientProvider client={queryClient}>
+              <KeyboardProvider>
+                <InitialLayout />
+                <ToastProvider />
+              </KeyboardProvider>
+            </QueryClientProvider>
+          </ConvexProviderWithClerk>
+        </ClerkLoaded>
+      </ClerkProvider>
+    </GestureHandlerRootView>
   );
+});
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
 });
