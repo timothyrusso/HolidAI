@@ -62,7 +62,11 @@ export const useCustom3DButtonLogic = ({ onPress, disabled, isLoading, raiseLeve
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     // While loading the button rests flat (top face down, no animation).
-    const translateY = isLoading ? raiseLevel : pressProgress.value * raiseLevel;
+    // Clamp to >= 0 so the release spring's overshoot never lifts the face ABOVE
+    // rest: Android clips children to their parent bounds by default
+    // (clipChildren), which would shear the top border for a few frames on the
+    // bounce-back; iOS (clipsToBounds=false) does not. See #394.
+    const translateY = isLoading ? raiseLevel : Math.max(0, pressProgress.value * raiseLevel);
     return { transform: [{ translateY }] };
   });
 
