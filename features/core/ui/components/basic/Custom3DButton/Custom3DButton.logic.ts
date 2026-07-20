@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { Easing, runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { fontFamily } from '@/features/core/ui/style/fontFamily';
 
-// PRIMARY spec — used as the component defaults so a bare <Custom3DButton> renders the target look.
 export const CUSTOM_3D_BUTTON_DEFAULTS = {
   backgroundColor: '#000000',
   borderColor: '#01C5C0',
@@ -19,11 +19,8 @@ export const CUSTOM_3D_BUTTON_DEFAULTS = {
   iconSize: 18,
 } as const;
 
-// Press-in: ~200ms ease-out translate down (mirrors the library's ANIMATED_TIMING_IN + Easing.out(cubic)).
 const PRESS_IN_TIMING = { duration: 200, easing: Easing.out(Easing.cubic) };
-// Release: spring tuned by eye to feel like the library's Animated spring (tension 100 / friction 6.75).
 const RELEASE_SPRING = { stiffness: 100, damping: 7, mass: 1 };
-// Allow press-and-hold: a slow release still counts as a tap.
 const TAP_MAX_DURATION = 100000;
 
 type UseCustom3DButtonLogicParams = {
@@ -34,7 +31,6 @@ type UseCustom3DButtonLogicParams = {
 };
 
 export const useCustom3DButtonLogic = ({ onPress, disabled, isLoading, raiseLevel }: UseCustom3DButtonLogicParams) => {
-  // 0 = raised (rest), 1 = pushed down (top face meets the bottom face).
   const pressProgress = useSharedValue(0);
   const isInteractive = !(disabled || isLoading);
 
@@ -50,7 +46,7 @@ export const useCustom3DButtonLogic = ({ onPress, disabled, isLoading, raiseLeve
         .onEnd(() => {
           'worklet';
           if (onPress) {
-            runOnJS(onPress)();
+            scheduleOnRN(onPress);
           }
         })
         .onFinalize(() => {
@@ -61,11 +57,6 @@ export const useCustom3DButtonLogic = ({ onPress, disabled, isLoading, raiseLeve
   );
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
-    // While loading the button rests flat (top face down, no animation).
-    // Clamp to >= 0 so the release spring's overshoot never lifts the face ABOVE
-    // rest: Android clips children to their parent bounds by default
-    // (clipChildren), which would shear the top border for a few frames on the
-    // bounce-back; iOS (clipsToBounds=false) does not. See #394.
     const translateY = isLoading ? raiseLevel : Math.max(0, pressProgress.value * raiseLevel);
     return { transform: [{ translateY }] };
   });
