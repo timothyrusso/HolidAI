@@ -36,9 +36,6 @@ export const custom3DButtonStyles = ({
   textFontFamily,
   isDisabled,
 }: Custom3DButtonStyleParams) => {
-  // The two faces (top + raised bottom) are `raiseLevel` shorter than the container.
-  // At rest the top face sits at the top, revealing a `raiseLevel`-tall strip of the raised
-  // bottom face below it. On press the top face translates down by `raiseLevel` to cover it.
   const faceHeight = height - raiseLevel;
   const containerWidth: DimensionValue | undefined = width ?? (stretch ? '100%' : undefined);
 
