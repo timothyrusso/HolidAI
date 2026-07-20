@@ -5,6 +5,7 @@ export const FEATURE_TIER: FeatureTier = 0;
 // Basic components
 export * from '@/features/core/ui/components/basic/BaseSkeleton/BaseSkeleton';
 export * from '@/features/core/ui/components/basic/Cheap/Cheap';
+export * from '@/features/core/ui/components/basic/Custom3DButton/Custom3DButton';
 export * from '@/features/core/ui/components/basic/CustomButton/CustomButton.logic';
 export * from '@/features/core/ui/components/basic/CustomButton/CustomButtonLarge';
 export * from '@/features/core/ui/components/basic/CustomButton/CustomButtonMedium';
