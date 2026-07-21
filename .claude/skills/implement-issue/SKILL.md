@@ -1,98 +1,83 @@
 ---
 name: implement-issue
-description: Implement a GitHub feature issue end-to-end — clarify → (explore) → plan approval → build → code review → device QA → one auto-fix on failure. Explicitly invoked with an issue number, e.g. `/implement-issue 378 [--explore] [--skip-review] [--skip-qa] [--worktree]`.
-argument-hint: <issue-number> [--explore] [--skip-review] [--skip-qa] [--worktree]
+description: Implement a GitHub feature issue end-to-end. Judges the issue — grills the user only if something genuinely needs clarifying (folding answers back into the issue body) — announces its reading, then launches the implement-issue-pipeline workflow (explore → build → wire PR → review → device QA → bounded auto-fix → run metrics). Explicitly invoked with an issue number, e.g. `/implement-issue 378 [--skip-explore] [--skip-review] [--skip-qa] [--worktree] [--max-fix N]`.
+argument-hint: <issue-number> [--skip-explore] [--skip-review] [--skip-qa] [--worktree] [--max-fix N]
 disable-model-invocation: true
 ---
 
-# implement-issue — end-to-end feature implementation
+# implement-issue — judge, clarify if needed, then delegate to the pipeline
 
-You (the main thread) orchestrate a feature from a GitHub issue through:
-clarify → (explore) → approve → build → review → QA → one automatic fix on failure.
-You can talk to the user AND dispatch subagents; use both.
+You (the main thread) own only the **conversation**: judging the issue, grilling when
+genuinely needed, announcing your reading, and relaying the result. The entire build
+pipeline lives in ONE place — the `implement-issue-pipeline` workflow — and you must
+NEVER re-implement any of its stages (explore/build/review/QA/fix) here or dispatch
+those agents yourself. Your job ends where the workflow begins.
 
 **Parse `$ARGUMENTS`:**
-- First token = the **issue number** (required).
-- `--explore` → run Stage 2 (a dedicated exploration pass before the plan).
-- `--skip-review` → skip Stage 5 (code review).
-- `--skip-qa` → skip Stage 6 (device QA).
-- `--worktree` → run the code-touching work in isolated git worktrees (opt-in; default is
-  the current working tree).
-
-Work the stages in order. Do not skip the two human gates (Stages 1 and 3).
+- First token = the **issue number** (required). If missing, ask which issue to work on.
+- Flags are **overrides only** — canonical defaults live in the workflow (explore, review,
+  QA all ON; worktree OFF). Map each flag the user passed to a workflow arg, and pass
+  NOTHING for flags they didn't:
+  - `--skip-explore` → `explore: false`
+  - `--skip-review` → `review: false`
+  - `--skip-qa` → `qa: false`
+  - `--worktree` → `worktree: true` (isolation; expect a cold install/build in the worktree)
+  - `--max-fix N` → `maxFix: N`
 
 ## Stage 0 — Setup
 - `gh issue view <issue>`; confirm it is a Feature-template issue (has `### Description` and
   `### Acceptance criteria`). If not, tell the user and ask how to proceed.
 
-## Stage 1 — Clarify gate (interactive)
-- Read the Description + Acceptance criteria critically. Look for genuine ambiguities, gaps,
-  contradictions, or risky assumptions that would change what gets built.
-- **If there are real doubts:** use the `grilling` skill to interview the user and resolve
-  them, staying focused on what affects the implementation.
-- **If the issue is crisp and complete:** skip grilling — say so; don't manufacture questions.
-- If anything was clarified, post a concise **Clarifications** summary as an issue comment
-  (`gh issue comment <issue> --body-file <file>`) and keep the clarified points for later.
+## Stage 1 — Judge (the only routing decision)
+Read the Description + Acceptance criteria critically. Look for genuine ambiguities, gaps,
+contradictions, or risky assumptions that would change what gets built.
 
-## Stage 2 — Explore — only if `--explore`
-- Dispatch the `explorer` subagent (`subagent_type: explorer`) with the issue number and any
-  Stage 1 clarifications. (Read-only — no worktree needed.)
-- It returns a structured exploration report (target feature/tier, files to touch, pattern to
-  mirror, integration points, risks, suggested approach). Keep it for Stages 3 and 4.
-- If `--explore` was not passed, skip this stage; you'll form the approach yourself in Stage 3.
+- **If the issue is crisp and complete:** say so and move on — do NOT manufacture questions,
+  and do NOT wait for approval. PR review is the approval gate for crisp issues.
+- **If there are real doubts:** run the `grilling` skill — interview the user one question at
+  a time until the issue would be unambiguous to an agent building it with no further
+  questions. When a question can be answered by reading the codebase, explore instead of
+  asking. Stay focused on what affects the implementation and the acceptance criteria.
 
-## Stage 3 — Approve gate (interactive)
-- Present: your understanding of the feature, the acceptance criteria you'll build to, and a
-  short implementation approach (which feature/folder, which layers). If Stage 2 ran, base
-  this on the explorer's report.
-- Wait for the user's go-ahead; adjust if they push back. Do not write code without approval.
+**Fold clarifications back into the issue body** (only if grilling happened):
+- Rewrite the issue so it is the single improved source of truth: update `### Description`
+  and `### Acceptance criteria` (and `### Out of scope` if scope changed) to incorporate
+  every resolved clarification. Keep the **exact** Feature-template headings. Do not pad or
+  invent scope — reflect only what the user actually confirmed.
+- Show the user the rewritten body and get their explicit go-ahead, then apply it with
+  `gh issue edit <issue> --body-file <file>` (editing the issue is an outward action).
+- **Fallback** — if the user declines the body edit: post the clarifications as an issue
+  comment instead (`gh issue comment <issue> --body-file <file>`) and pass them to the
+  workflow via the `clarifications` arg.
 
-## Stage 4 — Implement
-- Dispatch the `feature-builder` subagent (`subagent_type: feature-builder`; add
-  `isolation: worktree` **iff** `--worktree`). Give it the issue number, the Stage 1
-  clarifications, and — if Stage 2 ran — the exploration report inline, so it doesn't
-  re-explore.
-- It branches, implements, verifies (tsc + arch), commits, opens the PR, posts its report
-  comment, and returns the PR URL. Capture that URL.
+## Stage 2 — Announce, don't ask
+- **If you grilled:** the synthesis at the end of the grilling conversation ("so I'll build
+  X, Y, Z") already served as the announcement — proceed directly to Stage 3.
+- **If the issue was crisp:** state your reading in ONE short message — the acceptance
+  criteria as you understand them, the feature/area you expect it to touch, and any flags
+  in effect — then IMMEDIATELY proceed to Stage 3 without waiting for a reply. The user
+  interrupts if the reading is wrong; silence is consent.
 
-## Stage 5 — Code review (static) — skip if `--skip-review`
-- Dispatch the `code-reviewer` subagent (`subagent_type: code-reviewer`) with the issue
-  number. (No worktree needed — it reads committed refs via `git diff`.)
-- It reviews the diff against CLAUDE.md rules + correctness, posts a review comment, and
-  returns a verdict (`PASS` / `CHANGES-REQUESTED`) with the blocking findings. Keep those.
+## Stage 3 — Delegate to the pipeline
+- Invoke the **Workflow tool** with `{ name: "implement-issue-pipeline", args: { issue: <n>,
+  ...overrides } }` — include `clarifications` only in the fallback case above. This skill
+  explicitly authorizes that Workflow call.
+- The workflow runs explore → build → wire PR → review → device QA → bounded auto-fix →
+  run-metrics comment, and returns `{ prUrl, explored, reviewVerdict, qaVerdict, fixAttempts,
+  passed, outstanding }`.
+- While it runs, do not poll or narrate; report when it completes.
 
-## Stage 6 — Device QA — skip if `--skip-qa`
-- Dispatch the `qa-engineer` subagent (`subagent_type: qa-engineer`; add `isolation: worktree`
-  **iff** `--worktree`) with the issue number.
-- It checks out the branch, runs baseline + acceptance-criteria QA on the agent-device, posts
-  the QA comment, and returns an overall verdict with findings.
-
-## Stage 7 — Fix-loop (cap 1, automatic)
-- Collect **blocking findings** from Stage 5 (review `CHANGES-REQUESTED`) and Stage 6
-  (QA `FAIL`).
-- **If there are any blocking findings:**
-  - Dispatch `feature-builder` once more in **fix mode** (add `isolation: worktree` iff
-    `--worktree`): state that branch `feature/<issue>` and its PR already exist, include ALL
-    blocking findings (review + QA) verbatim, and instruct it to apply the fixes as new
-    commits on the existing branch — no new branch, no new PR.
-  - Re-run the enabled verify stages once: re-review (if review is on) and re-QA (if QA is on).
-    - All enabled verify stages now pass → Stage 8.
-    - Anything still blocking → **STOP** (cap = 1). Report to the user for human intervention
-      with the outstanding findings. Do not loop again.
-- Non-blocking outcomes never trigger the loop: review non-blocking nits, and QA
-  `BLOCKED` / `NEEDS-REVIEW` / `NOT PERFORMED` — surface them in Stage 8 for the user.
-
-## Stage 8 — Report
-- Summarize: the PR URL, the review verdict, the QA verdict, what happened each iteration
-  (build → review → QA → fix? → re-review + re-QA?), and anything needing the user's attention.
+## Stage 4 — Report
+- Relay the result: the PR URL, review verdict, QA verdict, fix attempts, and anything
+  outstanding that needs the user's attention (non-blocking review nits, QA
+  `BLOCKED`/`NEEDS-REVIEW`/`NOT_PERFORMED`, or findings left after the fix cap).
 - Do not merge the PR.
 
 ## Notes
-- explorer, feature-builder, code-reviewer, and qa-engineer run **sequentially** — never in
-  parallel; they share the branch, and (without `--worktree`) the working tree and the device.
-- All handoffs are through committed/pushed git state, which is why `--worktree` can isolate
-  each code-touching agent safely.
-- `--worktree` isolates the filesystem so humans can keep editing the main checkout, but a
-  fresh worktree has no `node_modules`/native build — expect a **cold app build** in the QA
-  stage (or have the agent attach to an already-running app). The simulator itself is shared.
-- This skill is long-running and drives the simulator; the QA stages take the most time.
+- **Headless/batch entry:** for unattended runs (queue draining, overnight), invoke the
+  `implement-issue-pipeline` workflow directly — same pipeline, no conversation. This skill
+  is the human-present front door.
+- **One encoding rule:** any change to pipeline behavior (stages, defaults, prompts, caps)
+  belongs in `.claude/workflows/implement-issue-pipeline.js` — never here.
+- This skill is long-running once delegated; the QA stage drives the simulator and takes
+  the most time.
