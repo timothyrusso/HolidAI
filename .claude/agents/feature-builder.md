@@ -62,8 +62,10 @@ The invoking prompt will give you a GitHub issue number. It may also give you:
 This agent's deliverable is a PR the user can review commit-by-commit.
 1. Branch. First check whether `feature/<issue-number>` already exists
    (`git rev-parse --verify feature/<issue-number>` or `gh pr list --head feature/<issue-number>`):
-   - **Fresh build:** it doesn't exist → create it off `main`, e.g. `feature/366`.
-     Never commit on `main`.
+   - **Fresh build:** it doesn't exist → create it EXPLICITLY off the up-to-date remote
+     main: `git fetch origin main && git checkout -b feature/<issue-number> origin/main`.
+     Never branch from whatever HEAD happens to be checked out — the working tree may be
+     sitting on an unrelated branch — and never commit on `main`.
    - **Fix mode:** it already exists (you were given QA findings) → check it out and
      continue on it. Do NOT create a new branch and do NOT open a new PR; the existing PR
      updates automatically when you push. Add your fixes as new commits.

@@ -33,9 +33,23 @@ const DEFAULT_MAX_FIX_ROUNDS = 2
 //   qa              default ON  — pass false to skip device QA
 //   worktree        default OFF — pass true to isolate code-touching agents
 //   maxFix          default DEFAULT_MAX_FIX_ROUNDS
-const opts = typeof args === 'object' && args !== null ? args : { issue: args }
+// Args may arrive JSON-stringified depending on the invoker (observed in the first live
+// run: `args` was the string '{"issue": 399, "worktree": true}', so `issue` became the
+// whole JSON text and `worktree: true` was silently lost). Parse defensively, and fail
+// fast on a non-numeric issue instead of propagating garbage into prompts and branch names.
+let rawArgs = args
+if (typeof rawArgs === 'string') {
+  try {
+    rawArgs = JSON.parse(rawArgs)
+  } catch {
+    // not JSON — fall through and treat it as a bare issue number
+  }
+}
+const opts = typeof rawArgs === 'object' && rawArgs !== null ? rawArgs : { issue: rawArgs }
 const issue = opts.issue
-if (!issue) throw new Error('implement-issue-pipeline: missing `issue` in args, e.g. { issue: 378 }')
+if (!issue || !/^\d+$/.test(String(issue))) {
+  throw new Error(`implement-issue-pipeline: \`issue\` must be a GitHub issue number, got: ${JSON.stringify(issue)}`)
+}
 
 const suppliedReport =
   typeof opts.explorerReport === 'string' && opts.explorerReport.trim() ? opts.explorerReport : null
@@ -117,13 +131,13 @@ function buildMetricsReport() {
     '',
     '_Best-effort: any metric the workflow runtime cannot reliably capture is shown as `n/a` and never blocks the run._',
     '',
-    '| Agent | Model | Codegraph | Wall-clock | Tokens |',
+    '| Agent | Model | Codegraph | Wall-clock | Output tokens |',
     '| --- | --- | --- | --- | --- |',
     rows,
     '',
-    `**Totals** — wall-clock: \`n/a\` · tokens: ${fmtTokens(totalTok)}`,
+    `**Totals** — wall-clock: \`n/a\` · output tokens: ${fmtTokens(totalTok)}`,
     '',
-    '<sub>Wall-clock time is `n/a` because workflow scripts cannot read the clock (`Date.now()` is unavailable). Codegraph usage is not observable from the runtime, so it is `n/a`. Tokens are per-agent `budget.spent()` deltas; the total is the whole-run delta.</sub>',
+    '<sub>Wall-clock time is `n/a` because workflow scripts cannot read the clock (`Date.now()` is unavailable). Codegraph usage is not observable from the runtime, so it is `n/a`. Token figures are per-agent `budget.spent()` deltas, which count OUTPUT tokens only — the harness-level total (input + output) is several times larger, so never reconcile the two. The total is the whole-run delta; the report-posting agent itself can never appear in the table it posts.</sub>',
   ].join('\n')
 }
 
@@ -347,7 +361,7 @@ Report which of the two steps succeeded and whether the remediation was needed.`
 try {
   phase('Wire PR')
   // Mechanical gh commands — low effort is enough and cheaper/faster.
-  await agent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low' })
+  await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low' })
 } catch (e) {
   log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
@@ -423,7 +437,9 @@ try {
 ${report}
 REPORT>>>`
   // Verbatim posting of pre-built markdown — low effort is enough and cheaper/faster.
-  await agent(reportPrompt, { agentType: 'general-purpose', label: `report:${issue}`, effort: 'low' })
+  // (Tracked, but it posts the report built just above it, so it is the one agent whose
+  // own row can never appear in the table it posts.)
+  await trackedAgent(reportPrompt, { agentType: 'general-purpose', label: `report:${issue}`, effort: 'low' })
 } catch (e) {
   log(`Metrics-report step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
