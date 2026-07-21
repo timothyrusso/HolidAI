@@ -33,7 +33,7 @@ prose describes behaviour the code no longer has).
 **Semantic** — does the prose still match the code/config?
 - CLAUDE.md rules vs actual enforcement (`biome.json`, `eslint.config.js`, `.dependency-cruiser.js`, `lefthook.yml`) — is a rule the docs claim is enforced still backed by a real rule/hook?
 - The `AGENTIC_WORKFLOW.md` "what's enforced" table vs the real linters/hooks.
-- The pipeline stages in `AGENTIC_WORKFLOW.md` vs the actual `implement-issue` skill and `implement-issue-auto` workflow.
+- The pipeline stages in `AGENTIC_WORKFLOW.md` vs the actual `implement-issue` skill and `implement-issue-pipeline` workflow.
 - The layer/folder model in `ARCHITECTURE.md` vs the real `features/` structure.
 - The issue-template headings vs the headings the agents actually parse (`### Description`, `### Acceptance criteria`).
 
