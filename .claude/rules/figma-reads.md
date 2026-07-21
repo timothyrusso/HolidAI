@@ -24,9 +24,21 @@ rate-limits *data-reading* tools to **~6 calls per MONTH**. Write tools (`use_fi
 `search_design_system`
 (all under the `mcp__plugin_figma_figma__` prefix).
 
-## NOT gated (free / exempt — use these freely)
+## NOT gated by settings — but NOT free either (learned 2026-07-21)
 
-`use_figma` (writes AND read-only inspection scripts), `create_new_file`, `whoami`.
+`use_figma`, `create_new_file`, `whoami` are not in the `ask` gate, and `use_figma` remains the
+default path for all inspection/verification. **However, `use_figma` proved to be plan-rate-limited
+too**: on 2026-07-21 it returned *"You've reached the Figma MCP tool call limit on the Starter
+plan"* after ~20 calls across 3 days. Reset cadence unknown (doc mentions per-minute + daily or
+monthly caps). Therefore:
+
+- Treat **every** Figma MCP call as scarce. **Batch aggressively** — combine inspect + build +
+  inline screenshot into one script per call whenever possible; never split work that can be atomic.
+- Prepare and validate everything OFF-Figma first (HTML preview on Desktop → user validates →
+  one batched write).
+- If a call returns the rate-limit error, STOP calling Figma tools and tell the user; retrying
+  burns nothing but adds noise — test again only after a plausible reset (next day / next month)
+  or after a plan upgrade.
 
 ## Enforcement
 
