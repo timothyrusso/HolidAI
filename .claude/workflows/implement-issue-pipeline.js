@@ -8,8 +8,8 @@ export const meta = {
     { title: 'Explore', detail: 'explorer maps the issue onto the architecture (default on)' },
     { title: 'Build', detail: 'feature-builder implements + opens PR' },
     { title: 'Wire PR', detail: 'assign PR + add to project (metadata only, best-effort)' },
-    { title: 'Review', detail: 'code-reviewer checks the diff against the rules' },
-    { title: 'QA', detail: 'qa-engineer drives the app on the agent-device (default on)' },
+    { title: 'Review', detail: 'code-reviewer checks the diff against the rules (parallel with QA)' },
+    { title: 'QA', detail: 'qa-engineer drives the app on the agent-device (default on, parallel with Review)' },
     { title: 'Fix', detail: 'feature-builder addresses blocking findings' },
     { title: 'Report', detail: 'post a best-effort run-metrics PR comment' },
   ],
@@ -78,19 +78,22 @@ function tokenDelta(before, after) {
   return Number.isFinite(d) && d >= 0 ? d : 'n/a'
 }
 
-async function trackedAgent(prompt, agentOpts) {
-  const before = spent()
-  const result = await agent(prompt, agentOpts)
-  const label = agentOpts.label
+function recordMetric(label, agentType, tokens) {
   seenLabels[label] = (seenLabels[label] || 0) + 1
   const n = seenLabels[label]
   metrics.push({
     agent: n > 1 ? `${label} (#${n})` : label,
-    model: MODEL_BY_AGENT[agentOpts.agentType] || 'n/a',
+    model: agentType ? MODEL_BY_AGENT[agentType] || 'n/a' : 'n/a',
     codegraph: 'n/a',
     time: 'n/a',
-    tokens: tokenDelta(before, spent()),
+    tokens,
   })
+}
+
+async function trackedAgent(prompt, agentOpts) {
+  const before = spent()
+  const result = await agent(prompt, agentOpts)
+  recordMetric(agentOpts.label, agentOpts.agentType, tokenDelta(before, spent()))
   return result
 }
 const runStartSpent = spent()
@@ -194,17 +197,43 @@ const fixPrompt = findings =>
     .join('\n')}`
 
 async function verify() {
-  let review = null
-  let qa = null
+  if (!doReview && !doQa) return { review: null, qa: null }
+  // Review ∥ QA: the two verify stages are independent — code-reviewer reads committed
+  // refs via `git diff` (never the working tree), qa-engineer owns the device/checkout —
+  // so they run in parallel: wall-clock = max(review, qa) instead of review + qa.
+  // Per-agent `phase` opts (not the global phase()) keep the progress groups race-free.
+  const before = spent()
+  const kinds = []
+  const thunks = []
   if (doReview) {
-    phase('Review')
-    review = await trackedAgent(reviewPrompt, { agentType: 'code-reviewer', label: `review:${issue}`, schema: REVIEW_SCHEMA })
+    kinds.push('review')
+    thunks.push(() => agent(reviewPrompt, { agentType: 'code-reviewer', label: `review:${issue}`, phase: 'Review', schema: REVIEW_SCHEMA }))
   }
   if (doQa) {
-    phase('QA')
-    qa = await trackedAgent(qaPrompt, { agentType: 'qa-engineer', label: `qa:${issue}`, schema: QA_SCHEMA, ...iso })
+    kinds.push('qa')
+    thunks.push(() => agent(qaPrompt, { agentType: 'qa-engineer', label: `qa:${issue}`, phase: 'QA', schema: QA_SCHEMA, ...iso }))
   }
-  return { review, qa }
+  const results = await parallel(thunks)
+  const delta = tokenDelta(before, spent())
+
+  const byKind = {}
+  kinds.forEach((k, i) => {
+    byKind[k] = results[i]
+  })
+  // parallel() resolves a failed/skipped agent to null instead of throwing — fail loudly
+  // here rather than letting a missing verdict read as "nothing blocking" downstream.
+  if (doReview && !byKind.review) throw new Error(`code-reviewer returned no result for issue #${issue}`)
+  if (doQa && !byKind.qa) throw new Error(`qa-engineer returned no result for issue #${issue}`)
+
+  // Concurrent budget deltas overlap, so per-agent tokens can't be attributed when both
+  // stages ran — record one combined metrics row (single-stage runs keep exact attribution).
+  if (kinds.length === 1) {
+    recordMetric(`${kinds[0]}:${issue}`, kinds[0] === 'review' ? 'code-reviewer' : 'qa-engineer', delta)
+  } else {
+    recordMetric(`verify:${issue} (review ∥ qa)`, null, delta)
+  }
+
+  return { review: byKind.review || null, qa: byKind.qa || null }
 }
 
 function blockingFrom(review, qa) {
@@ -223,7 +252,8 @@ const wirePrompt = `PR wiring for the pull request ${build.prUrl}. Change METADA
 Report which of the two steps succeeded and whether the remediation was needed.`
 try {
   phase('Wire PR')
-  await agent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}` })
+  // Mechanical gh commands — low effort is enough and cheaper/faster.
+  await agent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low' })
 } catch (e) {
   log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
@@ -250,7 +280,8 @@ try {
 <<<REPORT
 ${report}
 REPORT>>>`
-  await agent(reportPrompt, { agentType: 'general-purpose', label: `report:${issue}` })
+  // Verbatim posting of pre-built markdown — low effort is enough and cheaper/faster.
+  await agent(reportPrompt, { agentType: 'general-purpose', label: `report:${issue}`, effort: 'low' })
 } catch (e) {
   log(`Metrics-report step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
