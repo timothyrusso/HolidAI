@@ -1,4 +1,4 @@
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import { Routes } from '@/features/core/navigation';
 import { BaseSkeleton, BasicView } from '@/features/core/ui';
 import type { Trip } from '@/features/trips/domain/entities/Trip';
@@ -13,7 +13,7 @@ const renderItem = (item: Trip | UniqueItem) => {
 };
 
 export const TripListPage = () => {
-  const { userTrips } = useTripListPageLogic();
+  const { userTrips, refreshing, onRefresh } = useTripListPageLogic();
 
   return (
     <BasicView nameView={Routes.ShowAllTrips} statusBarStyle="dark">
@@ -26,6 +26,7 @@ export const TripListPage = () => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </BasicView>
   );
