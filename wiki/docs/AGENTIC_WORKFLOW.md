@@ -36,10 +36,11 @@ genuinely needs clarifying, and delegates to the single pipeline workflow
 | `explorer` | `.claude/agents/explorer.md` | Read-only. Maps an issue onto the architecture (target feature/tier, files, pattern, risks). Runs as the pipeline's first phase (default on). |
 | `feature-builder` | `.claude/agents/feature-builder.md` | Implements, verifies (tsc + arch, once per build round), commits in small layer-aligned commits, opens the PR. |
 | `code-reviewer` | `.claude/agents/code-reviewer.md` | Read-only. Reviews the diff against the rules the linters *don't* enforce. |
-| `qa-engineer` | `.claude/agents/qa-engineer.md` | Drives the app on the agent-device (baseline + acceptance criteria); posts a PASS/FAIL report. |
+| `qa-engineer` | `.claude/agents/qa-engineer.md` | Drives the app on the agent-device (baseline + acceptance criteria); posts a PASS/FAIL report and returns per-criterion results. |
+| `finding-vetter` | `.claude/agents/finding-vetter.md` | Read-only skeptic. Tries to refute one blocking finding (against the diff, code, and QA evidence) before it can trigger an auto-fix; returns confirmed/refuted/suspect. |
 | `qa-baseline` | `.claude/skills/qa-baseline/SKILL.md` | Standing regression checks run for *every* feature (startup, render, navigation). |
 | `implement-issue` | `.claude/skills/implement-issue/SKILL.md` | The **front door** (thin orchestrator): judges the issue, grills only if needed (folding answers back into the issue body), announces its reading, then delegates to the pipeline. Contains no pipeline logic. |
-| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review → device QA → bounded auto-fix → run metrics. Owns the canonical defaults. Directly invocable for headless/batch. |
+| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → run metrics. Owns the canonical defaults. Directly invocable for headless/batch. |
 | CodeGraph | `.mcp.json` + `@colbymchenry/codegraph` | Code-intelligence MCP (symbols, call paths, blast radius) that `explorer`/`feature-builder` query instead of grepping. Local index in `.codegraph/` (gitignored). |
 
 Each agent reads the deep architecture docs — [`ARCHITECTURE.md`](ARCHITECTURE.md) and
@@ -57,7 +58,7 @@ write-issue (skill, grilling)  ──►  a complete GitHub issue
       │                                                      ▼
       └──►  implement-issue-pipeline (workflow)   THE pipeline (single encoding)
               direct invocation = headless/batch    explore → build → wire PR →
-                                                    review → QA → fix → metrics
+                                                    review ∥ QA → vet → fix → metrics
 ```
 
 - **`write-issue`** interviews you (via `grilling`) and creates a complete, template-conformant
@@ -104,10 +105,30 @@ approval gate.
 
 ## The `implement-issue-pipeline` workflow
 
-The single deterministic encoding of the build pipeline: explore → build → wire PR → review →
-device QA → bounded auto-fix → run-metrics comment, with schema-validated verdicts and a hard
-fix-loop cap. It is **gate-free** — any clarification happens in `/implement-issue` before it
-launches; approval happens at PR review before merge.
+The single deterministic encoding of the build pipeline: explore → build → wire PR →
+review ∥ device QA (parallel — independent stages) → finding vetting → bounded auto-fix →
+run-metrics comment, with schema-validated verdicts and a hard fix-loop cap. It is
+**gate-free** — any clarification happens in `/implement-issue` before it launches; approval
+happens at PR review before merge.
+
+Three verification properties worth knowing:
+
+- **Per-criterion QA (traceability).** QA returns one entry per test item (`id`, the
+  acceptance criterion it verifies, class, verdict, note); the overall QA verdict is
+  **derived in code** (any item FAIL or failed baseline ⇒ FAIL) — a "PASS" provably means
+  every criterion was exercised and passed, never a self-reported summary.
+- **Adversarial vetting.** Every blocking finding gets a read-only skeptic
+  (`finding-vetter`) that tries to refute it against the diff, code, and captured QA
+  evidence before it can trigger a fix round. Refuted findings are excluded (and reported);
+  device claims that can't be verified without re-driving the app become `suspects` — never
+  auto-fixed, always surfaced for human eyes, and they block a clean `passed`. Under
+  uncertainty the vetter confirms (dropping a real bug is worse than a wasted fix round).
+- **Convergent fix loop.** Up to `maxFix` (default 2) fix rounds, but each round must make
+  progress: the loop fingerprints every findings-set it fixes against (QA findings key on
+  their stable `T`-ids) and stops early with `stuck: true` if a round reproduces any
+  previous set — including A→B→A cycles. Later fix prompts are history-aware: findings that
+  survived an attempt are marked `[PERSISTS]` and the builder is told what was already
+  tried, so round 2 is an escalation with new information, not a reroll of round 1.
 
 Invoke it directly (headless/batch) or let `/implement-issue` delegate to it. Args — the
 workflow owns these canonical defaults; callers pass only overrides:
@@ -121,9 +142,13 @@ workflow owns these canonical defaults; callers pass only overrides:
 | `review` | `true` | run the code-review stage |
 | `qa` | `true` | run device QA (pass `false` for unattended environments where agent-device is fragile) |
 | `worktree` | `false` | isolate code-touching agents in git worktrees (cold install/build cost) |
-| `maxFix` | `1` | max auto-fix rounds (hard counter; raise for more) |
+| `maxFix` | `2` | max auto-fix rounds (hard counter; convergence detection stops earlier when a round makes no progress) |
 
-Returns `{ prUrl, explored, reviewVerdict, qaVerdict, fixAttempts, passed, outstanding }`.
+Returns `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, fixAttempts, stuck, passed,
+outstanding, suspects, refuted }` — `outstanding` = confirmed findings left after the fix
+loop; `stuck` = the loop stopped early because a round made no progress; `suspects` =
+unverifiable device claims needing human eyes; `refuted` = findings the vetter dismissed
+(spot-check them).
 
 ---
 

@@ -62,15 +62,22 @@ contradictions, or risky assumptions that would change what gets built.
 - Invoke the **Workflow tool** with `{ name: "implement-issue-pipeline", args: { issue: <n>,
   ...overrides } }` — include `clarifications` only in the fallback case above. This skill
   explicitly authorizes that Workflow call.
-- The workflow runs explore → build → wire PR → review → device QA → bounded auto-fix →
-  run-metrics comment, and returns `{ prUrl, explored, reviewVerdict, qaVerdict, fixAttempts,
-  passed, outstanding }`.
+- The workflow runs explore → build → wire PR → review ∥ device QA → finding vetting →
+  bounded auto-fix (history-aware, convergence-checked) → run-metrics comment, and returns
+  `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, fixAttempts, stuck, passed,
+  outstanding, suspects, refuted }`.
 - While it runs, do not poll or narrate; report when it completes.
 
 ## Stage 4 — Report
-- Relay the result: the PR URL, review verdict, QA verdict, fix attempts, and anything
-  outstanding that needs the user's attention (non-blocking review nits, QA
-  `BLOCKED`/`NEEDS-REVIEW`/`NOT_PERFORMED`, or findings left after the fix cap).
+- Relay the result: the PR URL, review verdict, QA verdict (with per-criterion `qaItems`
+  coverage), fix attempts, and anything needing the user's attention:
+  - `outstanding` — confirmed findings left after the fix loop (human intervention). If
+    `stuck` is true, the loop stopped early because a fix round made no progress — say so
+    explicitly; the same findings came back and repeating the fix would have been a reroll.
+  - `suspects` — device claims the vetter could not verify from code + evidence; these are
+    never auto-fixed and ALWAYS need human eyes (they block a clean `passed`).
+  - `refuted` — findings the vetter dismissed (mention them so the human can spot-check).
+  - Non-blocking notes: QA items `BLOCKED`/`NEEDS-REVIEW`, or QA `NOT_PERFORMED`.
 - Do not merge the PR.
 
 ## Notes

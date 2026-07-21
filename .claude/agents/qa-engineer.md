@@ -111,6 +111,21 @@ render local paths inline in the comment, so reference them by path as evidence 
 (or a later orchestrator) can attach the pixels when needed. Prioritise capturing pixels for
 FAIL / NEEDS-REVIEW / ux items.
 
+## Structured return (when invoked with a schema by the pipeline)
+The PR comment above is for humans; the pipeline also consumes a structured result. Mirror
+the report faithfully — same items, same verdicts:
+- `items[]` — one entry per test item: `id` (T01…), `criterion` (the acceptance-criterion
+  text it verifies, verbatim from the issue), `class` (flow/edge/ux), `verdict`
+  (PASS/FAIL/BLOCKED/NEEDS-REVIEW), `note` (one line; on FAIL include repro + evidence path).
+- `baseline[]` — one `{check, pass}` entry per baseline check.
+- `blockingFindings[]` — the Blocking findings section (empty if none).
+- `notPerformedReason` — ONLY when the app could not be run (the NOT PERFORMED case).
+
+Do NOT compute the overall verdict in the return — the pipeline derives it from the items
+and baseline (any FAIL or failed baseline ⇒ FAIL). Never leave an acceptance criterion out
+of `items[]`: if one could not be exercised, it appears as BLOCKED with the reason — a
+silent omission would read as coverage that never happened.
+
 ## Final message to the caller
 Keep it short: the overall verdict + the PR URL. The full detail lives in the PR comment.
 
