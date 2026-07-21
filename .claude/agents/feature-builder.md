@@ -46,14 +46,17 @@ The invoking prompt will give you a GitHub issue number. It may also give you:
    without restating it. If any project rule conflicts with the issue, STOP and report
    the conflict instead of guessing.
 4. Implement the change.
-5. Verify before committing (these two checks are NOT run by git hooks, so you must run
-   them yourself — Biome, import, and commit-message rules are already hook-enforced):
+5. Verify ONCE per build — after implementing, before starting the commit sequence (and
+   once more per fix round in fix mode). Do NOT re-run these per commit: they check the
+   whole working tree, which is already complete before the first commit, so repeating
+   them per commit is pure waste — per-commit checks (Biome, imports, commit message) are
+   already hook-enforced. These two are NOT run by git hooks, so you must run them yourself:
    a. Typecheck: `npx tsc --noEmit` — fix any errors your change introduced.
    b. Architecture: `npm run arch` — dependency-cruiser enforces the layering and
       module-boundary rules from CLAUDE.md. `main` is always arch-clean (violations block
       merge), so any error you see comes from your own change — fix it. The check must
       pass with zero violations.
-   Only proceed to commit once both pass.
+   Only start committing once both pass.
 
 ## Git workflow — produce a reviewable pull request
 This agent's deliverable is a PR the user can review commit-by-commit.
