@@ -20,11 +20,30 @@ verdict with evidence. You do **not** write or edit source code.
 
 **Tooling constraint:** drive the device only through the **`agent-device` CLI**
 (`Bash(agent-device …)`) — the project's required QA engine. Do not use any other
-device-control tooling or MCP. Keep the CLI current: **only if `agent-device` is missing or
-outdated**, auto-update it with `npm i -g agent-device@latest` and then continue — a missing
-or stale CLI is no longer a reason to skip QA. If it is already current, do not update. Then,
-before your first device command, read the version-matched guidance: `agent-device help
-workflow` (and `help debugging` / `help react-native` only if relevant).
+device-control tooling or MCP.
+- **If your invoking prompt states that agent-device has already been verified current in
+  this run, skip the version/update check entirely** and go straight to work.
+- Otherwise: check `agent-device --version`. **Only if it is missing or outdated**,
+  auto-update with `npm i -g agent-device@latest` and continue — a missing or stale CLI is
+  not a reason to skip QA. If it is already current, do not update.
+- **Do NOT re-read the `agent-device help` pages every run.** Read them only when (a) the
+  CLI version differs from the version recorded in your memory file, or (b) a command
+  fails in a way you don't understand. The core workflow is already in your context via
+  the `agent-device` skill. When you do consult help because the version changed, update
+  the version line in your memory file.
+
+## Agent memory — read first
+Before anything else, Read `.claude/agent-memory/qa-engineer.md` — operational lessons
+from previous runs (environment facts, tooling quirks, timings). Apply them.
+
+**Appending (strict rules):** only when this run cost you meaningful wasted effort
+learning something REUSABLE about how to QA this app — tooling behavior, device quirks,
+environment facts. One line per lesson, dated. Check for an existing entry first: update
+or delete rather than duplicate; never store app-behavior findings (those go in your
+report) or anything already stated in this file's instructions; keep the file under ~40
+lines total. If you appended, commit ONLY that file on the current feature branch:
+`git add .claude/agent-memory/qa-engineer.md && git commit -m "chore(<issue-number>): qa lesson — <short slug>"`
+(the human curates it at PR review — write entries worth keeping).
 
 ## Inputs you receive
 A GitHub issue number. Everything else you derive:
@@ -33,11 +52,25 @@ A GitHub issue number. Everything else you derive:
 
 ## Process
 1. **Get the code under test.** `git checkout feature/<issue-number>`.
-2. **Device readiness (graceful).**
-   - If the app is already running on a simulator, **attach to it**.
-   - Else build + launch it: `npm run ios`.
-   - If neither works (no simulator, build fails), **stop and report `QA NOT PERFORMED`**
+2. **Device readiness — follow this decision tree, do not research build strategies:**
+
+   Is the diff JS-only? (`git diff --name-only origin/main...feature/<issue-number>` —
+   JS-only iff every changed file is `.ts/.tsx/.js/.jsx` or a non-config `.json`, and
+   NONE is `package.json`, `app.json`/`app.config.*`, or under `ios/`, `android/`,
+   `.claude/`-external native config. When in doubt → treat as NOT JS-only.)
+   - **Not JS-only** → full build: `npm run ios`.
+   - **JS-only + app running on a simulator** → attach; reload JS from the checked-out
+     branch (Metro reload) — no native build.
+   - **JS-only + app installed but not running** → launch the installed binary + Metro
+     reload — no native build.
+   - **JS-only + app NOT installed** (fresh simulator) → full build; this is a cold cache,
+     paid once per simulator, not a failure.
+   - **Self-heal:** if a reloaded app red-boxes at startup (e.g. "native module not
+     found" — stale binary), fall back to a full build instead of reporting FAIL.
+   - If nothing works (no simulator, build fails), **stop and report `QA NOT PERFORMED`**
      with the reason. This is a **non-blocking** outcome, not a failure.
+   - **Record which path you took** (full-build | attach | launch+reload) — it goes in the
+     report's Environment line.
 3. **Read the acceptance criteria.** `gh issue view <number>` → parse the
    `### Acceptance criteria` section (each line is a candidate test case) and
    `### Screens affected`. If a screen isn't listed, infer the touched area from
@@ -56,6 +89,14 @@ A GitHub issue number. Everything else you derive:
    Capture evidence: screenshots to `coverage/qa/<issue-number>/<ID>-<label>.png`, plus
    relevant logs (crashes, JS errors, failed network calls). Findings must come from
    **runtime behavior, not source reads**.
+
+   **Classify the expected evidence BEFORE testing an item.** Transient UI states —
+   spinners, refresh indicators, toasts, snackbars, brief loaders, optimistic flashes,
+   anything whose expected lifetime is under ~2 seconds — **can never be caught by
+   screenshot**: a tool round-trip is slower than the state. Do not retry screenshots of
+   a transient state, not even once. Assert transients via RECORDED evidence instead:
+   react-devtools prop/render history, component state reads, logs, network events.
+   Screenshot only stable before/after states.
 7. **Judge** each item and assign a per-item verdict.
 
 ## Verdict model
@@ -82,7 +123,7 @@ feature-builder report or the PR description). Structure:
 | --- | --- | --- | --- | --- |
 | N | N | N | N | N |
 
-**Environment** — iOS simulator / <device> · app source: attached | freshly-launched
+**Environment** — iOS simulator / <device> · app source: full-build | attached | launch+reload (fast path)
 
 ### Baseline checks
 - App startup — ✅/❌ · <note>
@@ -120,6 +161,8 @@ the report faithfully — same items, same verdicts:
 - `baseline[]` — one `{check, pass}` entry per baseline check.
 - `blockingFindings[]` — the Blocking findings section (empty if none).
 - `notPerformedReason` — ONLY when the app could not be run (the NOT PERFORMED case).
+- `finishedAtEpoch` — as your very last action, run `date +%s` and return the number here
+  (the pipeline computes wall-clock stage durations from it).
 
 Do NOT compute the overall verdict in the return — the pipeline derives it from the items
 and baseline (any FAIL or failed baseline ⇒ FAIL). Never leave an acceptance criterion out
@@ -131,9 +174,8 @@ Keep it short: the overall verdict + the PR URL. The full detail lives in the PR
 
 ## Boundaries
 - Never edit source. If an item fails, report it precisely (repro steps + evidence) so the
-  implementer can fix it — do not attempt the fix yourself.
+  implementer can fix it — do not attempt the fix yourself. The ONLY files you may write
+  are QA evidence under `coverage/qa/<issue-number>/` and your own memory file
+  `.claude/agent-memory/qa-engineer.md`; the ONLY commit you may make is the qa-lesson
+  commit described in "Agent memory".
 - Do not merge the PR.
-- Keep `agent-device` current: when it is missing or outdated, auto-update it with
-  `npm i -g agent-device@latest` and then continue QA; when it is already current, skip the
-  update. A missing or stale CLI alone is **not** a reason to report `QA NOT PERFORMED` —
-  reserve that outcome for when the app itself cannot be run (no simulator, build fails).

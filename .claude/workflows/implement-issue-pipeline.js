@@ -7,7 +7,7 @@ export const meta = {
   phases: [
     { title: 'Explore', detail: 'explorer maps the issue onto the architecture (default on)' },
     { title: 'Build', detail: 'feature-builder implements + opens PR' },
-    { title: 'Wire PR', detail: 'assign PR + add to project (metadata only, best-effort)' },
+    { title: 'Wire PR', detail: 'assign PR + add to project + verify agent-device current (best-effort)' },
     { title: 'Review', detail: 'code-reviewer checks the diff against the rules (parallel with QA)' },
     { title: 'QA', detail: 'qa-engineer drives the app on the agent-device (default on, parallel with Review)' },
     { title: 'Vet', detail: 'one skeptic per blocking finding tries to refute it before it can trigger a fix' },
@@ -33,6 +33,9 @@ const DEFAULT_MAX_FIX_ROUNDS = 2
 //   qa              default ON  — pass false to skip device QA
 //   worktree        default OFF — pass true to isolate code-touching agents
 //   maxFix          default DEFAULT_MAX_FIX_ROUNDS
+//   startedAt       optional Unix epoch (seconds) of run start, supplied by the caller
+//                   (`date +%s`) — enables wall-clock durations in the metrics table,
+//                   since workflow scripts cannot read the clock themselves
 // Args may arrive JSON-stringified depending on the invoker (observed in the first live
 // run: `args` was the string '{"issue": 399, "worktree": true}', so `issue` became the
 // whole JSON text and `worktree: true` was silently lost). Parse defensively, and fail
@@ -50,6 +53,7 @@ const issue = opts.issue
 if (!issue || !/^\d+$/.test(String(issue))) {
   throw new Error(`implement-issue-pipeline: \`issue\` must be a GitHub issue number, got: ${JSON.stringify(issue)}`)
 }
+const startedAt = typeof opts.startedAt === 'number' && Number.isFinite(opts.startedAt) ? opts.startedAt : null
 
 const suppliedReport =
   typeof opts.explorerReport === 'string' && opts.explorerReport.trim() ? opts.explorerReport : null
@@ -96,14 +100,34 @@ function tokenDelta(before, after) {
   return Number.isFinite(d) && d >= 0 ? d : 'n/a'
 }
 
-function recordMetric(label, agentType, tokens) {
+// Wall-clock: workflow scripts cannot read the clock (Date.now() is unavailable — it
+// would break run-resume), but AGENTS can. Each tracked agent returns `finishedAtEpoch`
+// (`date +%s` as its last action); durations are pure arithmetic between consecutive
+// finishes, seeded by the caller-supplied `startedAt`. Cached agents replay their
+// original epochs, so resumed runs report historically true durations.
+let lastFinishEpoch = startedAt
+function fmtDur(totalSeconds) {
+  const s = Math.max(0, Math.round(totalSeconds))
+  const m = Math.floor(s / 60)
+  return m > 0 ? `${m}m ${s % 60}s` : `${s}s`
+}
+function stageDuration(finishEpoch) {
+  const valid = typeof finishEpoch === 'number' && Number.isFinite(finishEpoch)
+  const base = lastFinishEpoch
+  if (valid) lastFinishEpoch = finishEpoch
+  if (!valid || typeof base !== 'number') return 'n/a'
+  const d = finishEpoch - base
+  return d >= 0 ? fmtDur(d) : 'n/a'
+}
+
+function recordMetric(label, agentType, tokens, time) {
   seenLabels[label] = (seenLabels[label] || 0) + 1
   const n = seenLabels[label]
   metrics.push({
     agent: n > 1 ? `${label} (#${n})` : label,
     model: agentType ? MODEL_BY_AGENT[agentType] || 'n/a' : 'n/a',
     codegraph: 'n/a',
-    time: 'n/a',
+    time: time || 'n/a',
     tokens,
   })
 }
@@ -111,7 +135,8 @@ function recordMetric(label, agentType, tokens) {
 async function trackedAgent(prompt, agentOpts) {
   const before = spent()
   const result = await agent(prompt, agentOpts)
-  recordMetric(agentOpts.label, agentOpts.agentType, tokenDelta(before, spent()))
+  const time = result && typeof result === 'object' ? stageDuration(result.finishedAtEpoch) : 'n/a'
+  recordMetric(agentOpts.label, agentOpts.agentType, tokenDelta(before, spent()), time)
   return result
 }
 const runStartSpent = spent()
@@ -135,9 +160,9 @@ function buildMetricsReport() {
     '| --- | --- | --- | --- | --- |',
     rows,
     '',
-    `**Totals** — wall-clock: \`n/a\` · output tokens: ${fmtTokens(totalTok)}`,
+    `**Totals** — wall-clock: ${startedAt != null && typeof lastFinishEpoch === 'number' && lastFinishEpoch >= startedAt ? fmtDur(lastFinishEpoch - startedAt) : '`n/a`'} · output tokens: ${fmtTokens(totalTok)}`,
     '',
-    '<sub>Wall-clock time is `n/a` because workflow scripts cannot read the clock (`Date.now()` is unavailable). Codegraph usage is not observable from the runtime, so it is `n/a`. Token figures are per-agent `budget.spent()` deltas, which count OUTPUT tokens only — the harness-level total (input + output) is several times larger, so never reconcile the two. The total is the whole-run delta; the report-posting agent itself can never appear in the table it posts.</sub>',
+    '<sub>Wall-clock durations come from agent-reported `date +%s` epochs (workflow scripts cannot read the clock — `Date.now()` is unavailable); a cell is `n/a` when an agent omitted its epoch or no `startedAt` was passed. Codegraph usage is not observable from the runtime, so it is `n/a`. Token figures are per-agent `budget.spent()` deltas, which count OUTPUT tokens only — the harness-level total (input + output) is several times larger, so never reconcile the two. The total is the whole-run delta; the report-posting agent itself can never appear in the table it posts.</sub>',
   ].join('\n')
 }
 
@@ -146,6 +171,7 @@ const EXPLORE_SCHEMA = {
   additionalProperties: false,
   properties: {
     report: { type: 'string' },
+    finishedAtEpoch: { type: 'number' },
   },
   required: ['report'],
 }
@@ -156,6 +182,7 @@ const BUILD_SCHEMA = {
   properties: {
     prUrl: { type: 'string' },
     summary: { type: 'string' },
+    finishedAtEpoch: { type: 'number' },
   },
   required: ['prUrl', 'summary'],
 }
@@ -166,6 +193,7 @@ const REVIEW_SCHEMA = {
   properties: {
     verdict: { enum: ['PASS', 'CHANGES-REQUESTED'] },
     blockingFindings: { type: 'array', items: { type: 'string' } },
+    finishedAtEpoch: { type: 'number' },
   },
   required: ['verdict', 'blockingFindings'],
 }
@@ -207,6 +235,7 @@ const QA_SCHEMA = {
     },
     blockingFindings: { type: 'array', items: { type: 'string' } },
     notPerformedReason: { type: 'string' },
+    finishedAtEpoch: { type: 'number' },
   },
   required: ['items', 'baseline', 'blockingFindings'],
 }
@@ -218,15 +247,34 @@ const VET_SCHEMA = {
   properties: {
     verdict: { enum: ['confirmed', 'refuted', 'suspect'] },
     reason: { type: 'string' },
+    finishedAtEpoch: { type: 'number' },
   },
   required: ['verdict', 'reason'],
+}
+
+// Wire agent: PR metadata (best-effort) + agent-device env pre-check. `agentDeviceReady`
+// lets the QA agent skip its own version/update ritual — the CLI is machine-global, so a
+// check done here benefits QA; only the KNOWLEDGE that it happened must be passed along.
+const WIRE_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    agentDeviceReady: { type: 'boolean' },
+    note: { type: 'string' },
+    finishedAtEpoch: { type: 'number' },
+  },
+  required: ['agentDeviceReady', 'note'],
 }
 
 const clarificationsBlock = clarifications
   ? `\n\nClarifications from the pre-build conversation (authoritative additions to the issue's Description):\n${clarifications}`
   : ''
 
-const explorePrompt = `Run pre-implementation exploration for GitHub issue #${issue} per your process: map the issue onto the architecture (target feature and dependency tier, files/layers to touch, closest pattern to mirror, integration points, risks, suggested approach). Return the full structured exploration report as the \`report\` string.${clarificationsBlock}`
+// Appended to every tracked agent's prompt — feeds the wall-clock column (see stageDuration).
+const EPOCH_INSTR =
+  '\n\nAs your very last action before returning, run `date +%s` and include the number as `finishedAtEpoch` in your structured return.'
+
+const explorePrompt = `Run pre-implementation exploration for GitHub issue #${issue} per your process: map the issue onto the architecture (target feature and dependency tier, files/layers to touch, closest pattern to mirror, integration points, risks, suggested approach). Return the full structured exploration report as the \`report\` string.${clarificationsBlock}${EPOCH_INSTR}`
 
 // ── Explore (phase 0, default on) ─────────────────────────────────────────────
 let explorerReport = suppliedReport
@@ -245,11 +293,16 @@ const explorerBlock = explorerReport
   ? `\n\nExploration report (use it as your codebase map; don't re-explore from scratch):\n${explorerReport}`
   : ''
 
-const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, open the PR with an empty body, and post your report as the first PR comment. Return the PR URL and a one-line summary.${clarificationsBlock}${explorerBlock}`
+const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, open the PR with an empty body, and post your report as the first PR comment. Return the PR URL and a one-line summary.${clarificationsBlock}${explorerBlock}${EPOCH_INSTR}`
 
-const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process, and post your review comment on the PR. Return your overall verdict (PASS or CHANGES-REQUESTED) and the list of blocking findings (empty if none).`
+const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process, and post your review comment on the PR. Return your overall verdict (PASS or CHANGES-REQUESTED) and the list of blocking findings (empty if none).${EPOCH_INSTR}`
 
-const qaPrompt = `Run device QA for issue #${issue} on branch feature/${issue} via agent-device per your process (baseline checks + acceptance criteria), and post your QA comment on the PR. Return the structured result mirroring your report: items[] (one entry per test item — id, the acceptance criterion it verifies verbatim, class, per-item verdict, one-line note with evidence path on FAIL), baseline[] ({check, pass} per baseline check), blockingFindings (empty if none), and notPerformedReason ONLY if the app could not be run. Do NOT compute an overall verdict — the pipeline derives it from the items. Every acceptance criterion must appear in items; if one could not be exercised, report it as BLOCKED with the reason.`
+const qaPrompt = deviceReady =>
+  `Run device QA for issue #${issue} on branch feature/${issue} via agent-device per your process (baseline checks + acceptance criteria), and post your QA comment on the PR. Return the structured result mirroring your report: items[] (one entry per test item — id, the acceptance criterion it verifies verbatim, class, per-item verdict, one-line note with evidence path on FAIL), baseline[] ({check, pass} per baseline check), blockingFindings (empty if none), and notPerformedReason ONLY if the app could not be run. Do NOT compute an overall verdict — the pipeline derives it from the items. Every acceptance criterion must appear in items; if one could not be exercised, report it as BLOCKED with the reason.${
+    deviceReady
+      ? ' The agent-device CLI has already been verified current in this run — skip your version/update check entirely.'
+      : ''
+  }${EPOCH_INSTR}`
 
 // History-aware fix prompt (e2): findings that survived a previous attempt are marked
 // [PERSISTS] and the builder is told what was already tried — round N is an escalation
@@ -263,7 +316,7 @@ const fixPrompt = (findings, attempt, history, persistedKeys) =>
           .map(h => `- Attempt ${h.round}: "${h.summary}"`)
           .join('\n')}\nFindings marked [PERSISTS] survived those attempts — the tried approach is wrong for them. Do NOT repeat it: re-diagnose from scratch (read the code around your previous fix commits, check the adjacent layer, question the assumed root cause) and take a different angle.`
       : ''
-  }`
+  }${EPOCH_INSTR}`
 
 async function verify() {
   if (!doReview && !doQa) return { review: null, qa: null }
@@ -272,6 +325,7 @@ async function verify() {
   // so they run in parallel: wall-clock = max(review, qa) instead of review + qa.
   // Per-agent `phase` opts (not the global phase()) keep the progress groups race-free.
   const before = spent()
+  const baseEpoch = lastFinishEpoch
   const kinds = []
   const thunks = []
   if (doReview) {
@@ -280,7 +334,7 @@ async function verify() {
   }
   if (doQa) {
     kinds.push('qa')
-    thunks.push(() => agent(qaPrompt, { agentType: 'qa-engineer', label: `qa:${issue}`, phase: 'QA', schema: QA_SCHEMA, ...iso }))
+    thunks.push(() => agent(qaPrompt(agentDeviceReady), { agentType: 'qa-engineer', label: `qa:${issue}`, phase: 'QA', schema: QA_SCHEMA, ...iso }))
   }
   const results = await parallel(thunks)
   const delta = tokenDelta(before, spent())
@@ -294,12 +348,17 @@ async function verify() {
   if (doReview && !byKind.review) throw new Error(`code-reviewer returned no result for issue #${issue}`)
   if (doQa && !byKind.qa) throw new Error(`qa-engineer returned no result for issue #${issue}`)
 
-  // Concurrent budget deltas overlap, so per-agent tokens can't be attributed when both
-  // stages ran — record one combined metrics row (single-stage runs keep exact attribution).
+  // Durations: both branches started from the same base, so each gets its own wall-clock
+  // even though tokens can only be attributed as a combined row (concurrent budget deltas
+  // overlap). Advance the shared epoch to the later of the two finishes.
+  const finishes = kinds.map(k => (byKind[k] && typeof byKind[k].finishedAtEpoch === 'number' ? byKind[k].finishedAtEpoch : null))
+  const branchDur = f => (typeof f === 'number' && typeof baseEpoch === 'number' && f >= baseEpoch ? fmtDur(f - baseEpoch) : 'n/a')
+  const maxFinish = Math.max(...finishes.filter(f => typeof f === 'number'), Number.NEGATIVE_INFINITY)
+  if (Number.isFinite(maxFinish)) lastFinishEpoch = maxFinish
   if (kinds.length === 1) {
-    recordMetric(`${kinds[0]}:${issue}`, kinds[0] === 'review' ? 'code-reviewer' : 'qa-engineer', delta)
+    recordMetric(`${kinds[0]}:${issue}`, kinds[0] === 'review' ? 'code-reviewer' : 'qa-engineer', delta, branchDur(finishes[0]))
   } else {
-    recordMetric(`verify:${issue} (review ∥ qa)`, null, delta)
+    recordMetric(`verify:${issue} (review ∥ qa)`, null, delta, `${branchDur(finishes[0])} ∥ ${branchDur(finishes[1])}`)
   }
 
   return { review: byKind.review || null, qa: byKind.qa || null }
@@ -354,14 +413,18 @@ phase('Build')
 const build = await trackedAgent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
 log(`Built issue #${issue} → ${build.prUrl}`)
 
-const wirePrompt = `PR wiring for the pull request ${build.prUrl}. Change METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly two things with the \`gh\` CLI:
+const wirePrompt = `PR wiring + environment pre-check for the pull request ${build.prUrl}. Change PR METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly three things:
 1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
-2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — print the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
-Report which of the two steps succeeded and whether the remediation was needed.`
+2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — note the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
+3. Verify the agent-device CLI is current: \`agent-device --version\`; if missing or outdated, run \`npm i -g agent-device@latest\` and re-check. Return \`agentDeviceReady: true\` ONLY if you verified it is current (or successfully updated it); \`false\` on any doubt or failure.
+Summarise the outcome of all three in \`note\`.${EPOCH_INSTR}`
+// Set by the wire agent; lets the QA agent skip its own version/update ritual.
+let agentDeviceReady = false
 try {
   phase('Wire PR')
-  // Mechanical gh commands — low effort is enough and cheaper/faster.
-  await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low' })
+  // Mechanical gh/npm commands — low effort is enough and cheaper/faster.
+  const wire = await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low', schema: WIRE_SCHEMA })
+  agentDeviceReady = Boolean(wire && wire.agentDeviceReady === true)
 } catch (e) {
   log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
@@ -373,7 +436,7 @@ try {
 // skeptic can't check from code + captured evidence become `suspect` — surfaced for human
 // eyes, never auto-fixed. Fail-safe: a dead vetter confirms (status quo), never drops.
 const vetPrompt = f =>
-  `Adversarially verify ONE ${f.source === 'qa' ? 'device-QA' : 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.`
+  `Adversarially verify ONE ${f.source === 'qa' ? 'device-QA' : 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.${EPOCH_INSTR}`
 
 async function vetFindings(findings) {
   if (findings.length === 0) return { confirmed: [], refuted: [], suspect: [] }
@@ -383,7 +446,9 @@ async function vetFindings(findings) {
       agent(vetPrompt(f), { agentType: 'finding-vetter', label: `vet:${issue}#${i + 1}`, phase: 'Vet', schema: VET_SCHEMA })),
   )
   const delta = tokenDelta(before, spent())
-  recordMetric(findings.length === 1 ? `vet:${issue}` : `vet:${issue} (x${findings.length})`, 'finding-vetter', delta)
+  const vetEpochs = results.filter(Boolean).map(r => r.finishedAtEpoch).filter(n => typeof n === 'number' && Number.isFinite(n))
+  const vetTime = vetEpochs.length > 0 ? stageDuration(Math.max(...vetEpochs)) : 'n/a'
+  recordMetric(findings.length === 1 ? `vet:${issue}` : `vet:${issue} (x${findings.length})`, 'finding-vetter', delta, vetTime)
 
   const out = { confirmed: [], refuted: [], suspect: [] }
   findings.forEach((f, i) => {

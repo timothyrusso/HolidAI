@@ -60,8 +60,10 @@ contradictions, or risky assumptions that would change what gets built.
 
 ## Stage 3 — Delegate to the pipeline
 - Invoke the **Workflow tool** with `{ name: "implement-issue-pipeline", args: { issue: <n>,
-  ...overrides } }` — include `clarifications` only in the fallback case above. This skill
-  explicitly authorizes that Workflow call.
+  startedAt: <unix epoch>, ...overrides } }` — `startedAt` is the output of `date +%s` at
+  invocation time (the pipeline uses it to compute wall-clock durations; workflow scripts
+  cannot read the clock). Include `clarifications` only in the fallback case above. This
+  skill explicitly authorizes that Workflow call.
 - The workflow runs explore → build → wire PR → review ∥ device QA → finding vetting →
   bounded auto-fix (history-aware, convergence-checked) → run-metrics comment, and returns
   `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, fixAttempts, stuck, passed,
