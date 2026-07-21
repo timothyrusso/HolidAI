@@ -6,6 +6,7 @@ import type { Trip, TripAiResp } from '@/features/trips/domain/entities/Trip';
 
 export interface ITripRepository {
   getTrips(): readonly Trip[] | undefined;
+  refetchTrips(): Promise<Result<void>>;
   addTrip(params: { userId: string; tripAiResp: TripAiResp; isFavorite: boolean }): Promise<Result<Id<'trips'>>>;
   deleteAllTrips(userId: string): Promise<Result<void>>;
   deleteTrip(id: Id<'trips'>): Promise<Result<void>>;

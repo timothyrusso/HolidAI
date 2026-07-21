@@ -1,5 +1,5 @@
 import { useUser } from '@clerk/expo';
-import { useMutation, useQuery } from 'convex/react';
+import { useConvex, useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { ensureError, fail, ok } from '@/features/core/error';
 import type { ITripRepository } from '@/features/trips/domain/entities/repositories/ITripRepository';
@@ -7,6 +7,8 @@ import type { ITripRepository } from '@/features/trips/domain/entities/repositor
 export const useTripRepository = (): ITripRepository => {
   const { user } = useUser();
   const userId = user?.id;
+
+  const convex = useConvex();
 
   const userTrips = useQuery(api.trips.getAllTripsbyUserId, userId ? { userId } : 'skip');
   const createTrip = useMutation(api.trips.createTrip);
@@ -101,6 +103,16 @@ export const useTripRepository = (): ITripRepository => {
 
   return {
     getTrips: () => userTrips,
+
+    refetchTrips: async () => {
+      if (!userId) return ok(undefined);
+      try {
+        await convex.query(api.trips.getAllTripsbyUserId, { userId });
+        return ok(undefined);
+      } catch (err) {
+        return fail(ensureError(err));
+      }
+    },
 
     addTrip: async params => {
       try {
