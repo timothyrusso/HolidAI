@@ -25,6 +25,7 @@ Deep architecture references live in `wiki/docs/` — consult the relevant one (
 - Log errors only in `useCases/`. Facades and `.logic.ts` do not log.
 - IoC class constructors must have an empty body `{}`. Only declare `@inject()`-decorated parameters (TypeScript assigns them to fields automatically). No object creation, no validation, no logic. All construction and setup belongs in `di/config.ts`; register ready-to-use objects via `container.registerInstance()`.
 - If a rule must be broken, stop and explain the conflict to the user before writing any code.
+- **Figma MCP reads are gated.** Never call a Figma MCP data-read tool (`get_metadata`, `get_design_context`, `get_screenshot`, `get_variable_defs`, `get_libraries`, `search_design_system`, and the rest under `mcp__plugin_figma_figma__`) unless it is genuinely mandatory AND the user has given explicit permission for that specific call. Do all Figma inspection/verification through `use_figma` (exempt write tool) instead. Full policy: `.claude/rules/figma-reads.md`.
 
 ## Import rules
 
