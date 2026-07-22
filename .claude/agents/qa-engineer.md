@@ -59,11 +59,13 @@ A GitHub issue number. Everything else you derive:
    NONE is `package.json`, `app.json`/`app.config.*`, or under `ios/`, `android/`,
    `.claude/`-external native config. When in doubt → treat as NOT JS-only.)
    - **Not JS-only** → full build: `npm run ios`.
-   - **Bundler config changed** (`metro.config.*`, `babel.config.*`, `.babelrc*` in the
-     diff) — this rule takes precedence over the app-state branches below: still no
-     native build, but a running Metro holds that config stale from startup — ALWAYS
-     restart Metro from the checkout with its cache cleared (`--clear`) before
-     launching/reloading; never plain-attach in this case.
+   - **Bundler config changed while the app is running or installed** (`metro.config.*`,
+     `babel.config.*`, `.babelrc*` in the diff) — takes precedence over the two branches
+     below: still no native build, but a running Metro holds that config stale from
+     startup — ALWAYS restart Metro from the checkout with its cache cleared (`--clear`)
+     before launching/reloading; never plain-attach in this case. On a fresh simulator
+     (app NOT installed) this rule does NOT apply — the full-build branch below already
+     starts Metro with fresh config.
    - **JS-only + app running on a simulator** → first verify the running Metro server's
      project root is THIS checkout — reloading against someone else's Metro session tests
      the wrong code while looking green. If it isn't (or you can't tell), restart Metro
@@ -118,10 +120,12 @@ On FAIL/BLOCKED/NEEDS-REVIEW do **not** abort — capture evidence and continue.
 the whole QA) · `PASS` if no item FAILs (BLOCKED/NEEDS-REVIEW are non-blocking notes) ·
 `NOT PERFORMED` if the app could not be run.
 
-## Output — post as a PR comment
-Write the report as self-contained Markdown, then post it as a comment on the PR:
-`gh pr comment <pr-url> --body-file <file>` (a new comment — do not overwrite the
-feature-builder report or the PR description). Structure:
+## Output — the QA report
+Write the report as self-contained Markdown. **When invoked with a structured schema that
+has a `report` field** (the pipeline), return it there and do NOT post any PR comment —
+the pipeline posts ONE consolidated run comment at the end. **Only when invoked without a
+schema**, post it as a PR comment (`gh pr comment <pr-url> --body-file <file>`, a new
+comment — do not overwrite others). Structure:
 
 ```markdown
 ## 🧪 Device QA — PASS | FAIL | NOT PERFORMED
@@ -168,6 +172,7 @@ the report faithfully — same items, same verdicts:
 - `baseline[]` — one `{check, pass}` entry per baseline check.
 - `blockingFindings[]` — the Blocking findings section (empty if none).
 - `notPerformedReason` — ONLY when the app could not be run (the NOT PERFORMED case).
+- `report` — the full QA report markdown described above, verbatim.
 - `finishedAtEpoch` — as your very last action, run `date +%s` and return the number here
   (the pipeline computes wall-clock stage durations from it).
 

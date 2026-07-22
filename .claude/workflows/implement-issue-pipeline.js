@@ -184,9 +184,10 @@ const BUILD_SCHEMA = {
   properties: {
     prUrl: { type: 'string' },
     summary: { type: 'string' },
+    report: { type: 'string' },
     finishedAtEpoch: { type: 'number' },
   },
-  required: ['prUrl', 'summary'],
+  required: ['prUrl', 'summary', 'report'],
 }
 
 const REVIEW_SCHEMA = {
@@ -195,9 +196,10 @@ const REVIEW_SCHEMA = {
   properties: {
     verdict: { enum: ['PASS', 'CHANGES-REQUESTED'] },
     blockingFindings: { type: 'array', items: { type: 'string' } },
+    report: { type: 'string' },
     finishedAtEpoch: { type: 'number' },
   },
-  required: ['verdict', 'blockingFindings'],
+  required: ['verdict', 'blockingFindings', 'report'],
 }
 
 // Per-criterion QA results (traceability): the qa-engineer already judges per test item
@@ -237,9 +239,10 @@ const QA_SCHEMA = {
     },
     blockingFindings: { type: 'array', items: { type: 'string' } },
     notPerformedReason: { type: 'string' },
+    report: { type: 'string' },
     finishedAtEpoch: { type: 'number' },
   },
-  required: ['items', 'baseline', 'blockingFindings'],
+  required: ['items', 'baseline', 'blockingFindings', 'report'],
 }
 
 // Skeptic verdict for one blocking finding (adversarial vetting before the fix loop).
@@ -295,12 +298,12 @@ const explorerBlock = explorerReport
   ? `\n\nExploration report (use it as your codebase map; don't re-explore from scratch):\n${explorerReport}`
   : ''
 
-const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, open the PR with an empty body, and post your report as the first PR comment. Return the PR URL and a one-line summary.${clarificationsBlock}${explorerBlock}${EPOCH_INSTR}`
+const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, and open the PR with an empty body. Do NOT post any PR comment. Return the PR URL, a one-line summary, and your full structured report markdown as \`report\`.${clarificationsBlock}${explorerBlock}${EPOCH_INSTR}`
 
-const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process, and post your review comment on the PR. Return your overall verdict (PASS or CHANGES-REQUESTED) and the list of blocking findings (empty if none).${EPOCH_INSTR}`
+const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process. Do NOT post any PR comment. Return your overall verdict (PASS or CHANGES-REQUESTED), the list of blocking findings (empty if none), and your full review report markdown as \`report\`.${EPOCH_INSTR}`
 
 const qaPrompt = deviceReady =>
-  `Run device QA for issue #${issue} on branch feature/${issue} via agent-device per your process (baseline checks + acceptance criteria), and post your QA comment on the PR. Return the structured result mirroring your report: items[] (one entry per test item — id, the acceptance criterion it verifies verbatim, class, per-item verdict, one-line note with evidence path on FAIL), baseline[] ({check, pass} per baseline check), blockingFindings (empty if none), and notPerformedReason ONLY if the app could not be run. Do NOT compute an overall verdict — the pipeline derives it from the items. Every acceptance criterion must appear in items; if one could not be exercised, report it as BLOCKED with the reason.${
+  `Run device QA for issue #${issue} on branch feature/${issue} via agent-device per your process (baseline checks + acceptance criteria). Do NOT post any PR comment. Return the structured result mirroring your report: items[] (one entry per test item — id, the acceptance criterion it verifies verbatim, class, per-item verdict, one-line note with evidence path on FAIL), baseline[] ({check, pass} per baseline check), blockingFindings (empty if none), notPerformedReason ONLY if the app could not be run, and your full QA report markdown as \`report\`. Do NOT compute an overall verdict — the pipeline derives it from the items. Every acceptance criterion must appear in items; if one could not be exercised, report it as BLOCKED with the reason.${
     deviceReady
       ? ' The agent-device CLI has already been verified current in this run — skip your version/update check entirely.'
       : ''
@@ -310,7 +313,7 @@ const qaPrompt = deviceReady =>
 // [PERSISTS] and the builder is told what was already tried — round N is an escalation
 // with new information, not a reroll of round N−1.
 const fixPrompt = (findings, attempt, history, persistedKeys) =>
-  `Fix mode for issue #${issue} (attempt ${attempt}/${MAX_FIX}). Branch feature/${issue} and its PR already exist — do NOT create a new branch or PR. Address these CONFIRMED blocking findings as new commits on the existing branch, then return the PR URL and a one-line summary of the fixes:\n${findings
+  `Fix mode for issue #${issue} (attempt ${attempt}/${MAX_FIX}). Branch feature/${issue} and its PR already exist — do NOT create a new branch or PR, and do NOT post any PR comment. Address these CONFIRMED blocking findings as new commits on the existing branch, then return the PR URL, a one-line summary of the fixes, and your fix report markdown as \`report\`:\n${findings
     .map((f, i) => `${i + 1}. [${f.source}]${persistedKeys.has(findingKey(f)) ? ' [PERSISTS — a previous fix attempt did NOT clear this]' : ''} ${f.text}`)
     .join('\n')}${
     history.length > 0
@@ -414,6 +417,8 @@ function blockingFrom(review, qa) {
 
 phase('Build')
 const build = await trackedAgent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
+// No PR means nowhere to post a run report — a build failure is the one truly fatal stage.
+if (!build || !build.prUrl) throw new Error(`build stage returned no PR for issue #${issue}`)
 log(`Built issue #${issue} → ${build.prUrl}`)
 
 const wirePrompt = `PR wiring + environment pre-check for the pull request ${build.prUrl}. Change PR METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly three things:
@@ -464,53 +469,131 @@ async function vetFindings(findings) {
   return out
 }
 
-let { review, qa } = await verify()
-let vetted = await vetFindings(blockingFrom(review, qa))
+// Everything after build is wrapped: whatever happens, the run posts its ONE consolidated
+// PR comment at the end. An aborted run reports as ABORTED with the sections it collected,
+// then rethrows — no more silent losses of already-produced reports.
+let review = null
+let qa = null
+let vetted = { confirmed: [], refuted: [], suspect: [] }
 let fixAttempts = 0
 let stuck = false
+let abortError = null
+let abortStage = null
 const seenRounds = new Set() // fingerprint of every findings-set already fixed against (e1)
-const fixHistory = [] // { round, summary } — feeds later fix prompts (e2)
+const fixHistory = [] // { round, summary, report } — feeds later fix prompts (e2) + the final comment
 let prevKeys = new Set() // last round's finding keys, for [PERSISTS] annotations
 
-while (vetted.confirmed.length > 0 && fixAttempts < MAX_FIX) {
-  // e1 — convergence stop: if this exact findings-set already triggered a fix round,
-  // another round would be a reroll — and every round costs a full re-verify (device QA,
-  // the slowest stage). The Set covers all prior rounds, so A→B→A cycles are caught too.
-  const fp = roundFingerprint(vetted.confirmed)
-  if (seenRounds.has(fp)) {
-    stuck = true
-    log(`Convergence: findings identical to a previous round — stopping early (stuck) instead of spending fix round ${fixAttempts + 1}/${MAX_FIX}`)
-    break
-  }
-  seenRounds.add(fp)
-
-  fixAttempts++
-  log(`Fix attempt ${fixAttempts}/${MAX_FIX} — ${vetted.confirmed.length} confirmed blocking finding(s)`)
-  phase('Fix')
-  const fix = await trackedAgent(fixPrompt(vetted.confirmed, fixAttempts, fixHistory, prevKeys), { agentType: 'feature-builder', label: `fix:${issue}#${fixAttempts}`, schema: BUILD_SCHEMA, ...iso })
-  fixHistory.push({ round: fixAttempts, summary: fix && fix.summary ? fix.summary : 'n/a' })
-  prevKeys = new Set(vetted.confirmed.map(findingKey))
+try {
+  abortStage = 'verify'
   ;({ review, qa } = await verify())
+  abortStage = 'vet'
   vetted = await vetFindings(blockingFrom(review, qa))
+
+  while (vetted.confirmed.length > 0 && fixAttempts < MAX_FIX) {
+    // e1 — convergence stop: if this exact findings-set already triggered a fix round,
+    // another round would be a reroll — and every round costs a full re-verify (device QA,
+    // the slowest stage). The Set covers all prior rounds, so A→B→A cycles are caught too.
+    const fp = roundFingerprint(vetted.confirmed)
+    if (seenRounds.has(fp)) {
+      stuck = true
+      log(`Convergence: findings identical to a previous round — stopping early (stuck) instead of spending fix round ${fixAttempts + 1}/${MAX_FIX}`)
+      break
+    }
+    seenRounds.add(fp)
+
+    fixAttempts++
+    log(`Fix attempt ${fixAttempts}/${MAX_FIX} — ${vetted.confirmed.length} confirmed blocking finding(s)`)
+    abortStage = `fix round ${fixAttempts}`
+    phase('Fix')
+    const fix = await trackedAgent(fixPrompt(vetted.confirmed, fixAttempts, fixHistory, prevKeys), { agentType: 'feature-builder', label: `fix:${issue}#${fixAttempts}`, schema: BUILD_SCHEMA, ...iso })
+    fixHistory.push({ round: fixAttempts, summary: fix && fix.summary ? fix.summary : 'n/a', report: fix && fix.report ? fix.report : '' })
+    prevKeys = new Set(vetted.confirmed.map(findingKey))
+    abortStage = 'verify'
+    ;({ review, qa } = await verify())
+    abortStage = 'vet'
+    vetted = await vetFindings(blockingFrom(review, qa))
+  }
+} catch (e) {
+  abortError = e
+  log(`Run aborted at ${abortStage}: ${e && e.message ? e.message : e} — posting the run report anyway`)
 }
 
 const outstanding = vetted.confirmed
 
+// ── The ONE consolidated PR comment (always posted, even on abort) ─────────────────────
+// Agents no longer post their own comments; their report markdown travels through the
+// structured returns and lands here, in collapsible sections under a short header.
+function clip(text, max) {
+  const s = typeof text === 'string' ? text : ''
+  return s.length > max ? `${s.slice(0, max)}\n\n_…truncated_` : s
+}
+function section(title, body) {
+  return `<details>\n<summary>${title}</summary>\n\n${body && body.trim() ? body : '_not available_'}\n\n</details>`
+}
+function buildFinalComment() {
+  const status = abortError
+    ? `⛔ ABORTED at ${abortStage}`
+    : outstanding.length === 0 && vetted.suspect.length === 0
+      ? '✅ PASSED'
+      : '❌ NOT PASSED'
+  const reviewV = doReview ? (review ? review.verdict : 'n/a') : 'skipped'
+  const qaV = doQa ? (qa ? qaVerdictFrom(qa) : 'n/a') : 'skipped'
+  const totalDur =
+    startedAt != null && typeof lastFinishEpoch === 'number' && lastFinishEpoch >= startedAt
+      ? fmtDur(lastFinishEpoch - startedAt)
+      : 'n/a'
+
+  const attention = []
+  if (abortError) attention.push(`- ⛔ aborted at ${abortStage}: ${abortError.message || abortError}`)
+  for (const f of outstanding) attention.push(`- ❌ outstanding [${f.source}] ${clip(f.text, 300)}`)
+  for (const f of vetted.suspect) attention.push(`- ⚠️ suspect, needs human verification [${f.source}] ${clip(f.text, 300)}`)
+  if (stuck) attention.push('- 🔁 fix loop stopped early: no progress between rounds')
+  if (vetted.refuted.length > 0) attention.push(`- 🚮 ${vetted.refuted.length} finding(s) refuted by vetting — spot-check in the Vetting section`)
+
+  const vetLines = []
+  for (const f of vetted.confirmed) vetLines.push(`- CONFIRMED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+  for (const f of vetted.suspect) vetLines.push(`- SUSPECT [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+  for (const f of vetted.refuted) vetLines.push(`- REFUTED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+
+  const buildBody =
+    clip(build.report, 15000) +
+    fixHistory.map(h => `\n\n---\n\n**Fix round ${h.round}** — ${h.summary}\n\n${clip(h.report, 8000)}`).join('')
+
+  const parts = [
+    `## 🤖 Pipeline run — issue #${issue} · ${status}`,
+    '',
+    `**review ${reviewV} · QA ${qaV} · ${fixAttempts} fix round(s) · wall-clock ${totalDur}**`,
+    '',
+    build.summary || '',
+    attention.length > 0 ? `\n**Needs attention:**\n${attention.join('\n')}` : '',
+    '',
+    section('🔨 Build report', buildBody),
+    section('🔍 Code review', doReview ? clip(review && review.report, 15000) : '_skipped_'),
+    section('🧪 Device QA', doQa ? clip(qa && qa.report, 15000) : '_skipped_'),
+  ]
+  if (vetLines.length > 0) parts.push(section('🕵️ Finding vetting', vetLines.join('\n')))
+  parts.push(section('📊 Run metrics', buildMetricsReport()))
+  return parts.join('\n')
+}
+
 try {
-  const report = buildMetricsReport()
   phase('Report')
-  const reportPrompt = `Post the run-metrics report below as a NEW comment on the pull request ${build.prUrl}. Do NOT edit the PR body, the PR title, or any existing comment — this must be an additional, standalone comment. Write everything between the <<<REPORT and REPORT>>> markers (excluding the markers themselves) VERBATIM — no edits, no summarising, no extra text — to a temp file, then run \`gh pr comment ${build.prUrl} --body-file <that-file>\`.
+  const finalComment = buildFinalComment()
+  const reportPrompt = `Post the pipeline run report below as a NEW comment on the pull request ${build.prUrl}. Do NOT edit the PR body, the PR title, or any existing comment — this must be an additional, standalone comment. Write everything between the <<<REPORT and REPORT>>> markers (excluding the markers themselves) VERBATIM — no edits, no summarising, no extra text — to a temp file, then run \`gh pr comment ${build.prUrl} --body-file <that-file>\`.
 
 <<<REPORT
-${report}
+${finalComment}
 REPORT>>>`
   // Verbatim posting of pre-built markdown — low effort is enough and cheaper/faster.
   // (Tracked, but it posts the report built just above it, so it is the one agent whose
   // own row can never appear in the table it posts.)
   await trackedAgent(reportPrompt, { agentType: 'general-purpose', label: `report:${issue}`, effort: 'low' })
 } catch (e) {
-  log(`Metrics-report step failed (non-blocking): ${e && e.message ? e.message : e}`)
+  log(`Run-report step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
+
+// The report is posted; now surface the abort to the caller with normal failure semantics.
+if (abortError) throw abortError
 
 return {
   prUrl: build.prUrl,

@@ -65,9 +65,9 @@ contradictions, or risky assumptions that would change what gets built.
   cannot read the clock). Include `clarifications` only in the fallback case above. This
   skill explicitly authorizes that Workflow call.
 - The workflow runs explore → build → wire PR → review ∥ device QA → finding vetting →
-  bounded auto-fix (history-aware, convergence-checked) → run-metrics comment, and returns
-  `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, fixAttempts, stuck, passed,
-  outstanding, suspects, refuted }`.
+  bounded auto-fix (history-aware, convergence-checked) → ONE consolidated run-report
+  comment (posted even on an aborted run), and returns `{ prUrl, explored, reviewVerdict,
+  qaVerdict, qaItems, fixAttempts, stuck, passed, outstanding, suspects, refuted }`.
 - While it runs, do not poll or narrate; report when it completes.
 
 ## Stage 4 — Report

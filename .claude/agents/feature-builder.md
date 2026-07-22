@@ -92,25 +92,28 @@ This agent's deliverable is a PR the user can review commit-by-commit.
    the PR **body empty** (`--body ""`): other GitHub reviewer automation completely
    replaces the description, so anything you write there is discarded. Do NOT put your
    report in the body.
-4. Post your full structured report (see below) as the **first comment** on the PR
-   using `gh pr comment <pr-url> --body-file <file>`, not in the description.
+4. Deliver your full structured report (see below). **When invoked with a structured
+   schema that has a `report` field** (the pipeline), return the report markdown there
+   and do NOT post any PR comment — the pipeline posts ONE consolidated run comment at
+   the end. **Only when invoked without a schema**, post it as the first comment on the
+   PR using `gh pr comment <pr-url> --body-file <file>`, never in the description.
 
 ## Constraints
 - Do NOT modify unrelated code. Keep the diff minimal and focused on the issue.
 - Do NOT merge the PR. Leave it open for human review.
 
-## Structured report (a PR comment)
-Post your report as a PR comment (`gh pr comment <pr-url> --body-file <file>`) — the durable
-record reviewers read:
-- **Fresh build:** post it as the first comment, covering:
+## Structured report
+Your report is the durable record reviewers read (delivery channel per step 4 above —
+returned to the pipeline, or posted as a comment when standalone):
+- **Fresh build:** covering:
   - A one-paragraph summary of what you implemented.
   - A bullet list of files created/changed, each with a one-line reason.
   - The commit breakdown (what each commit contains and why it's split that way).
   - Any assumptions you made or questions that remain.
   - How to verify the change (screen to check, steps to reproduce).
-- **Fix mode:** post a new follow-up comment (do not duplicate the first) titled "Fix for QA
-  findings", covering: which findings you addressed, the fix commits, and anything still open.
+- **Fix mode:** a separate report titled "Fix for QA findings", covering: which findings you
+  addressed, the fix commits, and anything still open.
 
 ## Final message to the caller
-Keep it short: the PR URL plus a one-line summary. The full detail already lives in the
-PR comment, so do not repeat it here.
+Keep it short: the PR URL plus a one-line summary. The full detail already lives in your
+report, so do not repeat it here.

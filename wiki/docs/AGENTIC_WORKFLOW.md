@@ -99,8 +99,10 @@ approval gate.
 
 ### The PR contract
 - **Title:** meaningful. **Body:** empty (other GitHub reviewer automation overwrites it).
-- **First comment:** the feature-builder report. **Further comments:** the review, QA, and
-  run-metrics reports.
+- **ONE pipeline comment**, posted at run end — even when a stage aborts the run: a short
+  status header (verdicts, fix rounds, wall-clock) plus collapsible sections carrying the
+  full build, review, device-QA, vetting, and run-metrics reports. Agents never post their
+  own comments.
 
 ---
 
