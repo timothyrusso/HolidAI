@@ -80,6 +80,8 @@ flowchart TD
         VET --> SORT{"verdict per finding"}
         SORT -->|"refuted"| DROP["excluded from fix,<br/>reported for spot-check"]
         SORT -->|"suspect"| HUMAN["never auto-fixed,<br/>blocks a clean pass,<br/>needs human eyes"]
+        DROP --> REPORT
+        HUMAN --> REPORT
         SORT -->|"confirmed"| LOOP{"confirmed left and<br/>rounds below maxFix?"}
         LOOP -->|"no"| REPORT
         LOOP -->|"yes"| CONV{"findings-set already<br/>seen in a prior round?"}
@@ -92,7 +94,8 @@ flowchart TD
 
     VERIFY -.->|"any post-build stage throws"| ABORT["abort captured"]
     ABORT --> REPORT
-    REPORT --> RET["structured return to the caller"]
+    REPORT -.->|"aborted: rethrow<br/>after reporting"| FAILED["run fails"]
+    REPORT -->|"completed without abort"| RET["structured return to the caller"]
     RET --> SUMM["skill relays the result"]
     SUMM --> PRREV["Human PR review"]
     PRREV --> MERGE["Merge — never automated"]
@@ -181,6 +184,7 @@ flowchart TD
     JS -->|"no, or in doubt"| FULL["Full build:<br/>npm run ios"]
     JS -->|"yes"| BC{"Bundler config changed?<br/>(metro / babel)"}
     BC -->|"yes, app running or installed"| RESTART["Restart Metro from checkout<br/>with cleared cache,<br/>then launch + reload"]
+    BC -->|"yes, app not installed"| FULL
     BC -->|"no"| STATE{"App state<br/>on simulator"}
     STATE -->|"running"| ROOT{"Running Metro rooted<br/>at THIS checkout?"}
     ROOT -->|"yes"| ATTACH["Attach + Metro reload"]
