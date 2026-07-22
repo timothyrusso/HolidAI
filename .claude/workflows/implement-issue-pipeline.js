@@ -349,9 +349,11 @@ async function verify() {
     byKind[k] = results[i]
   })
   // Preserve whichever branch DID complete before failing loudly — the abort report must
-  // not lose a section that was already produced by the surviving parallel agent.
-  if (byKind.review) review = byKind.review
-  if (byKind.qa) qa = byKind.qa
+  // not lose a section produced by the surviving parallel agent. The dead branch is set
+  // to null (not left stale from a previous round) so the report marks it unavailable
+  // instead of passing off a pre-fix result as current.
+  if (doReview) review = byKind.review || null
+  if (doQa) qa = byKind.qa || null
   // parallel() resolves a failed/skipped agent to null instead of throwing — fail loudly
   // here rather than letting a missing verdict read as "nothing blocking" downstream.
   if (doReview && !byKind.review) throw new Error(`code-reviewer returned no result for issue #${issue}`)
