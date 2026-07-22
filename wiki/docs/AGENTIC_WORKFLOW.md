@@ -159,7 +159,10 @@ Three verification properties worth knowing:
 - **Per-criterion QA (traceability).** QA returns one entry per test item (`id`, the
   acceptance criterion it verifies, class, verdict, note); the overall QA verdict is
   **derived in code** (any item FAIL or failed baseline ⇒ FAIL) — a "PASS" provably means
-  every criterion was exercised and passed, never a self-reported summary.
+  every criterion was exercised and passed, never a self-reported summary. Evidence spans
+  screenshots, logs, and react-devtools state; for pixel-critical transient/animated
+  states, short screen recordings with extracted frames (no agent can watch a video —
+  every agent can Read the frames).
 - **Adversarial vetting.** Every blocking finding gets a read-only skeptic
   (`finding-vetter`) that tries to refute it against the diff, code, and captured QA
   evidence before it can trigger a fix round. Refuted findings are excluded (and reported);
@@ -172,6 +175,10 @@ Three verification properties worth knowing:
   previous set — including A→B→A cycles. Later fix prompts are history-aware: findings that
   survived an attempt are marked `[PERSISTS]` and the builder is told what was already
   tried, so round 2 is an escalation with new information, not a reroll of round 1.
+
+Beyond the pipeline's own verification, **CI gates every PR** (human- or pipeline-authored)
+with Biome lint, `tsc --noEmit`, and the dependency-cruiser architecture check — a second
+net under the builder's once-per-round self-check.
 
 #### Device-readiness fast path (QA stage)
 
