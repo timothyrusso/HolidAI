@@ -97,7 +97,7 @@ flowchart TD
     REPORT -.->|"aborted: rethrow<br/>after reporting"| FAILED["run fails"]
     REPORT -->|"completed without abort"| RET["structured return to the caller"]
     RET --> SUMM["skill relays the result"]
-    SUMM --> PRREV["Human PR review"]
+    SUMM --> PRREV["Human PR review<br/>(behind the CI gate:<br/>lint + typecheck + arch)"]
     PRREV --> MERGE["Merge — never automated"]
 ```
 
