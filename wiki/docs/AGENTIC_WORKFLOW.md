@@ -36,12 +36,12 @@ genuinely needs clarifying, and delegates to the single pipeline workflow
 | `explorer` | `.claude/agents/explorer.md` | Read-only. Maps an issue onto the architecture (target feature/tier, files, pattern, risks). Runs as the pipeline's first phase (default on). |
 | `feature-builder` | `.claude/agents/feature-builder.md` | Implements, verifies (tsc + arch, once per build round), commits in small layer-aligned commits, opens the PR. |
 | `code-reviewer` | `.claude/agents/code-reviewer.md` | Read-only. Reviews the diff against the rules the linters *don't* enforce. |
-| `qa-engineer` | `.claude/agents/qa-engineer.md` | Drives the app on the agent-device (baseline + acceptance criteria); posts a PASS/FAIL report and returns per-criterion results. |
+| `qa-engineer` | `.claude/agents/qa-engineer.md` | Drives the app on the agent-device (baseline + acceptance criteria) via the device-readiness fast path; returns per-criterion results and its report to the pipeline. |
 | `finding-vetter` | `.claude/agents/finding-vetter.md` | Read-only skeptic. Tries to refute one blocking finding (against the diff, code, and QA evidence) before it can trigger an auto-fix; returns confirmed/refuted/suspect. |
 | `qa-baseline` | `.claude/skills/qa-baseline/SKILL.md` | Standing regression checks run for *every* feature (startup, render, navigation). |
 | Agent memory | `.claude/agent-memory/` | Committed, per-agent operational lessons (device quirks, tooling facts, timings). Agents read theirs at run start and may append under strict rules; humans curate at PR review — keep or delete. |
 | `implement-issue` | `.claude/skills/implement-issue/SKILL.md` | The **front door** (thin orchestrator): judges the issue, grills only if needed (folding answers back into the issue body), announces its reading, then delegates to the pipeline. Contains no pipeline logic. |
-| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → run metrics. Owns the canonical defaults. Directly invocable for headless/batch. |
+| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → one consolidated run comment. Owns the canonical defaults. Directly invocable for headless/batch. |
 | CodeGraph | `.mcp.json` + `@colbymchenry/codegraph` | Code-intelligence MCP (symbols, call paths, blast radius) that `explorer`/`feature-builder` query instead of grepping. Local index in `.codegraph/` (gitignored). |
 
 Each agent reads the deep architecture docs — [`ARCHITECTURE.md`](ARCHITECTURE.md) and
@@ -146,9 +146,10 @@ approval gate.
 
 The single deterministic encoding of the build pipeline: explore → build → wire PR →
 review ∥ device QA (parallel — independent stages) → finding vetting → bounded auto-fix →
-run-metrics comment, with schema-validated verdicts and a hard fix-loop cap. It is
-**gate-free** — any clarification happens in `/implement-issue` before it launches; approval
-happens at PR review before merge.
+one consolidated run comment (best-effort, attempted even when a post-build stage aborts
+the run), with schema-validated verdicts and a hard fix-loop cap. It is **gate-free** —
+any clarification happens in `/implement-issue` before it launches; approval happens at PR
+review before merge.
 
 Three verification properties worth knowing:
 
@@ -226,6 +227,6 @@ unverifiable device claims needing human eyes; `refuted` = findings the vetter d
      otherwise it announces its reading and runs end-to-end.
    - **Headless/batch:** run the `implement-issue-pipeline` workflow with `{ issue: <n> }`
      (add `qa: false` if the environment can't drive a device reliably).
-3. Review the resulting PR — the feature-builder, review, QA, and run-metrics reports are in its
-   comments.
+3. Review the resulting PR — the build, review, device-QA, vetting, and run-metrics reports
+   all live in ONE pipeline comment, as collapsible sections under a short status header.
 4. Merge when satisfied. The pipeline never merges for you.
