@@ -16,6 +16,10 @@ export const meta = {
   ],
 }
 
+// ═════════════════════════════════════════════════════════════════════════════════════
+// ARGS — parse, validate, and derive the run options (full contract: wiki AGENTIC_WORKFLOW)
+// ═════════════════════════════════════════════════════════════════════════════════════
+
 // Loop cap: the single place to change the auto-fix round limit
 const DEFAULT_MAX_FIX_ROUNDS = 2
 
@@ -28,10 +32,13 @@ if (typeof rawArgs === 'string') {
   }
 }
 const opts = typeof rawArgs === 'object' && rawArgs !== null ? rawArgs : { issue: rawArgs }
+
 const issue = opts.issue
+
 if (!issue || !/^\d+$/.test(String(issue))) {
   throw new Error(`implement-issue-pipeline: \`issue\` must be a GitHub issue number, got: ${JSON.stringify(issue)}`)
 }
+
 const startedAt = typeof opts.startedAt === 'number' && Number.isFinite(opts.startedAt) ? opts.startedAt : null
 
 const suppliedReport =
@@ -44,6 +51,11 @@ const doQa = opts.qa !== false // default on
 const worktree = opts.worktree === true // default off — opt-in isolation
 const MAX_FIX = typeof opts.maxFix === 'number' ? opts.maxFix : DEFAULT_MAX_FIX_ROUNDS // hard counter; change DEFAULT_MAX_FIX_ROUNDS above to adjust the cap
 const iso = worktree ? { isolation: 'worktree' } : {}
+
+// ═════════════════════════════════════════════════════════════════════════════════════
+// INSTRUMENTATION & REPORTING — token/wall-clock metrics and the consolidated PR comment.
+// No pipeline logic in this region; skip it entirely when reading for the flow.
+// ═════════════════════════════════════════════════════════════════════════════════════
 
 const MODEL_BY_AGENT = {
   explorer: 'sonnet',
@@ -146,6 +158,70 @@ function buildMetricsReport() {
     '<sub>Wall-clock durations come from agent-reported `date +%s` epochs (workflow scripts cannot read the clock — `Date.now()` is unavailable); a cell is `n/a` when an agent omitted its epoch or no `startedAt` was passed. Codegraph usage is not observable from the runtime, so it is `n/a`. Token figures are per-agent `budget.spent()` deltas, which count OUTPUT tokens only — the harness-level total (input + output) is several times larger, so never reconcile the two. The total is the whole-run delta; the report-posting agent itself can never appear in the table it posts.</sub>',
   ].join('\n')
 }
+
+// The ONE consolidated PR comment (always posted, even on abort). Agents never post their
+// own comments; their report markdown travels through the structured returns and lands
+// here, in collapsible sections under a short header. NOTE: this function reads run state
+// declared in the STAGES region below (build, review, qa, vetted, fixHistory, abort state);
+// that is safe because it is only CALLED in the Report stage, after all of it exists.
+function clip(text, max) {
+  const s = typeof text === 'string' ? text : ''
+  return s.length > max ? `${s.slice(0, max)}\n\n_…truncated_` : s
+}
+function section(title, body) {
+  return `<details>\n<summary>${title}</summary>\n\n${body && body.trim() ? body : '_not available_'}\n\n</details>`
+}
+function buildFinalComment() {
+  const status = abortError
+    ? `⛔ ABORTED at ${abortStage}`
+    : outstanding.length === 0 && vetted.suspect.length === 0
+      ? '✅ PASSED'
+      : '❌ NOT PASSED'
+  const reviewV = doReview ? (review ? review.verdict : 'n/a') : 'skipped'
+  const qaV = doQa ? (qa ? qaVerdictFrom(qa) : 'n/a') : 'skipped'
+  const totalDur =
+    startedAt != null && typeof lastFinishEpoch === 'number' && lastFinishEpoch >= startedAt
+      ? fmtDur(lastFinishEpoch - startedAt)
+      : 'n/a'
+
+  const attention = []
+  if (abortError) attention.push(`- ⛔ aborted at ${abortStage}: ${abortError.message || abortError}`)
+  for (const f of outstanding) attention.push(`- ❌ outstanding [${f.source}] ${clip(f.text, 300)}`)
+  for (const f of vetted.suspect) attention.push(`- ⚠️ suspect, needs human verification [${f.source}] ${clip(f.text, 300)}`)
+  if (stuck) attention.push('- 🔁 fix loop stopped early: no progress between rounds')
+  if (vetted.refuted.length > 0) attention.push(`- 🚮 ${vetted.refuted.length} finding(s) refuted by vetting — spot-check in the Vetting section`)
+
+  const vetLines = []
+  for (const f of vetted.confirmed) vetLines.push(`- CONFIRMED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+  for (const f of vetted.suspect) vetLines.push(`- SUSPECT [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+  for (const f of vetted.refuted) vetLines.push(`- REFUTED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
+
+  const buildBody =
+    clip(build.report, 15000) +
+    fixHistory.map(h => `\n\n---\n\n**Fix round ${h.round}** — ${h.summary}\n\n${clip(h.report, 8000)}`).join('')
+
+  const parts = [
+    `## 🤖 Pipeline run — issue #${issue} · ${status}`,
+    '',
+    `**review ${reviewV} · QA ${qaV} · ${fixAttempts} fix round(s) · wall-clock ${totalDur}**`,
+    '',
+    build.summary || '',
+    attention.length > 0 ? `\n**Needs attention:**\n${attention.join('\n')}` : '',
+    '',
+    section('🔨 Build report', buildBody),
+    section('🔍 Code review', doReview ? clip(review && review.report, 15000) : '_skipped_'),
+    section('🧪 Device QA', doQa ? clip(qa && qa.report, 15000) : '_skipped_'),
+  ]
+  if (vetLines.length > 0) parts.push(section('🕵️ Finding vetting', vetLines.join('\n')))
+  parts.push(section('📊 Run metrics', buildMetricsReport()))
+  // Hard cap safely under GitHub's 65,536-char comment limit — a clipped tail may leave a
+  // <details> tag unclosed (degraded folding) but the comment still posts.
+  return clip(parts.join('\n'), 60000)
+}
+
+// ═════════════════════════════════════════════════════════════════════════════════════
+// SCHEMAS — structured-output contracts, one per agent stage
+// ═════════════════════════════════════════════════════════════════════════════════════
 
 const EXPLORE_SCHEMA = {
   type: 'object',
@@ -250,6 +326,12 @@ const WIRE_SCHEMA = {
   required: ['agentDeviceReady', 'note'],
 }
 
+// ═════════════════════════════════════════════════════════════════════════════════════
+// PROMPTS — the static ones. Prompts that interpolate run state at declaration time
+// (buildPrompt needs the exploration report, wirePrompt needs the PR URL) are declared
+// inline in the STAGES flow instead.
+// ═════════════════════════════════════════════════════════════════════════════════════
+
 const clarificationsBlock = clarifications
   ? `\n\nClarifications from the pre-build conversation (authoritative additions to the issue's Description):\n${clarifications}`
   : ''
@@ -259,25 +341,6 @@ const EPOCH_INSTR =
   '\n\nAs your very last action before returning, run `date +%s` and include the number as `finishedAtEpoch` in your structured return.'
 
 const explorePrompt = `Run pre-implementation exploration for GitHub issue #${issue} per your process: map the issue onto the architecture (target feature and dependency tier, files/layers to touch, closest pattern to mirror, integration points, risks, suggested approach). Return the full structured exploration report as the \`report\` string.${clarificationsBlock}${EPOCH_INSTR}`
-
-// ── Explore (phase 0, default on) ─────────────────────────────────────────────
-let explorerReport = suppliedReport
-if (doExplore) {
-  phase('Explore')
-  try {
-    const ex = await trackedAgent(explorePrompt, { agentType: 'explorer', label: `explore:${issue}`, schema: EXPLORE_SCHEMA })
-    explorerReport = ex && ex.report ? ex.report : null
-    if (!explorerReport) log('Explorer returned no report — builder will map the codebase itself (non-blocking)')
-  } catch (e) {
-    log(`Explore phase failed (non-blocking): ${e && e.message ? e.message : e}`)
-  }
-}
-
-const explorerBlock = explorerReport
-  ? `\n\nExploration report (use it as your codebase map; don't re-explore from scratch):\n${explorerReport}`
-  : ''
-
-const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, and open the PR with an empty body. Do NOT post any PR comment. Return the PR URL, a one-line summary, and your full structured report markdown as \`report\`.${clarificationsBlock}${explorerBlock}${EPOCH_INSTR}`
 
 const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process. Do NOT post any PR comment. Return your overall verdict (PASS or CHANGES-REQUESTED), the list of blocking findings (empty if none), and your full review report markdown as \`report\`.${EPOCH_INSTR}`
 
@@ -301,6 +364,14 @@ const fixPrompt = (findings, attempt, history, persistedKeys) =>
           .join('\n')}\nFindings marked [PERSISTS] survived those attempts — the tried approach is wrong for them. Do NOT repeat it: re-diagnose from scratch (read the code around your previous fix commits, check the adjacent layer, question the assumed root cause) and take a different angle.`
       : ''
   }${EPOCH_INSTR}`
+
+// Arrow function — `build.prUrl` resolves at call time, after the Build stage has run.
+const vetPrompt = f =>
+  `Adversarially verify ONE ${f.source === 'qa' ? 'device-QA' : 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.${EPOCH_INSTR}`
+
+// ═════════════════════════════════════════════════════════════════════════════════════
+// STAGE HELPERS — verify (review ∥ QA), verdict derivation, finding fingerprints, vetting
+// ═════════════════════════════════════════════════════════════════════════════════════
 
 async function verify() {
   if (!doReview && !doQa) return { review: null, qa: null }
@@ -400,37 +471,12 @@ function blockingFrom(review, qa) {
   return out
 }
 
-phase('Build')
-const build = await trackedAgent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
-// No PR means nowhere to post a run report — a build failure is the one truly fatal stage.
-if (!build || !build.prUrl) throw new Error(`build stage returned no PR for issue #${issue}`)
-log(`Built issue #${issue} → ${build.prUrl}`)
-
-const wirePrompt = `PR wiring + environment pre-check for the pull request ${build.prUrl}. Change PR METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly three things:
-1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
-2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — note the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
-3. Verify the agent-device CLI is current: \`agent-device --version\`; if missing or outdated, run \`npm i -g agent-device@latest\` and re-check. Return \`agentDeviceReady: true\` ONLY if you verified it is current (or successfully updated it); \`false\` on any doubt or failure.
-Summarise the outcome of all three in \`note\`.${EPOCH_INSTR}`
-// Set by the wire agent; lets the QA agent skip its own version/update ritual.
-let agentDeviceReady = false
-try {
-  phase('Wire PR')
-  // Mechanical gh/npm commands — low effort is enough and cheaper/faster.
-  const wire = await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low', schema: WIRE_SCHEMA })
-  agentDeviceReady = Boolean(wire && wire.agentDeviceReady === true)
-} catch (e) {
-  log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
-}
-
-// ── Vet: adversarial check of every blocking finding before it can trigger a fix ─────
+// Vet: adversarial check of every blocking finding before it can trigger a fix.
 // A false finding sent to fix mode makes the builder "fix" correct code (known real case:
 // device QA misreading layered-Animated buttons as non-hittable). One skeptic per finding
 // tries to REFUTE it; only confirmed findings reach the builder. Device-runtime claims the
 // skeptic can't check from code + captured evidence become `suspect` — surfaced for human
 // eyes, never auto-fixed. Fail-safe: a dead vetter confirms (status quo), never drops.
-const vetPrompt = f =>
-  `Adversarially verify ONE ${f.source === 'qa' ? 'device-QA' : 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.${EPOCH_INSTR}`
-
 async function vetFindings(findings) {
   if (findings.length === 0) return { confirmed: [], refuted: [], suspect: [] }
   const before = spent()
@@ -452,6 +498,52 @@ async function vetFindings(findings) {
   if (out.refuted.length > 0) log(`Vet: refuted ${out.refuted.length} finding(s) — excluded from fix`)
   if (out.suspect.length > 0) log(`Vet: ${out.suspect.length} suspect device claim(s) — need human eyes, not auto-fixed`)
   return out
+}
+
+// ═════════════════════════════════════════════════════════════════════════════════════
+// STAGES — the pipeline flow: explore → build → wire → (verify ∥) → vet → fix loop →
+// consolidated report → return (abort in any post-build stage still posts the report)
+// ═════════════════════════════════════════════════════════════════════════════════════
+
+// ── Explore (phase 0, default on) ─────────────────────────────────────────────
+let explorerReport = suppliedReport
+if (doExplore) {
+  phase('Explore')
+  try {
+    const ex = await trackedAgent(explorePrompt, { agentType: 'explorer', label: `explore:${issue}`, schema: EXPLORE_SCHEMA })
+    explorerReport = ex && ex.report ? ex.report : null
+    if (!explorerReport) log('Explorer returned no report — builder will map the codebase itself (non-blocking)')
+  } catch (e) {
+    log(`Explore phase failed (non-blocking): ${e && e.message ? e.message : e}`)
+  }
+}
+
+const explorerBlock = explorerReport
+  ? `\n\nExploration report (use it as your codebase map; don't re-explore from scratch):\n${explorerReport}`
+  : ''
+
+const buildPrompt = `Implement GitHub issue #${issue} for HolidAI, following your full process: read the issue, obey the architecture rules, verify with tsc + arch (once, before the commit sequence), create branch feature/${issue}, commit in small layer-aligned commits, and open the PR with an empty body. Do NOT post any PR comment. Return the PR URL, a one-line summary, and your full structured report markdown as \`report\`.${clarificationsBlock}${explorerBlock}${EPOCH_INSTR}`
+
+phase('Build')
+const build = await trackedAgent(buildPrompt, { agentType: 'feature-builder', label: `build:${issue}`, schema: BUILD_SCHEMA, ...iso })
+// No PR means nowhere to post a run report — a build failure is the one truly fatal stage.
+if (!build || !build.prUrl) throw new Error(`build stage returned no PR for issue #${issue}`)
+log(`Built issue #${issue} → ${build.prUrl}`)
+
+const wirePrompt = `PR wiring + environment pre-check for the pull request ${build.prUrl}. Change PR METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly three things:
+1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
+2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — note the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
+3. Verify the agent-device CLI is current: \`agent-device --version\`; if missing or outdated, run \`npm i -g agent-device@latest\` and re-check. Return \`agentDeviceReady: true\` ONLY if you verified it is current (or successfully updated it); \`false\` on any doubt or failure.
+Summarise the outcome of all three in \`note\`.${EPOCH_INSTR}`
+// Set by the wire agent; lets the QA agent skip its own version/update ritual.
+let agentDeviceReady = false
+try {
+  phase('Wire PR')
+  // Mechanical gh/npm commands — low effort is enough and cheaper/faster.
+  const wire = await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low', schema: WIRE_SCHEMA })
+  agentDeviceReady = Boolean(wire && wire.agentDeviceReady === true)
+} catch (e) {
+  log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
 
 // Everything after build is wrapped: whatever happens, the run posts its ONE consolidated
@@ -504,64 +596,6 @@ try {
 }
 
 const outstanding = vetted.confirmed
-
-// ── The ONE consolidated PR comment (always posted, even on abort) ─────────────────────
-// Agents no longer post their own comments; their report markdown travels through the
-// structured returns and lands here, in collapsible sections under a short header.
-function clip(text, max) {
-  const s = typeof text === 'string' ? text : ''
-  return s.length > max ? `${s.slice(0, max)}\n\n_…truncated_` : s
-}
-function section(title, body) {
-  return `<details>\n<summary>${title}</summary>\n\n${body && body.trim() ? body : '_not available_'}\n\n</details>`
-}
-function buildFinalComment() {
-  const status = abortError
-    ? `⛔ ABORTED at ${abortStage}`
-    : outstanding.length === 0 && vetted.suspect.length === 0
-      ? '✅ PASSED'
-      : '❌ NOT PASSED'
-  const reviewV = doReview ? (review ? review.verdict : 'n/a') : 'skipped'
-  const qaV = doQa ? (qa ? qaVerdictFrom(qa) : 'n/a') : 'skipped'
-  const totalDur =
-    startedAt != null && typeof lastFinishEpoch === 'number' && lastFinishEpoch >= startedAt
-      ? fmtDur(lastFinishEpoch - startedAt)
-      : 'n/a'
-
-  const attention = []
-  if (abortError) attention.push(`- ⛔ aborted at ${abortStage}: ${abortError.message || abortError}`)
-  for (const f of outstanding) attention.push(`- ❌ outstanding [${f.source}] ${clip(f.text, 300)}`)
-  for (const f of vetted.suspect) attention.push(`- ⚠️ suspect, needs human verification [${f.source}] ${clip(f.text, 300)}`)
-  if (stuck) attention.push('- 🔁 fix loop stopped early: no progress between rounds')
-  if (vetted.refuted.length > 0) attention.push(`- 🚮 ${vetted.refuted.length} finding(s) refuted by vetting — spot-check in the Vetting section`)
-
-  const vetLines = []
-  for (const f of vetted.confirmed) vetLines.push(`- CONFIRMED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
-  for (const f of vetted.suspect) vetLines.push(`- SUSPECT [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
-  for (const f of vetted.refuted) vetLines.push(`- REFUTED [${f.source}] ${clip(f.text, 300)}\n  - ${clip(f.vetReason, 300)}`)
-
-  const buildBody =
-    clip(build.report, 15000) +
-    fixHistory.map(h => `\n\n---\n\n**Fix round ${h.round}** — ${h.summary}\n\n${clip(h.report, 8000)}`).join('')
-
-  const parts = [
-    `## 🤖 Pipeline run — issue #${issue} · ${status}`,
-    '',
-    `**review ${reviewV} · QA ${qaV} · ${fixAttempts} fix round(s) · wall-clock ${totalDur}**`,
-    '',
-    build.summary || '',
-    attention.length > 0 ? `\n**Needs attention:**\n${attention.join('\n')}` : '',
-    '',
-    section('🔨 Build report', buildBody),
-    section('🔍 Code review', doReview ? clip(review && review.report, 15000) : '_skipped_'),
-    section('🧪 Device QA', doQa ? clip(qa && qa.report, 15000) : '_skipped_'),
-  ]
-  if (vetLines.length > 0) parts.push(section('🕵️ Finding vetting', vetLines.join('\n')))
-  parts.push(section('📊 Run metrics', buildMetricsReport()))
-  // Hard cap safely under GitHub's 65,536-char comment limit — a clipped tail may leave a
-  // <details> tag unclosed (degraded folding) but the comment still posts.
-  return clip(parts.join('\n'), 60000)
-}
 
 try {
   phase('Report')
