@@ -348,6 +348,10 @@ async function verify() {
   kinds.forEach((k, i) => {
     byKind[k] = results[i]
   })
+  // Preserve whichever branch DID complete before failing loudly — the abort report must
+  // not lose a section that was already produced by the surviving parallel agent.
+  if (byKind.review) review = byKind.review
+  if (byKind.qa) qa = byKind.qa
   // parallel() resolves a failed/skipped agent to null instead of throwing — fail loudly
   // here rather than letting a missing verdict read as "nothing blocking" downstream.
   if (doReview && !byKind.review) throw new Error(`code-reviewer returned no result for issue #${issue}`)
@@ -573,7 +577,9 @@ function buildFinalComment() {
   ]
   if (vetLines.length > 0) parts.push(section('🕵️ Finding vetting', vetLines.join('\n')))
   parts.push(section('📊 Run metrics', buildMetricsReport()))
-  return parts.join('\n')
+  // Hard cap safely under GitHub's 65,536-char comment limit — a clipped tail may leave a
+  // <details> tag unclosed (degraded folding) but the comment still posts.
+  return clip(parts.join('\n'), 60000)
 }
 
 try {

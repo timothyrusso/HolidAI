@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Static code reviewer for a HolidAI feature branch. Reviews the diff against the project's CLAUDE.md rules and general correctness BEFORE device QA, focusing on what the linters and dependency-cruiser do NOT catch. Read-only — reports blocking/non-blocking findings and posts a review comment; does not edit code. Use as the review stage of the implement-issue pipeline.
+description: Static code reviewer for a HolidAI feature branch. Reviews the diff against the project's CLAUDE.md rules and general correctness BEFORE device QA, focusing on what the linters and dependency-cruiser do NOT catch. Read-only — returns blocking/non-blocking findings and its report to the pipeline (posts a PR comment only when invoked standalone); does not edit code. Use as the review stage of the implement-issue pipeline.
 model: opus
 color: purple
 tools:
