@@ -36,6 +36,9 @@ settled before any quota is spent.
 
 ## Quota facts (empirical)
 
-- Starter caps are opaque; observed ≈20 calls per rolling few days, partial daily recovery.
-- Budget ≤5–10 calls/day; a dozen in one day starves the next.
-- On a rate-limit error: stop entirely, inform the user, test again the next day.
+- Starter caps are opaque. Observed: initial bucket ≈20 calls (Jul 19–20), then **≈1 call/day**
+  refill once drained (Jul 21: 1 then blocked; Jul 22: 1 then blocked). Full reset likely monthly.
+- After exhaustion, assume **exactly ONE call per day**: never spend it on probes or inspection —
+  only on a fully-prepared, user-approved build script (save pending scripts to Desktop as
+  `*.figma.js` so any session can fire them verbatim).
+- On a rate-limit error: stop entirely, inform the user; the failed call changed nothing (atomic).
