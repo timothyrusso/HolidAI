@@ -65,6 +65,10 @@ A GitHub issue number. Everything else you derive:
      from the checked-out branch. Then attach and reload JS — no native build.
    - **JS-only + app installed but not running** → start Metro from the checked-out
      branch, launch the installed binary, reload — no native build.
+   - **Bundler config changed** (`metro.config.*`, `babel.config.*`, `.babelrc*` in the
+     diff): still no native build, but a running Metro holds that config stale from
+     startup — ALWAYS restart Metro from the checkout with its cache cleared (`--clear`)
+     before launching/reloading; never plain-attach in this case.
    - **JS-only + app NOT installed** (fresh simulator) → full build; this is a cold cache,
      paid once per simulator, not a failure.
    - **Self-heal:** if a reloaded app red-boxes at startup (e.g. "native module not
