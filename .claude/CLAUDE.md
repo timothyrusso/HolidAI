@@ -25,7 +25,7 @@ Deep architecture references live in `wiki/docs/` — consult the relevant one (
 - Log errors only in `useCases/`. Facades and `.logic.ts` do not log.
 - IoC class constructors must have an empty body `{}`. Only declare `@inject()`-decorated parameters (TypeScript assigns them to fields automatically). No object creation, no validation, no logic. All construction and setup belongs in `di/config.ts`; register ready-to-use objects via `container.registerInstance()`.
 - If a rule must be broken, stop and explain the conflict to the user before writing any code.
-- **Figma MCP reads are gated.** Never call a Figma MCP data-read tool (`get_metadata`, `get_design_context`, `get_screenshot`, `get_variable_defs`, `get_libraries`, `search_design_system`, and the rest under `mcp__plugin_figma_figma__`) unless it is genuinely mandatory AND the user has given explicit permission for that specific call. Do all Figma inspection/verification through `use_figma` instead — but `use_figma` is ALSO plan-rate-limited on Starter (cap hit 2026-07-21), so batch every Figma operation into as few calls as possible. Full policy: `.claude/rules/figma-reads.md`.
+- **ALL Figma MCP calls are gated.** Every tool under `mcp__plugin_figma_figma` (reads, writes, `use_figma`, `whoami` — everything) requires the user's explicit approval before EACH call; never attempt one without asking first. Every Figma update must be completed in exactly ONE `use_figma` call — batch inspection + all mutations + inline screenshot verification into a single script, prepared via a user-validated HTML preview first. If one call can't cover it (50k-char script limit) or a script fails, stop and ask. Full policy: `.claude/rules/figma-calls.md`.
 
 ## Import rules
 

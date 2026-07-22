@@ -7,24 +7,33 @@
       "Bash(agent-device *)"
     ],
     "ask": [
-      "mcp__plugin_figma_figma__get_metadata",
-      "mcp__plugin_figma_figma__get_design_context",
-      "mcp__plugin_figma_figma__get_screenshot",
-      "mcp__plugin_figma_figma__get_variable_defs",
+      "mcp__plugin_figma_figma",
+      "mcp__plugin_figma_figma__add_code_connect_map",
+      "mcp__plugin_figma_figma__create_new_file",
+      "mcp__plugin_figma_figma__download_assets",
+      "mcp__plugin_figma_figma__export_video",
+      "mcp__plugin_figma_figma__generate_diagram",
+      "mcp__plugin_figma_figma__generate_figma_design",
       "mcp__plugin_figma_figma__get_code_connect_map",
       "mcp__plugin_figma_figma__get_code_connect_suggestions",
       "mcp__plugin_figma_figma__get_context_for_code_connect",
-      "mcp__plugin_figma_figma__get_libraries",
+      "mcp__plugin_figma_figma__get_design_context",
       "mcp__plugin_figma_figma__get_figjam",
+      "mcp__plugin_figma_figma__get_libraries",
+      "mcp__plugin_figma_figma__get_metadata",
       "mcp__plugin_figma_figma__get_motion_context",
+      "mcp__plugin_figma_figma__get_screenshot",
       "mcp__plugin_figma_figma__get_shader_effect",
       "mcp__plugin_figma_figma__get_shader_fill",
+      "mcp__plugin_figma_figma__get_variable_defs",
+      "mcp__plugin_figma_figma__list_file_components_for_code_connect",
       "mcp__plugin_figma_figma__list_shader_effects",
       "mcp__plugin_figma_figma__list_shader_fills",
-      "mcp__plugin_figma_figma__list_file_components_for_code_connect",
       "mcp__plugin_figma_figma__search_design_system",
-      "mcp__plugin_figma_figma__download_assets",
-      "mcp__plugin_figma_figma__export_video"
+      "mcp__plugin_figma_figma__send_code_connect_mappings",
+      "mcp__plugin_figma_figma__upload_assets",
+      "mcp__plugin_figma_figma__use_figma",
+      "mcp__plugin_figma_figma__whoami"
     ]
   }
 }
