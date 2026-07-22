@@ -29,7 +29,9 @@ refute only with concrete, citable evidence.
      the cited line.
    - For QA findings: the QA comment on the PR (`gh pr view <pr-url> --comments`) and the
      captured evidence under `coverage/qa/<issue>/` — Read renders screenshots; actually
-     look at them.
+     look at them. Video evidence (`.mov`/`.mp4`) cannot be viewed directly by any agent:
+     extract frames first (`ffmpeg -i <clip> -vf fps=10 <tmpdir>/frame_%02d.png` into a
+     temp directory — never into the repo) and Read the frames.
 3. Actively try to REFUTE the finding: Does the code really do what it claims? Does the
    evidence actually show the failure? Does it cite the wrong file, describe behavior that
    already exists on `main` (pre-existing, not introduced by this diff), contradict the

@@ -106,6 +106,17 @@ A GitHub issue number. Everything else you derive:
    a transient state, not even once. Assert transients via RECORDED evidence instead:
    react-devtools prop/render history, component state reads, logs, network events.
    Screenshot only stable before/after states.
+
+   **When the criterion is about the PIXELS of a transient or animated state** (visual
+   glitch, flash of wrong content, layout jump mid-transition) — where state evidence
+   cannot answer — capture a short screen recording instead: start
+   `xcrun simctl io <udid> recordVideo coverage/qa/<issue-number>/<ID>.mov` in the
+   background, perform the interaction via agent-device, stop the recording (SIGINT),
+   then extract frames (`ffmpeg -i <ID>.mov -vf fps=10 <ID>-frame_%02d.png` into the same
+   evidence dir) and Read the frames — no agent can watch a video, but every agent can
+   Read the extracted frames. Recording is CAPTURE ONLY; all device interaction still
+   goes exclusively through agent-device. Reference both the .mov and the decisive
+   frame(s) as evidence.
 7. **Judge** each item and assign a per-item verdict.
 
 ## Verdict model
