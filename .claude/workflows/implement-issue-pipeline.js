@@ -114,7 +114,9 @@ function fmtDur(totalSeconds) {
 function stageDuration(finishEpoch) {
   const valid = typeof finishEpoch === 'number' && Number.isFinite(finishEpoch)
   const base = lastFinishEpoch
-  if (valid) lastFinishEpoch = finishEpoch
+  // Advance only forwards: a stale or bogus epoch must not drag the baseline backwards
+  // and silently inflate the next stage's duration.
+  if (valid && (typeof base !== 'number' || finishEpoch >= base)) lastFinishEpoch = finishEpoch
   if (!valid || typeof base !== 'number') return 'n/a'
   const d = finishEpoch - base
   return d >= 0 ? fmtDur(d) : 'n/a'
@@ -354,7 +356,8 @@ async function verify() {
   const finishes = kinds.map(k => (byKind[k] && typeof byKind[k].finishedAtEpoch === 'number' ? byKind[k].finishedAtEpoch : null))
   const branchDur = f => (typeof f === 'number' && typeof baseEpoch === 'number' && f >= baseEpoch ? fmtDur(f - baseEpoch) : 'n/a')
   const maxFinish = Math.max(...finishes.filter(f => typeof f === 'number'), Number.NEGATIVE_INFINITY)
-  if (Number.isFinite(maxFinish)) lastFinishEpoch = maxFinish
+  // Same forward-only rule as stageDuration.
+  if (Number.isFinite(maxFinish) && (typeof baseEpoch !== 'number' || maxFinish >= baseEpoch)) lastFinishEpoch = maxFinish
   if (kinds.length === 1) {
     recordMetric(`${kinds[0]}:${issue}`, kinds[0] === 'review' ? 'code-reviewer' : 'qa-engineer', delta, branchDur(finishes[0]))
   } else {
