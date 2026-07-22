@@ -1,7 +1,7 @@
 export const meta = {
   name: 'implement-issue-pipeline',
   description:
-    'THE issue-implementation pipeline (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → run metrics. Gate-free — any clarify/grill conversation happens in the /implement-issue skill BEFORE this launches. Approval happens at PR review before merge.',
+    'THE issue-implementation pipeline (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → one consolidated run comment. Gate-free — any clarify/grill conversation happens in the /implement-issue skill BEFORE this launches. Approval happens at PR review before merge.',
   whenToUse:
     'Launched by the /implement-issue skill after its interactive judgment, or invoked directly (headless/batch) on a crisp, pre-approved issue. For uncertain issues run /implement-issue instead — it grills first, then delegates here.',
   phases: [
@@ -12,34 +12,13 @@ export const meta = {
     { title: 'QA', detail: 'qa-engineer drives the app on the agent-device (default on, parallel with Review)' },
     { title: 'Vet', detail: 'one skeptic per blocking finding tries to refute it before it can trigger a fix' },
     { title: 'Fix', detail: 'feature-builder addresses confirmed findings (history-aware, stops early if stuck)' },
-    { title: 'Report', detail: 'post a best-effort run-metrics PR comment' },
+    { title: 'Report', detail: 'assemble and post the ONE consolidated run comment (best-effort, even on abort)' },
   ],
 }
 
-// Loop cap: the single place to change the auto-fix round limit (currently 2).
-// Convergence detection in the fix loop stops earlier when a round reproduces a
-// previously-seen findings-set, so raising this only buys rounds that make progress.
+// Loop cap: the single place to change the auto-fix round limit
 const DEFAULT_MAX_FIX_ROUNDS = 2
 
-// ── Args contract ─────────────────────────────────────────────────────────────
-// This workflow owns the CANONICAL defaults; callers (the /implement-issue skill,
-// or a direct batch invocation) pass ONLY what the user overrode.
-//   issue           (required) GitHub issue number
-//   explore         default ON  — pass false to skip the exploration phase
-//   explorerReport  optional pre-supplied exploration report (skips the phase)
-//   clarifications  optional clarifications text — fallback channel for when the
-//                   skill did NOT fold answers into the issue body
-//   review          default ON  — pass false to skip static code review
-//   qa              default ON  — pass false to skip device QA
-//   worktree        default OFF — pass true to isolate code-touching agents
-//   maxFix          default DEFAULT_MAX_FIX_ROUNDS
-//   startedAt       optional Unix epoch (seconds) of run start, supplied by the caller
-//                   (`date +%s`) — enables wall-clock durations in the metrics table,
-//                   since workflow scripts cannot read the clock themselves
-// Args may arrive JSON-stringified depending on the invoker (observed in the first live
-// run: `args` was the string '{"issue": 399, "worktree": true}', so `issue` became the
-// whole JSON text and `worktree: true` was silently lost). Parse defensively, and fail
-// fast on a non-numeric issue instead of propagating garbage into prompts and branch names.
 let rawArgs = args
 if (typeof rawArgs === 'string') {
   try {
