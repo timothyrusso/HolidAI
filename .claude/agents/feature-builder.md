@@ -46,21 +46,26 @@ The invoking prompt will give you a GitHub issue number. It may also give you:
    without restating it. If any project rule conflicts with the issue, STOP and report
    the conflict instead of guessing.
 4. Implement the change.
-5. Verify before committing (these two checks are NOT run by git hooks, so you must run
-   them yourself — Biome, import, and commit-message rules are already hook-enforced):
+5. Verify ONCE per build — after implementing, before starting the commit sequence (and
+   once more per fix round in fix mode). Do NOT re-run these per commit: they check the
+   whole working tree, which is already complete before the first commit, so repeating
+   them per commit is pure waste — per-commit checks (Biome, imports, commit message) are
+   already hook-enforced. These two are NOT run by git hooks, so you must run them yourself:
    a. Typecheck: `npx tsc --noEmit` — fix any errors your change introduced.
    b. Architecture: `npm run arch` — dependency-cruiser enforces the layering and
       module-boundary rules from CLAUDE.md. `main` is always arch-clean (violations block
       merge), so any error you see comes from your own change — fix it. The check must
       pass with zero violations.
-   Only proceed to commit once both pass.
+   Only start committing once both pass.
 
 ## Git workflow — produce a reviewable pull request
 This agent's deliverable is a PR the user can review commit-by-commit.
 1. Branch. First check whether `feature/<issue-number>` already exists
    (`git rev-parse --verify feature/<issue-number>` or `gh pr list --head feature/<issue-number>`):
-   - **Fresh build:** it doesn't exist → create it off `main`, e.g. `feature/366`.
-     Never commit on `main`.
+   - **Fresh build:** it doesn't exist → create it EXPLICITLY off the up-to-date remote
+     main: `git fetch origin main && git checkout -b feature/<issue-number> origin/main`.
+     Never branch from whatever HEAD happens to be checked out — the working tree may be
+     sitting on an unrelated branch — and never commit on `main`.
    - **Fix mode:** it already exists (you were given QA findings) → check it out and
      continue on it. Do NOT create a new branch and do NOT open a new PR; the existing PR
      updates automatically when you push. Add your fixes as new commits.
@@ -87,25 +92,28 @@ This agent's deliverable is a PR the user can review commit-by-commit.
    the PR **body empty** (`--body ""`): other GitHub reviewer automation completely
    replaces the description, so anything you write there is discarded. Do NOT put your
    report in the body.
-4. Post your full structured report (see below) as the **first comment** on the PR
-   using `gh pr comment <pr-url> --body-file <file>`, not in the description.
+4. Deliver your full structured report (see below). **When invoked with a structured
+   schema that has a `report` field** (the pipeline), return the report markdown there
+   and do NOT post any PR comment — the pipeline posts ONE consolidated run comment at
+   the end. **Only when invoked without a schema**, post it as the first comment on the
+   PR using `gh pr comment <pr-url> --body-file <file>`, never in the description.
 
 ## Constraints
 - Do NOT modify unrelated code. Keep the diff minimal and focused on the issue.
 - Do NOT merge the PR. Leave it open for human review.
 
-## Structured report (a PR comment)
-Post your report as a PR comment (`gh pr comment <pr-url> --body-file <file>`) — the durable
-record reviewers read:
-- **Fresh build:** post it as the first comment, covering:
+## Structured report
+Your report is the durable record reviewers read (delivery channel per step 4 above —
+returned to the pipeline, or posted as a comment when standalone):
+- **Fresh build:** covering:
   - A one-paragraph summary of what you implemented.
   - A bullet list of files created/changed, each with a one-line reason.
   - The commit breakdown (what each commit contains and why it's split that way).
   - Any assumptions you made or questions that remain.
   - How to verify the change (screen to check, steps to reproduce).
-- **Fix mode:** post a new follow-up comment (do not duplicate the first) titled "Fix for QA
-  findings", covering: which findings you addressed, the fix commits, and anything still open.
+- **Fix mode:** a separate report titled "Fix for QA findings", covering: which findings you
+  addressed, the fix commits, and anything still open.
 
 ## Final message to the caller
-Keep it short: the PR URL plus a one-line summary. The full detail already lives in the
-PR comment, so do not repeat it here.
+Keep it short: the PR URL plus a one-line summary. The full detail already lives in your
+report, so do not repeat it here.

@@ -1,6 +1,6 @@
 ---
 name: write-issue
-description: Author a complete, well-specified GitHub feature issue by interviewing the user until the Description and Acceptance criteria are unambiguous, then create it with the Feature-template structure. Use when starting a new feature from a rough idea — it front-loads clarification so /implement-issue and the implement-issue-auto workflow can trust the issue.
+description: Author a complete, well-specified GitHub feature issue by interviewing the user until the Description and Acceptance criteria are unambiguous, then create it with the Feature-template structure. Use when starting a new feature from a rough idea — it front-loads clarification so /implement-issue and the implement-issue-pipeline workflow can trust the issue.
 argument-hint: "[rough idea or title]"
 ---
 
@@ -51,7 +51,8 @@ The rough idea (if any) is in `$ARGUMENTS`. If it's empty, ask the user what the
    ```
 
 5. **Report** the created issue number and URL, and suggest the next step:
-   `/implement-issue <n>` (interactive) or the `implement-issue-auto` workflow (unattended).
+   `/implement-issue <n>` (the front door — it judges the issue and delegates to the
+   `implement-issue-pipeline` workflow), or invoke the workflow directly for headless/batch runs.
 
 ## Rules
 - Acceptance criteria must be **testable** — each one is a QA test case later.
