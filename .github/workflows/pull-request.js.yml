@@ -31,6 +31,7 @@ jobs:
       - run: npm install --package-lock-only
       - run: npm ci
       - run: npm run lint
+      - run: npx tsc --noEmit
 
       - name: Architecture check
         if: github.event_name == 'pull_request'
