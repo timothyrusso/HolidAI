@@ -44,8 +44,9 @@ refute only with concrete, citable evidence.
   (verifying it would require re-driving the app). Known false-positive class in this
   project: device QA misreports layered-Animated / gesture-drawn controls as non-hittable —
   a "button not tappable" claim about an animated or gesture-driven control is suspect
-  unless the evidence clearly shows otherwise. Suspects are NOT auto-fixed; they go to a
-  human.
+  unless the evidence clearly shows otherwise. Suspects are NOT auto-fixed: the pipeline
+  excludes them from the fix loop, reports them in the run comment and the structured
+  return, and they block a clean `passed` — they wait for human verification at PR review.
 - **confirmed** — everything else, including "probably real but I cannot fully verify".
 
 ## Boundaries
