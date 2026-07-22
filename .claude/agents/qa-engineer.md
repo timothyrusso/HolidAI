@@ -59,16 +59,17 @@ A GitHub issue number. Everything else you derive:
    NONE is `package.json`, `app.json`/`app.config.*`, or under `ios/`, `android/`,
    `.claude/`-external native config. When in doubt → treat as NOT JS-only.)
    - **Not JS-only** → full build: `npm run ios`.
+   - **Bundler config changed** (`metro.config.*`, `babel.config.*`, `.babelrc*` in the
+     diff) — this rule takes precedence over the app-state branches below: still no
+     native build, but a running Metro holds that config stale from startup — ALWAYS
+     restart Metro from the checkout with its cache cleared (`--clear`) before
+     launching/reloading; never plain-attach in this case.
    - **JS-only + app running on a simulator** → first verify the running Metro server's
      project root is THIS checkout — reloading against someone else's Metro session tests
      the wrong code while looking green. If it isn't (or you can't tell), restart Metro
      from the checked-out branch. Then attach and reload JS — no native build.
    - **JS-only + app installed but not running** → start Metro from the checked-out
      branch, launch the installed binary, reload — no native build.
-   - **Bundler config changed** (`metro.config.*`, `babel.config.*`, `.babelrc*` in the
-     diff): still no native build, but a running Metro holds that config stale from
-     startup — ALWAYS restart Metro from the checkout with its cache cleared (`--clear`)
-     before launching/reloading; never plain-attach in this case.
    - **JS-only + app NOT installed** (fresh simulator) → full build; this is a cold cache,
      paid once per simulator, not a failure.
    - **Self-heal:** if a reloaded app red-boxes at startup (e.g. "native module not
