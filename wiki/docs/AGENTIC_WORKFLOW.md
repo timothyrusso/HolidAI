@@ -51,15 +51,51 @@ Each agent reads the deep architecture docs — [`ARCHITECTURE.md`](ARCHITECTURE
 
 ## Entry points
 
-```
-write-issue (skill, grilling)  ──►  a complete GitHub issue
-      │
-      ├──►  /implement-issue (skill)              human-present front door:
-      │       judge → grill if needed → announce → delegate ─┐
-      │                                                      ▼
-      └──►  implement-issue-pipeline (workflow)   THE pipeline (single encoding)
-              direct invocation = headless/batch    explore → build → wire PR →
-                                                    review ∥ QA → vet → fix → metrics
+```mermaid
+flowchart TD
+    WI["write-issue skill<br/>(grilling interview)"] --> ISSUE["Complete Feature-template issue"]
+    ISSUE --> FD
+    ISSUE -.->|"headless / batch:<br/>invoke workflow directly"| ARGS
+
+    subgraph SKILL["/implement-issue — human-present front door"]
+        FD["Stage 0 — Setup:<br/>gh issue view, template check"] --> JUDGE{"Stage 1 — Judge:<br/>real doubts?"}
+        JUDGE -->|"no"| ANN["Stage 2 — Announce reading,<br/>proceed without waiting"]
+        JUDGE -->|"yes"| GRILL["Grill the user<br/>(grilling skill)"]
+        GRILL --> FOLD["Fold answers into the issue body<br/>(with approval; fallback: comment)"]
+        FOLD --> ANN
+        ANN --> DELEG["Stage 3 — Delegate:<br/>issue, startedAt, flag overrides"]
+    end
+
+    DELEG --> ARGS
+
+    subgraph PIPE["implement-issue-pipeline — THE pipeline, single encoding"]
+        ARGS["Parse + validate args<br/>(canonical defaults live here)"] --> EXPL{"explore?<br/>(default on)"}
+        EXPL -->|"yes"| EXPLORE["explorer maps the issue onto<br/>the architecture (non-blocking)"]
+        EXPL -->|"skipped / report supplied"| BUILD
+        EXPLORE --> BUILD["feature-builder:<br/>branch off origin/main, implement,<br/>tsc + arch once, layer-aligned commits,<br/>open PR with empty body"]
+        BUILD -->|"no PR"| FATAL["FATAL — nowhere to report"]
+        BUILD --> WIRE["wire, best-effort:<br/>assign PR + project +<br/>agent-device pre-check"]
+        WIRE --> VERIFY["review ∥ device QA<br/>(parallel, independent)"]
+        VERIFY --> VET["vet: one skeptic per<br/>blocking finding"]
+        VET --> SORT{"verdict per finding"}
+        SORT -->|"refuted"| DROP["excluded from fix,<br/>reported for spot-check"]
+        SORT -->|"suspect"| HUMAN["never auto-fixed,<br/>blocks a clean pass,<br/>needs human eyes"]
+        SORT -->|"confirmed"| LOOP{"confirmed left and<br/>rounds below maxFix?"}
+        LOOP -->|"no"| REPORT
+        LOOP -->|"yes"| CONV{"findings-set already<br/>seen in a prior round?"}
+        CONV -->|"yes"| STUCK["stuck — stop early,<br/>never reroll"]
+        STUCK --> REPORT
+        CONV -->|"no"| FIX["feature-builder fix round<br/>(history-aware, PERSISTS markers)"]
+        FIX --> VERIFY
+        REPORT["ONE consolidated PR comment:<br/>status header + collapsible<br/>build / review / QA / vetting / metrics"]
+    end
+
+    VERIFY -.->|"any post-build stage throws"| ABORT["abort captured"]
+    ABORT --> REPORT
+    REPORT --> RET["structured return to the caller"]
+    RET --> SUMM["skill relays the result"]
+    SUMM --> PRREV["Human PR review"]
+    PRREV --> MERGE["Merge — never automated"]
 ```
 
 - **`write-issue`** interviews you (via `grilling`) and creates a complete, template-conformant
@@ -132,6 +168,31 @@ Three verification properties worth knowing:
   previous set — including A→B→A cycles. Later fix prompts are history-aware: findings that
   survived an attempt are marked `[PERSISTS]` and the builder is told what was already
   tried, so round 2 is an escalation with new information, not a reroll of round 1.
+
+#### Device-readiness fast path (QA stage)
+
+How the qa-engineer decides between a Metro reload and a full native build — a JS-only
+diff on a warm simulator skips the ~10-minute `xcodebuild` entirely:
+
+```mermaid
+flowchart TD
+    START["Get code under test:<br/>checkout feature branch"] --> JS{"Diff JS-only?<br/>(no native, no package.json,<br/>no app config)"}
+    JS -->|"no, or in doubt"| FULL["Full build:<br/>npm run ios"]
+    JS -->|"yes"| BC{"Bundler config changed?<br/>(metro / babel)"}
+    BC -->|"yes, app running or installed"| RESTART["Restart Metro from checkout<br/>with cleared cache,<br/>then launch + reload"]
+    BC -->|"no"| STATE{"App state<br/>on simulator"}
+    STATE -->|"running"| ROOT{"Running Metro rooted<br/>at THIS checkout?"}
+    ROOT -->|"yes"| ATTACH["Attach + Metro reload"]
+    ROOT -->|"no / unsure"| RESTART
+    STATE -->|"installed,<br/>not running"| LAUNCH["Start Metro from checkout,<br/>launch installed binary, reload"]
+    STATE -->|"not installed<br/>(fresh simulator)"| FULL
+    FULL --> TEST["Baseline checks +<br/>per-criterion test items"]
+    ATTACH --> TEST
+    LAUNCH --> TEST
+    RESTART --> TEST
+    ATTACH -.->|"red-box at startup<br/>(stale binary)"| FULL
+    LAUNCH -.->|"red-box at startup"| FULL
+```
 
 Invoke it directly (headless/batch) or let `/implement-issue` delegate to it. Args — the
 workflow owns these canonical defaults; callers pass only overrides:
