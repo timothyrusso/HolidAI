@@ -52,11 +52,13 @@ grace poll still quiet**. Quiet → step 4. Threads → step 2.
     confirmed fix batch below — its commit must exist before its thread is replied to and
     resolved (never resolve a fix decision on words alone). If they decide **resolve** or
     **defer**, reply with their reason and resolve.
-  - **Below-bar rule (orchestrator judgment, raised in later waves):** a finding can be
-    technically true and still not worth a fix here — a theoretical edge that cannot occur
-    in this repository, or polish below the repo's own bar. Resolve it with a short honest
-    reason instead of fixing; never let technically-true-but-inapplicable findings drive
-    endless accommodation. After wave 1, only clear correctness earns a fix.
+  - **Below-bar rule (raised in later waves):** a finding can be technically true and
+    still not worth a fix here. The orchestrator may resolve it alone ONLY when it is
+    OBJECTIVELY inapplicable — an edge that cannot occur in this repository, or a
+    factually wrong premise (things with a checkable truth value). Anything taste- or
+    threshold-shaped is a judgment call and goes to the user like any other. Never let
+    technically-true-but-inapplicable findings drive endless accommodation. After wave 1,
+    only clear correctness, security, reliability, or data-integrity issues earn a fix.
 - **Fix the confirmed batch**: dispatch `feature-builder` in fix mode on the head branch —
   findings verbatim, no new branch or PR, and instruct it explicitly to post NO PR comment
   and return its summary in its final message only.
