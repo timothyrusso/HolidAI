@@ -49,7 +49,7 @@ const rule = {
     // Every hook-like call, collected during traversal. Classification into ViewModel vs foreign is
     // deferred to Program:exit, once ALL imports are known — otherwise a call appearing before its
     // (hoisted) `.logic` import would be misclassified as foreign.
-    /** @type {{ node: any, name: string }[]} */
+    /** @type {{ node: any, name: string, isMember: boolean }[]} */
     const allCalls = [];
 
     /** @param {string} name */
@@ -70,11 +70,12 @@ const rule = {
       },
       CallExpression(node) {
         // Identifier callee `useX()` or member callee `React.useX()` / `hooks.useX()`.
+        const isMember = node.callee.type === 'MemberExpression';
         const callee = node.callee.type === 'MemberExpression' ? node.callee.property : node.callee;
         if (callee.type !== 'Identifier') return;
         const name = callee.name;
         if (!isHookCall(name)) return;
-        allCalls.push({ node, name });
+        allCalls.push({ node, name, isMember });
       },
       'Program:exit'() {
         // No ViewModel import => presentational component, nothing to enforce.
@@ -87,7 +88,9 @@ const rule = {
         /** @type {{ node: any, name: string }[]} */
         const foreignCalls = [];
         for (const call of allCalls) {
-          if (viewModelHooks.has(call.name)) {
+          // A ViewModel hook is an imported binding invoked as a bare identifier. A member call
+          // (`X.useY()`) is a different binding, so it can never be the ViewModel hook — only foreign.
+          if (!call.isMember && viewModelHooks.has(call.name)) {
             viewModelCalls.push(call);
           } else if (!allow.has(call.name)) {
             foreignCalls.push(call);

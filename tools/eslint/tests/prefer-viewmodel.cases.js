@@ -103,6 +103,19 @@ module.exports = function run() {
         };`,
         errors: [{ messageId: 'foreignHook' }],
       },
+      // A member call whose property name matches the ViewModel import is a different binding, so it
+      // is foreign (not conflated with the imported hook, which would wrongly read as calledTwice).
+      {
+        filename: TSX,
+        code: `${IMPORT}
+        import * as hooks from '@/hooks';
+        export const SelectDatesPage = () => {
+          const { state } = useSelectDatesPageLogic();
+          hooks.useSelectDatesPageLogic();
+          return null;
+        };`,
+        errors: [{ messageId: 'foreignHook' }],
+      },
       // Calls its ViewModel hook twice.
       {
         filename: TSX,
