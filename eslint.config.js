@@ -1,6 +1,7 @@
 const { defineConfig } = require('eslint/config');
 const reactCompiler = require('eslint-plugin-react-compiler');
 const tsParser = require('@typescript-eslint/parser');
+const holidai = require('./tools/eslint');
 
 module.exports = defineConfig([
   {
@@ -31,6 +32,23 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'convex/_generated/*', '.claude/workflows/**'],
+    // ViewModel contract rules — see tools/eslint. Registered at `warn` during rollout (issue #403);
+    // flipped to `error` once every ViewModel is migrated (issue #404).
+    files: ['**/*.logic.ts'],
+    plugins: { holidai },
+    rules: {
+      'holidai/viewmodel-return-shape': 'warn',
+    },
+  },
+  {
+    files: ['**/*.tsx'],
+    plugins: { holidai },
+    rules: {
+      'holidai/prefer-viewmodel': 'warn',
+    },
+  },
+  {
+    // tools/ is build-time tooling (like scripts/) — not linted with app rules.
+    ignores: ['dist/*', 'convex/_generated/*', '.claude/workflows/**', 'tools/**'],
   },
 ]);

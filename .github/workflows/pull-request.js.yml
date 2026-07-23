@@ -31,6 +31,10 @@ jobs:
       - run: npm install --package-lock-only
       - run: npm ci
       - run: npm run lint
+      - run: npm run test:eslint-rules
+      # ViewModel-contract ESLint rules run at `warn` during rollout (issue #403), so this step is
+      # green today; issue #404 migrates all ViewModels and flips the rules to `error`.
+      - run: npm run lint:compiler
       - run: npx tsc --noEmit
 
       - name: Architecture check
