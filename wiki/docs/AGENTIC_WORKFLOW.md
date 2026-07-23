@@ -99,7 +99,8 @@ flowchart TD
     REPORT -->|"completed without abort"| RET["structured return to the caller"]
     RET --> SUMM["skill relays the result"]
     SUMM --> BOTS["AI review bots comment on the PR"]
-    BOTS --> TRIAGE["/triage-pr loop:<br/>vet each finding, fix confirmed,<br/>resolve noise, escalate judgment<br/>calls to the human"]
+    BOTS -->|"optional"| TRIAGE["/triage-pr loop:<br/>vet each finding, fix confirmed,<br/>resolve noise, escalate judgment<br/>calls to the human"]
+    BOTS -.->|"triage skipped:<br/>human handles bot<br/>threads directly"| PRREV
     TRIAGE -->|"fix commits<br/>trigger re-review"| BOTS
     TRIAGE -->|"bots quiet +<br/>grace poll"| PRREV["Human PR review<br/>(behind the CI gate:<br/>lint + typecheck + arch)"]
     PRREV --> MERGE["Merge — never automated"]
