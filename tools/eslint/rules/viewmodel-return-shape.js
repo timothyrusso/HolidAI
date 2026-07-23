@@ -19,6 +19,24 @@ const NESTED_FUNCTION_TYPES = new Set([
   'ArrowFunctionExpression',
 ]);
 
+// TypeScript wrapper expressions that surround the real value: `x as const`, `x satisfies T`, `x!`.
+// The @typescript-eslint parser nests the object literal under `.expression`, so we peel them off
+// before checking the return shape (otherwise `return { state } as const` reads as a non-object).
+const TS_WRAPPER_TYPES = new Set(['TSAsExpression', 'TSSatisfiesExpression', 'TSNonNullExpression']);
+
+/**
+ * Peel any TS wrapper expressions off a node to reach the underlying value.
+ * @param {any} node
+ * @returns {any}
+ */
+function unwrapTs(node) {
+  let current = node;
+  while (current && TS_WRAPPER_TYPES.has(current.type)) {
+    current = current.expression;
+  }
+  return current;
+}
+
 /**
  * A hook is any function whose name starts with `use` + uppercase (React convention).
  * @param {unknown} name
@@ -104,11 +122,26 @@ const rule = {
     function validateObject(reportNode, hookName, objExpr) {
       const keys = keysOf(objExpr);
       const bad = keys.filter((/** @type {any} */ k) => !ALLOWED.has(k));
-      if (keys.length === 0 || bad.length > 0) {
+      // Spreads and computed keys defeat static verification — a spread could inject any key, and a
+      // computed key isn't statically known — so a ViewModel return must use plain literal keys only.
+      const hasSpread = objExpr.properties.some((/** @type {any} */ p) => p.type === 'SpreadElement');
+      const hasComputed = objExpr.properties.some(
+        (/** @type {any} */ p) => p.type === 'Property' && p.computed,
+      );
+      if (bad.length > 0 || hasSpread || hasComputed) {
+        const markers = [...bad];
+        if (hasSpread) markers.push('(spread)');
+        if (hasComputed) markers.push('(computed key)');
         context.report({
           node: reportNode,
           messageId: 'wrongShape',
-          data: { name: hookName, shape: SHAPE, bad: bad.join(', ') || '(empty object)' },
+          data: { name: hookName, shape: SHAPE, bad: markers.join(', ') },
+        });
+      } else if (keys.length === 0) {
+        context.report({
+          node: reportNode,
+          messageId: 'wrongShape',
+          data: { name: hookName, shape: SHAPE, bad: '(empty object)' },
         });
       }
     }
@@ -118,23 +151,25 @@ const rule = {
      * @param {any} fn
      */
     function checkHook(hookName, fn) {
-      // Implicit-return arrow: `const useXLogic = () => ({ ... })`
-      if (fn.body.type === 'ObjectExpression') {
-        validateObject(fn.body, hookName, fn.body);
-        return;
-      }
-      // Implicit-return arrow returning a non-object (e.g. a ternary) — not a valid contract.
+      // Implicit-return arrow: `const useXLogic = () => ({ ... })` (possibly wrapped in `as const` etc.)
       if (fn.body.type !== 'BlockStatement') {
-        context.report({ node: fn, messageId: 'notObject', data: { name: hookName, shape: SHAPE } });
+        const body = unwrapTs(fn.body);
+        if (body.type === 'ObjectExpression') {
+          validateObject(body, hookName, body);
+        } else {
+          // Implicit-return arrow returning a non-object (e.g. a ternary) — not a valid contract.
+          context.report({ node: fn, messageId: 'notObject', data: { name: hookName, shape: SHAPE } });
+        }
         return;
       }
       // Block body: inspect only the hook's own returns. No returns (or only bare `return;`) => void, OK.
       for (const ret of collectOwnReturns(fn)) {
         if (!ret.argument) continue; // bare `return;` guard clause — allowed
-        if (ret.argument.type !== 'ObjectExpression') {
+        const arg = unwrapTs(ret.argument);
+        if (arg.type !== 'ObjectExpression') {
           context.report({ node: ret, messageId: 'notObject', data: { name: hookName, shape: SHAPE } });
         } else {
-          validateObject(ret, hookName, ret.argument);
+          validateObject(ret, hookName, arg);
         }
       }
     }

@@ -62,13 +62,24 @@ module.exports = function run() {
         filename: LOGIC,
         code: `export const useXLogic = () => { if (Math.random()) return; return { state: { a: 1 } }; };`,
       },
-      // Nested function return (useEffect cleanup) must be ignored.
+      // A return inside a nested function (e.g. a useEffect cleanup) belongs to that function,
+      // not the hook, so it is ignored.
       {
         filename: LOGIC,
         code: `export const useXLogic = () => {
           const cleanup = () => { return { notAllowed: 1 }; };
           return { effects: { cleanup } };
         };`,
+      },
+      // TS wrapper on a block return: `{ ... } as const` still reads as the object underneath.
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => { return { state: {} } as const; };`,
+      },
+      // TS wrapper on an implicit-return arrow.
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => ({ effects: {} }) as const;`,
       },
       // Not a .logic.ts file => rule does not apply.
       {
@@ -95,6 +106,18 @@ module.exports = function run() {
       {
         filename: LOGIC,
         code: `export const useXLogic = () => { return {}; };`,
+        errors: [{ messageId: 'wrongShape' }],
+      },
+      // A spread can inject arbitrary keys, so it is rejected even alongside a valid bucket.
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => { return { state: {}, ...extra }; };`,
+        errors: [{ messageId: 'wrongShape' }],
+      },
+      // A computed key is not statically knowable, so it is rejected too.
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => { return { state: {}, [dynamic]: 1 }; };`,
         errors: [{ messageId: 'wrongShape' }],
       },
       // Non-conforming return NESTED in control flow (the key hardening case).

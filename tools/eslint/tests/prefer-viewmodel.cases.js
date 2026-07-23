@@ -55,6 +55,16 @@ module.exports = function run() {
           return null;
         };`,
       },
+      // The `.logic` import is hoisted below the component; classification in Program:exit still
+      // recognizes the ViewModel hook, so no false foreign-hook is reported.
+      {
+        filename: TSX,
+        code: `export const SelectDatesPage = () => {
+          const { state } = useSelectDatesPageLogic();
+          return null;
+        };
+        ${IMPORT}`,
+      },
       // Allowlisted foreign hook is permitted.
       {
         filename: TSX,
@@ -77,6 +87,18 @@ module.exports = function run() {
         export const SelectDatesPage = () => {
           const { state } = useSelectDatesPageLogic();
           const [x] = useState(0);
+          return null;
+        };`,
+        errors: [{ messageId: 'foreignHook' }],
+      },
+      // Member-expression / namespace-qualified foreign hook (React.useState) must not bypass the rule.
+      {
+        filename: TSX,
+        code: `${IMPORT}
+        import * as React from 'react';
+        export const SelectDatesPage = () => {
+          const { state } = useSelectDatesPageLogic();
+          const [x] = React.useState(0);
           return null;
         };`,
         errors: [{ messageId: 'foreignHook' }],

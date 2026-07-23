@@ -46,10 +46,11 @@ const rule = {
 
     /** @type {Set<string>} */
     const viewModelHooks = new Set();
+    // Every hook-like call, collected during traversal. Classification into ViewModel vs foreign is
+    // deferred to Program:exit, once ALL imports are known — otherwise a call appearing before its
+    // (hoisted) `.logic` import would be misclassified as foreign.
     /** @type {{ node: any, name: string }[]} */
-    const viewModelCalls = [];
-    /** @type {{ node: any, name: string }[]} */
-    const foreignCalls = [];
+    const allCalls = [];
 
     /** @param {string} name */
     function isHookCall(name) {
@@ -68,20 +69,30 @@ const rule = {
         }
       },
       CallExpression(node) {
-        if (node.callee.type !== 'Identifier') return;
-        const name = node.callee.name;
+        // Identifier callee `useX()` or member callee `React.useX()` / `hooks.useX()`.
+        const callee = node.callee.type === 'MemberExpression' ? node.callee.property : node.callee;
+        if (callee.type !== 'Identifier') return;
+        const name = callee.name;
         if (!isHookCall(name)) return;
-        if (viewModelHooks.has(name)) {
-          viewModelCalls.push({ node, name });
-        } else if (!allow.has(name)) {
-          foreignCalls.push({ node, name });
-        }
+        allCalls.push({ node, name });
       },
       'Program:exit'() {
         // No ViewModel import => presentational component, nothing to enforce.
         if (viewModelHooks.size === 0) return;
 
         const expected = [...viewModelHooks].join(' | ');
+
+        /** @type {{ node: any, name: string }[]} */
+        const viewModelCalls = [];
+        /** @type {{ node: any, name: string }[]} */
+        const foreignCalls = [];
+        for (const call of allCalls) {
+          if (viewModelHooks.has(call.name)) {
+            viewModelCalls.push(call);
+          } else if (!allow.has(call.name)) {
+            foreignCalls.push(call);
+          }
+        }
 
         for (const call of foreignCalls) {
           context.report({
