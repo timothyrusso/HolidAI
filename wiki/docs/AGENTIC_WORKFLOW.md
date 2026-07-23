@@ -98,7 +98,10 @@ flowchart TD
     REPORT -.->|"aborted: rethrow<br/>after reporting"| FAILED["run fails"]
     REPORT -->|"completed without abort"| RET["structured return to the caller"]
     RET --> SUMM["skill relays the result"]
-    SUMM --> PRREV["Human PR review<br/>(behind the CI gate:<br/>lint + typecheck + arch)"]
+    SUMM --> BOTS["AI review bots comment on the PR"]
+    BOTS --> TRIAGE["/triage-pr loop:<br/>vet each finding, fix confirmed,<br/>resolve noise, escalate judgment<br/>calls to the human"]
+    TRIAGE -->|"fix commits<br/>trigger re-review"| BOTS
+    TRIAGE -->|"bots quiet +<br/>grace poll"| PRREV["Human PR review<br/>(behind the CI gate:<br/>lint + typecheck + arch)"]
     PRREV --> MERGE["Merge — never automated"]
 ```
 
@@ -230,6 +233,28 @@ unverifiable device claims needing human eyes; `refuted` = findings the vetter d
 
 ---
 
+## The `/triage-pr` loop
+
+After the pipeline opens a PR, the AI review bots (coderabbit, sourcery, cubic, gemini)
+comment on their own schedule. `/triage-pr <pr>` is a **main-thread skill** (it contains
+human gates, so it cannot be a workflow) that drives those threads to zero:
+
+- Every bot finding is vetted by `finding-vetter`: **confirmed** → auto-fixed, committed,
+  thread closed with the SHA (push is verified before any thread is resolved) ·
+  **refuted** → short evidence-cited reply, resolved · **suspect / judgment** → the user
+  decides in chat, mid-loop.
+- **Below-bar rule:** the orchestrator may resolve a technically-true finding alone only
+  when it is OBJECTIVELY inapplicable (impossible in this repo, or a wrong premise);
+  taste- and threshold-shaped calls always go to the user. After wave 1, only clear
+  correctness, security, reliability, or data-integrity issues earn a fix.
+- **Termination is natural** (no round cap): no unresolved bot threads AND no pending bot
+  check runs AND one grace poll still quiet. The only tripwire is the stuck detector — a
+  wave whose findings-set repeats a previous wave's hands the loop to the human.
+- Human-authored comments are untouchable, and the loop produces no reports — thread
+  replies plus a short closing chat message only.
+
+---
+
 ## How to use it
 
 1. `write-issue` (or open a Feature-template issue by hand) → a complete issue with Description +
@@ -239,6 +264,9 @@ unverifiable device claims needing human eyes; `refuted` = findings the vetter d
      otherwise it announces its reading and runs end-to-end.
    - **Headless/batch:** run the `implement-issue-pipeline` workflow with `{ issue: <n> }`
      (add `qa: false` if the environment can't drive a device reliably).
-3. Review the resulting PR — the build, review, device-QA, vetting, and run-metrics reports
+3. Once the AI review bots have commented on the fresh PR, optionally run
+   `/triage-pr <pr>` — it drives the bot threads to zero and consults you in chat only
+   where judgment lives.
+4. Review the resulting PR — the build, review, device-QA, vetting, and run-metrics reports
    all live in ONE pipeline comment, as collapsible sections under a short status header.
-4. Merge when satisfied. The pipeline never merges for you.
+5. Merge when satisfied. The pipeline never merges for you.
