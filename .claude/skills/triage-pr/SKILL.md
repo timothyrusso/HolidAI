@@ -59,9 +59,11 @@ grace poll still quiet**. Quiet → step 4. Threads → step 2.
     endless accommodation. After wave 1, only clear correctness earns a fix.
 - **Fix the confirmed batch**: dispatch `feature-builder` in fix mode on the head branch —
   findings verbatim, no new branch or PR, and instruct it explicitly to post NO PR comment
-  and return its summary in its final message only. After it commits: reply to each fixed
-  thread with the commit SHA, resolve it.
-- Push once per wave (only if commits were made), then return to step 1.
+  and return its summary in its final message only.
+- **Push first, then close threads**: after the batch commits, push and CONFIRM the push
+  succeeded; only then reply to each fixed thread with its commit SHA and resolve it — a
+  resolved thread must never cite a SHA that is not on the PR's remote branch. Then return
+  to step 1.
 
 **3. Stuck detector (the only tripwire — there is deliberately NO round cap).**
 Fingerprint each wave's bot findings as a **sorted multiset of thread identities**
@@ -87,9 +89,12 @@ gh api graphql -f query='query { repository(owner: "<owner>", name: "<repo>") {
 
 Reply, then resolve (two complete commands per thread):
 ```
-gh api graphql -f query='mutation($tid: ID!, $body: String!) { addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $tid, body: $body}) { comment { id } } }' -f tid=<thread-id> -f body=<reply text>
-gh api graphql -f query='mutation($tid: ID!) { resolveReviewThread(input: {threadId: $tid}) { thread { isResolved } } }' -f tid=<thread-id>
+gh api graphql -f query='mutation($tid: ID!, $body: String!) { addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $tid, body: $body}) { comment { id } } }' -f tid="<thread-id>" -f body="<reply text>"
+gh api graphql -f query='mutation($tid: ID!) { resolveReviewThread(input: {threadId: $tid}) { thread { isResolved } } }' -f tid="<thread-id>"
 ```
+Always double-quote `tid` and `body` — an unquoted multi-word body shell-splits before
+`gh` ever sees it. For bodies with special characters, build them in a variable or a
+heredoc-driven script rather than inline.
 
 Background watcher (5-minute spacing, run_in_background) — this loop IS the quiet
 condition: threads exit early; QUIET requires no threads AND no pending bot checks held
@@ -103,9 +108,8 @@ for i in $(seq 1 12); do
   N=$(<unresolved BOT thread count via the query above, paginated> 2>/dev/null)
   [ -z "$N" ] && echo "API_UNAVAILABLE: thread query returned nothing" && exit 1
   [ "$N" -gt 0 ] && echo "THREADS: $N" && exit 0
-  CHECKS=$(gh pr checks <pr> 2>/dev/null)
-  [ -z "$CHECKS" ] && echo "API_UNAVAILABLE: gh pr checks returned nothing" && exit 1
-  PENDING=$(printf '%s\n' "$CHECKS" | grep -ciE "pending|in progress|queued" || true)
+  PENDING=$(gh pr checks <pr> --json bucket --jq '[.[] | select(.bucket == "pending")] | length' 2>/dev/null)
+  [ -z "$PENDING" ] && echo "API_UNAVAILABLE: gh pr checks returned nothing" && exit 1
   if [ "$PENDING" -eq 0 ]; then
     QUIET=$((QUIET+1))
     [ "$QUIET" -ge 2 ] && echo "QUIET" && exit 0
