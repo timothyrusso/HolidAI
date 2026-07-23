@@ -88,13 +88,19 @@ gh api graphql -f query='mutation($tid: ID!) { resolveReviewThread(input: {threa
 
 Background watcher (5-minute spacing, run_in_background) — this loop IS the quiet
 condition: threads exit early; QUIET requires no threads AND no pending bot checks held
-across one extra grace poll:
+across one extra grace poll. Both API reads FAIL CLOSED on empty output: an auth or
+network failure must abort the watcher, never read as "zero threads / zero pending".
+(Do not fail on the exit code of `gh pr checks` — it exits 8 for pending and 1 for
+failed checks; only empty output means the API was unreachable.)
 ```
 QUIET=0
 for i in $(seq 1 12); do
-  N=<unresolved BOT thread count via the query above, paginated>
+  N=$(<unresolved BOT thread count via the query above, paginated> 2>/dev/null)
+  [ -z "$N" ] && echo "API_UNAVAILABLE: thread query returned nothing" && exit 1
   [ "$N" -gt 0 ] && echo "THREADS: $N" && exit 0
-  PENDING=$(gh pr checks <pr> 2>/dev/null | grep -ciE "pending|in progress|queued" || true)
+  CHECKS=$(gh pr checks <pr> 2>/dev/null)
+  [ -z "$CHECKS" ] && echo "API_UNAVAILABLE: gh pr checks returned nothing" && exit 1
+  PENDING=$(printf '%s\n' "$CHECKS" | grep -ciE "pending|in progress|queued" || true)
   if [ "$PENDING" -eq 0 ]; then
     QUIET=$((QUIET+1))
     [ "$QUIET" -ge 2 ] && echo "QUIET" && exit 0
