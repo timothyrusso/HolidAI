@@ -53,7 +53,10 @@ const doQa = opts.qa !== false
 
 const worktree = opts.worktree === true
 
-const MAX_FIX = typeof opts.maxFix === 'number' ? opts.maxFix : DEFAULT_MAX_FIX_ROUNDS
+if (opts.maxFix !== undefined && (!Number.isInteger(opts.maxFix) || opts.maxFix < 0)) {
+  throw new Error(`implement-issue-pipeline: \`maxFix\` must be a non-negative integer, got: ${JSON.stringify(opts.maxFix)}`)
+}
+const MAX_FIX = opts.maxFix === undefined ? DEFAULT_MAX_FIX_ROUNDS : opts.maxFix
 
 const iso = worktree ? { isolation: 'worktree' } : {}
 

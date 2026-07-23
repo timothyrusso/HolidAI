@@ -48,8 +48,10 @@ grace poll still quiet**. Quiet → step 4. Threads → step 2.
   - **confirmed** → collect for fixing.
   - **refuted** → reply with the vetter's reason (short), resolve the thread.
   - **suspect / judgment call** → consult the user in chat: the finding, the vetter's
-    reasoning, and 2–3 proposed options. Apply whatever they decide (fix, resolve with a
-    reason, or defer), then reply + resolve accordingly.
+    reasoning, and 2–3 proposed options. If they decide **fix**, the finding JOINS the
+    confirmed fix batch below — its commit must exist before its thread is replied to and
+    resolved (never resolve a fix decision on words alone). If they decide **resolve** or
+    **defer**, reply with their reason and resolve.
 - **Fix the confirmed batch**: dispatch `feature-builder` in fix mode on the head branch —
   findings verbatim, no new branch or PR, and instruct it explicitly to post NO PR comment
   and return its summary in its final message only. After it commits: reply to each fixed
@@ -57,37 +59,52 @@ grace poll still quiet**. Quiet → step 4. Threads → step 2.
 - Push once per wave (only if commits were made), then return to step 1.
 
 **3. Stuck detector (the only tripwire — there is deliberately NO round cap).**
-Fingerprint each wave's bot findings (normalized text set). If a wave's set matches any
-previous wave's, stop: the same findings keep returning, more rounds are rerolls. Tell the
-user which findings are stuck and hand the loop over.
+Fingerprint each wave's bot findings as a **sorted multiset of thread identities**
+(`path:line` plus normalized text, joined and sorted — same semantics as the pipeline's
+`roundFingerprint`). Never a plain text set: that collapses identical findings at
+different locations, so fixing one occurrence while the other legitimately persists would
+fake a stuck state and stop the loop with a fixable finding still open. If a wave's
+fingerprint matches any previous wave's, stop: the same findings keep returning, more
+rounds are rerolls. Tell the user which findings are stuck and hand the loop over.
 
 **4. Finish.** The short closing message described in the ground rules. Nothing else.
 
 ## Recipes
 
-Unresolved threads (id, author, body, path, line):
+Unresolved threads (id, author, body, path, line). Resolved threads consume the page
+budget too — if `hasNextPage` is true, paginate with `after: "<endCursor>"` before
+trusting any count, or unresolved threads past the page can silently read as zero:
 ```
 gh api graphql -f query='query { repository(owner: "<owner>", name: "<repo>") {
-  pullRequest(number: <pr>) { reviewThreads(first: 100) { nodes {
+  pullRequest(number: <pr>) { reviewThreads(first: 100) { pageInfo { hasNextPage endCursor } nodes {
     id isResolved path line comments(first: 1) { nodes { author { login } body } } } } } } }'
 ```
 
-Reply, then resolve (two mutations per thread):
+Reply, then resolve (two complete commands per thread):
 ```
-addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $tid, body: $body}) { comment { id } }
-resolveReviewThread(input: {threadId: $tid}) { thread { isResolved } }
+gh api graphql -f query='mutation($tid: ID!, $body: String!) { addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $tid, body: $body}) { comment { id } } }' -f tid=<thread-id> -f body=<reply text>
+gh api graphql -f query='mutation($tid: ID!) { resolveReviewThread(input: {threadId: $tid}) { thread { isResolved } } }' -f tid=<thread-id>
 ```
 
-Background watcher (5-minute spacing, run_in_background):
+Background watcher (5-minute spacing, run_in_background) — this loop IS the quiet
+condition: threads exit early; QUIET requires no threads AND no pending bot checks held
+across one extra grace poll:
 ```
-for i in $(seq 1 6); do
-  N=<unresolved bot thread count via the query above>
+QUIET=0
+for i in $(seq 1 12); do
+  N=<unresolved BOT thread count via the query above, paginated>
   [ "$N" -gt 0 ] && echo "THREADS: $N" && exit 0
+  PENDING=$(gh pr checks <pr> 2>/dev/null | grep -ciE "pending|in progress|queued" || true)
+  if [ "$PENDING" -eq 0 ]; then
+    QUIET=$((QUIET+1))
+    [ "$QUIET" -ge 2 ] && echo "QUIET" && exit 0
+  else
+    QUIET=0
+  fi
   sleep 300
-done; echo "QUIET"
+done
+echo "WINDOW_CLOSED: bots still busy, re-run the watcher"
 ```
-Combine with `gh pr checks <pr>` before declaring quiet: any pending/queued check run
-from a bot means a review job is still running — keep watching.
 
 ## Chaining
 This skill is the natural follow-up to an `implement-issue` pipeline run: once the bots
