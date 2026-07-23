@@ -37,6 +37,24 @@ module.exports = function run() {
         code: `import { useState } from 'react';
         export const Dumb = () => { const [x] = useState(0); return null; };`,
       },
+      // Test files are exempt even if they mix hooks freely.
+      {
+        filename: 'SelectDatesPage.test.tsx',
+        code: `${IMPORT}
+        import { useState } from 'react';
+        export const SelectDatesPage = () => { const [x] = useState(0); return null; };`,
+      },
+      // Multiple ViewModel hooks from different `.logic` modules, each called once.
+      {
+        filename: TSX,
+        code: `${IMPORT}
+        import { useSelectGuestsPageLogic } from '@/features/x/SelectGuestsPage.logic';
+        export const SelectDatesPage = () => {
+          const { state: dates } = useSelectDatesPageLogic();
+          const { state: guests } = useSelectGuestsPageLogic();
+          return null;
+        };`,
+      },
       // Allowlisted foreign hook is permitted.
       {
         filename: TSX,
@@ -69,6 +87,19 @@ module.exports = function run() {
         code: `${IMPORT}
         export const SelectDatesPage = () => {
           const a = useSelectDatesPageLogic();
+          const b = useSelectDatesPageLogic();
+          return null;
+        };`,
+        errors: [{ messageId: 'calledTwice' }],
+      },
+      // Multiple ViewModel hooks, one of them called twice => calledTwice for that hook.
+      {
+        filename: TSX,
+        code: `${IMPORT}
+        import { useSelectGuestsPageLogic } from '@/features/x/SelectGuestsPage.logic';
+        export const SelectDatesPage = () => {
+          const a = useSelectDatesPageLogic();
+          const { state: guests } = useSelectGuestsPageLogic();
           const b = useSelectDatesPageLogic();
           return null;
         };`,

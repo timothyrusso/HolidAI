@@ -32,6 +32,21 @@ module.exports = function run() {
         filename: LOGIC,
         code: `export const useXLogic = () => { return { state: { a: 1 }, effects: { c: () => {} } }; };`,
       },
+      // Non-empty subset (derived only) — any single allowed bucket is valid.
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => ({ derived: { b: 2 } });`,
+      },
+      // FunctionDeclaration form of a ViewModel hook (the other detection path).
+      {
+        filename: LOGIC,
+        code: `export function useSelectDatesPageLogic() { return { state: {}, effects: {} }; }`,
+      },
+      // Non-hook function in a .logic file is ignored (only use* functions are enforced).
+      {
+        filename: LOGIC,
+        code: `export function helper() { return { anything: 1 }; }`,
+      },
       // Implicit-return arrow object.
       {
         filename: LOGIC,
@@ -74,6 +89,12 @@ module.exports = function run() {
       {
         filename: LOGIC,
         code: `export const useXLogic = () => { return { state: {}, loading: true }; };`,
+        errors: [{ messageId: 'wrongShape' }],
+      },
+      // Empty object return — the `(empty object)` path (keys.length === 0).
+      {
+        filename: LOGIC,
+        code: `export const useXLogic = () => { return {}; };`,
         errors: [{ messageId: 'wrongShape' }],
       },
       // Non-conforming return NESTED in control flow (the key hardening case).
