@@ -11,6 +11,7 @@
       "!**/dist/**",
       "!**/coverage/**",
       "!**/scripts/**",
+      "!**/tools/**",
       "!**/.expo/**",
       "!**/convex/_generated/**",
       "!**/.claude/workflows/**"

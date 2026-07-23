@@ -16,6 +16,7 @@
     "format": "npx @biomejs/biome format --write",
     "lint": "npx @biomejs/biome check --no-errors-on-unmatched --files-ignore-unknown=true",
     "lint:compiler": "npx eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "test:eslint-rules": "node tools/eslint/tests/run.js",
     "arch": "depcruise features convex app types --config .dependency-cruiser.js",
     "arch:report": "depcruise features convex app types --config .dependency-cruiser.js --output-type err-html > arch-report.html; open arch-report.html"
   },

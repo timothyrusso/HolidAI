@@ -16,7 +16,8 @@
     "tsdoc",
     "codegraph",
     "figma",
-    "mcp"
+    "mcp",
+    "viewmodel"
   ],
   "flagWords": [
     "hte"
