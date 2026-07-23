@@ -80,6 +80,8 @@ contradictions, or risky assumptions that would change what gets built.
     never auto-fixed and ALWAYS need human eyes (they block a clean `passed`).
   - `refuted` — findings the vetter dismissed (mention them so the human can spot-check).
   - Non-blocking notes: QA items `BLOCKED`/`NEEDS-REVIEW`, or QA `NOT_PERFORMED`.
+- Offer the natural follow-up: once the AI review bots have commented on the fresh PR,
+  `/triage-pr <pr>` drives their threads to zero before the user's human review pass.
 - Do not merge the PR.
 
 ## Notes
