@@ -52,7 +52,7 @@ jobs:
           java-version: '17'
 
       - name: Setup Expo and EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@v9
         with:
           token: ${{ secrets.EXPO_TOKEN }}
           expo-version: latest
