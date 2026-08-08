@@ -14,7 +14,8 @@
       "!**/tools/**",
       "!**/.expo/**",
       "!**/convex/_generated/**",
-      "!**/.claude/workflows/**"
+      "!**/.claude/workflows/**",
+      "!**/.rnstorybook/storybook.requires.ts"
     ]
   },
   "formatter": {

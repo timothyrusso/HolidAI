@@ -7,9 +7,10 @@ export const meta = {
   phases: [
     { title: 'Explore', detail: 'explorer maps the issue onto the architecture (default on)' },
     { title: 'Build', detail: 'feature-builder implements + opens PR' },
-    { title: 'Wire PR', detail: 'assign PR + add to project + check agent-device available (best-effort)' },
+    { title: 'Wire PR', detail: 'assign PR + add to project + check agent-device/agent-browser available (best-effort)' },
     { title: 'Review', detail: 'code-reviewer checks the diff against the rules (parallel with QA)' },
-    { title: 'QA', detail: 'qa-engineer drives the app on the agent-device (default on, parallel with Review)' },
+    { title: 'QA', detail: 'qa-engineer drives the app on a device — only when the issue has a mobile surface' },
+    { title: 'Web QA', detail: 'qa-web-engineer drives Chromium via agent-browser — only when the issue has a web surface' },
     { title: 'Vet', detail: 'one skeptic per blocking finding tries to refute it before it can trigger a fix' },
     { title: 'Fix', detail: 'feature-builder addresses confirmed findings (history-aware, stops early if stuck)' },
     { title: 'Report', detail: 'assemble and post the ONE consolidated run comment (best-effort, even on abort)' },
@@ -51,6 +52,19 @@ const doReview = opts.review !== false
 
 const doQa = opts.qa !== false
 
+// QA surfaces. `null` => let the explorer decide (see resolveQaTargets); an explicit array
+// pins the run (e.g. { qaTargets: ['web'] } to force web-only QA on a headless run).
+const VALID_QA_TARGETS = ['mobile', 'web']
+let qaTargetsOverride = null
+if (opts.qaTargets !== undefined) {
+  if (!Array.isArray(opts.qaTargets) || opts.qaTargets.some(t => !VALID_QA_TARGETS.includes(t))) {
+    throw new Error(
+      `implement-issue-pipeline: \`qaTargets\` must be an array of ${VALID_QA_TARGETS.join('|')}, got: ${JSON.stringify(opts.qaTargets)}`,
+    )
+  }
+  qaTargetsOverride = [...new Set(opts.qaTargets)]
+}
+
 const worktree = opts.worktree === true
 
 if (opts.maxFix !== undefined && (!Number.isInteger(opts.maxFix) || opts.maxFix < 0)) {
@@ -69,6 +83,7 @@ const MODEL_BY_AGENT = {
   'feature-builder': 'opus',
   'code-reviewer': 'opus',
   'qa-engineer': 'sonnet',
+  'qa-web-engineer': 'sonnet',
   'finding-vetter': 'opus',
 }
 
@@ -185,7 +200,10 @@ function buildFinalComment() {
       ? '✅ PASSED'
       : '❌ NOT PASSED'
   const reviewV = doReview ? (review ? review.verdict : 'n/a') : 'skipped'
-  const qaV = doQa ? (qa ? qaVerdictFrom(qa) : 'n/a') : 'skipped'
+  const ranMobile = doQa && qaTargets.includes('mobile')
+  const ranWeb = doQa && qaTargets.includes('web')
+  const qaV = ranMobile ? (qa ? qaVerdictFrom(qa) : 'n/a') : 'skipped'
+  const qaWebV = ranWeb ? (qaWeb ? qaVerdictFrom(qaWeb) : 'n/a') : 'skipped'
   const totalDur =
     startedAt != null && typeof lastFinishEpoch === 'number' && lastFinishEpoch >= startedAt
       ? fmtDur(lastFinishEpoch - startedAt)
@@ -210,14 +228,15 @@ function buildFinalComment() {
   const parts = [
     `## 🤖 Pipeline run — issue #${issue} · ${status}`,
     '',
-    `**review ${reviewV} · QA ${qaV} · ${fixAttempts} fix round(s) · wall-clock ${totalDur}**`,
+    `**review ${reviewV} · device QA ${qaV} · web QA ${qaWebV} · ${fixAttempts} fix round(s) · wall-clock ${totalDur}**`,
     '',
     build.summary || '',
     attention.length > 0 ? `\n**Needs attention:**\n${attention.join('\n')}` : '',
     '',
     section('🔨 Build report', buildBody),
     section('🔍 Code review', doReview ? clip(review && review.report, 15000) : '_skipped_'),
-    section('🧪 Device QA', doQa ? clip(qa && qa.report, 15000) : '_skipped_'),
+    section('🧪 Device QA', ranMobile ? clip(qa && qa.report, 15000) : '_skipped — no mobile surface for this issue_'),
+    section('🌐 Web QA', ranWeb ? clip(qaWeb && qaWeb.report, 15000) : '_skipped — no web surface for this issue_'),
   ]
   if (vetLines.length > 0) parts.push(section('🕵️ Finding vetting', vetLines.join('\n')))
   parts.push(section('📊 Run metrics', buildMetricsReport()))
@@ -233,9 +252,14 @@ const EXPLORE_SCHEMA = {
   additionalProperties: false,
   properties: {
     report: { type: 'string' },
+    qaTargets: {
+      type: 'array',
+      items: { enum: ['mobile', 'web'] },
+    },
+    qaTargetsReason: { type: 'string' },
     finishedAtEpoch: { type: 'number' },
   },
-  required: ['report'],
+  required: ['report', 'qaTargets', 'qaTargetsReason'],
 }
 
 const BUILD_SCHEMA = {
@@ -317,10 +341,11 @@ const WIRE_SCHEMA = {
   additionalProperties: false,
   properties: {
     agentDeviceReady: { type: 'boolean' },
+    agentBrowserReady: { type: 'boolean' },
     note: { type: 'string' },
     finishedAtEpoch: { type: 'number' },
   },
-  required: ['agentDeviceReady', 'note'],
+  required: ['agentDeviceReady', 'agentBrowserReady', 'note'],
 }
 
 // ═════════════════════════════════════════════════════════════════════════════════════
@@ -336,7 +361,14 @@ const clarificationsBlock = clarifications
 const EPOCH_INSTR =
   '\n\nAs your very last action before returning, run `date +%s` and include the number as `finishedAtEpoch` in your structured return.'
 
-const explorePrompt = `Run pre-implementation exploration for GitHub issue #${issue} per your process: map the issue onto the architecture (target feature and dependency tier, files/layers to touch, closest pattern to mirror, integration points, risks, suggested approach). Return the full structured exploration report as the \`report\` string.${clarificationsBlock}${EPOCH_INSTR}`
+const explorePrompt = `Run pre-implementation exploration for GitHub issue #${issue} per your process: map the issue onto the architecture (target feature and dependency tier, files/layers to touch, closest pattern to mirror, integration points, risks, suggested approach). Return the full structured exploration report as the \`report\` string.
+
+ALSO decide which runtime surfaces this issue needs QA'd, and return them as \`qaTargets\` with a one-line \`qaTargetsReason\`:
+- \`"mobile"\` — the change is observable in the iOS/Android app (a screen, navigation, native module, app-wide behaviour). Driven on a device by qa-engineer.
+- \`"web"\` — the change is observable in a browser (web Storybook, \`expo start --web\`, anything served over HTTP). Driven in Chromium by qa-web-engineer.
+- Both, when the issue genuinely has both surfaces.
+- \`[]\` (EMPTY) — when NO acceptance criterion can be verified at runtime: pure build tooling, CI config, lint rules, docs, agent/workflow config, or type-only changes. An empty array SKIPS QA entirely; that is the correct answer for such issues, not a failure. Do not pad the list to look thorough — a QA run that can only report BLOCKED is worse than no QA run.
+Judge from the acceptance criteria and the files the change will touch, not from the issue title.${clarificationsBlock}${EPOCH_INSTR}`
 
 const reviewPrompt = `Review the change on branch feature/${issue} (issue #${issue}) per your process. Do NOT post any PR comment. Return your overall verdict (PASS or CHANGES-REQUESTED), the list of blocking findings (empty if none), and your full review report markdown as \`report\`.${EPOCH_INSTR}`
 
@@ -345,7 +377,14 @@ const qaPrompt = deviceReady =>
     deviceReady
       ? ' The agent-device CLI has already been verified available in this run — skip your own version check entirely.'
       : ''
-  }${EPOCH_INSTR}`
+  } This run also has a separate web-QA agent covering browser surfaces: if an acceptance criterion is browser-only, mark it BLOCKED as out of scope for mobile QA rather than improvising a browser session.${EPOCH_INSTR}`
+
+const qaWebPrompt = browserReady =>
+  `Run web QA for issue #${issue} on branch feature/${issue} via agent-browser per your process (web baseline checks + acceptance criteria). Do NOT post any PR comment. Return the structured result mirroring your report: items[] (one entry per test item — id, the acceptance criterion it verifies verbatim, class, per-item verdict, one-line note with evidence path on FAIL), baseline[] ({check, pass} per baseline check), blockingFindings (empty if none), notPerformedReason ONLY if the web target could not be served, and your full QA report markdown as \`report\`. Do NOT compute an overall verdict — the pipeline derives it from the items. Every acceptance criterion must appear in items; if one could not be exercised, report it as BLOCKED with the reason.${
+    browserReady
+      ? ' The agent-browser CLI has already been verified available in this run — skip your own version check entirely.'
+      : ''
+  } This run also has a separate mobile-QA agent covering device surfaces: if an acceptance criterion is device-only, mark it BLOCKED as out of scope for web QA rather than driving a simulator.${EPOCH_INSTR}`
 
 const fixPrompt = (findings, attempt, history, persistedKeys) =>
   `Fix mode for issue #${issue} (attempt ${attempt}/${MAX_FIX}). Branch feature/${issue} and its PR already exist — do NOT create a new branch or PR, and do NOT post any PR comment. Address these CONFIRMED blocking findings as new commits on the existing branch, then return the PR URL, a one-line summary of the fixes, and your fix report markdown as \`report\`:\n${findings
@@ -358,15 +397,19 @@ const fixPrompt = (findings, attempt, history, persistedKeys) =>
       : ''
   }${EPOCH_INSTR}`
 
+const SOURCE_LABEL = { qa: 'device-QA', qaWeb: 'web-QA', review: 'code-review' }
+
 const vetPrompt = f =>
-  `Adversarially verify ONE ${f.source === 'qa' ? 'device-QA' : 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.${EPOCH_INSTR}`
+  `Adversarially verify ONE ${SOURCE_LABEL[f.source] || 'code-review'} finding for issue #${issue} (branch feature/${issue}, PR ${build.prUrl}) per your process. The finding:\n\n"${f.text}"\n\nTry to refute it against the actual diff, code, and captured QA evidence. Return confirmed, refuted, or suspect with your reason.${EPOCH_INSTR}`
 
 // ═════════════════════════════════════════════════════════════════════════════════════
 // STAGE HELPERS — verify (review ∥ QA), verdict derivation, finding fingerprints, vetting
 // ═════════════════════════════════════════════════════════════════════════════════════
 
 async function verify() {
-  if (!doReview && !doQa) return { review: null, qa: null }
+  const wantMobile = doQa && qaTargets.includes('mobile')
+  const wantWeb = doQa && qaTargets.includes('web')
+  if (!doReview && !wantMobile && !wantWeb) return { review: null, qa: null, qaWeb: null }
   const before = spent()
   const baseEpoch = lastFinishEpoch
   const kinds = []
@@ -375,9 +418,13 @@ async function verify() {
     kinds.push('review')
     thunks.push(() => agent(reviewPrompt, { agentType: 'code-reviewer', label: `review:${issue}`, phase: 'Review', schema: REVIEW_SCHEMA }))
   }
-  if (doQa) {
+  if (wantMobile) {
     kinds.push('qa')
     thunks.push(() => agent(qaPrompt(agentDeviceReady), { agentType: 'qa-engineer', label: `qa:${issue}`, phase: 'QA', schema: QA_SCHEMA, ...iso }))
+  }
+  if (wantWeb) {
+    kinds.push('qaWeb')
+    thunks.push(() => agent(qaWebPrompt(agentBrowserReady), { agentType: 'qa-web-engineer', label: `qa-web:${issue}`, phase: 'Web QA', schema: QA_SCHEMA, ...iso }))
   }
   const results = await parallel(thunks)
   const delta = tokenDelta(before, spent())
@@ -388,22 +435,26 @@ async function verify() {
   })
 
   if (doReview) review = byKind.review || null
-  if (doQa) qa = byKind.qa || null
+  if (wantMobile) qa = byKind.qa || null
+  if (wantWeb) qaWeb = byKind.qaWeb || null
   if (doReview && !byKind.review) throw new Error(`code-reviewer returned no result for issue #${issue}`)
-  if (doQa && !byKind.qa) throw new Error(`qa-engineer returned no result for issue #${issue}`)
+  if (wantMobile && !byKind.qa) throw new Error(`qa-engineer returned no result for issue #${issue}`)
+  if (wantWeb && !byKind.qaWeb) throw new Error(`qa-web-engineer returned no result for issue #${issue}`)
 
   const finishes = kinds.map(k => (byKind[k] && typeof byKind[k].finishedAtEpoch === 'number' ? byKind[k].finishedAtEpoch : null))
   const branchDur = f => (typeof f === 'number' && typeof baseEpoch === 'number' && f >= baseEpoch ? fmtDur(f - baseEpoch) : 'n/a')
   const maxFinish = Math.max(...finishes.filter(f => typeof f === 'number'), Number.NEGATIVE_INFINITY)
 
+  const AGENT_BY_KIND = { review: 'code-reviewer', qa: 'qa-engineer', qaWeb: 'qa-web-engineer' }
+
   if (Number.isFinite(maxFinish) && (typeof baseEpoch !== 'number' || maxFinish >= baseEpoch)) lastFinishEpoch = maxFinish
   if (kinds.length === 1) {
-    recordMetric(`${kinds[0]}:${issue}`, kinds[0] === 'review' ? 'code-reviewer' : 'qa-engineer', delta, branchDur(finishes[0]))
+    recordMetric(`${kinds[0]}:${issue}`, AGENT_BY_KIND[kinds[0]], delta, branchDur(finishes[0]))
   } else {
-    recordMetric(`verify:${issue} (review ∥ qa)`, null, delta, `${branchDur(finishes[0])} ∥ ${branchDur(finishes[1])}`)
+    recordMetric(`verify:${issue} (${kinds.join(' ∥ ')})`, null, delta, finishes.map(branchDur).join(' ∥ '))
   }
 
-  return { review: byKind.review || null, qa: byKind.qa || null }
+  return { review: byKind.review || null, qa: byKind.qa || null, qaWeb: byKind.qaWeb || null }
 }
 
 function qaVerdictFrom(qa) {
@@ -416,27 +467,35 @@ function qaVerdictFrom(qa) {
 }
 
 function findingKey(f) {
-  const tid = f.source === 'qa' ? (f.text.match(/\bT\d{2,}\b/) || [])[0] : null
-  return tid ? `qa:${tid}` : `${f.source}:${f.text.toLowerCase().replace(/\s+/g, ' ').trim()}`
+  // Mobile QA items are T01…, web QA items are W01… — key on the item id when present so the
+  // same failing item across fix rounds fingerprints identically (and so a T-id from mobile
+  // never collides with a W-id from web).
+  const isQa = f.source === 'qa' || f.source === 'qaWeb'
+  const tid = isQa ? (f.text.match(/\b[TW]\d{2,}\b/) || [])[0] : null
+  return tid ? `${f.source}:${tid}` : `${f.source}:${f.text.toLowerCase().replace(/\s+/g, ' ').trim()}`
 }
 function roundFingerprint(findings) {
   return findings.map(findingKey).sort().join('\n')
 }
 
-function blockingFrom(review, qa) {
+function qaBlockingFrom(result, source, out) {
+  if (!result || qaVerdictFrom(result) !== 'FAIL') return
+  if (result.blockingFindings.length > 0) {
+    for (const f of result.blockingFindings) out.push({ text: f, source })
+  } else {
+    for (const i of result.items.filter(i => i.verdict === 'FAIL')) {
+      out.push({ text: `${i.id} (${i.criterion}): ${i.note}`, source })
+    }
+  }
+}
+
+function blockingFrom(review, qa, qaWeb) {
   const out = []
   if (review && review.verdict === 'CHANGES-REQUESTED') {
     for (const f of review.blockingFindings) out.push({ text: f, source: 'review' })
   }
-  if (qa && qaVerdictFrom(qa) === 'FAIL') {
-    if (qa.blockingFindings.length > 0) {
-      for (const f of qa.blockingFindings) out.push({ text: f, source: 'qa' })
-    } else {
-      for (const i of qa.items.filter(i => i.verdict === 'FAIL')) {
-        out.push({ text: `${i.id} (${i.criterion}): ${i.note}`, source: 'qa' })
-      }
-    }
-  }
+  qaBlockingFrom(qa, 'qa', out)
+  qaBlockingFrom(qaWeb, 'qaWeb', out)
   return out
 }
 
@@ -469,16 +528,30 @@ async function vetFindings(findings) {
 // ═════════════════════════════════════════════════════════════════════════════════════
 
 let explorerReport = suppliedReport
+// null until resolved: an explicit override wins; otherwise the explorer decides; if the
+// explorer never ran or failed, fall back to both surfaces (see resolution below) so a
+// broken explorer can never silently switch QA off.
+let exploredQaTargets = null
 if (doExplore) {
   phase('Explore')
   try {
     const ex = await trackedAgent(explorePrompt, { agentType: 'explorer', label: `explore:${issue}`, schema: EXPLORE_SCHEMA })
     explorerReport = ex && ex.report ? ex.report : null
+    if (ex && Array.isArray(ex.qaTargets)) {
+      exploredQaTargets = [...new Set(ex.qaTargets.filter(t => VALID_QA_TARGETS.includes(t)))]
+      log(`Explorer chose QA targets: ${exploredQaTargets.length ? exploredQaTargets.join(' + ') : 'none'} — ${ex.qaTargetsReason || 'no reason given'}`)
+    }
     if (!explorerReport) log('Explorer returned no report — builder will map the codebase itself (non-blocking)')
   } catch (e) {
     log(`Explore phase failed (non-blocking): ${e && e.message ? e.message : e}`)
   }
 }
+
+// Resolution order: explicit override > explorer's judgement > both (fail-safe).
+const qaTargets = qaTargetsOverride ?? exploredQaTargets ?? [...VALID_QA_TARGETS]
+if (qaTargetsOverride) log(`QA targets pinned by caller: ${qaTargetsOverride.length ? qaTargetsOverride.join(' + ') : 'none'}`)
+else if (exploredQaTargets === null) log('No QA target decision available (explore skipped or failed) — defaulting to mobile + web')
+if (doQa && qaTargets.length === 0) log('QA skipped: no runtime surface to verify for this issue')
 
 const explorerBlock = explorerReport
   ? `\n\nExploration report (use it as your codebase map; don't re-explore from scratch):\n${explorerReport}`
@@ -494,21 +567,32 @@ log(`Built issue #${issue} → ${build.prUrl}`)
 const wirePrompt = `PR wiring + environment pre-check for the pull request ${build.prUrl}. Change PR METADATA ONLY — never edit the PR body or title (those are owned by the setup-pr workflow), and do not add issue-linking. Do exactly three things:
 1. Assign the PR to timothyrusso: \`gh pr edit ${build.prUrl} --add-assignee timothyrusso\`.
 2. Add the PR to GitHub Project #1: \`gh project item-add 1 --owner timothyrusso --url ${build.prUrl}\`. This needs the \`project\` scope on the gh token, which is currently MISSING. If step 2 fails with a scope/authorization error, do NOT abort and do NOT undo step 1 — note the exact remediation \`gh auth refresh -s project\` and treat the run as fine. Step 1 must still stand.
-3. Check the agent-device CLI is available (read-only — do NOT install, update, or add any package): \`agent-device --version\`. Return \`agentDeviceReady: true\` if it reports a version; \`false\` if the command is missing or errors. Keeping the CLI up to date is handled by environment provisioning outside this run, never by this stage.
+3. Check the QA CLIs this run actually needs are available (read-only — do NOT install, update, or add any package).${
+  qaTargets.includes('mobile')
+    ? ' Run `agent-device --version` and return `agentDeviceReady: true` if it reports a version, `false` if it is missing or errors.'
+    : ' This run does NOT need mobile QA — skip the agent-device check and return `agentDeviceReady: false`.'
+}${
+  qaTargets.includes('web')
+    ? ' Run `agent-browser --version` and return `agentBrowserReady: true` if it reports a version, `false` if it is missing or errors.'
+    : ' This run does NOT need web QA — skip the agent-browser check and return `agentBrowserReady: false`.'
+} Keeping the CLIs up to date is handled by environment provisioning outside this run, never by this stage.
 Summarise the outcome of all three in \`note\`.${EPOCH_INSTR}`
 
 let agentDeviceReady = false
+let agentBrowserReady = false
 
 try {
   phase('Wire PR')
   const wire = await trackedAgent(wirePrompt, { agentType: 'general-purpose', label: `wire:${issue}`, effort: 'low', schema: WIRE_SCHEMA })
   agentDeviceReady = Boolean(wire && wire.agentDeviceReady === true)
+  agentBrowserReady = Boolean(wire && wire.agentBrowserReady === true)
 } catch (e) {
   log(`PR wiring step failed (non-blocking): ${e && e.message ? e.message : e}`)
 }
 
 let review = null
 let qa = null
+let qaWeb = null
 let vetted = { confirmed: [], refuted: [], suspect: [] }
 let fixAttempts = 0
 let stuck = false
@@ -520,9 +604,9 @@ let prevKeys = new Set()
 
 try {
   abortStage = 'verify'
-  ;({ review, qa } = await verify())
+  ;({ review, qa, qaWeb } = await verify())
   abortStage = 'vet'
-  vetted = await vetFindings(blockingFrom(review, qa))
+  vetted = await vetFindings(blockingFrom(review, qa, qaWeb))
 
   while (vetted.confirmed.length > 0 && fixAttempts < MAX_FIX) {
     const fp = roundFingerprint(vetted.confirmed)
@@ -541,9 +625,9 @@ try {
     fixHistory.push({ round: fixAttempts, summary: fix && fix.summary ? fix.summary : 'n/a', report: fix && fix.report ? fix.report : '' })
     prevKeys = new Set(vetted.confirmed.map(findingKey))
     abortStage = 'verify'
-    ;({ review, qa } = await verify())
+    ;({ review, qa, qaWeb } = await verify())
     abortStage = 'vet'
-    vetted = await vetFindings(blockingFrom(review, qa))
+    vetted = await vetFindings(blockingFrom(review, qa, qaWeb))
   }
 } catch (e) {
   abortError = e
@@ -567,12 +651,20 @@ REPORT>>>`
 
 if (abortError) throw abortError
 
+// Each QA lane reports for itself: a lane that was never selected returns 'skipped' (not
+// null), so a caller can tell "no mobile surface to verify" apart from "mobile QA ran and
+// could not be performed".
+const ranMobileQa = doQa && qaTargets.includes('mobile')
+const ranWebQa = doQa && qaTargets.includes('web')
+
 return {
   prUrl: build.prUrl,
   explored: Boolean(explorerReport),
   reviewVerdict: doReview ? review.verdict : 'skipped',
-  qaVerdict: doQa ? qaVerdictFrom(qa) : 'skipped',
-  qaItems: doQa && qa ? qa.items : [],
+  qaVerdict: ranMobileQa ? qaVerdictFrom(qa) : 'skipped',
+  qaItems: ranMobileQa && qa ? qa.items : [],
+  qaWebVerdict: ranWebQa ? qaVerdictFrom(qaWeb) : 'skipped',
+  qaWebItems: ranWebQa && qaWeb ? qaWeb.items : [],
   fixAttempts,
   stuck,
   passed: outstanding.length === 0 && vetted.suspect.length === 0,

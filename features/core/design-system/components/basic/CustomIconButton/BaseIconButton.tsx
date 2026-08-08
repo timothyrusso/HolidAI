@@ -1,5 +1,6 @@
 import { ActivityIndicator, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
+import { match } from 'ts-pattern';
 
 import {
   ButtonState,
@@ -38,7 +39,13 @@ export function BaseIconButton({
   animatedIconStyle,
   noPressedStyle = false,
 }: CustomIconButtonProps) {
-  const buttonState = isDisabled ? ButtonState.Disabled : ButtonState.Active;
+  // Loading maps to Disabled, matching BaseButton. Both components already pass
+  // `disabled={isDisabled || isLoading}` to CustomPressable, so a loading button cannot be pressed;
+  // rendering it in the Active style made it look pressable while silently ignoring taps.
+  const buttonState = match({ isDisabled, isLoading })
+    .with({ isDisabled: true }, () => ButtonState.Disabled)
+    .with({ isLoading: true }, () => ButtonState.Disabled)
+    .otherwise(() => ButtonState.Active);
 
   const { derived } = useCustomButtonLogic();
 

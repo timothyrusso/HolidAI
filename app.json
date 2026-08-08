@@ -38,6 +38,8 @@
           "ios": {
             "deploymentTarget": "17.0",
             "useFrameworks": "static",
+            "buildReactNativeFromSource": true,
+            "usePrecompiledModules": false,
             "extraPods": [
               {
                 "name": "GoogleUtilities",

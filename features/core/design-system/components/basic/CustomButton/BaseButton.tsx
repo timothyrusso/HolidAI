@@ -51,7 +51,7 @@ export function BaseButton({
 
   const { derived } = useCustomButtonLogic();
 
-  const styles = styleButton(buttonType, buttonState, derived.getButtonStyles, size, leftIcon, rightIcon);
+  const styles = styleButton(buttonType, buttonState, derived.getButtonStyles, size);
 
   const iconColor = derived.styleIconColor(buttonType, buttonState);
 
@@ -59,17 +59,26 @@ export function BaseButton({
     <CustomPressable disabled={isDisabled || isLoading} onPress={onPress} style={[styles.button, style]}>
       <View style={styles.innerContainer}>
         {isLoading ? (
-          <ActivityIndicator color={styles.text.color} />
+          // `iconColor`, not `styles.text.color`: a spinner is a glyph, so it takes the same
+          // `styleIconColor` token BaseIconButton's spinner uses. Sourcing it from the text color
+          // made the two components' spinners differ for Main/Primary disabled, where
+          // `getButtonStyles` returns primaryWhite but `styleIconColor` returns primaryWhiteDisabled.
+          <ActivityIndicator color={iconColor} />
         ) : (
           <Fragment>
             {leftIcon && (
-              <CustomIcon name={leftIcon} size={iconSize} style={[styles.icon, leftIconStyle]} color={iconColor} />
+              <CustomIcon name={leftIcon} size={iconSize} style={[styles.leftIcon, leftIconStyle]} color={iconColor} />
             )}
             {title && (
               <CustomText style={[styles.text, textStyle]} text={title} numberOfLines={1} ellipsizeMode="tail" />
             )}
             {rightIcon && (
-              <CustomIcon name={rightIcon} size={iconSize} style={[styles.icon, rightIconStyle]} color={iconColor} />
+              <CustomIcon
+                name={rightIcon}
+                size={iconSize}
+                style={[styles.rightIcon, rightIconStyle]}
+                color={iconColor}
+              />
             )}
           </Fragment>
         )}

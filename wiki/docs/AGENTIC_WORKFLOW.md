@@ -18,9 +18,12 @@ genuinely needs clarifying, and delegates to the single pipeline workflow
 - **agent-device** installed and configured (once per developer) — see
   [agent-device.dev](https://agent-device.dev/) or the `agent-device-configuration` skill. The
   project commits the `Bash(agent-device *)` permission and the `agent-device` skill router, so
-  only the per-machine binary + env vars are needed.
+  only the per-machine binary + env vars are needed. This is the **mobile** QA engine.
+- **agent-browser** installed (`npm i -g agent-browser && agent-browser install`) — the **web**
+  QA engine, used by `qa-web-engineer` to drive Chromium. Only needed for issues with a web
+  surface.
 - **`gh`** authenticated for the HolidAI repository.
-- The iOS app buildable/runnable on a simulator (the QA stage drives it via agent-device).
+- The iOS app buildable/runnable on a simulator (the mobile QA stage drives it via agent-device).
 - **CodeGraph** — `npm install` (pins the `@colbymchenry/codegraph` devDependency), then
   `npx codegraph init` once to build the local index (`.codegraph/`, gitignored, auto-synced).
   The committed `.mcp.json` gives `explorer`/`feature-builder` the code-intelligence MCP.
@@ -36,13 +39,14 @@ genuinely needs clarifying, and delegates to the single pipeline workflow
 | `explorer` | `.claude/agents/explorer.md` | Read-only. Maps an issue onto the architecture (target feature/tier, files, pattern, risks). Runs as the pipeline's first phase (default on). |
 | `feature-builder` | `.claude/agents/feature-builder.md` | Implements, verifies (tsc + arch, once per build round), commits in small layer-aligned commits, opens the PR. |
 | `code-reviewer` | `.claude/agents/code-reviewer.md` | Read-only. Reviews the diff against the rules the linters *don't* enforce. |
-| `qa-engineer` | `.claude/agents/qa-engineer.md` | Drives the app on the agent-device (baseline + acceptance criteria) via the device-readiness fast path; returns per-criterion results and its report to the pipeline. |
+| `qa-engineer` | `.claude/agents/qa-engineer.md` | **Mobile** QA. Drives the app on the agent-device (baseline + acceptance criteria) via the device-readiness fast path; returns per-criterion results and its report to the pipeline. Never drives a browser. |
+| `qa-web-engineer` | `.claude/agents/qa-web-engineer.md` | **Web** QA. Drives Chromium via `agent-browser` (web baseline + acceptance criteria) against a web target — web Storybook or `expo start --web`. Same structured contract as `qa-engineer`; never drives a simulator. |
 | `finding-vetter` | `.claude/agents/finding-vetter.md` | Read-only skeptic. Tries to refute one blocking finding (against the diff, code, and QA evidence) before it can trigger an auto-fix; returns confirmed/refuted/suspect. |
 | `qa-baseline` | `.claude/skills/qa-baseline/SKILL.md` | Standing regression checks run for *every* feature (startup, render, navigation). |
 | Agent memory | `.claude/agent-memory/` | Committed, per-agent operational lessons (device quirks, tooling facts, timings). Agents read theirs at run start and may append under strict rules; humans curate at PR review — keep or delete. |
 | `implement-issue` | `.claude/skills/implement-issue/SKILL.md` | The **front door** (thin orchestrator): judges the issue, grills only if needed (folding answers back into the issue body), announces its reading, then delegates to the pipeline. Contains no pipeline logic. |
 | `triage-pr` | `.claude/skills/triage-pr/SKILL.md` | Bot-review triage loop (main-thread skill — it contains human gates): vets every AI-reviewer comment with `finding-vetter`, auto-fixes confirmed findings, resolves noise with short replies, consults the user in chat for judgment calls. Natural termination (bots quiet + grace poll); no round cap, only a stuck tripwire. Human comments untouchable. |
-| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review ∥ device QA → finding vetting → bounded auto-fix → one consolidated run comment. Owns the canonical defaults. Directly invocable for headless/batch. |
+| `implement-issue-pipeline` | `.claude/workflows/implement-issue-pipeline.js` | **THE pipeline** (single encoding): explore → build → wire PR → review ∥ QA (mobile and/or web, routed by `qaTargets`) → finding vetting → bounded auto-fix → one consolidated run comment. Owns the canonical defaults. Directly invocable for headless/batch. |
 | CodeGraph | `.mcp.json` + `@colbymchenry/codegraph` | Code-intelligence MCP (symbols, call paths, blast radius) that `explorer`/`feature-builder` query instead of grepping. Local index in `.codegraph/` (gitignored). |
 
 Each agent reads the deep architecture docs — [`ARCHITECTURE.md`](ARCHITECTURE.md) and
@@ -71,12 +75,12 @@ flowchart TD
 
     subgraph PIPE["implement-issue-pipeline — THE pipeline, single encoding"]
         ARGS["Parse + validate args<br/>(canonical defaults live here)"] --> EXPL{"explore?<br/>(default on)"}
-        EXPL -->|"yes"| EXPLORE["explorer maps the issue onto<br/>the architecture (non-blocking)"]
+        EXPL -->|"yes"| EXPLORE["explorer maps the issue onto<br/>the architecture (non-blocking)<br/>+ picks qaTargets: mobile / web / both / none"]
         EXPL -->|"skipped / report supplied"| BUILD
         EXPLORE --> BUILD["feature-builder:<br/>branch off origin/main, implement,<br/>tsc + arch once, layer-aligned commits,<br/>open PR with empty body"]
         BUILD -->|"no PR"| FATAL["FATAL — nowhere to report"]
-        BUILD --> WIRE["wire, best-effort:<br/>assign PR + project +<br/>agent-device pre-check"]
-        WIRE --> VERIFY["review ∥ device QA<br/>(parallel, independent)"]
+        BUILD --> WIRE["wire, best-effort:<br/>assign PR + project +<br/>QA CLI pre-check (only the<br/>engines qaTargets needs)"]
+        WIRE --> VERIFY["review ∥ device QA ∥ web QA<br/>(parallel, independent —<br/>QA lanes run only if in qaTargets)"]
         VERIFY --> VET["vet: one skeptic per<br/>blocking finding"]
         VET --> SORT{"verdict per finding"}
         SORT -->|"refuted"| DROP["excluded from fix,<br/>reported for spot-check"]
@@ -145,15 +149,16 @@ approval gate.
 - **Title:** meaningful. **Body:** empty (other GitHub reviewer automation overwrites it).
 - **ONE pipeline comment**, posted at run end — even when a stage aborts the run: a short
   status header (verdicts, fix rounds, wall-clock) plus collapsible sections carrying the
-  full build, review, device-QA, vetting, and run-metrics reports. Agents never post their
-  own comments.
+  full build, review, mobile-QA, web-QA, vetting, and run-metrics reports. Agents never post
+  their own comments.
 
 ---
 
 ## The `implement-issue-pipeline` workflow
 
 The single deterministic encoding of the build pipeline: explore → build → wire PR →
-review ∥ device QA (parallel — independent stages) → finding vetting → bounded auto-fix →
+review ∥ mobile QA ∥ web QA (parallel — independent stages, each QA lane running only when
+the issue has that surface) → finding vetting → bounded auto-fix →
 one consolidated run comment (best-effort, attempted even when a post-build stage aborts
 the run), with schema-validated verdicts and a hard fix-loop cap. It is **gate-free** —
 any clarification happens in `/implement-issue` before it launches; approval happens at PR
@@ -231,16 +236,20 @@ workflow owns these canonical defaults; callers pass only overrides:
 | `explorerReport` | — | pre-supplied exploration report (skips the phase) |
 | `clarifications` | — | clarifications text — fallback channel when the skill did not fold answers into the issue body |
 | `review` | `true` | run the code-review stage |
-| `qa` | `true` | run device QA (pass `false` for unattended environments where agent-device is fragile) |
+| `qa` | `true` | master switch for the QA stage (pass `false` to skip QA entirely, e.g. unattended environments) |
+| `qaTargets` | — (explorer decides) | which runtime surfaces to QA: `['mobile']`, `['web']`, both, or `[]` for none. Omit to let the `explorer` choose from the acceptance criteria and touched files; pass an array to pin it. `[]` skips QA — the right answer for pure tooling/CI/docs/type-only issues, where a QA run could only report BLOCKED. If exploration is skipped or fails, this falls back to **both** so a broken explorer can never silently switch QA off. |
 | `worktree` | `false` | isolate code-touching agents in git worktrees (cold install/build cost) |
 | `maxFix` | `2` | max auto-fix rounds (hard counter; convergence detection stops earlier when a round makes no progress) |
 | `startedAt` | — | Unix epoch (seconds) of run start (`date +%s`), supplied by the caller — fills the wall-clock column in the metrics report |
 
-Returns `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, fixAttempts, stuck, passed,
-outstanding, suspects, refuted }` — `outstanding` = confirmed findings left after the fix
-loop; `stuck` = the loop stopped early because a round made no progress; `suspects` =
-unverifiable device claims needing human eyes; `refuted` = findings the vetter dismissed
-(spot-check them).
+Returns `{ prUrl, explored, reviewVerdict, qaVerdict, qaItems, qaWebVerdict, qaWebItems,
+fixAttempts, stuck, passed, outstanding, suspects, refuted }` — each QA lane reports for
+itself: `qaVerdict`/`qaItems` cover mobile QA, `qaWebVerdict`/`qaWebItems` cover web QA, and
+a lane that was not selected (or QA switched off entirely) reads `'skipped'` rather than
+`null`, so "no surface to verify" never looks like "QA ran and could not be performed".
+`outstanding` = confirmed findings left after the fix loop; `stuck` = the loop stopped early
+because a round made no progress; `suspects` = unverifiable runtime claims needing human
+eyes; `refuted` = findings the vetter dismissed (spot-check them).
 
 ---
 
@@ -278,6 +287,7 @@ human gates, so it cannot be a workflow) that drives those threads to zero:
 3. Once the AI review bots have commented on the fresh PR, optionally run
    `/triage-pr <pr>` — it drives the bot threads to zero and consults you in chat only
    where judgment lives.
-4. Review the resulting PR — the build, review, device-QA, vetting, and run-metrics reports
-   all live in ONE pipeline comment, as collapsible sections under a short status header.
+4. Review the resulting PR — the build, review, mobile-QA, web-QA, vetting, and run-metrics
+   reports all live in ONE pipeline comment, as collapsible sections under a short status
+   header.
 5. Merge when satisfied. The pipeline never merges for you.

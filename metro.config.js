@@ -1,4 +1,6 @@
 const { getSentryExpoConfig } = require('@sentry/react-native/metro');
+const { withStorybook } = require('@storybook/react-native/metro/withStorybook');
+const path = require('node:path');
 
 module.exports = (() => {
   const config = getSentryExpoConfig(__dirname);
@@ -16,5 +18,10 @@ module.exports = (() => {
     sourceExts: [...resolver.sourceExts, 'svg'],
   };
 
-  return config;
+  // `enabled: false` makes Metro strip Storybook from the bundle, which is what keeps it out of
+  // production builds. Do not weaken this flag.
+  return withStorybook(config, {
+    enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true',
+    configPath: path.resolve(__dirname, './.rnstorybook'),
+  });
 })();

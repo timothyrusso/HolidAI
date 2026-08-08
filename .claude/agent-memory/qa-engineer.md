@@ -6,6 +6,11 @@ Read at the start of every QA run. Append only under the rules in
 ## Known environment
 
 - agent-device version last verified: 0.19.3 (2026-07-24)
+- Project requires Node >=22.13 (package.json engines); default `nvm` shell node here can be
+  older (e.g. 22.11.0) and silently breaks Metro/CLI tooling (ERR_REQUIRE_ESM loading
+  metro.config.js, `storybook build` refuses to start) with errors that look like code bugs
+  but aren't. Always check `node --version` vs `engines.node` before blaming the PR; `source
+  ~/.nvm/nvm.sh && nvm use <compliant-version>` (22.20.0 confirmed installed) fixes it.
 
 ## Lessons
 
@@ -18,32 +23,31 @@ Read at the start of every QA run. Append only under the rules in
   broken account. If the identifier field is pre-filled ("Last Used"), Clerk may default to
   a PASSWORD prompt — tap "Use another method" → "Email code to <address>" first. Any test
   that signs out must sign back in before finishing.
-- [2026-07-24] The android real device "Pixel 9a" (booted=true) shows a black screenshot
-  (locked/screen-off) — not usable for QA.
-- [2026-07-24] After `--settle`, refs from the pre-action snapshot can resolve to the WRONG
-  element on layout-shifting screens (Profile/Account). This app's custom circular
-  back-buttons/list rows never show `hittable:true`. Mitigation: pull a FRESH
-  `snapshot -i --raw` after any nav change, read the target's `rect`, tap the computed
-  center point directly.
+- [2026-08-08] `agent-device devices --json` can list a physical iOS device as `booted:true`
+  even when it's not actually connected (matches `xcrun devicectl list devices` showing
+  "unavailable"). Confirm reachability with a cheap `agent-device open <bundleId> --platform
+  ios --device "<Name>"` before committing to it.
+- [2026-08-08] Do NOT QA web targets from this agent. Driving Chrome via `agent-device
+  --platform macos` was tried and is unreliable (Chrome loses frontmost focus between
+  commands so presses land on the wrong window; `snapshot -i` sees only the "Agent Device
+  Runner" helper window, never page content). Web Storybook / `expo start --web` now belong
+  to the `qa-web-engineer` agent, which uses `agent-browser`. Mark browser-only criteria
+  BLOCKED and move on.
+- [2026-08-08] FIXED — Xcode 26.6 could not compile RN 0.86's *prebuilt*
+  `ReactNativeDependencies` pod (folly `New.h` aligned-new/aligned-delete mismatch, xcodebuild
+  exit 65). Resolved by `ios.buildReactNativeFromSource: true` +
+  `usePrecompiledModules: false` in the `expo-build-properties` plugin in `app.json`, which
+  makes the Podfile set `RCT_USE_RN_DEP=0` / `RCT_USE_PREBUILT_RNCORE=0` so folly builds with
+  the local toolchain. Xcode did NOT need downgrading. Cost: clean iOS builds are slower
+  (RN compiles from source). If iOS builds ever fail this way again, check those flags
+  survived a prebuild before blaming Xcode or the PR.
 - [2026-07-24] `agent-device metro reload` can 500 even with Metro healthy/reachable —
-  fall back to `open <app> --platform ios --device <name> --relaunch` (equally valid
-  attach+reload for JS-only diffs).
-- [2026-07-25] Long RN ScrollViews (e.g. TripDetailsPage): `scroll down/up <amount>` /
-  `scroll top` are unreliable (huge variable overshoot, or silent no-op). Prefer manual
-  `swipe <x> <y1> <x> <y2>` drags with modest deltas (~300-500px) + a `screenshot` after
-  each, walking toward the target; `find "<text>" get attrs --json` gives the target's
-  current `rect.y` (negative = above viewport, positive-large = below) to gauge direction/
-  distance. Relaunch to reset to true top if lost.
-- [2026-07-25] A global debug "gearshape.fill" tools-overlay icon sits top-right on every
-  screen (~x:330-374, y:96-144) and intercepts taps meant for an in-app close/X button in
-  that same corner — tap further left/down (e.g. y>140) or use a bottom-sheet dismiss swipe
-  instead.
+  fall back to `open <app> --platform ios --device <name> --relaunch`.
+- [2026-07-25] Long RN ScrollViews: `scroll down/up`/`scroll top` are unreliable (huge
+  overshoot or silent no-op). Prefer manual `swipe <x> <y1> <x> <y2>` drags (~300-500px) +
+  `screenshot` after each; `find "<text>" get attrs --json` gives `rect.y` to gauge distance.
 - [2026-07-25] If Home shows "no trip planned" but the account has trips, check Profile →
-  the "Totale viaggi" stat cell → tap it → "Tutti i viaggi" lists them (Home may only show
-  a filtered subset, e.g. when AI tokens are exhausted new-trip creation is blocked too).
-- [2026-07-25] For accessibilityLabel checks on images inside a list row that iOS collapses
-  into one composite Button (child labels hidden from AT): use
-  `agent-device react-devtools find <Component>` to confirm the same component instance
-  mounts there, then rely on an unmerged instance elsewhere (e.g. a details modal) as the
-  on-device proof of the rendered (translated) label — `react-devtools get component`
-  shows input props (e.g. the raw i18n key), not necessarily the final rendered label.
+  "Totale viaggi" → "Tutti i viaggi" (Home may show a filtered subset).
+- [2026-07-25] For accessibilityLabel checks collapsed into one composite AT button, use
+  `react-devtools find <Component>` to confirm the instance, then check an unmerged instance
+  elsewhere (e.g. a details modal) as on-device proof of the rendered (translated) label.

@@ -74,3 +74,21 @@ approval gate and hands it to the implementer. Structure:
 ```
 
 Keep it tight and high-signal — it's a map for the plan and the implementer, not a document.
+
+## QA routing — `qaTargets`
+
+When invoked with a schema that has a `qaTargets` field (the pipeline), also decide **which
+runtime surfaces this issue needs QA'd**, and give a one-line `qaTargetsReason`. This decides
+which QA agents run, so judge it from the **acceptance criteria and the files the change will
+touch** — not from the issue title.
+
+| Value | When | Who runs it |
+|---|---|---|
+| `"mobile"` | observable in the iOS/Android app — a screen, navigation, native module, app-wide behaviour | `qa-engineer`, on a device |
+| `"web"` | observable in a browser — web Storybook, `expo start --web`, anything served over HTTP | `qa-web-engineer`, in Chromium |
+| both | the issue genuinely has both surfaces | both, in parallel |
+| `[]` (empty) | **no** acceptance criterion is verifiable at runtime: build tooling, CI config, lint rules, docs, agent/workflow config, type-only changes | nobody — QA is skipped |
+
+An empty array is a legitimate, useful answer, not a cop-out: a QA run that can only report
+BLOCKED costs a lot and proves nothing. Equally, do not drop a surface just because it looks
+awkward to test — if a criterion is checkable at runtime, name its surface.
