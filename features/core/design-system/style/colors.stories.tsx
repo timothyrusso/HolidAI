@@ -19,9 +19,9 @@ type Story = StoryObj<typeof meta>;
 const RAMPS = ['purple', 'lime', 'red', 'cyan'] as const;
 
 /**
- * The step is matched as `\d+`, not as the four steps that exist today: adding a `purple100` to
- * `colors.ts` must land it in the purple row, sorted, with no edit to this file. Anything that
- * doesn't match a ramp at all — the five neutrals — falls into the last row.
+ * The step is matched as `\d+`, not as a fixed list of steps: adding a `purple100` to `colors.ts`
+ * must land it in the purple row, sorted, with no edit to this file. Anything that doesn't match a
+ * ramp at all — the neutrals — falls into the last row.
  */
 const RAMP_TOKEN = /^(purple|lime|red|cyan)(\d+)$/;
 
@@ -82,9 +82,9 @@ export const Palette: Story = {
 };
 
 /**
- * A ratio, not a fixed width: four steps fit one row inside the 360px phone frame from
- * `.storybook/preview.tsx` without pinning the story to that number, and a five-token row (the
- * neutrals) wraps instead of overflowing.
+ * A ratio, not a fixed width: four swatches fit one row inside the 360px phone frame from
+ * `.storybook/preview.tsx` without pinning the story to that number, and any longer row wraps
+ * instead of overflowing.
  */
 const CELL_WIDTH = '25%';
 

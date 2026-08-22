@@ -34,6 +34,8 @@ export * from '@/features/core/design-system/components/basic/CustomSegmentedCon
 export * from '@/features/core/design-system/components/basic/CustomSegmentedControl/CustomSegmentedControlSmall';
 export * from '@/features/core/design-system/components/basic/CustomSpinner/CustomSpinner';
 export * from '@/features/core/design-system/components/basic/CustomSpinner/CustomSpinner.logic';
+export * from '@/features/core/design-system/components/basic/CustomTag/CustomTag';
+export * from '@/features/core/design-system/components/basic/CustomTag/CustomTag.logic';
 export * from '@/features/core/design-system/components/basic/CustomText/CustomText';
 export * from '@/features/core/design-system/components/basic/CustomTextButton/CustomTextButton';
 export * from '@/features/core/design-system/components/basic/CustomTextInput/CustomTextInput';

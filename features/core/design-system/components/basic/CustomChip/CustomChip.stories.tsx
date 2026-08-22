@@ -8,10 +8,13 @@ import { colors } from '@/features/core/design-system/style/colors';
 import { type ChipSizeName, chipSizes } from '@/features/core/design-system/style/dimensions/chip';
 import { spacing } from '@/features/core/design-system/style/dimensions/spacing';
 import { icons } from '@/features/core/design-system/style/icons';
+import { isPaletteBackgroundColor, type PaletteColor } from '@/features/core/design-system/style/paletteRoles';
 
 const photo = require('@/features/core/design-system/assets/images/welcome_1.jpg');
 
-const PALETTE = Object.entries(colors) as [string, ChipColor][];
+const PALETTE = (Object.entries(colors) as [string, PaletteColor][]).filter((entry): entry is [string, ChipColor] =>
+  isPaletteBackgroundColor(entry[1]),
+);
 
 // The props are a discriminated union, so the args inferred from the component cover the blur chip
 // too and no single arg object satisfies them: the stories are typed off this solid, labelled arg
@@ -35,7 +38,7 @@ const meta = {
   },
   argTypes: {
     size: { control: 'select', options: Object.keys(chipSizes) },
-    color: { control: 'select', options: Object.values(colors) },
+    color: { control: 'select', options: PALETTE.map(([, color]) => color) },
     uppercase: { control: 'boolean' },
   },
 } satisfies Meta<typeof CustomChip>;
