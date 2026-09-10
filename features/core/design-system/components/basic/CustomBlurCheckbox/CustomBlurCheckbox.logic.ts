@@ -57,10 +57,10 @@ export const useCustomBlurCheckboxLogic = ({
       isChecked,
       canBlur,
       intensity: blur.intensity30,
-      // The design's black@25 / black@12 fills and white@50 / white@60 rings land on the nearest
-      // rungs of the opacity ladder, which keeps the checked ring the fainter of the two.
+      // The design's white@50 / white@60 rings map exactly; only its black@12 unchecked fill has to
+      // round to the nearest rung of the opacity ladder.
       tintOpacity: isChecked ? opacity.opacity25 : opacity.opacity10,
-      ringOpacity: isChecked ? opacity.opacity40 : opacity.opacity60,
+      ringOpacity: isChecked ? opacity.opacity50 : opacity.opacity60,
       glyphName: icons.checkmark,
       glyphColor: colors.primaryWhite,
       slop,
