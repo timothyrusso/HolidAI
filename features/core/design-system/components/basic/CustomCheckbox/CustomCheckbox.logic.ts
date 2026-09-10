@@ -162,8 +162,7 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
       ringAnimatedStyle,
       checkmarkAnimatedStyle,
       slop,
-      // Static announces as checked and dimmed rather than leaving the a11y tree: it is a value the
-      // reader should still hear, just not one it can change.
+      // Static stays in the a11y tree, dimmed rather than hidden: its value is still worth hearing.
       accessibilityState: { checked: isChecked, disabled: !isInteractive },
     },
     effects: {
