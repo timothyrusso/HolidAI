@@ -68,8 +68,10 @@ Read at the start of every QA run. Append only under the rules in
 - [2026-08-22] A concurrent QA lane (e.g. web-qa) can hold the default `agent-device` session on
   the preferred simulator (`DEVICE_IN_USE`/stale `default` session) and leave a stray Metro bound
   to the same checkout with a different env (e.g. `EXPO_PUBLIC_STORYBOOK_ENABLED=true`) — boot a
-  spare simulator under your own `--session <name>` and always verify/restart Metro rather than
-  trusting whatever's already listening on 8081.
+  spare simulator under your own `--session <name>` ONLY after a real `DEVICE_IN_USE` failure; a
+  merely booted simulator is usually a previous round's leftover, so reuse it (a spare costs a
+  full cold build). Always verify/restart Metro rather than trusting whatever's already
+  listening on 8081.
 - [2026-08-24] To test Reanimated animate-vs-jumpcut (incl. `useReducedMotion`) without a UI
   slider ref in the AX tree, use on-device Storybook's Controls-panel "reset" icon (top-right
   of the Controls panel, un-labeled in AX) to force a value jump, wrapped in
