@@ -38,8 +38,6 @@ export const useCustomBlurCheckboxLogic = ({
   const { box, glyph, touchPadding } = checkboxSizes[size];
   const isChecked = state === CheckboxState.checked;
 
-  // `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
-  // ancestor, which a reusable component cannot own: without one, there is no blur to render.
   const canBlur = Platform.OS !== PlatformOS.android || hasBlurTarget;
 
   const onPress = () => onChange(!isChecked);
