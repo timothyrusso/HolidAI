@@ -77,8 +77,6 @@ const CHECKED = 1;
 const CHECKMARK_START_SCALE = 0.6;
 const FULL_SCALE = 1;
 const EMPTY_DASH_PATTERN = [spacing.MinimalDouble, spacing.MinimalDouble];
-// Matches `CustomSegmentedControl`: settles in ~250-300ms with a slight overshoot. Every read of it
-// clamps, so the overshoot never pushes an opacity or a border width out of its valid range.
 const CHECK_SPRING = { damping: 22, stiffness: 220, mass: 1 };
 
 export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
@@ -91,14 +89,10 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
   const isInteractive = onChange !== undefined;
   const checkedColors = checkboxCheckedColors[color];
 
-  // Seeded with the state the checkbox is rendered in, so the mount pass springs to the value it
-  // already holds and a checkbox mounted checked paints checked on the first frame.
   const checkProgress = useSharedValue(isChecked ? CHECKED : UNCHECKED);
   const previousState = useRef(state);
 
   useEffect(() => {
-    // A `[4, 4]` dash has nothing to interpolate into a solid fill, and a dashed ring morphing into
-    // one reads as a glitch, so every transition touching `empty` cuts instead.
     const skipsAnimation =
       prefersReducedMotion || state === CheckboxState.empty || previousState.current === CheckboxState.empty;
     previousState.current = state;
@@ -107,10 +101,6 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
     checkProgress.value = skipsAnimation ? target : withSpring(target, CHECK_SPRING);
   }, [state, prefersReducedMotion, checkProgress]);
 
-  // The ring's outer edge stays on the box while its border thickens to the radius, so it fills
-  // inward into a solid disc; the colour crosses on the same value, so the two cannot drift apart.
-  // A border rather than an SVG stroke: react-native-web never applies an animated `stroke`
-  // attribute, which froze the ring on its checked colour on every transition back out of it.
   const ringAnimatedStyle = useAnimatedStyle(() => ({
     borderWidth: interpolate(checkProgress.value, [UNCHECKED, CHECKED], [strokeWidth, box / 2], Extrapolation.CLAMP),
     borderColor: interpolateColor(checkProgress.value, [UNCHECKED, CHECKED], [colors.tertiaryGrey, checkedColors.fill]),
@@ -148,8 +138,6 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
       isInteractive,
       isChecked,
       neutralRingColor: colors.tertiaryGrey,
-      // A white fill is invisible on a white surface, so that one variant keeps a neutral ring; the
-      // dashed `empty` ring must not be overdrawn by it.
       hasNeutralOutline: color === CheckboxColor.primaryWhite && !isEmpty,
       dashArray: EMPTY_DASH_PATTERN,
       glyphName: isEmpty ? icons.add : icons.checkmark,
@@ -157,7 +145,6 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
       ringAnimatedStyle,
       checkmarkAnimatedStyle,
       touchPadding,
-      // Static stays in the a11y tree, dimmed rather than hidden: its value is still worth hearing.
       accessibilityState: { checked: isChecked, disabled: !isInteractive },
     },
     effects: {
