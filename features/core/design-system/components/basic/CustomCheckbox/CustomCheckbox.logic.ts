@@ -40,8 +40,6 @@ export type CheckboxCheckedColors = {
   checkmark: string;
 };
 
-// Exhaustive on purpose: a colour added to the union without a checkmark decision fails to compile
-// here rather than rendering a checkmark nobody can see against its own fill.
 const checkboxCheckedColors: Record<CheckboxColor, CheckboxCheckedColors> = {
   [CheckboxColor.purple500]: { fill: colors.purple500, checkmark: colors.primaryWhite },
   [CheckboxColor.lime500]: { fill: colors.lime500, checkmark: colors.primaryBlack },
@@ -54,7 +52,6 @@ const checkboxCheckedColors: Record<CheckboxColor, CheckboxCheckedColors> = {
 type CheckboxBaseProps = {
   state: CheckboxState;
   size?: CheckboxSizeName;
-  /** Takes effect on `checked` only: `unchecked` and `empty` are neutral whatever is passed. */
   color?: CheckboxColor;
   style?: StyleProp<ViewStyle>;
 };
@@ -65,9 +62,7 @@ type CheckboxStaticProps = {
 };
 
 type CheckboxInteractiveProps = {
-  /** Passing a handler is what makes the checkbox interactive; omitting it renders the static one. */
   onChange: (next: boolean) => void;
-  /** Required: the control carries no adjacent text for a screen reader to fall back on. */
   accessibilityLabel: string;
 };
 
