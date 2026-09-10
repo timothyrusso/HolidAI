@@ -50,8 +50,6 @@ export const customBlurCheckboxStyles = ({
       backgroundColor: colors.primaryBlack,
       opacity: tintOpacity,
     },
-    // An overlay, because a translucent ring cannot be drawn as a container border without fading
-    // the glyph inside it with it.
     ring: {
       position: 'absolute',
       top: 0,
