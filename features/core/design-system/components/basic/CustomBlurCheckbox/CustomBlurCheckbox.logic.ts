@@ -9,7 +9,6 @@ import { type CheckboxSizeName, checkboxSizes } from '@/features/core/design-sys
 import { icons } from '@/features/core/design-system/style/icons';
 import { opacity } from '@/features/core/design-system/style/opacity';
 
-/** Glass over a photo: the design draws neither the dashed `empty` ring nor a static variant here. */
 export type BlurCheckboxState = Exclude<CheckboxState, typeof CheckboxState.empty>;
 
 export type CustomBlurCheckboxProps = {
