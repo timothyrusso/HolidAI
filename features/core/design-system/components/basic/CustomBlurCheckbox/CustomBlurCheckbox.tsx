@@ -53,7 +53,12 @@ export const CustomBlurCheckbox = ({
         >
           <View style={styles.tint} />
           <View style={styles.ring} />
-          <View style={styles.innerContainer}>
+          <View
+            style={styles.innerContainer}
+            aria-hidden
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
             {derived.isChecked && (
               <CustomIcon name={derived.glyphName} size={derived.glyph} color={derived.glyphColor} />
             )}
