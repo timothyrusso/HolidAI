@@ -1,12 +1,5 @@
 import { spacing } from '@/features/core/design-system/style/dimensions/spacing';
 
-/**
- * Component-scoped on purpose: the glyph is always half its box, a ratio the shared `spacing` ladder
- * cannot express, and the 2px ring is a stroke width only the checkbox asks for.
- *
- * `touchPadding` grows the pressable's own box instead of feeding `hitSlop`, which
- * react-native-web ignores.
- */
 export const checkboxSizes = {
   medium: {
     box: spacing.separator40,
