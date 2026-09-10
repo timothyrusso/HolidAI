@@ -35,7 +35,7 @@ export const useCustomBlurCheckboxLogic = ({
   onChange,
   hasBlurTarget,
 }: UseCustomBlurCheckboxLogicParams) => {
-  const { box, glyph, slop } = checkboxSizes[size];
+  const { box, glyph, touchPadding } = checkboxSizes[size];
   const isChecked = state === CheckboxState.checked;
 
   // `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
@@ -57,7 +57,7 @@ export const useCustomBlurCheckboxLogic = ({
       ringOpacity: isChecked ? opacity.opacity50 : opacity.opacity60,
       glyphName: icons.checkmark,
       glyphColor: colors.primaryWhite,
-      slop,
+      touchPadding,
       accessibilityState: { checked: isChecked },
     },
     effects: {

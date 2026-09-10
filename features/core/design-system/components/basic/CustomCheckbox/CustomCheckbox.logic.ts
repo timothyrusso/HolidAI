@@ -88,7 +88,7 @@ const CHECK_SPRING = { damping: 22, stiffness: 220, mass: 1 };
 
 export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
   const { state, size = DEFAULT_SIZE, color = DEFAULT_COLOR, onChange } = props;
-  const { box, glyph, strokeWidth, slop } = checkboxSizes[size];
+  const { box, glyph, strokeWidth, touchPadding } = checkboxSizes[size];
   const prefersReducedMotion = useReducedMotion();
 
   const isChecked = state === CheckboxState.checked;
@@ -161,7 +161,7 @@ export const useCustomCheckboxLogic = (props: CustomCheckboxProps) => {
       glyphColor: isEmpty ? colors.tertiaryGrey : checkedColors.checkmark,
       ringAnimatedStyle,
       checkmarkAnimatedStyle,
-      slop,
+      touchPadding,
       // Static stays in the a11y tree, dimmed rather than hidden: its value is still worth hearing.
       accessibilityState: { checked: isChecked, disabled: !isInteractive },
     },

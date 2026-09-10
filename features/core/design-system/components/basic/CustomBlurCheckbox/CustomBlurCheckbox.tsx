@@ -27,7 +27,7 @@ export const CustomBlurCheckbox = ({
 
   const styles = customBlurCheckboxStyles({
     box: derived.box,
-    slop: derived.slop,
+    touchPadding: derived.touchPadding,
     tintOpacity: derived.tintOpacity,
     ringOpacity: derived.ringOpacity,
   });

@@ -21,7 +21,11 @@ export const CustomCheckbox = (props: CustomCheckboxProps) => {
 
   const { style, accessibilityLabel } = props;
 
-  const styles = customCheckboxStyles({ box: derived.box, strokeWidth: derived.strokeWidth, slop: derived.slop });
+  const styles = customCheckboxStyles({
+    box: derived.box,
+    strokeWidth: derived.strokeWidth,
+    touchPadding: derived.touchPadding,
+  });
 
   const glyph = <CustomIcon name={derived.glyphName} size={derived.glyph} color={derived.glyphColor} />;
 
