@@ -12,6 +12,7 @@ export * from '@/features/core/design-system/components/basic/Custom3DButton/Cus
 export * from '@/features/core/design-system/components/basic/CustomBlurButton/CustomBlurButtonLarge';
 export * from '@/features/core/design-system/components/basic/CustomBlurButton/CustomBlurButtonMedium';
 export * from '@/features/core/design-system/components/basic/CustomBlurButton/CustomBlurButtonSmall';
+export * from '@/features/core/design-system/components/basic/CustomBlurCheckbox/CustomBlurCheckbox';
 export * from '@/features/core/design-system/components/basic/CustomBlurIconButton/CustomBlurIconButtonLarge';
 export * from '@/features/core/design-system/components/basic/CustomBlurIconButton/CustomBlurIconButtonMedium';
 export * from '@/features/core/design-system/components/basic/CustomBlurIconButton/CustomBlurIconButtonSmall';
@@ -21,6 +22,8 @@ export * from '@/features/core/design-system/components/basic/CustomButton/Custo
 export * from '@/features/core/design-system/components/basic/CustomButton/CustomButtonSmall';
 export * from '@/features/core/design-system/components/basic/CustomCard/CustomCard';
 export * from '@/features/core/design-system/components/basic/CustomCard/CustomCard.logic';
+export * from '@/features/core/design-system/components/basic/CustomCheckbox/CustomCheckbox';
+export * from '@/features/core/design-system/components/basic/CustomCheckbox/CustomCheckbox.logic';
 export * from '@/features/core/design-system/components/basic/CustomChip/CustomChip';
 export * from '@/features/core/design-system/components/basic/CustomChip/CustomChip.logic';
 export * from '@/features/core/design-system/components/basic/CustomIcon/CustomIcon';

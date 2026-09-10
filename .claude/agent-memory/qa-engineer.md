@@ -68,8 +68,10 @@ Read at the start of every QA run. Append only under the rules in
 - [2026-08-22] A concurrent QA lane (e.g. web-qa) can hold the default `agent-device` session on
   the preferred simulator (`DEVICE_IN_USE`/stale `default` session) and leave a stray Metro bound
   to the same checkout with a different env (e.g. `EXPO_PUBLIC_STORYBOOK_ENABLED=true`) — boot a
-  spare simulator under your own `--session <name>` and always verify/restart Metro rather than
-  trusting whatever's already listening on 8081.
+  spare simulator under your own `--session <name>` ONLY after a real `DEVICE_IN_USE` failure; a
+  merely booted simulator is usually a previous round's leftover, so reuse it (a spare costs a
+  full cold build). Always verify/restart Metro rather than trusting whatever's already
+  listening on 8081.
 - [2026-08-24] To test Reanimated animate-vs-jumpcut (incl. `useReducedMotion`) without a UI
   slider ref in the AX tree, use on-device Storybook's Controls-panel "reset" icon (top-right
   of the Controls panel, un-labeled in AX) to force a value jump, wrapped in
@@ -82,3 +84,22 @@ Read at the start of every QA run. Append only under the rules in
   `now/(max-min)` (not `(now-min)/(max-min)`) — e.g. min=1,max=10,now=1 shows "11%", now=10 shows
   "111%", and max===min shows "+∞". This is a platform quirk of the value the device exposes as
   text, not a component bug; don't flag it as broken without checking the min/max/now match spec.
+- [2026-09-09] `expo run:ios --device <id>` with an env flag (e.g. `EXPO_PUBLIC_STORYBOOK_ENABLED=true`)
+  silently reuses an already-running Metro on 8081 from an unrelated process instead of starting
+  its own — the flag never takes effect. After the native build finishes, start your own
+  `expo start --clear --port <other>` with the flag and `xcrun simctl openurl <udid>
+  "exp+<scheme>://expo-development-client/?url=http%3A%2F%2Flocalhost%3A<port>"` to point the
+  installed binary at it.
+- [2026-09-09] `xcrun simctl io recordVideo` can capture a stuck/stale frame (e.g. a control that
+  never visually updates for the whole clip, or a garbled "pinwheel" render) while the app's real
+  state and direct `screenshot` calls are correct throughout — a capture desync, not a repro.
+  Never conclude a visual bug from `recordVideo` frames alone; cross-check with 2-3 direct
+  `screenshot` calls at the same moment before reporting it.
+- [2026-09-09] A stuck `SplashScreenLogo` overlay can persist across relaunches in BOTH the AX
+  tree and actual `screenshot`/`simctl io screenshot` pixels (not just an AX-only false read like
+  the "Bundling%" case) — a simulator compositor glitch, not a real splash-hide bug. Fix with
+  `xcrun simctl shutdown <udid> && xcrun simctl boot <udid>`, not more relaunches.
+- [2026-09-09] The on-device Storybook sidebar toggle can go transiently unresponsive to taps at
+  its known coordinates after heavy interaction (picker dropdowns, rapid nav) with no AX/visual
+  change and no error — not a hang. `open <app> --session <s> --relaunch` recovers it; don't sink
+  retries into re-tapping the same spot.

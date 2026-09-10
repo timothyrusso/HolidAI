@@ -1,0 +1,63 @@
+import type { RefObject } from 'react';
+import { Platform, type StyleProp, type View, type ViewStyle } from 'react-native';
+
+import { CheckboxState } from '@/features/core/design-system/components/basic/CustomCheckbox/CustomCheckbox.logic';
+import { PlatformOS } from '@/features/core/design-system/PlatformOS';
+import { blur } from '@/features/core/design-system/style/blur';
+import { colors } from '@/features/core/design-system/style/colors';
+import { type CheckboxSizeName, checkboxSizes } from '@/features/core/design-system/style/dimensions/checkbox';
+import { icons } from '@/features/core/design-system/style/icons';
+import { opacity } from '@/features/core/design-system/style/opacity';
+
+export type BlurCheckboxState = Exclude<CheckboxState, typeof CheckboxState.empty>;
+
+export type CustomBlurCheckboxProps = {
+  state: BlurCheckboxState;
+  onChange: (next: boolean) => void;
+  size?: CheckboxSizeName;
+  accessibilityLabel: string;
+  blurTargetRef?: RefObject<View | null>;
+  style?: StyleProp<ViewStyle>;
+};
+
+const DEFAULT_SIZE: CheckboxSizeName = 'medium';
+
+type UseCustomBlurCheckboxLogicParams = {
+  state: BlurCheckboxState;
+  size?: CheckboxSizeName;
+  onChange: (next: boolean) => void;
+  hasBlurTarget: boolean;
+};
+
+export const useCustomBlurCheckboxLogic = ({
+  state,
+  size = DEFAULT_SIZE,
+  onChange,
+  hasBlurTarget,
+}: UseCustomBlurCheckboxLogicParams) => {
+  const { box, glyph, touchPadding } = checkboxSizes[size];
+  const isChecked = state === CheckboxState.checked;
+
+  const canBlur = Platform.OS !== PlatformOS.android || hasBlurTarget;
+
+  const onPress = () => onChange(!isChecked);
+
+  return {
+    derived: {
+      box,
+      glyph,
+      isChecked,
+      canBlur,
+      intensity: blur.intensity30,
+      tintOpacity: isChecked ? opacity.opacity25 : opacity.opacity10,
+      ringOpacity: isChecked ? opacity.opacity50 : opacity.opacity60,
+      glyphName: icons.checkmark,
+      glyphColor: colors.primaryWhite,
+      touchPadding,
+      accessibilityState: { checked: isChecked },
+    },
+    effects: {
+      onPress,
+    },
+  };
+};
