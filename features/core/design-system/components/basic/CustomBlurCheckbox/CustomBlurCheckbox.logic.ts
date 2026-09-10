@@ -15,7 +15,6 @@ export type CustomBlurCheckboxProps = {
   state: BlurCheckboxState;
   onChange: (next: boolean) => void;
   size?: CheckboxSizeName;
-  /** Required: the control carries no adjacent text for a screen reader to fall back on. */
   accessibilityLabel: string;
   /**
    * The `BlurTargetView` ancestor whose pixels Android should blur — plumb it from the screen that
