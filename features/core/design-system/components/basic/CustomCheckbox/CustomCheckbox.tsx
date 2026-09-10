@@ -10,12 +10,6 @@ import { customCheckboxStyles } from '@/features/core/design-system/components/b
 import { CustomIcon } from '@/features/core/design-system/components/basic/CustomIcon/CustomIcon';
 import { CustomPressable } from '@/features/core/design-system/components/basic/CustomPressable/CustomPressable';
 
-/**
- * A circular checkbox. Only the `empty` ring is an SVG, because React Native renders
- * `borderStyle: 'dashed'` solid on iOS as soon as the radius is rounded, which would drop that
- * state's only distinguishing feature. The animating ring is a plain border: it swaps in as a
- * separate element, so a dash pattern can never survive into the state that fills the circle.
- */
 export const CustomCheckbox = (props: CustomCheckboxProps) => {
   const { derived, effects } = useCustomCheckboxLogic(props);
 
@@ -57,14 +51,10 @@ export const CustomCheckbox = (props: CustomCheckboxProps) => {
     return (
       <View
         style={[styles.container, style]}
-        // A role alone never makes a native view an accessibility element, so the static checkbox
-        // would be skipped entirely without this.
         accessible
         accessibilityRole="checkbox"
         accessibilityLabel={accessibilityLabel}
         accessibilityState={derived.accessibilityState}
-        // react-native-web drops the `accessibilityState` object form, so the flat ARIA props are
-        // passed alongside it; React Native merges them back into `accessibilityState` on device.
         aria-checked={derived.isChecked}
         aria-disabled
       >
