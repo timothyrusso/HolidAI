@@ -16,10 +16,6 @@ export type CustomBlurCheckboxProps = {
   onChange: (next: boolean) => void;
   size?: CheckboxSizeName;
   accessibilityLabel: string;
-  /**
-   * The `BlurTargetView` ancestor whose pixels Android should blur — plumb it from the screen that
-   * owns the background. Ignored on iOS, which blurs whatever is behind the view.
-   */
   blurTargetRef?: RefObject<View | null>;
   style?: StyleProp<ViewStyle>;
 };
