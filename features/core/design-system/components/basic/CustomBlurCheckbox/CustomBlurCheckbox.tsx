@@ -9,7 +9,6 @@ import { customBlurCheckboxStyles } from '@/features/core/design-system/componen
 import { CustomIcon } from '@/features/core/design-system/components/basic/CustomIcon/CustomIcon';
 import { CustomPressable } from '@/features/core/design-system/components/basic/CustomPressable/CustomPressable';
 
-/** The frosted sibling of `CustomCheckbox`, for the photo backgrounds a solid fill would fight. */
 export const CustomBlurCheckbox = ({
   state,
   onChange,
@@ -39,8 +38,6 @@ export const CustomBlurCheckbox = ({
       accessibilityRole="checkbox"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={derived.accessibilityState}
-      // react-native-web drops the `accessibilityState` object form, so the flat ARIA prop is passed
-      // alongside it; React Native merges it back into `accessibilityState` on device.
       aria-checked={derived.isChecked}
     >
       <View style={styles.checkbox}>
