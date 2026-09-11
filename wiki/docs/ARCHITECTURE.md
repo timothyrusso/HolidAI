@@ -1638,7 +1638,7 @@ Do not write inline comments. The names, types, and structure carry the meaning,
   - `// HACK: <workaround> because <reason>`
 
   A codetag may wrap onto the following `//` lines at the same indentation; that is one block. No other tag (`TODO`, `FIXME`, `XXX`, `REVIEW`, …) is permitted.
-- **Tool directives** — `biome-ignore`, `eslint-disable*`, `@ts-check`, `@ts-expect-error`, `@ts-ignore`, and `/// <reference ... />`.
+- **Tool directives** — `biome-ignore`, `eslint-disable*` / `eslint-enable`, `@ts-check`, `@ts-expect-error`, `@ts-ignore`, `@ts-nocheck`, and `/// <reference ... />`.
 - **TSDoc** — a `/** */` block, and only as the leading comment of a declaration: a top-level `const`/function/class/type/interface (or its `export`), a class member, an interface or type-literal member, or the decorator preceding one of these. A `/** */` anywhere else — inside a function body, above a plain statement — is reported like any other comment.
 
 ```ts

@@ -1,15 +1,11 @@
 // @ts-check
 'use strict';
 
-// ESLint rule: no inline comments. Only `NOTE:`/`HACK:` codetags, tool directives, and TSDoc
-// blocks leading a declaration. Rationale: wiki/docs/ARCHITECTURE.md (Documentation — Inline comments).
-
 const DIRECTIVE =
   /^\s*(?:biome-ignore\b|eslint-disable|eslint-enable\b|@ts-check\b|@ts-expect-error\b|@ts-ignore\b|@ts-nocheck\b|\/\s*<reference\b)/;
 const CODETAG = /^\s*(?:NOTE|HACK):/;
+const CODETAG_SHAPED = /^\s*[A-Z][A-Z0-9_]+:/;
 
-// A `/**` block may lead one of these: a top-level declaration (or its `export`), a class member,
-// or an interface / type-literal member.
 const TOP_LEVEL_DECLARATIONS = new Set([
   'VariableDeclaration',
   'FunctionDeclaration',
@@ -83,10 +79,10 @@ const rule = {
       '*'(node) {
         if (!isDocTarget(node)) return;
         allowLeadingDocs(node);
-        // On `export const x`, the block leads the `export` keyword, not the declaration node.
+        // NOTE: on `export const x` the block leads the `export` keyword, not the declaration node.
         if (node.parent && EXPORTS.has(node.parent.type)) allowLeadingDocs(node.parent);
-        // A decorator sits between the TSDoc and the declaration it documents (and before `export`),
-        // so the block is a leading comment of the decorator, not of the declaration.
+        // NOTE: a decorator sits between the TSDoc and the declaration it documents (and before
+        // `export`), so the block is a leading comment of the decorator, not of the declaration.
         const decorators = node.decorators ?? [];
         if (decorators.length > 0) allowLeadingDocs(decorators[0]);
       },
@@ -97,12 +93,13 @@ const rule = {
         for (const comment of sourceCode.getAllComments()) {
           if (DIRECTIVE.test(comment.value)) continue;
           if (comment.type === 'Line') {
-            // A codetag may wrap: the `//` lines directly under it, at its own indentation, are the
-            // same block and are read as one comment.
+            // NOTE: a wrapped codetag, the `//` lines directly under it at the same indentation, is
+            // one comment.
             const continuesCodetag =
               codetagLine !== null &&
               comment.loc.start.line === codetagLine.loc.start.line + 1 &&
-              comment.loc.start.column === codetagLine.loc.start.column;
+              comment.loc.start.column === codetagLine.loc.start.column &&
+              !CODETAG_SHAPED.test(comment.value);
             if (CODETAG.test(comment.value) || continuesCodetag) {
               codetagLine = comment;
               continue;
