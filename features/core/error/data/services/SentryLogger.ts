@@ -20,22 +20,14 @@ export class SentryLogger implements ILogger {
   }
 
   /** No-op in production — informational logs are not forwarded to Sentry. */
-  log(_message: string): void {
-    /* no-op in production */
-  }
+  log(_message: string): void {}
 
   /** No-op in production — warnings are not forwarded to Sentry. */
-  warning(_message: string): void {
-    /* no-op in production */
-  }
+  warning(_message: string): void {}
 
   /** No-op in production — info messages are not forwarded to Sentry. */
-  info(_message: string): void {
-    /* no-op in production */
-  }
+  info(_message: string): void {}
 
   /** No-op in production — debug messages are not forwarded to Sentry. */
-  debug(_message: string): void {
-    /* no-op in production */
-  }
+  debug(_message: string): void {}
 }

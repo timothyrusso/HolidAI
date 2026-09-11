@@ -13,14 +13,14 @@ import { useGetUserTokens } from '@/features/user';
 export const useSelectDatesPageLogic = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [calendarKey, setCalendarKey] = useState<number>(0); // To force re-render of CalendarPicker
+  const [calendarKey, setCalendarKey] = useState<number>(0);
 
   const { tripActions } = useTripGenerationState();
   const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
 
   const handleDateChange = (date: Date, type?: 'START_DATE' | 'END_DATE') => {
-    // The library's types declare date as Date, but passes null at runtime during
-    // mid-range selection. The cast and null guard are intentional.
+    // NOTE: the library's types declare `date` as `Date`, but it passes null at runtime during
+    // mid-range selection, so the cast and the null guard are deliberate.
     const safeDate = date as Date | null;
     if (!safeDate) {
       if (type === 'START_DATE') setStartDate(null);

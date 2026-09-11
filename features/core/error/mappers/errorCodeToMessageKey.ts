@@ -12,4 +12,3 @@ export const errorCodeToMessageKey: Partial<Record<ErrorCodeType, string>> = {
   [ErrorCode.AuthPasswordResetFailed]: 'ERRORS.AUTH.PASSWORD_RESET_FAILED',
   [ErrorCode.TokensExhausted]: 'ERRORS.TOKENS_EXHAUSTED',
 };
-// Unmapped codes (UnexpectedError, Unknown, and any new code without a UI entry) fall back to 'ERRORS.GENERIC'

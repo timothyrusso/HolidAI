@@ -14,13 +14,10 @@ export const GenerateTripPage = () => {
 
   return (
     <BasicView nameView={Routes.GenerateTrip} statusBarStyle="dark">
-      {/* Layer 1: 5 full-screen color layers covering the entire background including corners */}
       <AnimatedColorsBackground />
 
-      {/* Layer 2: white mask inset by BORDER_SIZE with rounded corners — creates the inner rounded edge */}
       <View style={style.innerMask} />
 
-      {/* Layer 3: content on top */}
       <View style={style.animationContainer}>
         <WordsAnimation />
         <AnimatedBlocks />

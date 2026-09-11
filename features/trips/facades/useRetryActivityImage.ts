@@ -13,7 +13,6 @@ export const useRetryActivityImage = (
   location: string,
 ) => {
   const repo = useTripRepository();
-  // Tracks URLs already retried this mount, so a broken image is re-fetched at most once.
   const retriedUrls = useRef<Set<string>>(new Set());
 
   const retryActivityImage = useCallback(

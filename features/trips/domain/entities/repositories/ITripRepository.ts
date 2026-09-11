@@ -1,4 +1,4 @@
-// Pragmatic exception to domain purity: see Trip.ts for rationale.
+// NOTE: pragmatic exception to domain purity — see `Trip.ts` for the rationale.
 import type { Id } from '@/convex/_generated/dataModel';
 import type { Result } from '@/features/core/error';
 import type { CoverImage } from '@/features/trips/domain/entities/CoverImage';

@@ -17,10 +17,9 @@ export const TripListPage = () => {
   const { derived } = useTripListPageLogic();
 
   return (
-    // `isFullScreen` keeps BasicView from adding its own Android status-bar padding: as a tab root
-    // this page renders the header itself, and CustomHeader already applies the top inset.
+    // NOTE: `isFullScreen` keeps `BasicView` from adding its own Android status-bar padding — as a
+    // tab root this page renders the header itself, and `CustomHeader` already applies the top inset.
     <BasicView nameView={Routes.Trips} statusBarStyle="dark" isFullScreen>
-      {/* A tab root has nothing to pop, so the header is title-only — no back arrow. */}
       <CustomHeader title="TRIPS.TITLE" />
       <FlatList<Trip | UniqueItem>
         data={derived.userTrips}
