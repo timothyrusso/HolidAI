@@ -1,0 +1,1 @@
+import{P as t}from"./PlatformOS-nsQ00wNR.js";import{P as e}from"./iframe-YKxnGrhx.js";const m={bottomMenuHeight:90+(e.OS.match(t.ios)?20:0),buttonExtraLargeHeight:60,buttonLargeHeight:50,buttonMediumHeight:40,buttonSmallHeight:30,chipSmallHeight:24,chipMediumHeight:32,chipLargeHeight:40,buttonNumberHeight:30};export{m as c};
