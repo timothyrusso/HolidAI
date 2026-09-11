@@ -29,6 +29,8 @@ const MEMBERS = new Set([
   'TSPropertySignature',
   'TSMethodSignature',
   'TSIndexSignature',
+  'TSCallSignatureDeclaration',
+  'TSConstructSignatureDeclaration',
   'TSEnumMember',
 ]);
 

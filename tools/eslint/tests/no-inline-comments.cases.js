@@ -29,6 +29,9 @@ module.exports = function run() {
       { code: 'class A {\n  /** Brief. */\n  run(): void {}\n  /** Brief. */\n  value = 1;\n}' },
       { code: 'interface A {\n  /** Brief. */\n  run(): void;\n  /** Brief. */\n  value: string;\n}' },
       { code: 'type A = {\n  /** Brief. */\n  value: string;\n};' },
+      {
+        code: 'interface A {\n  /** Brief. */\n  (x: number): string;\n  /** Brief. */\n  new (x: number): A;\n}',
+      },
       // Codetags.
       { code: '// NOTE: the array order is load-bearing.\nconst a = 1;' },
       { code: 'const a = () => {\n  // HACK: poll because the SDK never resolves on web.\n  return 1;\n};' },
