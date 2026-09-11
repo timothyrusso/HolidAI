@@ -6,12 +6,15 @@ import { Routes, Stacks } from '@/features/core/navigation';
 const TabLayout = () => {
   const { t } = useTranslation();
 
+  // NOTE: `airplane` has no filled SF Symbol variant, so Trips signals selection through tint alone.
   return (
-    // NOTE: only the tint is configured — every material prop (backgroundColor, blurEffect,
-    // shadowColor, indicatorColor) must stay at its platform default or iOS 26 silently drops
-    // liquid glass. `accessibilityLabel` is passed explicitly because the native side only
-    // re-applies an item's a11y label when that prop itself changes, so an inherited title leaves
-    // screen readers announcing a stale language after a locale switch.
+    // NOTE: only the tint is set — every material prop (backgroundColor, blurEffect, shadowColor,
+    // indicatorColor) must stay at its platform default or iOS 26 silently drops liquid glass.
+    // `rippleColor` is transparent to suppress Android's Material touch ripple on tab presses, while
+    // the native active-indicator pill still animates behind the selected tab. `accessibilityLabel`
+    // is passed explicitly because the native side only re-applies an item's a11y label when that
+    // prop itself changes, so an inherited title leaves screen readers announcing a stale language
+    // after a locale switch.
     <NativeTabs
       iconColor={iconColor}
       labelStyle={labelStyle}

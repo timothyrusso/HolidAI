@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: spacing.Triple,
+    // NOTE: `spacing.Fourfold` is the app's dominant screen padding, so a full-width button is inset
+    // here exactly as on a real screen; a different value rendered buttons at a width the app never
+    // produces.
     padding: spacing.Fourfold,
   },
   localeBar: {
@@ -105,6 +108,8 @@ const styles = StyleSheet.create({
     gap: spacing.SingleAndHalf,
   },
   localeButton: {
+    // NOTE: `primaryGrey`, not `secondaryGrey`: the latter is #f5f5f5 and would be invisible as a
+    // border.
     borderColor: colors.primaryGrey,
     borderRadius: spacing.Single,
     borderWidth: spacing.HalfMinimal,
