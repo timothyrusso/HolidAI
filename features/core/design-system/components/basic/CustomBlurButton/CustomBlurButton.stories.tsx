@@ -14,8 +14,8 @@ const meta = {
   title: 'Design System/CustomBlurButton',
   component: CustomBlurButtonLarge,
   tags: ['autodocs'],
-  // A blur button is only itself over something worth blurring: on a flat canvas it is
-  // indistinguishable from a dark pill, which is exactly the failure mode worth catching here.
+  // NOTE: a blur button is only itself over something worth blurring — without a backdrop the
+  // blur has nothing to sample.
   decorators: [
     Story => (
       <View style={styles.backdrop}>

@@ -24,8 +24,6 @@ export const customSegmentedControlStyles = ({
   isDisabled,
 }: CustomSegmentedControlStyleParams) =>
   StyleSheet.create({
-    // The whole control fades when disabled: a segment nobody can pick is not a state of one
-    // segment, it is a state of the choice.
     track: {
       width: '100%',
       height: size.trackHeight,
@@ -38,8 +36,6 @@ export const customSegmentedControlStyles = ({
       flex: 1,
       flexDirection: 'row',
     },
-    // Sized as a fraction of the measured inner row rather than in points, so the thumb keeps
-    // covering exactly one segment at any container width.
     thumb: {
       position: 'absolute',
       top: 0,
@@ -58,16 +54,12 @@ export const customSegmentedControlStyles = ({
       alignItems: 'center',
       justifyContent: 'center',
     },
-    // Title case at 12/14 rather than the DS button's uppercase 16: a segment label is a selector,
-    // not a CTA.
     label: {
       flexShrink: 1,
       fontSize: size.fontSize,
       fontFamily: fontFamily.interBold,
       textAlign: 'center',
     },
-    // Two copies of the glyph, the selected-colour one laid over the unselected-colour one: the copy
-    // in flow sizes the box, so the overlay covers it exactly and the crossfade cannot shift the icon.
     iconStack: {
       marginRight: spacing.Single,
     },

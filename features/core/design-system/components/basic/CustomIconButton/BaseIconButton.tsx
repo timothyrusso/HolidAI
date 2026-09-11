@@ -38,8 +38,6 @@ export function BaseIconButton({
   isLoading = false,
   animatedIconStyle,
   noPressedStyle = false,
-  // Icon-only buttons have no text to name them, so the accessibility props inherited from ViewProps
-  // have to be forwarded to the pressable by hand: this component takes no rest element on purpose.
   accessibilityLabel,
   accessibilityHint,
   accessibilityRole,

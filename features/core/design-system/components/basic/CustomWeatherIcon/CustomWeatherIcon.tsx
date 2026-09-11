@@ -27,9 +27,6 @@ type WeatherIconPath = {
   transform?: string;
 };
 
-// Partly cloudy composes the two shared glyphs, scaled from their measured 80x80 boxes so the sun
-// clears the cloud's top-left corner: the sun's 56 goes to 38 at (6, 6), the cloud's 64 to 52 at
-// (20, 28.2), which keeps the glyph inside the same 66-wide footprint as the rest of the set.
 const PARTLY_CLOUDY_SUN_TRANSFORM = 'translate(-2.16 -2.16) scale(0.68)';
 
 const PARTLY_CLOUDY_CLOUD_TRANSFORM = 'translate(13.5 12.438) scale(0.8125)';
@@ -80,6 +77,19 @@ const STORM_BOLT_PATH =
  * the `d` values are upstream and unmodified. What this set changes is the `fill` values, which
  * glyphs are combined, and the `transform` that places them.
  *
+ * Condition to glyph:
+ *
+ * - `sunny` — `glyphs:sun-bold`
+ * - `partlyCloudy` — `glyphs:sun-bold` behind `glyphs:cloud-1-bold`
+ * - `cloudy` — `glyphs:cloud-1-bold`
+ * - `rain` — `glyphs:rain-1-bold`
+ * - `snow` — `glyphs:snow-bold`
+ * - `storm` — `glyphs:lightning-bold`
+ *
+ * `partlyCloudy` is the only composite, and it is scaled from the two measured 80x80 boxes so the
+ * sun clears the cloud's top-left corner: the sun's 56 goes to 38 at (6, 6), the cloud's 64 to 52
+ * at (20, 28.2), which keeps the glyph inside the same 66-wide footprint as the rest of the set.
+ *
  * ```text
  * MIT License
  *
@@ -105,7 +115,6 @@ const STORM_BOLT_PATH =
  * ```
  */
 const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
-  // glyphs:sun-bold
   [weatherConditions.sunny]: [
     {
       name: 'rays',
@@ -113,14 +122,13 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.lime700,
       fillRule: 'evenodd',
     },
-    // Upstream lists the core first, where the rays hide it: it only shows when drawn last.
+    // NOTE: upstream lists the core first, where the rays hide it: it only shows when drawn last.
     {
       name: 'core',
       d: SUN_CORE_PATH,
       fill: colors.lime500,
     },
   ],
-  // glyphs:sun-bold behind glyphs:cloud-1-bold, so the sun and the cloud are the shared artwork
   [weatherConditions.partlyCloudy]: [
     {
       name: 'rays',
@@ -142,7 +150,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       transform: PARTLY_CLOUDY_CLOUD_TRANSFORM,
     },
   ],
-  // glyphs:cloud-1-bold
   [weatherConditions.cloudy]: [
     {
       name: 'cloud',
@@ -151,7 +158,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fillRule: 'evenodd',
     },
   ],
-  // glyphs:rain-1-bold
   [weatherConditions.rain]: [
     {
       name: 'cloud',
@@ -165,7 +171,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.cyan500,
     },
   ],
-  // glyphs:snow-bold
   [weatherConditions.snow]: [
     {
       name: 'cloud',
@@ -173,7 +178,7 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.primaryGrey,
       fillRule: 'evenodd',
     },
-    // Traces the flake to keep its upper arms off the cloud, so it tracks the cloud colour.
+    // NOTE: traces the flake to keep its upper arms off the cloud, so it tracks the cloud colour.
     {
       name: 'halo',
       d: SNOW_HALO_PATH,
@@ -185,7 +190,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.cyan500,
     },
   ],
-  // glyphs:lightning-bold
   [weatherConditions.storm]: [
     {
       name: 'cloud',
@@ -216,13 +220,13 @@ export const CustomWeatherIcon = ({
   const styles = customWeatherIconStyles({ size });
 
   return (
-    // The accessibility props belong on this wrapper, not on `Svg`: react-native-svg's web build
-    // forwards unrecognised props straight onto the DOM `<svg>`, so `accessible` landed there as a
-    // raw attribute and React logged a non-boolean-attribute error on every render.
+    // NOTE: the accessibility props belong on this wrapper, not on `Svg`: react-native-svg's web
+    // build forwards unrecognised props straight onto the DOM `<svg>`, so `accessible` landed there
+    // as a raw attribute and React logged a non-boolean-attribute error on every render.
     <View
       style={styles.container}
-      // A label alone never makes a native view an accessibility element, so an unlabelled icon
-      // stays decorative and a labelled one is announced.
+      // NOTE: a label alone never makes a native view an accessibility element, so an unlabelled
+      // icon stays decorative and a labelled one is announced.
       accessible={accessibilityLabel !== undefined}
       accessibilityRole="image"
       accessibilityLabel={accessibilityLabel}

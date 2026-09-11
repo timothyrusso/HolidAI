@@ -18,8 +18,6 @@ const meta = {
     color: colors.primaryBlack,
   },
   argTypes: {
-    // A slider rather than a number field: the useful gesture is sweeping *through* the small sizes,
-    // where dense glyphs (`information-circle-outline`, `calendar-number-outline`) stop being legible.
     size: { control: { type: 'range', min: 8, max: 64, step: 1 } },
   },
 } satisfies Meta<typeof CustomIcon>;
@@ -43,8 +41,6 @@ export const Playground: Story = {};
  * would emit missing-key warnings, or silently display a translation on any key collision.
  */
 export const AllIcons: Story = {
-  // `name` is overridden per cell here, so leaving its control on would offer a knob that does
-  // nothing. Only the two args that reach every glyph stay.
   parameters: { controls: { include: ['size', 'color'] } },
   render: args => (
     <ScrollView contentContainerStyle={styles.grid}>

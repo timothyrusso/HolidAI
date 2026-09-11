@@ -61,8 +61,8 @@ export const CustomSegmentedControl = ({
             accessibilityRole="tab"
             accessibilityLabel={state.t(segment.label)}
             accessibilityState={{ selected: derived.isSelected(index), disabled: isDisabled }}
-            // react-native-web drops `accessibilityState.selected`, so a web tab reaches the a11y
-            // tree with no selected state unless the ARIA prop is passed alongside it.
+            // NOTE: react-native-web drops `accessibilityState.selected`, so a web tab reaches the
+            // a11y tree with no selected state unless the ARIA prop is passed alongside it.
             aria-selected={derived.isSelected(index)}
           >
             <Animated.View style={[styles.segmentContent, derived.contentAnimatedStyles[index]]}>

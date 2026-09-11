@@ -48,8 +48,6 @@ export type SegmentedControlColors = {
   unselectedContentColor: string;
 };
 
-// Settles in ~250-300ms with a slight overshoot. `CustomPressable`'s damping 500 / stiffness 1000 is a
-// jump cut over this travel distance, and `animations.ts` stays keyframes-only, so this stays a local const.
 const THUMB_SPRING = { damping: 22, stiffness: 220, mass: 1 };
 const NOT_MEASURED = 0;
 const UNSELECTED_CONTENT_OPACITY = opacity.opacity60;
@@ -139,23 +137,15 @@ export const useCustomSegmentedControlLogic = ({
     }))
     .exhaustive();
 
-  // The thumb follows the `selectedIndex` prop, never the tap: a parent that holds the prop fixed
-  // must see `onChange` fire with the thumb standing still. The shared value is seeded with the
-  // initial index, so the mount pass springs to the value it already holds and nothing animates in.
   useEffect(() => {
     selectionProgress.value = prefersReducedMotion ? thumbIndex : withSpring(thumbIndex, THUMB_SPRING);
   }, [thumbIndex, prefersReducedMotion, selectionProgress]);
 
-  // Hidden until the layout pass measures the track: the translate resolves to 0 for every index
-  // while the width is unknown, which would paint one frame of the thumb under the first segment.
   const thumbAnimatedStyle = useAnimatedStyle(() => ({
     opacity: innerWidth.value === NOT_MEASURED ? opacity.opacity0 : opacity.opacity100,
     transform: [{ translateX: selectionProgress.value * (innerWidth.value / segmentCount) }],
   }));
 
-  // One style per possible segment, all three called unconditionally: hooks cannot run inside the
-  // view's `map`, and the tuple prop caps the count at three. Every label reads the same shared
-  // value as the thumb, so the crossfade cannot desync from the travel.
   const firstLabelAnimatedStyle = useAnimatedStyle(() => ({
     color: labelColor(selectionProgress.value, 0, controlColors),
   }));
@@ -166,7 +156,6 @@ export const useCustomSegmentedControlLogic = ({
     color: labelColor(selectionProgress.value, 2, controlColors),
   }));
 
-  // The mute rides the same shared value, so the icon fades with its own label rather than snapping.
   const firstContentAnimatedStyle = useAnimatedStyle(() => ({
     opacity: contentOpacity(selectionProgress.value, 0),
   }));
@@ -177,11 +166,6 @@ export const useCustomSegmentedControlLogic = ({
     opacity: contentOpacity(selectionProgress.value, 2),
   }));
 
-  // Ionicons takes its colour as a prop, and neither a prop nor a glyph colour is animatable, so the
-  // view stacks a selected-colour copy of the icon over an unselected-colour one and fades the top
-  // copy in off this shared value. Reading `selectedIndex` here instead would blank both copies for
-  // the whole travel under a black thumb: the incoming white glyph over the grey track and the
-  // outgoing black glyph over the thumb it has not left yet.
   const firstIconOverlayAnimatedStyle = useAnimatedStyle(() => ({
     opacity: selectedIconOpacity(selectionProgress.value, 0),
   }));
@@ -202,8 +186,6 @@ export const useCustomSegmentedControlLogic = ({
   };
 
   return {
-    // `CustomText` is not used for a label, because the crossfade needs an animatable `color`, so
-    // the translation the reader and the screen share is done here instead.
     state: {
       t,
     },

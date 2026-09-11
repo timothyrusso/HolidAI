@@ -8,7 +8,6 @@ export const heartPulse: CSSAnimationKeyframes = {
   '100%': { transform: [{ scale: 1 }, { rotate: '0deg' }] },
 } as const;
 
-// Each word covers ~12.5% of the cycle (100 / 8 words), loops forever
 export const wordKeyframes: CSSAnimationKeyframes[] = [
   { '0%': { opacity: 1 }, '12%': { opacity: 1 }, '13%': { opacity: 0 }, '100%': { opacity: 0 } },
   {
@@ -62,7 +61,6 @@ export const wordKeyframes: CSSAnimationKeyframes[] = [
   { '0%': { opacity: 0 }, '87%': { opacity: 0 }, '88%': { opacity: 1 }, '99%': { opacity: 1 }, '100%': { opacity: 0 } },
 ] as const;
 
-// Each color layer pulses from faint to full opacity — staggered phases create the blended mix
 export const colorBgPulse: CSSAnimationKeyframes = {
   '0%': { opacity: 0.15 },
   '50%': { opacity: 1 },

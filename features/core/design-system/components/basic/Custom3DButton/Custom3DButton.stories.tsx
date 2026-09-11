@@ -14,8 +14,8 @@ const meta = {
   title: 'Design System/Custom3DButton',
   component: Custom3DButtonLarge,
   tags: ['autodocs'],
-  // The button is driven by a tap gesture rather than a `Pressable`, and a gesture only reaches a
-  // detector inside a root view. The app mounts one in `app/_layout.tsx`; Storybook does not.
+  // NOTE: the button is driven by a tap gesture, and a gesture only reaches a detector inside a
+  // root view. The app mounts one in `app/_layout.tsx`; Storybook does not.
   decorators: [
     Story => (
       <GestureHandlerRootView>

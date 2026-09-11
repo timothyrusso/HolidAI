@@ -49,7 +49,7 @@ export const useCustomBlurButtonLogic = ({ isDisabled, hasBlurTarget }: UseCusto
 
   const buttonState = isDisabled ? ButtonState.Disabled : ButtonState.Active;
 
-  // `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
+  // NOTE: `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
   // ancestor, which a reusable button cannot own: without one from the screen, there is no blur to
   // render at all.
   const canBlur = Platform.OS !== PlatformOS.android || hasBlurTarget;

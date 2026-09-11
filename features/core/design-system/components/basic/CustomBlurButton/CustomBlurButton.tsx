@@ -51,9 +51,6 @@ export function CustomBlurButton({
   });
 
   return (
-    // The role is set here rather than left to the caller because a blur button is always a button;
-    // the label is named explicitly rather than left to the title below, which the spinner replaces
-    // while loading — without it the button would announce itself unnamed for the whole request.
     <CustomPressable
       disabled={isDisabled || isLoading}
       onPress={onPress}

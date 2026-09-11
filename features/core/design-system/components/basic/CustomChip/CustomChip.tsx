@@ -38,7 +38,6 @@ export const CustomChip = (props: CustomChipProps) => {
           >
             <View style={styles.tint} />
           </BlurSurface>
-          {/* An overlay, because a 50%-opacity border cannot be drawn without fading the content with it. */}
           <View style={styles.border} />
         </Fragment>
       )}

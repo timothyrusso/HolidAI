@@ -70,7 +70,6 @@ type PatternBackdropProps = { blurTargetRef: RefObject<View | null> };
 
 function PatternBackdrop({ blurTargetRef }: PatternBackdropProps) {
   return (
-    // Android blurs only what a `BlurTargetView` registers; on iOS and web this is a plain `View`
     <BlurTargetView ref={blurTargetRef} style={styles.pattern}>
       {PATTERN_BLOCKS.map(block => (
         <View key={block.id} style={[styles.patternBlock, { backgroundColor: block.color }]}>

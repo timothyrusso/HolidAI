@@ -2,7 +2,6 @@ import type { FeatureTier } from '@/features/core/featureTier';
 
 export const FEATURE_TIER: FeatureTier = 0;
 
-// Basic components
 export * from '@/features/core/design-system/components/basic/BaseSkeleton/BaseSkeleton';
 export * from '@/features/core/design-system/components/basic/Custom3DButton/Custom3DButton.logic';
 export * from '@/features/core/design-system/components/basic/Custom3DButton/Custom3DButtonExtraLarge';
@@ -52,7 +51,6 @@ export * from '@/features/core/design-system/components/basic/CustomWeatherIcon/
 export * from '@/features/core/design-system/components/basic/LinearGradientText/LinearGradientText';
 export * from '@/features/core/design-system/components/basic/LottieAnimation/LottieAnimation';
 export * from '@/features/core/design-system/components/composite/AnimatedHeaderImage/AnimatedHeaderImage';
-// Composite components
 export * from '@/features/core/design-system/components/composite/Badge/Badge';
 export * from '@/features/core/design-system/components/composite/BottomSheetHeader/BottomSheetHeader';
 export * from '@/features/core/design-system/components/composite/CardWithImage/CardWithImage';
@@ -61,13 +59,9 @@ export * from '@/features/core/design-system/components/composite/CustomIconText
 export * from '@/features/core/design-system/components/composite/CustomNumberButton/CustomNumberButton';
 export * from '@/features/core/design-system/components/composite/CustomScrollView/CustomScrollView';
 export * from '@/features/core/design-system/components/composite/PlacesAutocomplete/PlacesAutocomplete';
-// Providers
 export * from '@/features/core/design-system/components/providers/ToastProvider';
-// View components
 export * from '@/features/core/design-system/components/view/BasicView/BasicView';
-// Platform
 export * from '@/features/core/design-system/PlatformOS';
-// Style tokens
 export * from '@/features/core/design-system/style/animations';
 export * from '@/features/core/design-system/style/blur';
 export * from '@/features/core/design-system/style/colors';

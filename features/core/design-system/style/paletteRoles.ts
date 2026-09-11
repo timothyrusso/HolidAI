@@ -16,8 +16,6 @@ type BorderOnlyColor =
 /** The colours a chip or a tag may take as its fill: the palette minus the border-only shades. */
 export type PaletteBackgroundColor = Exclude<PaletteColor, BorderOnlyColor>;
 
-// Exhaustive on purpose: a colour added to the palette without a contrast decision fails to compile
-// here, instead of silently inheriting a black label a future dark shade could never carry.
 const paletteContentColors: Record<PaletteBackgroundColor, PaletteBackgroundColor> = {
   [colors.purple300]: colors.primaryBlack,
   [colors.purple500]: colors.primaryWhite,
@@ -66,8 +64,6 @@ export type AccentShades = {
   emphasis: string;
 };
 
-// Exhaustive on purpose: a hue added to the union without a shade pair fails to compile here, rather
-// than resolving to undefined at the fill.
 const accentShadePairs: Record<AccentHue, AccentShades> = {
   [AccentHue.Purple]: { fill: colors.purple500, emphasis: colors.purple900 },
   [AccentHue.Lime]: { fill: colors.lime500, emphasis: colors.lime900 },

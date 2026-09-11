@@ -23,8 +23,6 @@ export type TagVariant = (typeof TagVariant)[keyof typeof TagVariant];
 
 const DEFAULT_TAG_SIZE: TagSizeName = 'medium';
 
-// Exhaustive on purpose: a colour added to the palette without a border decision fails to compile
-// here rather than rendering a tag with no outline at all.
 const tagBorderColors: Record<TagColor, PaletteColor> = {
   [colors.purple300]: colors.purple500,
   [colors.purple500]: colors.purple700,
@@ -42,7 +40,6 @@ const tagBorderColors: Record<TagColor, PaletteColor> = {
   [colors.cyan500]: colors.cyan700,
   [colors.cyan700]: colors.cyan900,
   [colors.cyan900]: colors.cyan1100,
-  // The neutrals have no family to darken into, so they borrow the grey that reads on all of them.
   [colors.primaryWhite]: colors.primaryGrey,
   [colors.primaryWhiteDisabled]: colors.primaryGrey,
   [colors.secondaryGrey]: colors.primaryGrey,
@@ -111,7 +108,7 @@ export const useCustomTagLogic = (props: CustomTagProps) => {
 
   const isBlur = props.variant === TagVariant.Blur;
 
-  // `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
+  // NOTE: `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
   // ancestor, which a reusable tag cannot own: without one from the screen, there is no blur to
   // render at all.
   const canBlur = Platform.OS !== PlatformOS.android || props.blurTargetRef !== undefined;
@@ -131,10 +128,7 @@ export const useCustomTagLogic = (props: CustomTagProps) => {
       isBlur,
       canBlur,
       isIconOnly: props.title === undefined,
-      // Beside a label the icon only restates it, so a screen reader must not stop on it twice.
       isIconDecorative: props.title !== undefined,
-      // An icon-only tag is a single element or a screen reader finds nothing to announce; a
-      // labelled tag only becomes one when the caller replaces its text with a label.
       isAccessibilityElement: props.title === undefined || props.accessibilityLabel !== undefined,
       intensity: blur.intensity30,
     },

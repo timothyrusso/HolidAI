@@ -34,12 +34,9 @@ export const CustomTag = (props: CustomTagProps) => {
           >
             <View style={styles.tint} />
           </BlurSurface>
-          {/* An overlay, because a 50%-opacity border cannot be drawn without fading the content with it. */}
           <View style={styles.blurBorder} />
         </Fragment>
       ) : (
-        // Also an overlay: a border on the container would eat 1px out of the symmetric padding an
-        // icon-only tag needs to stay square around its icon.
         <View style={styles.solidBorder} />
       )}
       {icon && (

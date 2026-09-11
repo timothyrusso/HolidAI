@@ -75,7 +75,7 @@ export const useCustomChipLogic = (props: CustomChipProps) => {
 
   const isBlur = props.variant === ChipVariant.Blur;
 
-  // `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
+  // NOTE: `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
   // ancestor, which a reusable chip cannot own: without one from the screen, there is no blur to
   // render at all.
   const canBlur = Platform.OS !== PlatformOS.android || props.blurTargetRef !== undefined;
@@ -91,10 +91,7 @@ export const useCustomChipLogic = (props: CustomChipProps) => {
       isBlur,
       canBlur,
       isIconOnly: props.title === undefined,
-      // Beside a label the icon only restates it, so a screen reader must not stop on it twice.
       isIconDecorative: props.title !== undefined,
-      // An icon-only chip is a single element or a screen reader finds nothing to announce; a
-      // labelled chip only becomes one when the caller replaces its text with a label.
       isAccessibilityElement: props.title === undefined || props.accessibilityLabel !== undefined,
       intensity: blur.intensity30,
     },
