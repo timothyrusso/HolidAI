@@ -40,15 +40,11 @@ void storybookI18n.use(initReactI18next).init({
 type StoryFrameProps = PropsWithChildren<{ locale: Locale }>;
 
 function StoryFrame({ locale, children }: StoryFrameProps) {
-  // Storybook bypasses `expo-router/entry`, so `app/_layout.tsx` — where the app calls
-  // `useFonts(fontsConfig)` — never runs. Without this the design-system's `inter-*` families
-  // are unknown to the renderer and every label silently falls back (a serif on web, the system
-  // font on device), which makes the catalogue lie about typography.
-  //
-  // `Ionicons` is loaded here too, and only on web: on iOS/Android the
-  // `@react-native-vector-icons/ionicons` config plugin links the font natively, but nothing
-  // does that in a browser, so every `CustomIcon` renders as a blank/tofu glyph. The family name
-  // must match the icon set's `postScriptName` ('Ionicons').
+  // NOTE: Storybook bypasses `expo-router/entry`, so `app/_layout.tsx` — where the app calls
+  // `useFonts(fontsConfig)` — never runs, and every label would silently fall back off the
+  // design-system's `inter-*` families. `Ionicons` is loaded here too, and only on web: the
+  // `@react-native-vector-icons/ionicons` config plugin links it natively on iOS/Android but
+  // nothing does in a browser. The family name must match the set's `postScriptName`.
   const [fontsLoaded, fontsError] = useFonts({
     ...fontsConfig,
     Ionicons: require('@react-native-vector-icons/ionicons/fonts/Ionicons.ttf'),
@@ -58,10 +54,9 @@ function StoryFrame({ locale, children }: StoryFrameProps) {
     void storybookI18n.changeLanguage(locale);
   }, [locale]);
 
-  // Render nothing WHILE loading: a first paint in the fallback font would be a misleading
-  // screenshot for any visual check. A load FAILURE is a different story — it never resolves, so
-  // bailing out on it too would leave the catalogue blank forever with nothing to look at. Render
-  // the story with degraded typography instead: a visibly wrong font is a readable symptom.
+  // NOTE: render nothing WHILE loading, because a first paint in the fallback font is a misleading
+  // screenshot. A load FAILURE never resolves, so bailing out on it too would leave the catalogue
+  // blank forever: the story renders with degraded typography instead.
   if (!fontsLoaded && !fontsError) return null;
 
   return (
@@ -87,9 +82,6 @@ const PHONE_VIEWPORT_WIDTH = 360;
 const styles = StyleSheet.create({
   container: {
     maxWidth: PHONE_VIEWPORT_WIDTH,
-    // `spacing.Fourfold` is the app's dominant screen padding, so a full-width button is inset here
-    // exactly as it is on a real screen. Hardcoding a different value made the catalogue render
-    // buttons at a width the app never produces.
     padding: spacing.Fourfold,
     width: '100%',
   },

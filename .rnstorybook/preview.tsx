@@ -46,30 +46,23 @@ type StoryFrameProps = PropsWithChildren<{
 }>;
 
 function StoryFrame({ locale, onLocaleChange, children }: StoryFrameProps) {
-  // Storybook bypasses `expo-router/entry`, so `app/_layout.tsx` — where the app calls
-  // `useFonts(fontsConfig)` — never runs. Without this the design-system's `inter-*` families
-  // are unknown to the renderer and every label silently falls back to the system font, which
-  // makes the catalogue lie about typography.
+  // NOTE: Storybook bypasses `expo-router/entry`, so `app/_layout.tsx` — where the app calls
+  // `useFonts(fontsConfig)` — never runs, and every label would silently fall back off the
+  // design-system's `inter-*` families onto the system font.
   const [fontsLoaded, fontsError] = useFonts(fontsConfig);
 
   useEffect(() => {
     void storybookI18n.changeLanguage(locale);
   }, [locale]);
 
-  // Render nothing WHILE loading: a first paint in the fallback font would be a misleading
-  // screenshot for any visual check. A load FAILURE is a different story — it never resolves, so
-  // bailing out on it too would leave the catalogue blank forever with nothing to look at. Render
-  // the story with degraded typography instead: a visibly wrong font is a readable symptom.
+  // NOTE: render nothing WHILE loading, because a first paint in the fallback font is a misleading
+  // screenshot. A load FAILURE never resolves, so bailing out on it too would leave the catalogue
+  // blank forever: the story renders with degraded typography instead.
   if (!fontsLoaded && !fontsError) return null;
 
   return (
     <I18nextProvider i18n={storybookI18n}>
       <View style={styles.container}>
-        {/*
-          The on-device UI has no toolbar chrome, so the locale switch is rendered in the canvas.
-          It writes to the same `locale` global that the web runtime's toolbar drives, which keeps
-          both runtimes on one source of truth.
-        */}
         <View style={styles.localeBar}>
           {LOCALES.map(item => (
             <Pressable
@@ -105,9 +98,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: spacing.Triple,
-    // `spacing.Fourfold` is the app's dominant screen padding, so a full-width button is inset here
-    // exactly as it is on a real screen. Hardcoding a different value made the catalogue render
-    // buttons at a width the app never produces.
     padding: spacing.Fourfold,
   },
   localeBar: {
@@ -115,7 +105,6 @@ const styles = StyleSheet.create({
     gap: spacing.SingleAndHalf,
   },
   localeButton: {
-    // `primaryGrey`, not `secondaryGrey` — the latter is #f5f5f5 and would be invisible as a border.
     borderColor: colors.primaryGrey,
     borderRadius: spacing.Single,
     borderWidth: spacing.HalfMinimal,
