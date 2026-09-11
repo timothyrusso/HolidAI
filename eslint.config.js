@@ -62,6 +62,13 @@ module.exports = defineConfig([
     },
   },
   {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { holidai },
+    rules: {
+      'holidai/no-inline-comments': 'error',
+    },
+  },
+  {
     // tools/ is build-time tooling (like scripts/) — not linted with app rules.
     ignores: [
       'dist/*',
