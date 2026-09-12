@@ -14,8 +14,6 @@ const meta = {
   title: 'Design System/CustomBlurButton',
   component: CustomBlurButtonLarge,
   tags: ['autodocs'],
-  // NOTE: a blur button is only itself over something worth blurring — without a backdrop the
-  // blur has nothing to sample.
   decorators: [
     Story => (
       <View style={styles.backdrop}>

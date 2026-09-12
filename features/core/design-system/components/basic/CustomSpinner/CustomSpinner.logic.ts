@@ -57,9 +57,6 @@ export const clampProgress = (progress: number) =>
 export const spinnerSweep = (progress?: number) =>
   progress === undefined ? INDETERMINATE_SWEEP_DEGREES / FULL_TURN_DEGREES : clampProgress(progress);
 
-// NOTE: React Native's native accessibility value is an integer triple (`std::optional<int>`), so a
-// 0–1 range truncates every intermediate value to 0 and a screen reader announces "0%" — the
-// announced range is expressed in whole percent instead.
 export const spinnerPercent = (sweep: number) => Math.round(sweep * MAX_PERCENT);
 
 type UseCustomSpinnerLogicParams = {

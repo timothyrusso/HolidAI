@@ -6,7 +6,6 @@ import { Routes, Stacks } from '@/features/core/navigation';
 const TabLayout = () => {
   const { t } = useTranslation();
 
-  // NOTE: `airplane` has no filled SF Symbol variant, so Trips signals selection through tint alone.
   return (
     // NOTE: only the tint is set — every material prop (backgroundColor, blurEffect, shadowColor,
     // indicatorColor) must stay at its platform default or iOS 26 silently drops liquid glass.

@@ -73,18 +73,7 @@ const STORM_BOLT_PATH =
  * declares `*.svg` as a component, so that mistake typechecks cleanly and renders blank.
  *
  * Source: the Iconify [`glyphs`](https://github.com/gorango/glyphs) set, `-bold` (solid) weight, by
- * Goran Spasojevic. All are natively `viewBox="0 0 80 80"`, so they share one grid and one weight;
- * the `d` values are upstream and unmodified. What this set changes is the `fill` values, which
- * glyphs are combined, and the `transform` that places them.
- *
- * Condition to glyph:
- *
- * - `sunny` — `glyphs:sun-bold`
- * - `partlyCloudy` — `glyphs:sun-bold` behind `glyphs:cloud-1-bold`
- * - `cloudy` — `glyphs:cloud-1-bold`
- * - `rain` — `glyphs:rain-1-bold`
- * - `snow` — `glyphs:snow-bold`
- * - `storm` — `glyphs:lightning-bold`
+ * Goran Spasojevic. All are natively `viewBox="0 0 80 80"`, so they share one grid and one weight.
  *
  * `partlyCloudy` is the only composite, and it is scaled from the two measured 80x80 boxes so the
  * sun clears the cloud's top-left corner: the sun's 56 goes to 38 at (6, 6), the cloud's 64 to 52
@@ -122,7 +111,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.lime700,
       fillRule: 'evenodd',
     },
-    // NOTE: upstream lists the core first, where the rays hide it: it only shows when drawn last.
     {
       name: 'core',
       d: SUN_CORE_PATH,
@@ -178,7 +166,6 @@ const weatherIconPaths: Record<WeatherCondition, readonly WeatherIconPath[]> = {
       fill: colors.primaryGrey,
       fillRule: 'evenodd',
     },
-    // NOTE: traces the flake to keep its upper arms off the cloud, so it tracks the cloud colour.
     {
       name: 'halo',
       d: SNOW_HALO_PATH,
@@ -220,13 +207,8 @@ export const CustomWeatherIcon = ({
   const styles = customWeatherIconStyles({ size });
 
   return (
-    // NOTE: the accessibility props belong on this wrapper, not on `Svg`: react-native-svg's web
-    // build forwards unrecognised props straight onto the DOM `<svg>`, so `accessible` landed there
-    // as a raw attribute and React logged a non-boolean-attribute error on every render.
     <View
       style={styles.container}
-      // NOTE: a label alone never makes a native view an accessibility element, so an unlabelled
-      // icon stays decorative and a labelled one is announced.
       accessible={accessibilityLabel !== undefined}
       accessibilityRole="image"
       accessibilityLabel={accessibilityLabel}

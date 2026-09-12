@@ -108,9 +108,6 @@ export const useCustomTagLogic = (props: CustomTagProps) => {
 
   const isBlur = props.variant === TagVariant.Blur;
 
-  // NOTE: `expo-blur` can only sample the pixels behind it on Android when it is handed a `blurTarget`
-  // ancestor, which a reusable tag cannot own: without one from the screen, there is no blur to
-  // render at all.
   const canBlur = Platform.OS !== PlatformOS.android || props.blurTargetRef !== undefined;
 
   const tagColors: TagColors = isBlur

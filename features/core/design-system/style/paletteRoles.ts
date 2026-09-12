@@ -13,7 +13,6 @@ type BorderOnlyColor =
   | typeof colors.cyan1100
   | typeof colors.primaryGreyDark;
 
-/** The colours a chip or a tag may take as its fill: the palette minus the border-only shades. */
 export type PaletteBackgroundColor = Exclude<PaletteColor, BorderOnlyColor>;
 
 const paletteContentColors: Record<PaletteBackgroundColor, PaletteBackgroundColor> = {

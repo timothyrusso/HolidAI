@@ -21,9 +21,6 @@ export const CustomTag = (props: CustomTagProps) => {
     isIconOnly: derived.isIconOnly,
   });
 
-  // NOTE: the border is an overlay because a 50%-opacity border cannot be drawn without fading the
-  // content with it, and a border on the container would eat 1px out of the symmetric padding an
-  // icon-only tag needs to stay square around its icon.
   return (
     <View style={styles.container} accessible={derived.isAccessibilityElement} accessibilityLabel={accessibilityLabel}>
       {derived.isBlur ? (

@@ -14,7 +14,6 @@ const meta = {
   title: 'Design System/CustomBlurIconButton',
   component: CustomBlurIconButtonLarge,
   tags: ['autodocs'],
-  // NOTE: same photo backdrop as the blur pill — without one, the blur has nothing to sample.
   decorators: [
     Story => (
       <View style={styles.backdrop}>

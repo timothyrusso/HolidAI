@@ -16,8 +16,6 @@ const PALETTE = (Object.entries(colors) as [string, PaletteColor][]).filter((ent
   isPaletteBackgroundColor(entry[1]),
 );
 
-// NOTE: the props are a discriminated union, so no single arg object satisfies them — the stories
-// are typed off this solid, labelled arg set and every other combination is rendered explicitly.
 type TagStoryArgs = {
   title: string;
   color: TagColor;

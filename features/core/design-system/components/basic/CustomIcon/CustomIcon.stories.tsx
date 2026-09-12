@@ -35,10 +35,6 @@ export const Playground: Story = {};
  * Each cell carries both labels because the map key and the Ionicons name it resolves to diverge in
  * ways nobody can infer: `hearth` renders `heart-outline`, `heartOutline` renders the *sharp*
  * variant, and `arrowRight` is a chevron. Showing only the key would actively mislead.
- *
- * The labels are raw `Text`, not the design system's `CustomText`: `CustomText` pipes every string
- * through `t()` with no escape hatch, and these are code identifiers, not copy — translating them
- * would emit missing-key warnings, or silently display a translation on any key collision.
  */
 export const AllIcons: Story = {
   parameters: { controls: { include: ['size', 'color'] } },
