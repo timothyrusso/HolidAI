@@ -3,7 +3,6 @@ import { match } from 'ts-pattern';
 import { spinnerColorForContent } from '@/features/core/design-system/components/basic/CustomSpinner/CustomSpinner.logic';
 import { colors } from '@/features/core/design-system/style/colors';
 
-// Define button states
 export const ButtonState = { Active: 'active', Disabled: 'disabled' } as const;
 export type ButtonState = (typeof ButtonState)[keyof typeof ButtonState];
 

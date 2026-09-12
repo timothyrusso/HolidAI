@@ -37,10 +37,6 @@ const AT_REST = 0;
 const ACTIVATE_ACTION: AccessibilityActionName = 'activate';
 const ACCESSIBILITY_ACTIONS: readonly AccessibilityActionInfo[] = [{ name: ACTIVATE_ACTION }];
 
-// Disabled swaps the face and the label/icon for palette tokens instead of fading the whole button:
-// an opacity multiplier renders a colour the palette does not contain, and flattens the raise along
-// with it. The raise and border keep their active values, so a disabled button is still recognisably
-// its own variant.
 const resolveButtonColors = (buttonType: Custom3DButtonType, buttonState: ButtonState): Custom3DButtonColors =>
   match({ buttonType, buttonState })
     .with({ buttonType: Custom3DButtonType.Main, buttonState: ButtonState.Active }, () => ({
@@ -156,8 +152,6 @@ export const useCustom3DButtonLogic = ({
     [isInteractive, onPress, pressProgress],
   );
 
-  // A screen reader consumes the touches the tap gesture needs, so activation gets its own path,
-  // behind the same guard the gesture is enabled with.
   const activate = () => {
     if (!isInteractive) return;
     onPress();
@@ -168,15 +162,10 @@ export const useCustom3DButtonLogic = ({
     activate();
   };
 
-  // Only the press moves the face. A loading button keeps it at rest with the raise visible below:
-  // pinning it down for the whole request would cost the button the raised silhouette that is its
-  // entire identity, for seconds at a time.
   const contentAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: Math.max(AT_REST, pressProgress.value * raiseLevel) }],
   }));
 
-  // The release spring overshoots past zero, so the overlay is clamped: a negative opacity is not a
-  // lighter face, it is an invalid style value.
   const pressOverlayAnimatedStyle = useAnimatedStyle(() => ({
     opacity: Math.max(AT_REST, pressProgress.value * opacity.opacity20),
   }));
@@ -188,8 +177,6 @@ export const useCustom3DButtonLogic = ({
   const spinnerColor = spinnerColorForContent(resolveButtonColors(buttonType, ButtonState.Active).contentColor);
 
   return {
-    // `CustomText` translates the title it renders, so the label the screen reader is handed has to
-    // be translated here too — otherwise the button announces the raw i18n key.
     state: {
       t,
     },

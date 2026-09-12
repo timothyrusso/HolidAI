@@ -6,7 +6,6 @@ import { useTripRepository } from '@/features/trips/data/repositories/useTripRep
 
 export const useRetryDishImage = (tripId: Id<'trips'> | undefined, searchTerm: string) => {
   const repo = useTripRepository();
-  // Tracks URLs already retried this mount, so a broken image is re-fetched at most once.
   const retriedUrls = useRef<Set<string>>(new Set());
 
   const retryDishImage = useCallback(

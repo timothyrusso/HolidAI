@@ -25,7 +25,6 @@ export const MapListHeaderComponent = ({ region, allCoordinates }: MapListHeader
         rotateEnabled={false}
         scrollEnabled={false}
       >
-        {/* Draw the route line */}
         <Polyline
           coordinates={allCoordinates.map(coord => ({
             latitude: coord.latitude,

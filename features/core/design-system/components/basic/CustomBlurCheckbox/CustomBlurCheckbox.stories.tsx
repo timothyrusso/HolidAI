@@ -14,7 +14,6 @@ const meta = {
   title: 'Design System/CustomBlurCheckbox',
   component: CustomBlurCheckbox,
   tags: ['autodocs'],
-  // Same photo backdrop as the blur buttons: without one, the blur has nothing to sample.
   decorators: [
     Story => (
       <View style={styles.backdrop}>

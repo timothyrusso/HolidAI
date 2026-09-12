@@ -7,13 +7,13 @@ const TabLayout = () => {
   const { t } = useTranslation();
 
   return (
-    // Only the tint is configured: every material prop (backgroundColor, blurEffect, shadowColor,
-    // indicatorColor) stays at its platform default, otherwise iOS 26 silently drops liquid glass.
-    // `rippleColor` is transparent to suppress Android's Material touch ripple on tab presses; the
-    // native active-indicator pill is untouched and still animates in behind the selected tab.
-    // `accessibilityLabel` is passed explicitly rather than inherited from the visible label: the
-    // native side only re-applies the item's a11y label when that prop itself changes, so relying
-    // on the inherited title can leave screen readers announcing a stale language after a switch.
+    // NOTE: only the tint is set — every material prop (backgroundColor, blurEffect, shadowColor,
+    // indicatorColor) must stay at its platform default or iOS 26 silently drops liquid glass.
+    // `rippleColor` is transparent to suppress Android's Material touch ripple on tab presses, while
+    // the native active-indicator pill still animates behind the selected tab. `accessibilityLabel`
+    // is passed explicitly because the native side only re-applies an item's a11y label when that
+    // prop itself changes, so an inherited title leaves screen readers announcing a stale language
+    // after a locale switch.
     <NativeTabs
       iconColor={iconColor}
       labelStyle={labelStyle}
@@ -28,7 +28,6 @@ const TabLayout = () => {
         />
         <NativeTabs.Trigger.Label>{t('HOME.TITLE')}</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
-      {/* `airplane` has no filled SF Symbol variant, so Trips signals selection through tint alone. */}
       <NativeTabs.Trigger name={Routes.Trips} accessibilityLabel={t('TRIPS.TITLE')}>
         <NativeTabs.Trigger.Icon sf="airplane" md="flight" />
         <NativeTabs.Trigger.Label>{t('TRIPS.TITLE')}</NativeTabs.Trigger.Label>

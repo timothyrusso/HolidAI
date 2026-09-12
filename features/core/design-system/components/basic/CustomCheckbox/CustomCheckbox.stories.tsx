@@ -22,8 +22,6 @@ const LIGHT_BACKGROUND_COLORS = [
 
 const INTERACTIVE_STATES = [CheckboxState.checked, CheckboxState.unchecked, CheckboxState.empty] as const;
 
-// The props are a discriminated union — an interactive checkbox requires a label — so no single arg
-// object satisfies them: the stories are typed off this static arg set instead.
 type CheckboxStoryArgs = {
   state: CheckboxState;
   size: CheckboxSizeName;

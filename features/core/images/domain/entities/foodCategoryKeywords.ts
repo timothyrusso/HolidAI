@@ -1,5 +1,4 @@
 export const FOOD_CATEGORY_KEYWORDS = [
-  // Generic food
   'food',
   'cuisine',
   'dish',
@@ -11,7 +10,6 @@ export const FOOD_CATEGORY_KEYWORDS = [
   'beverage',
   'ingredient',
   'nutrition',
-  // Food types
   'dessert',
   'confectionery',
   'charcuterie',
@@ -87,7 +85,6 @@ export const FOOD_CATEGORY_KEYWORDS = [
   'vegetarian',
   'halal',
   'kosher',
-  // Drinks
   'coffee',
   'tea',
   'wine',
@@ -97,7 +94,6 @@ export const FOOD_CATEGORY_KEYWORDS = [
   'smoothie',
   'spirit',
   'liqueur',
-  // Cuisines
   'italian',
   'french',
   'japanese',
@@ -137,7 +133,6 @@ export const FOOD_CATEGORY_KEYWORDS = [
   'malaysian',
   'philippine',
   'taiwanese',
-  // Cooking methods
   'baked',
   'grilled',
   'fried',

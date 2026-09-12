@@ -27,14 +27,9 @@ export const CustomSpinner = ({
   return (
     <Animated.View
       style={[styles.container, derived.isIndeterminate ? spinnerRotation : null, style]}
-      // A role alone never makes a native view an accessibility element, so VoiceOver and TalkBack
-      // would skip the spinner entirely without this.
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel}
-      // react-native-web drops the `accessibilityValue` object form, so this component passes the flat
-      // ARIA props instead; React Native merges them back into `accessibilityState` and
-      // `accessibilityValue` on device.
       aria-busy={derived.accessibilityBusy}
       aria-valuemin={derived.accessibilityValue?.min}
       aria-valuemax={derived.accessibilityValue?.max}

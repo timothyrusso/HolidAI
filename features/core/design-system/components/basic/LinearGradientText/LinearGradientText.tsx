@@ -33,7 +33,6 @@ export const LinearGradientText: FC<LinearGradientTextProps> = ({
         </View>
       }
     >
-      {/* Shows behind the mask, you can put anything here, such as an image */}
       <CustomImage source={imageSource} style={styles.image} useBlur={false} />
     </MaskedView>
   );

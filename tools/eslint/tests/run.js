@@ -12,6 +12,7 @@ RuleTester.itOnly = (_text, method) => method.call(RuleTester);
 const specs = [
   ['viewmodel-return-shape', require('./viewmodel-return-shape.cases')],
   ['prefer-viewmodel', require('./prefer-viewmodel.cases')],
+  ['no-inline-comments', require('./no-inline-comments.cases')],
 ];
 
 let failed = false;

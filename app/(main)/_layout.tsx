@@ -10,8 +10,6 @@ export default function AppLayout() {
 
   useEffect(() => {
     if (!isLoaded) return;
-    // useRef holds the previous auth state so we redirect only on a genuine
-    // signed-out -> signed-in transition, not on cold-start auth resolution.
     const wasSignedIn = prevSignedIn.current;
     prevSignedIn.current = isSignedIn;
     if (wasSignedIn === false && isSignedIn) {

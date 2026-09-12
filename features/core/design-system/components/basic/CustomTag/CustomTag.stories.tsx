@@ -16,9 +16,6 @@ const PALETTE = (Object.entries(colors) as [string, PaletteColor][]).filter((ent
   isPaletteBackgroundColor(entry[1]),
 );
 
-// The props are a discriminated union, so the args inferred from the component cover the blur tag
-// too and no single arg object satisfies them: the stories are typed off this solid, labelled arg
-// set instead, and every other combination is rendered explicitly.
 type TagStoryArgs = {
   title: string;
   color: TagColor;

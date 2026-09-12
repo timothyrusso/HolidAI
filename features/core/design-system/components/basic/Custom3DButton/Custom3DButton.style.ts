@@ -46,8 +46,6 @@ export const custom3DButtonStyles = ({ size, buttonColors }: Custom3DButtonStyle
       borderColor: buttonColors.borderColor,
       backgroundColor: buttonColors.faceColor,
     },
-    // A transient press effect, not a resting fill: it darkens whatever face colour it lands on
-    // instead of asking the palette for six pressed tokens.
     pressOverlay: {
       position: 'absolute',
       top: 0,

@@ -21,9 +21,9 @@ export const usePlacesAutocompleteLogic = (placeholder: string) => {
       translatedPlaceholder: t(placeholder),
     },
     effects: {
-      // Accepted exception to the "log only in useCases/" rule: these callbacks are
-      // SDK error hooks from GooglePlacesAutocomplete with no use case in the call path.
-      // The same rationale applies as for error boundary components.
+      // NOTE: accepted exception to the "log only in useCases/" rule — these callbacks are SDK
+      // error hooks from GooglePlacesAutocomplete with no use case in the call path. The same
+      // rationale applies as for error boundary components.
       handleFail: (error: Error) => logger.error(error),
       handleTimeout: () => logger.warning('google places autocomplete: request timeout'),
     },

@@ -27,13 +27,11 @@ export const BlurSurface = ({
   blurTargetRef,
   children,
 }: BlurSurfaceProps) => {
-  // No blur to render (Android without a `blurTarget`): a plain view carrying the caller's heavier
-  // tint, so the button is still a legible surface rather than an invisible one.
   if (!canBlur) {
     return <View style={surfaceStyle}>{children}</View>;
   }
 
-  // Android's blur ignores `borderRadius` on its own view, so the rounded shape comes from a mask
+  // NOTE: Android's blur ignores `borderRadius` on its own view, so the rounded shape comes from a mask.
   if (Platform.OS === PlatformOS.android) {
     return (
       <MaskedView style={surfaceStyle} maskElement={<View style={maskStyle} />}>

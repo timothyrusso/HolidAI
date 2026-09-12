@@ -18,8 +18,6 @@ const meta = {
     color: colors.primaryBlack,
   },
   argTypes: {
-    // A slider rather than a number field: the useful gesture is sweeping *through* the small sizes,
-    // where dense glyphs (`information-circle-outline`, `calendar-number-outline`) stop being legible.
     size: { control: { type: 'range', min: 8, max: 64, step: 1 } },
   },
 } satisfies Meta<typeof CustomIcon>;
@@ -37,14 +35,8 @@ export const Playground: Story = {};
  * Each cell carries both labels because the map key and the Ionicons name it resolves to diverge in
  * ways nobody can infer: `hearth` renders `heart-outline`, `heartOutline` renders the *sharp*
  * variant, and `arrowRight` is a chevron. Showing only the key would actively mislead.
- *
- * The labels are raw `Text`, not the design system's `CustomText`: `CustomText` pipes every string
- * through `t()` with no escape hatch, and these are code identifiers, not copy — translating them
- * would emit missing-key warnings, or silently display a translation on any key collision.
  */
 export const AllIcons: Story = {
-  // `name` is overridden per cell here, so leaving its control on would offer a knob that does
-  // nothing. Only the two args that reach every glyph stay.
   parameters: { controls: { include: ['size', 'color'] } },
   render: args => (
     <ScrollView contentContainerStyle={styles.grid}>

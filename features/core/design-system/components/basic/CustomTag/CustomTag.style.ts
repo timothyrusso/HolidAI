@@ -28,8 +28,6 @@ export const styleTag = ({ tagSize, tagColors, isIconOnly }: TagStyleParams) => 
       gap: tagSize.gap,
       height: tagSize.height,
       width: isIconOnly ? tagSize.height : undefined,
-      // The tag hugs its label, so only a cap against the parent lets an over-long one truncate
-      // instead of overflowing.
       maxWidth: '100%',
       paddingHorizontal: isIconOnly ? iconOnlyPadding : tagSize.paddingHorizontal,
       borderRadius: tagSize.radius,
@@ -76,8 +74,6 @@ export const styleTag = ({ tagSize, tagColors, isIconOnly }: TagStyleParams) => 
     },
     title: {
       flexShrink: 1,
-      // A one-line label renders `nowrap` on web, which floors its min width at the full label and
-      // overflows the capped tag instead of truncating. Already the Yoga default.
       minWidth: spacing.Zero,
       color: tagColors.content,
       fontFamily: fontFamily.interBold,

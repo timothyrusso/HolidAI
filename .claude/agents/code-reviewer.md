@@ -49,15 +49,13 @@ documented exception as a violation.
 2. **Correctness:** logic bugs, missing error/edge handling, unhandled async failure,
    obvious performance traps, and whether the code plausibly satisfies the issue's
    `### Description` and `### Acceptance criteria`.
-3. **Comment quality — always non-blocking.** Check the inline comments the diff *adds or
-   touches* against CLAUDE.md's inline-comment rule (full version: `ARCHITECTURE.md` —
-   Documentation — Inline comments): each must record a non-obvious constraint or workaround
-   with its reason, a deliberate deviation from the surrounding pattern, an external quirk,
-   or a pointer to an issue/spec — and none may restate the next line, banner a section
-   (`// --- Handlers ---`), narrate the change (`// Added for issue #443`), leave
-   commented-out code, or comment a self-evident name. The rule is not retroactive: never
-   flag a pre-existing comment the diff did not touch. Missing TSDoc on a new public method
-   is a separate, blocking item-1 violation — this check is about comments inside a body.
+3. **Codetag inventory — always non-blocking.** List every codetag the diff *adds* — `// NOTE:`
+   and `// HACK:` — with its `file:line` and full text. Pass no judgement on whether it was
+   warranted: `holidai/no-inline-comments` already decides what may exist, and the approval for
+   a codetag is given in a planning conversation you never see. This is a visibility line, so a
+   new codetag surfaces next to the diff for a human to accept or reject. Never flag a
+   pre-existing codetag the diff did not touch. Missing TSDoc on a new public method is a
+   separate, blocking item-1 violation.
 
 ## Discipline
 - Every finding must cite a real `file:line` from the diff. Do not invent issues; if you are
@@ -65,7 +63,7 @@ documented exception as a violation.
 - Classify each finding:
   - **blocking** — a CLAUDE.md rule violation or a correctness bug.
   - **non-blocking** — style, minor nit, or a suggestion.
-  - Comment-quality findings (item 3) are the one exception to the first rule: they are a
+  - Codetag-inventory findings (item 3) are the one exception to the first rule: they are a
     CLAUDE.md rule violation yet are **always** non-blocking, listed under `### Non-blocking`
     like any other note. Blocking them would let taste-shaped findings spend the small
     `MAX_FIX` budget that real correctness findings need, and they are the findings least

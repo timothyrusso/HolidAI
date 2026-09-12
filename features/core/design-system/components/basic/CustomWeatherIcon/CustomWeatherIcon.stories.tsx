@@ -27,8 +27,6 @@ const meta = {
   },
   argTypes: {
     condition: { control: 'select', options: Object.values(weatherConditions) },
-    // A slider rather than a number field: the useful gesture is sweeping *down* through the small
-    // sizes, where Snow's flake arms and Rain's droplets are the first details to fuse.
     size: { control: { type: 'range', min: 8, max: 64, step: 1 } },
   },
 } satisfies Meta<typeof CustomWeatherIcon>;
@@ -47,8 +45,6 @@ export const Playground: Story = {};
  * escape hatch, and these are code identifiers, not copy.
  */
 export const AllConditions: Story = {
-  // `condition` is overridden per cell here, so leaving its control on would offer a knob that does
-  // nothing.
   parameters: { controls: { include: ['size'] } },
   render: args => (
     <ScrollView contentContainerStyle={styles.grid}>
@@ -104,8 +100,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    // Six 48px glyphs plus their gaps overflow the 360px phone frame, so the last one wraps
-    // instead of being clipped.
     flexWrap: 'wrap',
     alignItems: 'center',
     gap: spacing.Double,

@@ -20,7 +20,6 @@ export default function ActivitiesTab() {
 }
 
 const styles = StyleSheet.create({
-  // BasicView centres its content — an empty body must still start right below the header.
   view: {
     justifyContent: 'flex-start',
   },

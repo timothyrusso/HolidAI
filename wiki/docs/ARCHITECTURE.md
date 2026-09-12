@@ -1631,45 +1631,35 @@ TSDoc format:
 
 ### Inline comments
 
-An inline comment is a claim that the code cannot speak for itself. Most of the time it can, so the default is no comment: the names, types, and structure carry the meaning. A comment earns its place only when it records a *why* that is unrecoverable from the code.
+Do not write inline comments. The names, types, and structure carry the meaning, and a comment is a second source of truth that drifts. Only three things may appear in a `.ts`/`.tsx` file, and `holidai/no-inline-comments` (see `tools/eslint`) enforces it at `error`:
 
-**Warranted — and only these four cases:**
+- **Codetags**, exactly two, case-sensitive, at the start of the comment:
+  - `// NOTE: <constraint the reader must respect>`
+  - `// HACK: <workaround> because <reason>`
 
-- a non-obvious constraint or workaround, together with its reason;
-- a deliberate deviation from the surrounding pattern;
-- an external quirk (a platform or library bug, an API contract);
-- a pointer to an issue or spec.
-
-**Banned outright:**
-
-- restating what the next line already says;
-- section banners (`// --- Handlers ---`);
-- narrating the change (`// Added for issue #443`, `// New:`, `// Updated`);
-- commented-out code;
-- comments on self-evident names.
+  A codetag may wrap onto the following `//` lines at the same indentation; that is one block. No other tag (`TODO`, `FIXME`, `XXX`, `REVIEW`, …) is permitted.
+- **Tool directives** — `biome-ignore`, `eslint-disable*` / `eslint-enable`, `@ts-check`, `@ts-expect-error`, `@ts-ignore`, `@ts-nocheck`, and `/// <reference ... />`.
+- **TSDoc** — a `/** */` block, and only as the leading comment of a declaration: a top-level `const`/function/class/type/interface (or its `export`), a class member, an interface or type-literal member, or the decorator preceding one of these. A `/** */` anywhere else — inside a function body, above a plain statement — is reported like any other comment.
 
 ```ts
 // ❌ restates the code
 // Set loading to true
 setLoading(true);
 
-// ❌ narrates the change
-// Updated to also handle the empty case
-if (items.length === 0) return ok([]);
-
-// ✅ records a why the code cannot carry
+// ❌ a plain comment, whatever its quality
 // Expo Router remounts the screen on locale change, so the animation must be keyed.
+
+// ✅ the same why, as a codetag
+// NOTE: Expo Router remounts the screen on locale change, so the animation must be keyed.
 ```
 
-**Length:** one line. Two only when the explanation is genuinely unavoidable.
+**Before writing one**, propose it: the file, the tag, the exact text, and why the code cannot carry it. A codetag is an exception granted in planning, not a default.
 
-**Scope:** every file, including tests and the automation scripts under `.claude/` — there is no exempt list, because an exemption would imply the rule is about comment volume rather than comment value. The "non-obvious why" test is what keeps a good comment alive anywhere, and what removes a noisy one anywhere. In tests, the `describe`/`it` name is the comment.
+**Scope.** The rule is registered for `**/*.{ts,tsx}`, so `tools/**`, `.claude/workflows/**` and the repository's `.js` config files (`eslint.config.js`, `metro.config.js`, `scripts/architecture/generateTierRules.js`, `.claude/scripts/*.js`) sit outside the linter's reach. There the same rule holds, unenforced, as a human one.
 
-**Not retroactive.** The rule governs the comments a change writes. A comment that the change itself made wrong or misleading should be fixed or deleted; unrelated pre-existing comment noise is left alone, because cleaning it up inflates every diff and fights the "keep the diff minimal" rule. Repository-wide comment cleanup is `/simplify`'s job.
+**TSDoc is unaffected.** The TSDoc requirement above still stands in full: public methods — every use case `execute()`, every repository and service interface method, and any non-self-evident facade or hook return value — keep their TSDoc block. Only its *placement* is linted; what it must contain is unchanged.
 
-**TSDoc is unaffected.** The TSDoc requirement above still stands in full: public methods — every use case `execute()`, every repository and service interface method, and any non-self-evident facade or hook return value — keep their TSDoc block. That documentation earns its place; this subsection is about the comments inside a function body.
-
-**At review:** the `code-reviewer` agent reports comment-quality findings as **non-blocking**, so they surface in the run report without spending the bounded auto-fix budget that correctness findings need.
+**At review:** the `code-reviewer` agent lists every codetag a diff adds, with its `file:line` and text, as a **non-blocking** finding, so a new one surfaces in the run report for a human to accept or reject.
 
 ---
 
