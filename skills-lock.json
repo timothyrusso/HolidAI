@@ -5,7 +5,7 @@
       "source": "callstack/agent-device",
       "sourceType": "github",
       "skillPath": "skills/agent-device/SKILL.md",
-      "computedHash": "0a673fe5ec24469f6ad35596cdf40f9d33076b78d0a929742d9e1de83f97d231"
+      "computedHash": "3187ae73a1a8b055e20630d64c86e5bb7576341b495c9a755f5e3ec7927c0302"
     },
     "dogfood": {
       "source": "callstack/agent-device",

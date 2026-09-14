@@ -1,5 +1,10 @@
 ---
-description: "Automates Apple-platform apps (iOS, tvOS, macOS), Android devices, and Amazon Vega OS TV apps in Vega Virtual Devices. Use when navigating apps, taking snapshots/screenshots where supported, driving TV remotes, tapping, typing, scrolling, extracting UI info, collecting evidence, or planning agent-device CLI commands."
+name: agent-device
+description: Automates Apple-platform apps (iOS, tvOS, macOS), Android devices,
+  and Amazon Vega OS TV apps in Vega Virtual Devices. Use when navigating apps,
+  taking snapshots/screenshots where supported, driving TV remotes, tapping,
+  typing, scrolling, extracting UI info, collecting evidence, or planning
+  agent-device CLI commands.
 ---
 # agent-device
 
@@ -12,6 +17,8 @@ agent-device open <app> --foreground
 That starts the session and returns the initial interactive snapshot with `@refs`.
 
 Loop: act with `press|click|fill|longpress <target> ... --settle`, `scroll <direction> --settle`, or `back --settle`; continue from the printed diff, verify the named expectation (`wait text "..."`, `is`, `get`, or `find`), then run `agent-device close`.
+
+Reaching an off-screen target is one command, not a scroll-and-check loop: `scroll down --until <selector>` scrolls until that element is on screen, and `scroll bottom` runs to the end of the content. Repeated bare `scroll down` calls are the slow way to find something.
 
 Copy refs byte-for-byte: `@e12`, `@e12~s4` — keep the `@` and any `~sN`. Prefer current refs, then `id`/`label`/`role` selectors; coordinates are a last resort. If snapshot reports sparse/AX-unavailable, its refs and selectors are invalid: run `agent-device screenshot`, inspect the image, use coordinates, then retry `snapshot -i` after navigating. Otherwise run `snapshot -i` only when the diff lacks the next target.
 
