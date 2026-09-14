@@ -1,5 +1,9 @@
 ---
-description: "Systematically explore and test a mobile app on iOS/Android with agent-device to find bugs, UX issues, and other problems. Use when asked to dogfood, QA, exploratory test, find issues, bug hunt, or test this app on mobile."
+name: dogfood
+description: Systematically explore and test a mobile app on iOS/Android with
+  agent-device to find bugs, UX issues, and other problems. Use when asked to
+  dogfood, QA, exploratory test, find issues, bug hunt, or test this app on
+  mobile.
 ---
 # Dogfood
 
