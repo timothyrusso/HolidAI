@@ -152,5 +152,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - run: npm install --package-lock-only
+      - run: npm install --package-lock-only --ignore-scripts
       - run: npm ci
