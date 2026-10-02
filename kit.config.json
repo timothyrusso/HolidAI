@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/@timothyrusso/config-presets/dist/kitConfig.schema.json",
+  "projectName": "HolidAI",
+  "featuresRoot": "features",
+  "appRoot": "app",
+  "github": {
+    "projectNumber": 1,
+    "projectId": "PVT_kwHOBRsxCs4A5SSb",
+    "statusFieldId": "PVTSSF_lAHOBRsxCs4A5SSbzguG_oM",
+    "statusOptions": {
+      "todo": "61e4505c",
+      "inProgress": "47fc9ee4",
+      "done": "98236657"
+    },
+    "labels": ["enhancement"]
+  },
+  "qa": {
+    "targets": ["mobile", "web"],
+    "simulator": "iPhone 17 Pro",
+    "metroPort": 8084
+  },
+  "lint": {
+    "allowedHooksInViews": [],
+    "dashes": "allow",
+    "singleSpinner": true
+  }
+}
