@@ -8,5 +8,3 @@ export {
   getTodayInLocalTimezoneUseCase,
   translateDateUseCase,
 } from '@/features/core/dates/di/resolve';
-
-export type { Trip as TierFixtureTrip } from '@/features/trips';
