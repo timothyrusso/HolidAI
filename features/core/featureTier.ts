@@ -1,1 +1,1 @@
-export type FeatureTier = 0 | 1 | 2 | 3;
+export type { FeatureTier } from '@timothyrusso/arch-rules';

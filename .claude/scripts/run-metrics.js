@@ -71,7 +71,7 @@ function readJson(file) {
   }
 }
 
-// The run that OWNS the pull request is the one whose builder returned it: that is the only
+// NOTE: the run that OWNS the pull request is the one whose builder returned it: that is the only
 // transcript match a passing mention of some other pull request cannot fake.
 function classifyRun(dir, ownedPattern, mentionPattern) {
   let mentioned = false;
@@ -103,7 +103,7 @@ function readTranscript(file) {
     const message = record && record.type === 'assistant' ? record.message : null;
     if (!message) continue;
     if (message.model) model = message.model;
-    // Every line of one streamed turn repeats that turn's growing usage snapshot under the same
+    // NOTE: every line of one streamed turn repeats that turn's growing usage snapshot under the same
     // message id, so keeping the last snapshot per id counts the turn exactly once.
     if (message.usage) turns.set(message.id || record.requestId || `turn-${turns.size}`, message.usage);
     for (const block of Array.isArray(message.content) ? message.content : []) {
