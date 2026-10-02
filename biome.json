@@ -1,108 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
-  "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["@timothyrusso/config-presets/biome"],
   "files": {
-    "ignoreUnknown": false,
     "includes": [
-      "**",
-      "!**/android/**",
-      "!**/ios/**",
-      "!**/node_modules/**",
-      "!**/dist/**",
-      "!**/coverage/**",
-      "!scripts/**",
-      "!**/tools/**",
-      "!**/.expo/**",
-      "!**/convex/_generated/**",
-      "!**/.claude/workflows/**",
-      "!**/.rnstorybook/storybook.requires.ts"
+      "!**/convex/_generated",
+      "!**/.rnstorybook/storybook.requires.ts",
+      "!**/.claude/workflows",
+      "!**/.claude/settings.local.json",
+      "!**/features/core/design-system/assets/lottie"
     ]
-  },
-  "formatter": {
-    "enabled": true,
-    "useEditorconfig": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 120,
-    "attributePosition": "auto",
-    "bracketSpacing": true,
-    "includes": [
-      "**",
-      "!.bundle",
-      "!.vscode",
-      "!android",
-      "!ios",
-      "!src/assets",
-      "!**/*.json",
-      "!**/*.lock",
-      "!**/expo-env.d.ts"
-    ]
-  },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "preset": "recommended",
-      "style": {
-        "useImportType": "error"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "off",
-        "noUndeclaredDependencies": "off",
-        "useImportExtensions": "off",
-        "noUndeclaredVariables": "off",
-        "noUnusedVariables": {
-          "level": "error",
-          "fix": "safe"
-        }
-      },
-      "suspicious": {
-        "noExplicitAny": "error",
-        "noConsole": "error",
-        "noEmptyBlockStatements": "off"
-      },
-      "complexity": { "noForEach": "off" }
-    }
   },
   "javascript": {
-    "formatter": {
-      "jsxQuoteStyle": "double",
-      "quoteProperties": "asNeeded",
-      "trailingCommas": "all",
-      "semicolons": "always",
-      "arrowParentheses": "asNeeded",
-      "bracketSameLine": false,
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "lineWidth": 120,
-      "quoteStyle": "single",
-      "attributePosition": "auto",
-      "bracketSpacing": true
-    },
-    "parser": { "unsafeParameterDecoratorsEnabled": true }
-  },
-  "json": {
-    "formatter": {
-      "indentStyle": "space",
-      "indentWidth": 2,
-      "lineWidth": 120,
-      "trailingCommas": "none"
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "overrides": [
-    {
-      "includes": ["**/biome.json"],
-      "linter": { "enabled": false }
-    },
-    {
-      "linter": {
-        "rules": {
-          "suspicious": { "noExplicitAny": "off" }
-        }
-      }
-    },
     {
       "includes": [
         "**/features/core/state/libraries/createSelectors.ts",
@@ -110,10 +23,9 @@
       ],
       "linter": {
         "rules": {
-          "correctness": {
-            "noUndeclaredVariables": "off"
-          },
-          "suspicious": { "noExplicitAny": "off" }
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
         }
       }
     }

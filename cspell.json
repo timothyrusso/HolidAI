@@ -1,15 +1,9 @@
 {
   "version": "0.1",
   "language": "en,it",
-  "import": [
-    "@cspell/dict-it-it/cspell-ext.json"
-  ],
+  "import": ["@cspell/dict-it-it/cspell-ext.json"],
   "useGitignore": true,
-  "ignorePaths": [
-    "features/core/design-system/assets/lottie/*.json",
-    "skills-lock.json",
-    "cspell.json"
-  ],
+  "ignorePaths": ["features/core/design-system/assets/lottie/*.json", "skills-lock.json", "cspell.json"],
   "words": [
     "armeabi",
     "autodocs",
@@ -131,7 +125,5 @@
     "zatsiorsky",
     "zustand"
   ],
-  "flagWords": [
-    "hte"
-  ]
+  "flagWords": ["hte"]
 }

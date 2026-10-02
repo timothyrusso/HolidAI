@@ -1,10 +1,17 @@
 {
   "enabledPlugins": {
+    "agentic-kit@agentic-kit": true,
     "expo@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "ui-design@claude-code-workflows": true
   },
   "extraKnownMarketplaces": {
+    "agentic-kit": {
+      "source": {
+        "source": "github",
+        "repo": "timothyrusso/agentic-kit"
+      }
+    },
     "claude-code-workflows": {
       "source": {
         "source": "github",
@@ -14,9 +21,7 @@
     }
   },
   "permissions": {
-    "allow": [
-      "Bash(agent-device *)"
-    ],
+    "allow": ["Bash(agent-device *)"],
     "deny": [
       "Bash(git commit *--no-verify*)",
       "Bash(git commit -n)",
@@ -33,7 +38,14 @@
       "Read(~/.aws/**)",
       "Read(~/.npmrc)",
       "Read(./.env)",
-      "Read(./.env.*)"
+      "Read(./.env.*)",
+      "Bash(git commit -n*)",
+      "Bash(git commit * -n*)",
+      "Bash(git -c core.hooksPath*)",
+      "Bash(git * -c core.hooksPath*)",
+      "Bash(git config core.hooksPath*)",
+      "Bash(git config * core.hooksPath*)",
+      "Bash(LEFTHOOK=0 *)"
     ],
     "ask": [
       "mcp__plugin_figma_figma",
