@@ -14,7 +14,6 @@ module.exports = defineConfig([
       'ios/**',
       'android/**',
       'convex/_generated/*',
-      '.claude/workflows/**',
       '.rnstorybook/storybook.requires.ts',
     ],
   },
