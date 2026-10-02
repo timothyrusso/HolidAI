@@ -1,6 +1,6 @@
 # Agent memory
 
-Committed, per-agent operational memory. Each file here belongs to one `.claude/agents/`
+Committed, per-agent operational memory. Each file here belongs to one agentic-kit plugin
 agent, which reads it at the start of a run and may append one-line lessons under the
 strict rules defined in its own agent definition.
 

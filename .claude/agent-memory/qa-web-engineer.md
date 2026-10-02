@@ -1,7 +1,7 @@
 # qa-web-engineer memory — operational lessons
 
 Read at the start of every web QA run. Append only under the rules in
-`.claude/agents/qa-web-engineer.md`. Humans curate at PR review — entries can be deleted.
+the agentic-kit plugin's `agent-memory/README.md`. Humans curate at PR review — entries can be deleted.
 
 ## Known environment
 
