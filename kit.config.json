@@ -17,7 +17,11 @@
   "qa": {
     "targets": ["mobile", "web"],
     "simulator": "iPhone 17 Pro",
-    "metroPort": 8084
+    "metroPort": 8084,
+    "baseline": {
+      "setup": "If the app is signed out, sign in with the Clerk test account: from the Welcome screen open sign-in or sign-up, enter the +clerk_test address in the QA_TEST_EMAIL key of the gitignored .env, and enter the fixed test-mode code 424242 (it works only for +clerk_test emails on the pk_test development instance). If a pre-filled identifier asks for a password, tap 'Use another method' and choose the email code. Complete any first-run onboarding. The session persists across relaunches through the Clerk token cache.",
+      "launch": "The signed-in main screen, with no crash, red screen, stuck splash or fatal error in the launch logs."
+    }
   },
   "lint": {
     "allowedHooksInViews": [],
