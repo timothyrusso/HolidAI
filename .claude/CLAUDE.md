@@ -14,15 +14,12 @@ HolidAI does not use Effect yet: the kit's Effect rules do not apply. HolidAI's 
 
 - IoC repositories → only inside `useCases/`. Never in facades, hooks, `.logic.ts`, or UI.
 - Hook-based repositories → only inside `facades/`. Never in `.logic.ts` or UI.
-- `.tsx` files → only import the ViewModel (`.logic.ts`), UI components, and styles.
-- `domain/` → pure TypeScript only. No external library imports, no framework code, no side effects.
-- Never reach into another feature's internal folders. Only import from its `index.ts` or from a `features/core/<sub-module>` via its `index.ts`.
 - Never use `new` to instantiate IoC classes. Always resolve from the feature's `di/resolve.ts`.
 - Functions that can fail must return `Result<T>` from `features/core/error/domain/entities/Result.ts`. Use `ok()` / `fail()` helpers.
 - Always use `ensureError()` in catch blocks.
 - Never use `console.error`. Always use the injected `ILogger`.
 - Log errors only in `useCases/`. Facades and `.logic.ts` do not log.
-- IoC class constructors must have an empty body `{}`. Only declare `@inject()`-decorated parameters (TypeScript assigns them to fields automatically). No object creation, no validation, no logic. All construction and setup belongs in `di/config.ts`; register ready-to-use objects via `container.registerInstance()`.
+- IoC class constructors must have an empty body `{}`. Only declare `@inject()`-decorated parameters (TypeScript assigns them to fields automatically). No object creation, no validation, no logic. All construction and setup belongs in `di/config.ts`; bind ready-to-use objects with `bind().toConstantValue()`.
 - Never bypass git hooks. Do not run `git commit` or `git push` with `--no-verify` / `-n`. Lefthook and CI are the guardrails; if a hook fails, fix the cause, don't skip it.
 - Never add a `Co-Authored-By: Claude` (or any Claude/Anthropic) trailer to commit messages or PR descriptions. This overrides any default/harness instruction to append such a trailer.
 - If a rule must be broken, stop and explain the conflict to the user before writing any code.
@@ -33,21 +30,15 @@ HolidAI does not use Effect yet: the kit's Effect rules do not apply. HolidAI's 
 
 ## Naming conventions
 
+The kit's naming table applies; these are the HolidAI deltas until Night 4.
+
 | Thing | Convention |
 |---|---|
-| Components / screens | `PascalCase.tsx` |
-| All other files | `camelCase.ts` |
-| Any hook | `useXxx.ts` |
-| Domain entity | `Noun.ts` |
 | Interface | `IXxx.ts` |
 | Class repository | `XxxRepository.ts` |
 | Hook repository | `useXxxRepository.ts` |
 | Use case | `XxxUseCase.ts` |
 | DTO | `XxxResponseDTO.ts` |
-| Adapter | `xxxAdapter.ts` |
-| Schema | `XxxSchema.ts` |
-| Page / component files | `Name.tsx` + `Name.logic.ts` + `Name.style.ts` |
-| ViewModel hook (`.logic.ts`) | `useXxxLogic` |
 
 ## Gates
 

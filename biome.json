@@ -5,7 +5,6 @@
     "includes": [
       "!**/convex/_generated",
       "!**/.rnstorybook/storybook.requires.ts",
-      "!**/.claude/workflows",
       "!**/.claude/settings.local.json",
       "!**/features/core/design-system/assets/lottie"
     ]
