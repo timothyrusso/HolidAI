@@ -1,0 +1,112 @@
+name: PR checks
+
+on:
+  push:
+    branches: ["main", "test", "development"]
+  pull_request:
+    branches: ["main", "test", "development"]
+
+concurrency:
+  group: pr-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Commit messages
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      # NOTE: the report goes to a file, not a step output, so the comment script reads it as data
+      # and a backtick or `${` in a violation cannot break or inject into the script.
+      - name: Architecture
+        id: arch
+        run: |
+          set +e
+          npm run --silent check:arch > "$RUNNER_TEMP/arch-report.txt" 2>&1
+          code=$?
+          cat "$RUNNER_TEMP/arch-report.txt"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit $code
+
+      # NOTE: one marker comment per PR, updated in place and deleted once the violations are fixed.
+      # Fork PRs get no write token, so they are skipped rather than failing.
+      - name: Architecture violations comment
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && steps.arch.outcome != 'skipped'
+        uses: actions/github-script@v9
+        env:
+          ARCH_EXIT_CODE: ${{ steps.arch.outputs.exit_code }}
+          ARCH_REPORT: ${{ runner.temp }}/arch-report.txt
+        with:
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- arch-violations -->';
+            const failed = process.env.ARCH_EXIT_CODE !== '0';
+            const report = fs.existsSync(process.env.ARCH_REPORT) ? fs.readFileSync(process.env.ARCH_REPORT, 'utf8') : '';
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find(c => (c.body ?? '').startsWith(marker));
+
+            if (!failed) {
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                });
+              }
+              return;
+            }
+
+            const fence = '`'.repeat(Math.max(3, ...[...report.matchAll(/`+/g)].map(m => m[0].length + 1)));
+            const body = [
+              marker,
+              '## Architecture violations found',
+              '',
+              'The following dependency-cruiser rules were violated. Fix them before merging.',
+              '',
+              fence,
+              report.slice(-60000),
+              fence,
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - run: npm run check
+      - run: npm run test:coverage
+
+      - name: Bundle for iOS (JavaScript only, no native build)
+        run: npx expo export --platform ios --output-dir "$RUNNER_TEMP/expo-export"

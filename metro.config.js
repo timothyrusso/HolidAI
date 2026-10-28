@@ -7,7 +7,6 @@ module.exports = (() => {
 
   const { transformer, resolver } = config;
 
-  // react-native-svg-transformer Expo configuration
   config.transformer = {
     ...transformer,
     babelTransformerPath: require.resolve('react-native-svg-transformer/expo'),
@@ -18,7 +17,7 @@ module.exports = (() => {
     sourceExts: [...resolver.sourceExts, 'svg'],
   };
 
-  // `enabled: false` makes Metro strip Storybook from the bundle, which is what keeps it out of
+  // NOTE: `enabled: false` makes Metro strip Storybook from the bundle, which is what keeps it out of
   // production builds. Do not weaken this flag.
   return withStorybook(config, {
     enabled: process.env.EXPO_PUBLIC_STORYBOOK_ENABLED === 'true',

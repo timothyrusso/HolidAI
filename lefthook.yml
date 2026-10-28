@@ -1,55 +1,30 @@
-#   Refer for explanation to following link:
-#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
-
-pre-push:
-  parallel: true
-  commands:
-    # packages-audit:
-    #  tags: frontend security
-    #  run: npm audit
-    # test:
-    #  run: npm test
+# NOTE: installed by the app's `prepare` script (`lefthook install`). There is no bypass: agents
+# are denied `--no-verify` in .claude/settings.json, and CI runs the same checks on every pull
+# request, so a hook skipped locally only moves the failure to the PR.
+# NOTE: relative imports are caught by ESLint (`arch/no-relative-imports`), so there is no grep.
 
 pre-commit:
   parallel: true
   commands:
-    lint:
-      files: git diff --name-only --cached --diff-filter=d
-      glob: "*.{js,jsx,ts,tsx}"
-      run: npx @biomejs/biome check --no-errors-on-unmatched {files}
-    format:
-      files: git diff --name-only --cached --diff-filter=d
-      glob: "*.{js,jsx,ts,tsx}"
-      run: npx @biomejs/biome format --write --no-errors-on-unmatched {files}
-    react-compiler:
-      files: git diff --name-only --cached --diff-filter=d
-      glob: "*.{js,jsx,ts,tsx}"
-      run: npx eslint --no-warn-ignored {files}
-    no-relative-imports:
-      files: git diff --name-only --cached --diff-filter=d
-      glob: "*.{ts,tsx}"
-      # Storybook config dirs are excluded: their entry files must use relative imports
-      # (e.g. `./storybook.requires`, which Metro generates next to them).
-      exclude: "^(convex|scripts|\\.rnstorybook|\\.storybook)/"
-      run: |
-        if grep -En "from ['\"](\./|\.\./).*['\"]" {files} 2>/dev/null; then
-          echo "Relative imports are not allowed. Use @/ aliases instead."
-          exit 1
-        fi
+    biome:
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx,json,jsonc}"
+      run: npx --no-install biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+    eslint:
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx}"
+      run: npx --no-install eslint --no-warn-ignored {staged_files}
+    text:
+      run: npx --no-install config-presets check-text {staged_files}
 
 commit-msg:
-  parallel: true
   commands:
-    lint-commit-msg:
-      run: npx --no-install commitlint --config .commitlint.cjs --edit {1}
-    spell-check:
-      run: npx cspell --no-summary {1}
-    validate-issue-number:
+    commitlint:
+      run: npx --no-install commitlint --edit {1}
+    issue-number:
       run: |
-        COMMIT_MSG=$(cat {1})
-        if ! echo "$COMMIT_MSG" | grep -qE '^[a-z]+\([0-9]+\): .+'; then
-          echo "❌ Commit message must include a GitHub issue number."
-          echo "   Got: $COMMIT_MSG"
-          echo "   Example: feat(200): your description"
+        if ! head -n 1 {1} | grep -qE '^(Merge |Revert |fixup! |squash! )|^[a-z]+\([0-9]+\)!?: .+'; then
+          echo "Commit message must be type(issue): message, e.g. feat(12): add the settings screen"
           exit 1
         fi
+    text:
+      run: npx --no-install config-presets check-text --message {1}

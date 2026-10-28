@@ -192,12 +192,18 @@ the on-device UI has no toolbar chrome.
 
 ## Documentation
 
-Architecture, error handling, coding conventions, and the AI-assisted development workflow are documented in [`wiki/docs/`](wiki/docs/).
+The shared architecture, error handling, testing and AI-assisted workflow come from
+[agentic-kit](https://github.com/timothyrusso/agentic-kit):
+[Architecture](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md),
+[Error Handling](https://github.com/timothyrusso/agentic-kit/blob/main/ERROR_HANDLING.md),
+[Testing](https://github.com/timothyrusso/agentic-kit/blob/main/TESTING.md) and
+[Agentic Workflow](https://github.com/timothyrusso/agentic-kit/blob/main/AGENTIC_WORKFLOW.md).
+[`wiki/docs/`](wiki/docs/) holds what HolidAI does differently:
 
-- [Architecture](wiki/docs/ARCHITECTURE.md)
-- [Error Handling](wiki/docs/ERROR_HANDLING.md)
+- [Architecture deltas](wiki/docs/ARCHITECTURE.md): features and tiers, Inversify and hook repositories, Convex, Clerk, Storybook, Sentry
+- [Error handling deltas](wiki/docs/ERROR_HANDLING.md): `Result<T>`, `BaseError`, `ensureError` until the Effect migration
 - [Performance Conventions](wiki/docs/PERFORMANCE_CONVENTIONS.md)
-- [Agentic Workflow](wiki/docs/AGENTIC_WORKFLOW.md) — AI-assisted issue-to-PR pipeline (`/implement-issue`)
+- [Agentic workflow deltas](wiki/docs/AGENTIC_WORKFLOW.md): plugin wiring and HolidAI's own agent pieces
 
 ---
 

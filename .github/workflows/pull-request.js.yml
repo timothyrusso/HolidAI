@@ -10,9 +10,10 @@ on:
     branches: ["main", "test", "development"]
 
 jobs:
-  # Kept separate from `build` on purpose: a Storybook bundling failure must not bury a
-  # lint/tsc failure in the same log. The existing checks already type-check and lint the story
-  # files; what they cannot see is whether the Vite + react-native-web pipeline can bundle them.
+  # Kept separate from the `check` job in pr-checks.yml on purpose: a Storybook bundling
+  # failure must not bury a lint/tsc failure in the same log. The existing checks already
+  # type-check and lint the story files; what they cannot see is whether the Vite +
+  # react-native-web pipeline can bundle them.
   storybook-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -117,103 +118,6 @@ jobs:
             // `startsWith`, never `includes`: the pipeline's run-report comment quotes agent
             // reports verbatim, marker included, so a substring match would edit that instead.
             const existing = comments.find(c => c.body.startsWith(marker));
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              });
-            }
-
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - run: npm install --package-lock-only
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test:eslint-rules
-      - run: npm run lint:compiler
-      - run: npx tsc --noEmit
-
-      - name: Architecture check
-        if: github.event_name == 'pull_request'
-        id: arch
-        run: |
-          set +e
-          OUTPUT=$(npm run arch 2>&1)
-          EXIT_CODE=$?
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          echo "$OUTPUT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
-          exit $EXIT_CODE
-
-      - name: Architecture check (non-PR)
-        if: github.event_name != 'pull_request'
-        run: npm run arch
-
-      - name: Update architecture violations comment
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const marker = '<!-- arch-violations -->';
-            const hasFailed = '${{ steps.arch.outputs.exit_code }}' !== '0';
-            const output = `${{ steps.arch.outputs.output }}`;
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const existing = comments.find(c => c.body.includes(marker));
-
-            if (!hasFailed) {
-              if (existing) {
-                await github.rest.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: existing.id,
-                });
-              }
-              return;
-            }
-
-            const body = [
-              marker,
-              '## Architecture violations found',
-              '',
-              'The following dependency-cruiser rules were violated. Fix them before merging.',
-              '',
-              '```',
-              output,
-              '```',
-            ].join('\n');
 
             if (existing) {
               await github.rest.issues.updateComment({
