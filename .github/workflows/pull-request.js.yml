@@ -10,9 +10,10 @@ on:
     branches: ["main", "test", "development"]
 
 jobs:
-  # Kept separate from `build` on purpose: a Storybook bundling failure must not bury a
-  # lint/tsc failure in the same log. The existing checks already type-check and lint the story
-  # files; what they cannot see is whether the Vite + react-native-web pipeline can bundle them.
+  # Kept separate from the `check` job in pr-checks.yml on purpose: a Storybook bundling
+  # failure must not bury a lint/tsc failure in the same log. The existing checks already
+  # type-check and lint the story files; what they cannot see is whether the Vite +
+  # react-native-web pipeline can bundle them.
   storybook-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -133,24 +134,3 @@ jobs:
                 body,
               });
             }
-
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - run: npm install --package-lock-only --ignore-scripts
-      - run: npm ci

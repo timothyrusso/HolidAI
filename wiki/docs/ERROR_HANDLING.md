@@ -30,8 +30,10 @@ type Result<T> = { success: true; data: T } | { success: false; error: BaseError
 const ok = <T>(data: T): Result<T> => ({ success: true, data });
 const fail = (error: BaseError): Result<never> => ({ success: false, error });
 
-class BaseError extends Error {
-  constructor(message: string, code: ErrorCode = ErrorCode.UnexpectedError,
+declare class BaseError extends Error {
+  readonly code: ErrorCode;
+  readonly context?: Record<string, unknown>;
+  constructor(message: string, code?: ErrorCode,
               options?: { context?: Record<string, unknown>; cause?: Error });
 }
 ```
@@ -64,7 +66,7 @@ class BaseError extends Error {
 `ILogger` (`log`, `error(error, context)`, `warning`, `info`, `debug`) is bound in
 `core/error/di/config.ts`: `BasicLogger` in development, `SentryLogger` in release builds.
 `SentryLogger` forwards `error()` to Sentry's `captureException` through `ISentryErrorClient`
-and drops the other levels. Pass a `BaseError` to `logger.error()`, never a raw `Error`.
+and drops the other levels. Pass a `BaseError` for application failures; crash-boundary and SDK callbacks pass their supplied `Error` directly.
 
 Outside use cases, three ViewModels log because no use case saw the error: the two crash views
 (the render error a boundary caught) and the design-system `PlacesAutocomplete` (its library's

@@ -9,7 +9,8 @@
     "agentic-kit": {
       "source": {
         "source": "github",
-        "repo": "timothyrusso/agentic-kit"
+        "repo": "timothyrusso/agentic-kit",
+        "ref": "066c2c3ad775ba20e0788624564b76d5db1dcfe2"
       }
     },
     "claude-code-workflows": {
