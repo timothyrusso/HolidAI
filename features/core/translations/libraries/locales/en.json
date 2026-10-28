@@ -58,7 +58,7 @@
     "LABEL": {
       "TOTAL_TRIPS": "Total Trips",
       "FAVORITE_TRIPS": "Favorite Trips",
-      "REMAINING_TOKENS": "Remaining Tokens"
+      "REMAINING_TOKENS": "Tokens Left"
     },
     "BUTTON": {
       "CHANGE_LANGUAGE": "Change Language",
