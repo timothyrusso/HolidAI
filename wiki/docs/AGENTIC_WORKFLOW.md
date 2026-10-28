@@ -30,7 +30,7 @@ HolidAI no longer keeps its own copies of the agents, skills or workflow; agents
 ## CI around the pipeline
 
 - `pr-checks.yml` is the kit's check job (commitlint, architecture with its marker comment,
-  `npm run check`, the iOS bundle).
+  `npm run check`, `npm run test:coverage`, the iOS bundle).
 - `pull-request.js.yml` keeps HolidAI's Storybook jobs. The web Storybook of every non-fork PR
   that touches a Storybook path is published at
   `https://timothyrusso.github.io/HolidAI/pr-<number>/`; the pipeline never screenshots stories,
