@@ -26,34 +26,48 @@ afterEach(() => {
   useTripGenerationStore.getState().actions.resetTripGenerationState();
 });
 
+/** Renders the facade over `fake`, generates a trip, runs `check`, and always disposes the runtime. */
+const generateWith = async (
+  fake: ReturnType<typeof AiServiceFake>,
+  check: (current: ReturnType<typeof useGenerateTrip>) => void,
+) => {
+  const { result, done } = await renderWithLayer(fake.layer, useGenerateTrip, undefined);
+  try {
+    await act(async () => result.current.generate(aTripRequest()));
+    await waitFor(() => check(result.current));
+  } finally {
+    await done();
+  }
+};
+
 describe('useGenerateTrip', () => {
-  it('returns the generated trip and clears the wizard', async () => {
-    const { result, done } = await renderWithLayer(answers.layer, useGenerateTrip, undefined);
-
-    await act(async () => result.current.generate(aTripRequest()));
-
-    await waitFor(() => expect(result.current.trip).toEqual(aGeneratedTrip()));
-    expect(wizardBudget()).toBe('');
-    await done();
+  it('returns the generated trip', async () => {
+    await generateWith(answers, current => expect(current.trip).toEqual(aGeneratedTrip()));
   });
 
-  it('reports a GeminiExtractionError as its error and keeps the wizard', async () => {
-    const { result, done } = await renderWithLayer(notATrip.layer, useGenerateTrip, undefined);
-
-    await act(async () => result.current.generate(aTripRequest()));
-
-    await waitFor(() => expect(result.current.error?._tag).toBe('GeminiExtractionError'));
-    expect(wizardBudget()).toBe('Moderate');
-    await done();
+  it('clears the wizard once it has a trip', async () => {
+    await generateWith(answers, () => expect(wizardBudget()).toBe(''));
   });
 
-  it('reports a GeminiSearchError as its error and keeps the wizard', async () => {
-    const { result, done } = await renderWithLayer(searchFails.layer, useGenerateTrip, undefined);
+  it('reports a GeminiExtractionError as its error', async () => {
+    await generateWith(notATrip, current => expect(current.error?._tag).toBe('GeminiExtractionError'));
+  });
 
-    await act(async () => result.current.generate(aTripRequest()));
+  it('keeps the wizard when the extraction fails', async () => {
+    await generateWith(notATrip, current => {
+      expect(current.error).not.toBeNull();
+      expect(wizardBudget()).toBe('Moderate');
+    });
+  });
 
-    await waitFor(() => expect(result.current.error?._tag).toBe('GeminiSearchError'));
-    expect(wizardBudget()).toBe('Moderate');
-    await done();
+  it('reports a GeminiSearchError as its error', async () => {
+    await generateWith(searchFails, current => expect(current.error?._tag).toBe('GeminiSearchError'));
+  });
+
+  it('keeps the wizard when the search fails', async () => {
+    await generateWith(searchFails, current => {
+      expect(current.error).not.toBeNull();
+      expect(wizardBudget()).toBe('Moderate');
+    });
   });
 });
