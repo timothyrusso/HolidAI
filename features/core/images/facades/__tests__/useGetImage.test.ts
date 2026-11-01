@@ -1,8 +1,7 @@
 import { waitFor } from '@testing-library/react-native';
-import { ImageRepositoryFake } from '@/features/core/images/di/__tests__/imageRepositoryFake';
 import type { ImageRequest } from '@/features/core/images/domain/entities/ImageRequest';
 import { useGetImage } from '@/features/core/images/facades/useGetImage';
-import { renderWithLayer } from '@/features/core/testing';
+import { ImageRepositoryFake, renderWithLayer } from '@/features/core/testing';
 
 const KYOTO = { url: 'https://images.unsplash.com/kyoto-regular', blurHash: 'LEHV6nWB2yk8' };
 const images = ImageRepositoryFake({ Kyoto: KYOTO, Carbonara: 'fail' });

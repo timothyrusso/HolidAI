@@ -1,7 +1,7 @@
 import { itEffect } from '@timothyrusso/effect-core/testing';
 import { Effect } from 'effect';
-import { ImageRepositoryFake } from '@/features/core/images/di/__tests__/imageRepositoryFake';
 import { fetchImage } from '@/features/core/images/useCases/fetchImage';
+import { ImageRepositoryFake } from '@/features/core/testing';
 
 const KYOTO = { url: 'https://images.unsplash.com/kyoto-regular', blurHash: 'LEHV6nWB2yk8' };
 

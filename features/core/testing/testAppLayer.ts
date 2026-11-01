@@ -43,3 +43,6 @@ export const makeTestRuntime = <R, E>(features: Layer.Layer<R, E, CoreTestServic
   const { layer, logs } = makeTestAppLayer();
   return { runtime: makeAppRuntime(features.pipe(Layer.provideMerge(layer))), logs };
 };
+
+/** No feature Layer: for a facade or ViewModel test that needs only the core test services. */
+export const NoFeatures = Layer.empty;

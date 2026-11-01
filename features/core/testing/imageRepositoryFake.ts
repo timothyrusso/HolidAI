@@ -1,7 +1,6 @@
 import { Effect, Layer } from 'effect';
 import { ImageFetchFailed } from '@/features/core/error';
-import type { ImageResult } from '@/features/core/images/domain/entities/ImageResult';
-import { ImageRepository } from '@/features/core/images/domain/repositories/ImageRepository';
+import { ImageRepository, type ImageResult } from '@/features/core/images';
 
 /**
  * An `ImageRepository` that answers from `images` and `photoNames`, keyed by the query: a query
