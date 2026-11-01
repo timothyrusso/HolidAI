@@ -4,7 +4,7 @@ Follow these rules on every task that involves writing or modifying code. If a s
 
 ## Reference documentation
 
-The agentic-kit docs are the authority for the generic rules, agents and workflow: ARCHITECTURE.md, ERROR_HANDLING.md, EFFECT_PRIMER.md, TESTING.md and AGENTIC_WORKFLOW.md, shipped in the plugin as `${CLAUDE_PLUGIN_ROOT}/docs/`. HolidAI's deltas live in `wiki/docs/ARCHITECTURE.md` and `wiki/docs/ERROR_HANDLING.md` and win on conflict. App-specific values (board, QA simulator, Metro port, baseline steps) live in `kit.config.json`.
+The agentic-kit docs are the authority for the generic rules, agents and workflow: ARCHITECTURE.md, ERROR_HANDLING.md, EFFECT_PRIMER.md, TESTING.md and AGENTIC_WORKFLOW.md, shipped in the plugin as `${CLAUDE_PLUGIN_ROOT}/docs/`. HolidAI's deltas live in `wiki/docs/ARCHITECTURE.md` and `wiki/docs/ERROR_HANDLING.md` and win on conflict; `wiki/docs/EFFECT_NOTES.md` names the HolidAI file that is the worked example of each primer section. App-specific values (board, QA simulator, Metro port, baseline steps) live in `kit.config.json`.
 
 HolidAI runs on Effect through `@timothyrusso/effect-core`: Tags and Layers in the inner layers, one runtime in `features/core/runtime`, the closed `AppError` union in `features/core/error`. This file lists only what the kit docs do not already say, or what agents get wrong; read the docs for the rest.
 

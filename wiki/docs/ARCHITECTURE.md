@@ -1,109 +1,153 @@
 # Architecture: HolidAI deltas
 
-The generic architecture (feature modules, tiers, layers, the ViewModel contract, the rules
-table, naming, imports, comments) is the kit's
-[ARCHITECTURE.md](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md). Read
-it first. This file holds only what HolidAI does differently or adds; where the two disagree,
-this file wins.
+HolidAI follows the agentic-kit `ARCHITECTURE.md`, `ERROR_HANDLING.md`, `TESTING.md` and
+`EFFECT_PRIMER.md` (shipped in the plugin as `${CLAUDE_PLUGIN_ROOT}/docs/`, and on
+[GitHub](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md)). Read them first.
+This file lists only what HolidAI decides on top of them; where the two disagree, this file wins.
+[ERROR_HANDLING.md](ERROR_HANDLING.md) holds the error deltas,
+[EFFECT_NOTES.md](EFFECT_NOTES.md) points at the HolidAI file that is the worked example of each
+primer section, and [`.claude/CLAUDE.md`](../../.claude/CLAUDE.md) is the short rule list agents
+follow.
 
 > **Diagram:** [Architecture overview](diagrams/architecture.mermaid)
 
-HolidAI does not use Effect yet. Every delta marked **until Night 4** describes today's code and
-is replaced by the kit's version in the Effect migration (#504): `Result<T>` instead of
-`Effect<A, E, R>`, Inversify instead of Layers and `core/runtime`, Zod instead of Effect Schema.
-Until then the kit's Effect rules (`effect-only-in-inner-layers`, `arch/no-effect-*`,
-`domain/errors/`, `di/layer.ts`, the Tier 5 runtime) have nothing to check. The short rule list
-agents follow is in [`.claude/CLAUDE.md`](../../.claude/CLAUDE.md); this file explains it.
+## Layout
 
-## Features and tiers
+`featuresRoot` is `features`, `appRoot` is `app`, and `@/` points at the repository root. Convex
+functions live in `convex/` at the root, next to them (see Convex below). Route files in `app/`
+re-export a page from a feature's `pages.ts`, except the layouts, which mount the providers and
+the route guards.
 
-Tiers are the `FEATURE_TIER` constants in each `index.ts`, typed with `FeatureTier` re-exported
-from `features/core/featureTier.ts`. HolidAI uses Tiers 0 to 3; there is no Tier 4 and no
-`core/runtime` (Tier 5) until Night 4.
+## Tiers
 
-| Feature | Tier | Owns |
+| Tier | Features | What they own |
 | --- | --- | --- |
-| `core/*` (`container`, `dates`, `design-system`, `error`, `http`, `images`, `navigation`, `network`, `performance`, `query`, `sentry`, `state`, `storage`, `toast`, `translations`) | 0 | Infrastructure; `container` is the shared Inversify container |
-| `ai` | 1 | The Gemini client (`geminiAiClient`) behind `IAiClient` |
-| `auth` | 1 | Welcome and sign-in screens over Clerk's native `AuthView` |
-| `user` | 1 | The Convex user record and the monthly generation tokens |
-| `trips` | 2 | The trip entity and its Convex repository |
-| `trip-generation` | 3 | The create-trip wizard and `GenerateTripUseCase` (AI search, extraction, save) |
-| `profile` | 3 | Profile, account settings and language screens over `user` and `trips` |
+| 0 | `core/*` (below) | the shared concerns |
+| 1 | `ai`, `auth`, `user` | the `AiService` over Gemini; the welcome and sign-in screens over Clerk's native `AuthView`; the Clerk user, the Convex generation tokens and the session follower |
+| 2 | `trips` | the trip entity, its Convex hook repository, the trip screens and the image retries |
+| 3 | `trip-generation`, `profile` | the create-trip wizard and the `generateTrip`, `enrichTrip` and `saveTrip` use cases; the profile, account settings and language screens |
+| 5 | `core/runtime` | `AppLayer`, `runtime`, `bootRuntime` and the `Register` augmentation |
 
-## Two DI modes (until Night 4)
+There is no tier 4.
 
-The kit has no container: Tags, Live Layers and one runtime. HolidAI today has two DI modes.
+## Core concerns
 
-### Mode 1: Inversify singletons
+| Concern | What it holds |
+| --- | --- |
+| `core/error` | the `AppError` union over `AppErrorRegistry`, the core tagged errors, `errorTagToMessageKey`, `useErrorMessage`, the two crash views; `kit.ts` re-exports `AppErrorBase` and `toAppError` for `domain/` files |
+| `core/config` | `AppConfig` from `makeConfig`, decoding `extra` of `app.config.js`; `requireConfigKey` for the optional keys |
+| `core/logger` | `LoggerLive` (see Logging in [ERROR_HANDLING.md](ERROR_HANDLING.md)), `logBackgroundFailure`, `useReportFailure` |
+| `core/sentry` | the `Sentry` Tag (`captureException`, `withSpan`) and `SentryLive`; the SDK bootstrap (`initSentry`, `wrap`, `registerNavigationContainer`, `reportBootFailure`) |
+| `core/performance` | the `PerformanceTracker` Tag (Sentry in release, a no-op in development) and the `startSpan` combinator; see [PERFORMANCE_CONVENTIONS.md](PERFORMANCE_CONVENTIONS.md) |
+| `core/http` | the `HttpClient` Tag: a 10 second timeout per attempt, two retries on no response or a 5xx |
+| `core/network` | the `Network` Tag over `expo-network` |
+| `core/storage` | the `Storage` Tag over one encrypted MMKV instance (`holidai.expo.storage`), keyed from `AppConfig`; objects go through Schema |
+| `core/images` | the `ImageRepository` Tag over Unsplash, Google Places and Wikimedia, `fetchImage`, `useGetImage`, `usePlacePhotoUrls` |
+| `core/query` | `queryClient` |
+| `core/state` | `createSelectors`, `registerStore`, `resetAllStores` |
+| `core/translations` | i18next, the `en` and `it` catalogs, `useChangeLanguage`, `languageToRestore` |
+| `core/dates`, `core/navigation`, `core/toast` | date formatting for prompts and screens; routes and `navigationService`; the toast |
+| `core/design-system` | components, tokens, assets and their Storybook stories |
+| `core/testing` | `makeTestAppLayer`, `makeTestRuntime`, `renderWithLayer`, `routerFake`, `convexFake`, `clerkFake`, and the core fakes (`ImageRepositoryFake`, `NetworkFake`, `StorageFake`) |
+| `core/runtime` | the composition root (tier 5) |
 
-Services, HTTP repositories and use cases are classes, registered as singletons in the shared
-container from `features/core/container` (whose first import is `reflect-metadata`). Features with
-a `di/` folder: `ai`, `trip-generation`, and the core concerns `dates`, `error`, `http`,
-`images`, `navigation`, `network`, `performance`, `query`, `sentry`, `storage`.
+## Layers plus hook repositories
 
-```text
-features/<name>/di/
-├── types.ts       tokens: FEATURE_TYPES = { Xxx: Symbol.for('Xxx') }
-├── config.ts      a ContainerModule; the only file that binds; ends with container.load(module)
-├── factories/     optional: one pure module per instance that needs setup (no Inversify imports)
-└── resolve.ts     first line imports ./config; exports container.get(...) results as constants
-```
+HolidAI wires dependencies two ways.
 
-- **Self-bootstrapping.** Each `resolve.ts` imports its own `config.ts` first, so the bindings
-  exist before any `container.get()`. `config.ts` never calls `container.get()`; when it needs
-  another feature's tokens bound first, it side-effect imports that feature's `di/config.ts`.
-  There is no central bootstrap file.
-- **Factories or inline.** A plain `new Foo()` is bound inline in `config.ts`. Anything that
-  reads `Constants`/env, validates, calls an SDK factory, or is one of several instances of a
-  type goes in `di/factories/` (`ai/di/factories/gemini.ts`, `storage/di/factories/mmkvClient.ts`).
-  A library instance injected through the container lives in `di/factories/`; one imported
-  directly by a single `data/services/` file lives in `libraries/`.
-- **Empty constructors.** A constructor only declares `@inject()` parameters. Building clients in
-  the composition root keeps every dependency swappable in a test, keeps the class to one job,
-  and makes the constructor signature the whole dependency list.
-- **Bindings.** `@injectable()` on every bound class, `@inject(token)` on every interface-typed
-  parameter (a missing one fails silently at runtime), `.inSingletonScope()` on the binding,
-  never `@singleton()`.
-- **Use cases are classes** with an `execute()` method, resolved in `di/resolve.ts`; the kit's
-  plain-function use cases come with Night 4.
-- **IoC repositories are reached only through a use case**, which logs and applies the rules.
-  `core/images` is the example: `UnsplashImageRepository`, `GooglePlacesImageRepository` and
-  `WikimediaDishImageRepository` are injected into use cases, and facades call the use cases.
-- **Public API exception.** The kit forbids exporting use cases from `index.ts`. HolidAI's
-  `index.ts` files re-export resolved singletons where another feature needs to call them:
-  `logger` (`core/error`), the image use cases such as `fetchUnsplashImageUseCase` (`core/images`), `geminiAiClient`
-  (`ai`), `generateTripUseCase` (`trip-generation`). `di/resolve.ts` itself is never imported
-  from outside its feature.
+- **Layers** for everything swappable that is not Convex or Clerk: `AiService`, `ImageRepository`,
+  `HttpClient`, `Network`, `Storage`, `Sentry`, `PerformanceTracker`, `Logger`, `AppConfig`. `ai`,
+  `core/images`, `core/logger` and `core/performance` have a `di/layer.ts` (the last two pick the
+  release or development Layer); the other core concerns export their Live Layer from `index.ts`,
+  and `core/runtime/runtime.ts` merges them all. `trips`, `user` and `trip-generation` have no
+  Layer of their own: their `di/` holds only test fakes.
+- **Hook repositories** for Convex and Clerk, as in the kit's
+  [hook repositories](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md#hook-repositories-hook-only-sdks):
+  `trips/data/repositories/useTripRepository.ts` and `user/data/repositories/useUserRepository.ts`,
+  typed by `ITripRepository` and `IUserRepository` in `domain/entities/repositories/`.
 
-### Mode 2: hook repositories (Convex and Clerk)
+### Convex boundary
 
-Convex queries are real-time subscriptions and Clerk exposes only hooks, so data access over them
-is a hook repository, as in the kit's
-[hook repositories](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md#hook-repositories-hook-only-sdks).
-The deltas:
+- Queries and mutations follow the kit's
+  [hook repositories](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md#hook-repositories-hook-only-sdks).
+- The trips query is skipped (`'skip'`) until Clerk has a user.
+- `run` in `useTripRepository` wraps every trip mutation. A Convex rejection becomes an
+  `UnexpectedError`; Convex has no typed failure the UI reads.
+- The optimistic updates (favourite, cover, dish image, activity photos) stay on the Convex
+  mutation with `withOptimisticUpdate`, inside the hook repository.
+- `Id<'trips'>` is Convex's branded string type, used as is in `trips/domain/` (a `// NOTE:` in
+  `Trip.ts` gives the reason).
 
-- Mutations return `Promise<Result<T>>` (try, `ensureError`, `fail`), not Effects; reactive reads
-  return the hook value (`undefined` while loading). See [ERROR_HANDLING.md](ERROR_HANDLING.md).
-- The repositories are `trips/data/repositories/useTripRepository.ts` and
-  `user/data/repositories/useUserRepository.ts`, typed by interfaces in
-  `domain/entities/repositories/`.
-- Hook repositories are called only from `facades/`, never from a `.logic.ts`.
-- Known deviation: the facades `user/facades/useDecrementTokens.ts` and
-  `user/facades/useGetUserTokens.ts` call `convex/react` directly instead of going through
-  `useUserRepository`.
+### Clerk boundary
 
-## Library wrappers
+- Clerk is hooks and native views only: `useUser`, `useAuth`, `useClerk`, and the native
+  `AuthView` (`SignInOrUpPage`) and `UserProfileView` (`AccountSettingsPage`). It has no Tag and no
+  Layer.
+- `useUserRepository` maps the Clerk user to the app's user; nothing else should read `useUser`.
+- `useSessionChanges` (`user/facades/`), called by `app/(main)/_layout.tsx` for the route guards,
+  follows the session: a sign-in goes home, and a sign-out from anywhere (Clerk's own account
+  screen included) calls `resetAllStores()`, so the next user starts with an empty wizard.
+- Users are created and deleted in Convex by the Clerk webhook (`convex/http.ts`), not by the app.
+- The session survives relaunches through `tokenCache` from `@clerk/expo/token-cache`. The QA
+  account and its fixed code are in `qa.baseline.setup` of `kit.config.json`.
 
-The kit lets any `data/` file import `libraries/`. In HolidAI only `data/services/` does; class
-repositories receive a service interface instead. Two documented exceptions:
+## Patterns
 
-1. **Hook-only service.** `core/toast/hooks/useToast.ts` wraps `toastClient` from `libraries/`
-   directly, because a toast is a UI concern with no second implementation to swap.
-2. **SDK bootstrap.** `initSentry`, `wrap` and `registerNavigationContainer` from `core/sentry`
-   are one-time startup calls, re-exported from its `index.ts` and called once in
-   `app/_layout.tsx`. Runtime Sentry calls go through `ISentryErrorClient` and
-   `ISentryPerfClient`, injected from the container.
+- **A hook repository's mutation handed to a use case.** A hook cannot be a Layer, so a use case
+  that ends in a Convex write takes the write as a parameter: `saveTrip(trip, save)` and the
+  `retryCoverImage`, `retryDishImage` and `retryActivityPhotos` use cases receive the repository's
+  Effect from their facade. `trips` exposes `addTrip` to `trip-generation` through `useAddTrip`
+  for that reason.
+- **The trip entity is the AI's answer.** `TripAiResp` in `trips/domain/entities/Trip.ts` is
+  `GeneratedTrip`, the type `GeneratedTripSchema` decodes in `ai`. The extract step asks the model
+  for a Zod schema (`ai/data/dtos/GeneratedTripResponseDTO.ts`, the format the Vercel AI SDK
+  takes), and `GeneratedTripSchema` re-decodes its answer; a test keeps the two accepting the same
+  fixtures.
+- **Optional config keys fail late.** The Convex URL, the Clerk key and the MMKV key are required
+  at boot; the provider keys and the Sentry DSN are optional, and the feature that needs one fails
+  with `ConfigMissing` when it runs (`requireConfigKey`). The Gemini client is built on the first
+  call through `Effect.cached`, so a checkout without the key still starts.
+- **The wizard resets when generation succeeds**, in `useGenerateTrip`, before enrichment and
+  save. A save that fails after that loses the wizard's inputs.
+- **Generation runs in two timed steps.** See [EFFECT_NOTES.md](EFFECT_NOTES.md) for the retry
+  schedule and the timeouts.
+
+## Exceptions
+
+Each is a deliberate departure from a kit rule, with the reason.
+
+1. **Logging at a fork point.** `languageToRestore` (`core/translations/useCases/language.ts`)
+   logs a storage failure through `logBackgroundFailure` and falls back to the device language.
+   Restoring the language is a best-effort launch step that `bootRuntime` awaits outside any
+   `useEffectQuery` or `useEffectMutation`, so there is no boundary to log it; a preference never
+   stops the app launching.
+2. **SDK callback failures through a mutation.** `useReportFailure` (`core/logger`) runs
+   `reportFailure(cause)`, an Effect that only fails, through `useEffectMutation`, so a failure an
+   SDK hands to a callback is logged once by the boundary like any other. Its one caller is the
+   `PlacesAutocomplete` ViewModel (the Google Places SDK's `onFail`).
+3. **`bootRuntime` runs an Effect in the composition root.** After `runtime.boot()`,
+   `core/runtime/runtime.ts` reads `AppConfig` and `languageToRestore` through
+   `runtime.runPromise`, because the providers above the runtime (Convex, Clerk) need the decoded
+   config before any facade exists. A boot failure is reported by `reportBootFailure` and shown by
+   `RootAppCrashView`.
+4. **`ai` in `domainPublicApiExceptions`** (`.dependency-cruiser.js`): `trips/domain/` imports the
+   `GeneratedTrip` type from `ai`, and `domain-no-cross-feature-runtime-import` flags type-only
+   imports (Kit gaps below).
+5. **A toast in a ViewModel.** `GenerateTripPage.logic.ts` shows the `TokensExhausted` toast
+   itself (a `// NOTE:` says so): it is a check before any mutation runs, with no facade failure to
+   hang it on.
+6. **Console in Convex.** `convex/http.ts` and `convex/users.ts` run on Convex's servers with no
+   `Logger`; their `console.error` carries a `biome-ignore`.
+
+## Behaviour notes
+
+- **Release builds send only defects to Sentry**, not typed failures (Logging in
+  [ERROR_HANDLING.md](ERROR_HANDLING.md)).
+- **`generateText` with `Output.object`**, not `generateObject`, which `ai@6` deprecates.
+- **The generation timeouts are estimates** (1 minute for search, 4 minutes for extract); the
+  `ai.search` and `ai.extract` spans make them tunable from Sentry data.
+- **`features/ai/__fixtures__/generatedTripAnswer.json` is hand-written**, because no key was
+  available to capture a real answer. Replace it with a captured one.
 
 ## Convex
 
@@ -118,73 +162,29 @@ convex/
 └── auth.config.ts    Clerk JWT issuer (CLERK_JWT_ISSUER_DOMAIN), applicationID "convex"
 ```
 
-- Convex bundles its functions itself without the `@/` alias, so `convex/` is allowed relative
-  imports (`arch/no-relative-imports` override in `eslint.config.js`). `convex/_generated` is
-  ignored by Biome and ESLint.
-- `convex/http.ts` has no logger, so its one `console.error` carries a `biome-ignore`.
-- The client is a `ConvexReactClient` mounted with `ConvexProviderWithClerk` in `app/_layout.tsx`.
+- Convex bundles its functions without the `@/` alias, so `convex/` keeps relative imports (the
+  `arch/no-relative-imports` allow list in `eslint.config.js`). `convex/_generated` is ignored by
+  Biome and ESLint.
+- The client is a `ConvexReactClient` built from the decoded `convexUrl` once the runtime has
+  booted, mounted with `ConvexProviderWithClerk` in `app/_layout.tsx`.
 
-## Clerk
+## Views and state
 
-- `@clerk/expo`: `ClerkProvider` with the `tokenCache` from `@clerk/expo/token-cache`, and
-  `ClerkLoaded`, in `app/_layout.tsx`. The session survives relaunches through that cache.
-- Sign-in and account screens are Clerk's native views (`AuthView` in `SignInOrUpPage`,
-  `UserProfileView` in `AccountSettingsPage`).
-- Clerk's hooks (`useUser`, `useAuth`, `useClerk`) are read in the hook repositories, in facades
-  and in a few ViewModels; they are the only Clerk API.
-- Users are created and deleted in Convex by the Clerk webhook, not by the app.
-- The QA test account and its fixed code are in `qa.baseline.setup` of `kit.config.json`.
-
-## Other deltas
-
-- **Schemas are Zod** (until Night 4) in `domain/schemas/`, run by `data/validators/`. A service
-  interface may use Zod only as `import type` for inference. Three domain files still import a
-  library and are downgraded to `warn` for `domain-pure-except-effect` in
-  `.dependency-cruiser.js`.
-- **Server data.** Trips and users come from Convex hook repositories; TanStack Query
-  (`queryClient` from `core/query`) caches only the HTTP image facades in `core/images`.
-- **State.** Stores use `createWithEqualityFn` with `shallow`; `createSelectors`, `registerStore`,
-  `resetAllStores` and `createZustandStorage` come from `core/state`. `registerStore` snapshots
-  the initial state by reference, so call it before any render and never mutate nested state in
-  place. `resetAllStores()` runs in the logout facade (`user/facades/useLogout.ts`) and clears memory only,
-  not MMKV. App-wide state is `core/state/app/`. MMKV is one encrypted instance
-  (`holidai.expo.storage`, key `MMKV_ENCRYPTION_KEY`).
-- **Styles** are static `StyleSheet.create` objects built from the design-system tokens
-  (`spacing`, `fontSize`, `components`), not `createStyles(theme)`.
-- **Temporary lint downgrade.** `arch/stable-row-handlers` is `warn` on three
-  `trip-generation` files until #504 moves their handlers into the ViewModels.
-- **TSDoc** is required on every public method, not only when the name falls short: every use
-  case `execute()`, every repository and service interface method, and any facade or hook return
-  value that is not self-evident. Private methods get one when they throw or have constraints.
-- **Rule names.** The rules once in the local `holidai` ESLint plugin (`tools/eslint/`) and
-  `scripts/architecture/` now come from the kit packages, so `holidai/viewmodel-return-shape`,
-  `holidai/prefer-viewmodel` and `holidai/no-inline-comments` are `arch/viewmodel-return-shape`,
-  `arch/prefer-viewmodel` and `arch/no-inline-comments`; see the kit's
-  [rules table](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md#rules-table).
-
-## Design system and Storybook
-
-`features/core/design-system/` holds `components/` (`basic/`, `composite/`, `providers/`,
-`view/`), `style/` (tokens: colours, typography, dimensions, shadows, blur, opacity, animations) and
-`assets/` (badges, fonts, images, lottie). Each component's `*.stories.tsx` sits next to it; the same stories run in the web
-Storybook (`.storybook/`, Vite and react-native-web) and on device (`.rnstorybook/`). How to run
-both and where the per-PR previews are published is in the [README](../../README.md#storybook).
-
-## Sentry
-
-- Logging: `SentryLogger` is bound to `ILogger` in release builds and `BasicLogger` in
-  development (`core/error/di/config.ts`); see [ERROR_HANDLING.md](ERROR_HANDLING.md).
-- Performance spans go through `IPerformanceTracker` from `core/performance` (Sentry in release,
-  no-op in development), never `@sentry/react-native` directly. Span names and `op` values are in
-  [PERFORMANCE_CONVENTIONS.md](PERFORMANCE_CONVENTIONS.md).
-- Startup wiring is the SDK bootstrap exception above.
+- `lint.allowedHooksInViews` is empty.
+- Styles are static `StyleSheet.create` objects built from the design-system tokens (`spacing`,
+  `fontSize`, `components`), not `createStyles(theme)`: the app has one theme.
+- Stores use `createWithEqualityFn` with `shallow` and register with `registerStore`, which
+  snapshots the initial state by reference: call it before any render and never mutate nested
+  state in place. `resetAllStores()` clears memory only, not MMKV.
+- The design system's stories run in the web Storybook (`.storybook/`, Vite and react-native-web)
+  and on device (`.rnstorybook/`); see the [README](../../README.md#storybook).
 
 ## Routes
 
 ```text
 app/
-├── _layout.tsx                    providers, Sentry wrap, root ErrorBoundary
-└── (main)/
+├── _layout.tsx                    boot, providers, Sentry wrap, root ErrorBoundary
+└── (main)/                        useSessionChanges and the signed-in route guards
     ├── (not_authenticated)/       welcome, sign-in-or-sign-up
     └── (authenticated)/           route-level ErrorBoundary for everything signed in
         ├── (tabs)/                home-page, trips, activities, profile
@@ -193,3 +193,49 @@ app/
         │                          activity-details, dish and typical-dishes modals
         └── profile/               account-settings, change-language
 ```
+
+## Tests
+
+- Feature fakes live in the feature's `di/__tests__/` (`aiServiceFake`, `tripImagesFake`), the
+  core ones in `core/testing`.
+- **Convex and Clerk are faked behind root `__mocks__/`** (`convex/react.ts`, `@clerk/expo.ts`),
+  which hand out `convexFake` and `clerkFake` from `core/testing`. TESTING.md allows `__mocks__`
+  only for a native module with no Tag and leaves hook repositories to device QA; HolidAI goes
+  further so the mutating facades and their optimistic updates have hook tests. A feature's
+  backend fake (`tripsBackendFake`, `userBackendFake`) answers each Convex function over in-memory
+  tables; `convexFake.hold` and `release` show an optimistic update before the server answers.
+  `jestAfterEnv.ts` resets the router, Convex and Clerk fakes before every test.
+- The library mocks in `__mocks__/` are each library's own (`react-native-reanimated`,
+  `react-native-worklets`, `react-native-keyboard-controller`, `react-native-safe-area-context`),
+  plus a no-op `@sentry/react-native` (the real SDK leaves a timer that keeps jest running) and
+  `expo-router`, which hands out `routerFake`.
+- Coverage is measured over `features/**/*.ts` (`jest.config.cjs`), not the preset's whole tree:
+  the Convex functions run on Convex's servers and the Storybook config on Storybook's.
+
+## Tooling notes
+
+- Zod stays a dependency for the AI SDK's output schema only (`GeneratedTripResponseDTO`);
+  domain schemas are Effect Schema.
+- `kit.config.json` sets `lint.dashes` to `allow`.
+
+## Kit gaps
+
+What the kit (0.1.2) does not cover yet, and what HolidAI does meanwhile:
+
+- `domain-no-cross-feature-runtime-import` flags type-only imports: `ai` joins
+  `domainPublicApiExceptions` (Exceptions above).
+- Only the QA agents read `.claude/agent-memory/`; the builder and reviewer agents do not, so the
+  Effect lessons for them live in [EFFECT_NOTES.md](EFFECT_NOTES.md) and `.claude/CLAUDE.md`.
+
+## Known leftovers
+
+Recorded, not fixed yet:
+
+- The core `NotFound` and `Unauthorized` errors are in the union and the mapper but never
+  constructed.
+- Performance spans do not nest: `SentryLive.withSpan` starts them with `startInactiveSpan`, so
+  `ai.search` and `ai.extract` are not children of `ai.generate` in the trace view (see
+  [PERFORMANCE_CONVENTIONS.md](PERFORMANCE_CONVENTIONS.md)).
+- `PlacesAutocomplete.tsx` reads the Places key from `Constants`, not from `AppConfig`.
+- `useSessionChanges`, `useGetUserTokens` and `SignInOrUpPage.logic.ts` call Clerk hooks (and
+  `useGetUserTokens` a Convex query) directly, not through `useUserRepository`.

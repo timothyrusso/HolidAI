@@ -12,46 +12,45 @@ flowchart TD
 
     subgraph UI["UI layer"]
         subgraph Components["components/"]
-            TSX["Name.tsx — JSX only"]:::ui
-            STY["Name.style.ts — StyleSheet"]:::ui
-            LOG["Name.logic.ts — ViewModel hook"]:::ui
+            TSX["Name.tsx: JSX only"]:::ui
+            STY["Name.style.ts: StyleSheet"]:::ui
+            LOG["Name.logic.ts: ViewModel hook"]:::ui
             TSX -->|"imports"| STY
             TSX -->|"imports"| LOG
         end
     end
 
     subgraph FHS["Facades / hooks / state"]
-        FAC["facade — coordinates repo + useCase"]:::facade
-        HOK["hook — stateful utility, no repo"]:::facade
-        STA["state — Zustand, client-only"]:::facade
+        FAC["facade: useEffectQuery / useEffectMutation"]:::facade
+        HOK["hook: stateful utility, no repo"]:::facade
+        STA["state: Zustand, client-only"]:::facade
     end
 
     subgraph UC["useCases"]
-        USE["XxxUseCase — business logic"]:::usecase
+        USE["useCase: plain function returning an Effect"]:::usecase
     end
 
-    subgraph DOM["Domain — pure TypeScript"]
-        ENT["entities — interfaces, types"]:::domain
-        IREP["IXxxRepository — data access contract"]:::domain
-        ISVC["IXxxService — capability contract"]:::domain
-        SCH["schemas — Zod, type inference"]:::domain
+    subgraph DOM["Domain: pure TypeScript plus effect"]
+        ENT["entities: interfaces, types"]:::domain
+        IREP["XxxRepository Tag / IXxxRepository: data access contract"]:::domain
+        ISVC["XxxService Tag: capability contract"]:::domain
+        SCH["schemas: Effect Schema"]:::domain
     end
 
-    subgraph DAT["Data — external world"]
-        HREP["useXxxRepository — hook-based, Convex"]:::data
-        CREP["XxxRepository — IoC singleton, HTTP"]:::data
-        ADA["Adapter — DTO to entity"]:::data
-        SVC["XxxService — IoC singleton, AI/logger"]:::data
-        LIB["libraries/ — 3rd-party wrappers"]:::data
+    subgraph DAT["Data: external world"]
+        HREP["useXxxRepository: hook-based, Convex and Clerk"]:::data
+        CREP["xxxRepositoryLive: Layer, HTTP"]:::data
+        ADA["Adapter: DTO to entity"]:::data
+        SVC["xxxServiceLive: Layer, AI/storage/Sentry"]:::data
+        LIB["libraries/: 3rd-party wrappers"]:::data
     end
 
     LOG -->|"imports"| FAC
     LOG -->|"imports"| HOK
     LOG -->|"imports"| STA
-    LOG -.->|"page-specific, not yet promoted"| USE
 
     FAC -->|"calls"| USE
-    FAC -.->|"direct · documented exception"| HREP
+    FAC -->|"calls"| HREP
 
     USE -->|"depends on"| ENT
     USE -->|"depends on"| IREP
@@ -64,5 +63,4 @@ flowchart TD
 
     CREP -->|"depends on"| ISVC
     CREP -->|"uses"| ADA
-    HREP -->|"uses"| ADA
     SVC -->|"uses"| LIB
