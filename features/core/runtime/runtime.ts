@@ -10,7 +10,7 @@ import { NetworkLive } from '@/features/core/network';
 import { PerformanceLive } from '@/features/core/performance';
 import { SentryLive } from '@/features/core/sentry';
 import { StorageLive } from '@/features/core/storage';
-import { restoreLanguage, savedLanguage } from '@/features/core/translations';
+import { languageToRestore, restoreLanguage } from '@/features/core/translations';
 
 /** The services every other core Layer builds on. */
 const FoundationLive = Layer.mergeAll(ConfigLive, SentryLive);
@@ -40,7 +40,7 @@ export const runtime = makeAppRuntime(AppLayer);
  */
 export const bootRuntime = async (): Promise<AppConfigValues> => {
   await runtime.boot();
-  const [config, language] = await runtime.runPromise(Effect.all([AppConfig.Config, savedLanguage]));
+  const [config, language] = await runtime.runPromise(Effect.all([AppConfig.Config, languageToRestore]));
   restoreLanguage(language);
   return config;
 };
