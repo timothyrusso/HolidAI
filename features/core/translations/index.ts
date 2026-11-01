@@ -6,4 +6,5 @@ export { Languages } from '@/features/core/translations/domain/entities/Language
 export { TranslationKeys } from '@/features/core/translations/domain/entities/TranslationKeys';
 export { useChangeLanguage } from '@/features/core/translations/facades/useChangeLanguage';
 export { useLocale } from '@/features/core/translations/hooks/useLocale';
-export { initI18n } from '@/features/core/translations/libraries/i18nBindings';
+export { initI18n, restoreLanguage } from '@/features/core/translations/libraries/i18nBindings';
+export { savedLanguage } from '@/features/core/translations/useCases/language';

@@ -1,5 +1,5 @@
 import { type AppServicesOf, makeAppRuntime } from '@timothyrusso/effect-core';
-import { Layer } from 'effect';
+import { Effect, Layer } from 'effect';
 import { AiLive } from '@/features/ai';
 import { AppConfig, type AppConfigValues, ConfigLive } from '@/features/core/config';
 import type { AppError } from '@/features/core/error';
@@ -10,6 +10,7 @@ import { NetworkLive } from '@/features/core/network';
 import { PerformanceLive } from '@/features/core/performance';
 import { SentryLive } from '@/features/core/sentry';
 import { StorageLive } from '@/features/core/storage';
+import { restoreLanguage, savedLanguage } from '@/features/core/translations';
 
 /** The services every other core Layer builds on. */
 const FoundationLive = Layer.mergeAll(ConfigLive, SentryLive);
@@ -32,13 +33,16 @@ export const AppLayer = FeaturesLive.pipe(Layer.provideMerge(CoreLive));
 export const runtime = makeAppRuntime(AppLayer);
 
 /**
- * Builds the runtime once, at launch, and resolves with the decoded app config the providers
- * above it need (the Convex URL, the Clerk key). Rejects with the Layer's own error, a
- * `ConfigError` naming the missing field for example, for the caller to report.
+ * Builds the runtime once, at launch, switches to the language the user chose (it is in storage,
+ * which opens with the runtime), and resolves with the decoded app config the providers above it
+ * need (the Convex URL, the Clerk key). Rejects with the Layer's own error, a `ConfigError` naming
+ * the missing field for example, for the caller to report.
  */
 export const bootRuntime = async (): Promise<AppConfigValues> => {
   await runtime.boot();
-  return runtime.runPromise(AppConfig.Config);
+  const [config, language] = await runtime.runPromise(Effect.all([AppConfig.Config, savedLanguage]));
+  restoreLanguage(language);
+  return config;
 };
 
 /** Every service the runtime provides: what a facade's Effect may need. */

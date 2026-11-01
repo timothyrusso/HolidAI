@@ -42,7 +42,7 @@ export const ImageRepositoryLive = Layer.effect(
         return photo ? { url: photo.urls[urlType], blurHash: photo.blur_hash ?? undefined } : null;
       });
 
-    const googlePlaces = (query: string, maxWidthPx: number) =>
+    const placePhotoNames = (query: string) =>
       Effect.gen(function* () {
         const apiKey = yield* requireConfigKey(config, 'googlePlacesApiKey');
         const body = yield* http.postJson(
@@ -51,9 +51,13 @@ export const ImageRepositoryLive = Layer.effect(
           { headers: { 'X-Goog-Api-Key': apiKey, 'X-Goog-FieldMask': 'places.id,places.photos' } },
         );
         const response = yield* decode(GooglePlacesSearchResponseDTO, 'googlePlaces')(body);
-        const photoName = response.places?.[0]?.photos?.[0]?.name;
-        return photoName ? { url: buildGooglePlacesMediaUrl(photoName, apiKey, maxWidthPx) } : null;
+        return { apiKey, names: (response.places?.[0]?.photos ?? []).map(photo => photo.name) };
       });
+
+    const googlePlaces = (query: string, maxWidthPx: number) =>
+      Effect.map(placePhotoNames(query), ({ apiKey, names }) =>
+        names[0] ? { url: buildGooglePlacesMediaUrl(names[0], apiKey, maxWidthPx) } : null,
+      );
 
     const wikimediaDish = (dish: string, widthPx: number) =>
       Effect.gen(function* () {
@@ -74,6 +78,7 @@ export const ImageRepositoryLive = Layer.effect(
             return wikimediaDish(request.query, request.maxWidthPx ?? IMAGE_RESOLUTION.high);
         }
       },
+      getPlacePhotoNames: (query, count) => Effect.map(placePhotoNames(query), ({ names }) => names.slice(0, count)),
     };
   }),
 );

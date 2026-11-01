@@ -1,31 +1,19 @@
-import * as Localization from 'expo-localization';
-import { useEffect } from 'react';
+import { useEffectMutation } from '@timothyrusso/effect-core/react';
 import { useTranslation } from 'react-i18next';
-import { storage } from '@/features/core/storage';
-import { TranslationKeys } from '@/features/core/translations/domain/entities/TranslationKeys';
+import { saveLanguage } from '@/features/core/translations/useCases/language';
 
+/**
+ * The language the app shows, and `changeLanguage`, which switches to another one at once and
+ * remembers it for the next launch.
+ */
 export const useChangeLanguage = () => {
   const { i18n } = useTranslation();
-  const initialLanguage = Localization.getLocales()[0]?.languageCode ?? TranslationKeys.defaultLanguage;
+  const { mutate } = useEffectMutation({ mutationFn: saveLanguage });
 
-  const loadLanguage = () => {
-    const savedLanguage = storage.getString(TranslationKeys.storageLanguageKey);
-    if (savedLanguage) {
-      i18n.changeLanguage(savedLanguage);
-    } else {
-      i18n.changeLanguage(initialLanguage);
-    }
-    return savedLanguage ?? initialLanguage;
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language);
+    mutate(language);
   };
 
-  useEffect(() => {
-    loadLanguage();
-  }, [i18n]);
-
-  const changeLanguage = (lang: string) => {
-    storage.set(TranslationKeys.storageLanguageKey, lang);
-    i18n.changeLanguage(lang);
-  };
-
-  return { changeLanguage, loadLanguage };
+  return { language: i18n.language, changeLanguage };
 };

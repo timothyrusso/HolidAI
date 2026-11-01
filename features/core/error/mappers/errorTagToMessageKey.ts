@@ -15,9 +15,9 @@ export const errorTagToMessageKey = appErrors.assertExhaustiveMessageKeys({
   NetworkFailure: 'ERRORS.NETWORK',
   Unauthorized: 'ERRORS.UNAUTHORIZED',
   NotFound: 'ERRORS.NOT_FOUND',
-  GenerationFailed: 'ERRORS.GENERATION',
   StorageFailure: 'ERRORS.STORAGE',
   ImageFetchFailed: 'ERRORS.IMAGE_FETCH',
   GeminiSearchError: 'ERRORS.GENERATION',
   GeminiExtractionError: 'ERRORS.GENERATION',
+  TokensExhausted: 'ERRORS.TOKENS_EXHAUSTED',
 });

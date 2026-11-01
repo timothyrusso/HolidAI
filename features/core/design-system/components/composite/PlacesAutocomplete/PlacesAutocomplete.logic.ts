@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { Point } from 'react-native-google-places-autocomplete';
-import { logger } from '@/features/core/error';
+import { useReportFailure } from '@/features/core/logger';
 import { TranslationKeys } from '@/features/core/translations';
 
 export interface LocationInfo {
@@ -12,6 +12,7 @@ export interface LocationInfo {
 
 export const usePlacesAutocompleteLogic = (placeholder: string) => {
   const { i18n, t } = useTranslation();
+  const reportFailure = useReportFailure();
 
   return {
     state: {
@@ -21,11 +22,7 @@ export const usePlacesAutocompleteLogic = (placeholder: string) => {
       translatedPlaceholder: t(placeholder),
     },
     effects: {
-      // NOTE: accepted exception to the "log only in useCases/" rule — these callbacks are SDK
-      // error hooks from GooglePlacesAutocomplete with no use case in the call path. The same
-      // rationale applies as for error boundary components.
-      handleFail: (error: Error) => logger.error(error),
-      handleTimeout: () => logger.warning('google places autocomplete: request timeout'),
+      handleFail: (error: Error) => reportFailure(error),
     },
   };
 };
