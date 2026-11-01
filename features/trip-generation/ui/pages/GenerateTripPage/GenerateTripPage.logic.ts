@@ -8,20 +8,21 @@ import {
   enrichDishesWithImagesUseCase,
   enrichTripWithCoverImageUseCase,
   enrichTripWithPhotosUseCase,
-  generateTripUseCase,
 } from '@/features/trip-generation/di/resolve';
+import { useGenerateTrip } from '@/features/trip-generation/facades/useGenerateTrip';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
-import { useAddTrip } from '@/features/trips';
+import { type TripAiResp, useAddTrip } from '@/features/trips';
 import { useDecrementTokens, useGetUserTokens } from '@/features/user';
 
 export const useGenerateTripPageLogic = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { tripSelectors, tripActions } = useTripGenerationState();
+  const { tripSelectors } = useTripGenerationState();
   const { user } = useUser();
   const { locale } = useLocale();
   // NOTE: accepted exception to the "toast in facades" rule.
   const { showErrorToast } = useToast();
+  const { generate } = useGenerateTrip();
   const { addTrip } = useAddTrip();
   const { decrementTokens } = useDecrementTokens();
   const { userTokens } = useGetUserTokens();
@@ -32,40 +33,21 @@ export const useGenerateTripPageLogic = () => {
   const travelerType = tripSelectors.travelerType();
   const budgetInfo = tripSelectors.budgetInfo();
 
-  const generateTrip = async () => {
-    if (userTokens === 0) {
-      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
-      navigationService.toHome();
-      return;
-    }
+  const leave = () => {
+    navigationService.toHome();
+    setIsLoading(false);
+  };
 
-    const result = await generateTripUseCase.execute({
-      location: locationInfo.name,
-      totalNoOfDays: datesInfo.totalNoOfDays,
-      travelersNumber,
-      travelerType,
-      budgetInfo,
-      startDate: datesInfo.startDate as Date,
-      endDate: datesInfo.endDate as Date,
-      locale,
-    });
-
-    if (!result.success) {
-      navigationService.toHome();
-      showErrorToast(result.error);
-      setIsLoading(false);
-      return;
-    }
-
+  const saveTrip = async (trip: TripAiResp) => {
     const [photosResult, dishesResult, coverResult] = await Promise.all([
-      enrichTripWithPhotosUseCase.execute(result.data),
-      enrichDishesWithImagesUseCase.execute(result.data),
-      enrichTripWithCoverImageUseCase.execute(result.data),
+      enrichTripWithPhotosUseCase.execute(trip),
+      enrichDishesWithImagesUseCase.execute(trip),
+      enrichTripWithCoverImageUseCase.execute(trip),
     ]);
 
     const enrichedData = {
-      ...(photosResult.success ? photosResult.data : result.data),
-      food: dishesResult.success ? dishesResult.data.food : result.data.food,
+      ...(photosResult.success ? photosResult.data : trip),
+      food: dishesResult.success ? dishesResult.data.food : trip.food,
       coverImage: coverResult.success ? coverResult.data.coverImage : { url: '', blurHash: '' },
     };
 
@@ -76,16 +58,36 @@ export const useGenerateTripPageLogic = () => {
     });
 
     if (!addTripResult.success) {
-      navigationService.toHome();
       showErrorToast(addTripResult.error);
-      setIsLoading(false);
+      leave();
       return;
     }
 
     decrementTokens(datesInfo.totalNoOfDays);
-    tripActions.resetTripGenerationState();
     setIsLoading(false);
     navigationService.toTripDetails({ id: addTripResult.data, fromGenerate: true });
+  };
+
+  const generateTrip = () => {
+    if (userTokens === 0) {
+      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
+      navigationService.toHome();
+      return;
+    }
+
+    generate(
+      {
+        location: locationInfo.name,
+        totalNoOfDays: datesInfo.totalNoOfDays,
+        travelersNumber,
+        travelerType,
+        budgetInfo,
+        startDate: datesInfo.startDate as Date,
+        endDate: datesInfo.endDate as Date,
+        locale,
+      },
+      { onSuccess: saveTrip, onError: leave },
+    );
   };
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { type AppServicesOf, makeAppRuntime } from '@timothyrusso/effect-core';
 import { Layer } from 'effect';
+import { AiLive } from '@/features/ai';
 import { AppConfig, type AppConfigValues, ConfigLive } from '@/features/core/config';
 import type { AppError } from '@/features/core/error';
 import { HttpClientLive } from '@/features/core/http';
@@ -22,7 +23,7 @@ const CoreLive = Layer.mergeAll(LoggerLive, PerformanceLive, HttpClientLive, Net
  * Every feature's Layer. A feature adds its `<Feature>Live` from its `index.ts` here; a Layer that
  * needs a core service (`HttpClient`, `AppConfig`) gets it from `CoreLive`.
  */
-export const FeaturesLive = Layer.mergeAll(ImagesLive);
+export const FeaturesLive = Layer.mergeAll(ImagesLive, AiLive);
 
 /** Every feature's Layer, over the core ones. */
 export const AppLayer = FeaturesLive.pipe(Layer.provideMerge(CoreLive));

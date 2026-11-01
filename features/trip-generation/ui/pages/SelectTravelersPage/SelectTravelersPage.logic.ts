@@ -4,8 +4,6 @@ import { navigationService } from '@/features/core/navigation';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { TravelerData } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.data';
 
-export { TravelerData };
-
 export const useSelectTravelersPageLogic = () => {
   const { tripActions } = useTripGenerationState();
   const { t } = useTranslation();
@@ -22,12 +20,16 @@ export const useSelectTravelersPageLogic = () => {
     navigationService.toSelectDates();
   };
 
+  const options = TravelerData.map(option => ({ ...option, onPress: () => handleCardPress(option.id) }));
+
   return {
     state: {
       selectedTravelers,
     },
+    derived: {
+      options,
+    },
     effects: {
-      handleCardPress,
       handleButtonPress,
     },
   };

@@ -36,16 +36,4 @@ module.exports = defineConfig([
       ],
     },
   },
-  {
-    // NOTE: these rows pass an inline arrow to the row component. Night 4 (#504) moves the
-    // handlers into the ViewModels and deletes this block.
-    files: [
-      'features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector.tsx',
-      'features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.tsx',
-      'features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.tsx',
-    ],
-    rules: {
-      'arch/stable-row-handlers': 'warn',
-    },
-  },
 ]);

@@ -1,0 +1,91 @@
+{
+  "tripDetails": {
+    "location": "Lisbon, Portugal",
+    "budget": "Moderate",
+    "travelers": 2,
+    "durationDays": 2,
+    "durationNights": 1,
+    "startDate": "12/05/2026",
+    "endDate": "2026-05-13",
+    "locale": "en",
+    "currency": "EUR"
+  },
+  "dayPlans": [
+    {
+      "day": 1,
+      "theme": "Alfama and the castle",
+      "schedule": [
+        {
+          "placeNumberID": 1,
+          "bestTimeToVisit": "Morning",
+          "rating": 4.6,
+          "ticketPricing": 15,
+          "placeDetails": "Moorish castle above Alfama with views over the Tagus.",
+          "placeDetailsLongDescription": "São Jorge Castle crowns the highest hill of the historic centre.",
+          "placeSecretsAndInsights": "The camera obscura in the Ulysses Tower runs every half hour.",
+          "geoCoordinates": { "latitude": 38.7139, "longitude": -9.1335 },
+          "placeName": "São Jorge Castle",
+          "activity": "Walk the walls of São Jorge Castle"
+        },
+        {
+          "placeNumberID": 2,
+          "bestTimeToVisit": "Sunset",
+          "rating": 4.8,
+          "ticketPricing": 0,
+          "placeDetails": "Terrace with a view over the roofs of Alfama.",
+          "placeDetailsLongDescription": "Miradouro de Santa Luzia is a tiled terrace beside a small church.",
+          "placeSecretsAndInsights": "Come at sunset and walk down to the Fado houses.",
+          "geoCoordinates": { "latitude": 38.7118, "longitude": -9.1302 },
+          "placeName": "Miradouro de Santa Luzia",
+          "activity": "Watch the sunset from Miradouro de Santa Luzia"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "theme": "Belém",
+      "schedule": [
+        {
+          "placeNumberID": 3,
+          "bestTimeToVisit": "Opening time",
+          "rating": 4.7,
+          "ticketPricing": null,
+          "placeDetails": "Manueline monastery and UNESCO World Heritage Site.",
+          "placeDetailsLongDescription": "Jerónimos Monastery was built to celebrate the voyage of Vasco da Gama.",
+          "placeSecretsAndInsights": "The church is free; only the cloister needs a ticket.",
+          "geoCoordinates": { "latitude": 38.6979, "longitude": -9.2068 },
+          "placeName": "Jerónimos Monastery",
+          "activity": "Visit the cloister of Jerónimos Monastery"
+        }
+      ]
+    }
+  ],
+  "budgetNotes": "About 90 EUR per person per day covers food, transport and entries.",
+  "transportationNotes": "Tram 28 crosses Alfama; tram 15 runs to Belém.",
+  "weather": {
+    "weatherGeneralNotes": "Warm and sunny in mid May.",
+    "averageHighTemperature": "23°C",
+    "averageLowTemperature": "14°C",
+    "daylight": "14 hours",
+    "weatherClothingNotes": "Light layers and shoes with grip for the cobblestones.",
+    "weatherSunProtectionNotes": "Sunscreen and sunglasses.",
+    "weatherRainPreparednessNotes": "Rain is unlikely.",
+    "weatherOutdoorActivitiesNotes": "Ideal for walking the hills."
+  },
+  "food": {
+    "foodGeneralNotes": "Seafood, grilled fish and custard tarts.",
+    "foodBudgetNotes": "A prato do dia lunch costs around 12 EUR.",
+    "typicalDishes": [
+      {
+        "name": "Pastel de nata",
+        "searchTerm": "pastel de nata",
+        "description": "Custard tart with a flaky crust, baked very hot and dusted with cinnamon.",
+        "ingredients": ["egg yolk", "sugar", "puff pastry", "cinnamon"],
+        "isGlutenFree": false,
+        "isVegetarian": true,
+        "isVegan": false
+      }
+    ]
+  },
+  "coverImage": {}
+}

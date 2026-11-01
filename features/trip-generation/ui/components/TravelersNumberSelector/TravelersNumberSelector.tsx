@@ -6,22 +6,22 @@ import { styles } from '@/features/trip-generation/ui/components/TravelersNumber
 const Separator = () => <View style={styles.separator} />;
 
 export const TravelersNumberSelector = () => {
-  const { state, effects } = useTravelersNumberSelectorLogic();
+  const { state, derived } = useTravelersNumberSelectorLogic();
 
-  const renderItem = ({ item }: { item: number }) => (
+  const renderItem = ({ item }: { item: (typeof derived.options)[number] }) => (
     <CustomNumberButton
       cardType={CardType.Secondary}
-      label={item.toString()}
-      selected={state.travelersNumber === item}
-      onPress={() => effects.handleCardPress(item)}
+      label={item.value.toString()}
+      selected={state.travelersNumber === item.value}
+      onPress={item.onPress}
     />
   );
 
   return (
     <FlatList
-      data={state.data}
+      data={derived.options}
       renderItem={renderItem}
-      keyExtractor={item => item.toString()}
+      keyExtractor={item => item.value.toString()}
       showsHorizontalScrollIndicator={false}
       horizontal
       ItemSeparatorComponent={Separator}

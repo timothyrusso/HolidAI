@@ -18,4 +18,6 @@ export const errorTagToMessageKey = appErrors.assertExhaustiveMessageKeys({
   GenerationFailed: 'ERRORS.GENERATION',
   StorageFailure: 'ERRORS.STORAGE',
   ImageFetchFailed: 'ERRORS.IMAGE_FETCH',
+  GeminiSearchError: 'ERRORS.GENERATION',
+  GeminiExtractionError: 'ERRORS.GENERATION',
 });
