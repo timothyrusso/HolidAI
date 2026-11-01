@@ -193,6 +193,24 @@ const commonsOk = HttpClientFake({
   },
 });
 const commonsEmpty = HttpClientFake({ [COMMONS]: {} });
+const commonsWithoutThumbnail = HttpClientFake({
+  [COMMONS]: {
+    query: {
+      pages: {
+        '1': { ...aCommonsPage({ pageid: 1 }), imageinfo: [{ width: 1200, height: 800 }] },
+        '2': aCommonsPage({ pageid: 2, thumburl: 'https://upload.wikimedia.org/carbonara-plate.jpg' }),
+      },
+    },
+  },
+});
+const commonsTrain = HttpClientFake({
+  [COMMONS]: { query: { pages: { '1': aCommonsPage({ categories: [{ title: 'Category:Steam locomotives' }] }) } } },
+});
+const commonsVector = HttpClientFake({
+  [COMMONS]: {
+    query: { pages: { '1': aCommonsPage({ thumburl: 'https://upload.wikimedia.org/800px-Carbonara.svg.png' }) } },
+  },
+});
 
 describe('ImageRepositoryLive, Wikimedia Commons', () => {
   itEffect(
@@ -212,6 +230,32 @@ describe('ImageRepositoryLive, Wikimedia Commons', () => {
       expect(yield* getImage({ source: 'wikimediaDish', query: 'Carbonara' })).toBeNull();
     }),
     repositoryOver(commonsEmpty, { ...TEST_CONFIG, googlePlacesApiKey: undefined, unsplashAccessKey: undefined }),
+  );
+
+  itEffect(
+    'skips a page with no thumbnail and returns a later usable one',
+    Effect.gen(function* () {
+      const image = yield* getImage({ source: 'wikimediaDish', query: 'Carbonara' });
+
+      expect(image).toEqual({ url: 'https://upload.wikimedia.org/carbonara-plate.jpg' });
+    }),
+    repositoryOver(commonsWithoutThumbnail),
+  );
+
+  itEffect(
+    'does not take a food word inside a longer word as a food category',
+    Effect.gen(function* () {
+      expect(yield* getImage({ source: 'wikimediaDish', query: 'Carbonara' })).toBeNull();
+    }),
+    repositoryOver(commonsTrain),
+  );
+
+  itEffect(
+    'skips a vector file rendered to a png thumbnail',
+    Effect.gen(function* () {
+      expect(yield* getImage({ source: 'wikimediaDish', query: 'Carbonara' })).toBeNull();
+    }),
+    repositoryOver(commonsVector),
   );
 });
 

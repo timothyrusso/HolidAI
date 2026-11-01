@@ -9,9 +9,9 @@ export const WikimediaExtMetadataDTO = Schema.Struct({
 export type WikimediaExtMetadataDTO = typeof WikimediaExtMetadataDTO.Type;
 
 export const WikimediaImageInfoDTO = Schema.Struct({
-  thumburl: Schema.String,
-  width: Schema.Number,
-  height: Schema.Number,
+  thumburl: Schema.optional(Schema.String),
+  width: Schema.optional(Schema.Number),
+  height: Schema.optional(Schema.Number),
   extmetadata: Schema.optional(WikimediaExtMetadataDTO),
 });
 export type WikimediaImageInfoDTO = typeof WikimediaImageInfoDTO.Type;
