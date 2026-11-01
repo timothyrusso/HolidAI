@@ -18,13 +18,11 @@ export const ChangeLanguagePage = () => {
           language="CHANGE_LANGUAGE.BUTTON.EN"
           onPress={() => effects.changeLanguageHandler(Languages.EN)}
           isSelected={state.selectedLanguage === Languages.EN}
-          isLoading={state.isLoading}
         />
         <LanguageItem
           language="CHANGE_LANGUAGE.BUTTON.IT"
           onPress={() => effects.changeLanguageHandler(Languages.IT)}
           isSelected={state.selectedLanguage === Languages.IT}
-          isLoading={state.isLoading}
         />
       </View>
     </BasicView>
