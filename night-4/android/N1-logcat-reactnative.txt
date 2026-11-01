@@ -1,0 +1,64 @@
+11-01 15:42:50.307 I/ReactNativeJS(29261): WebSocket closed with code 1006: Software caused connection abort
+11-01 15:42:50.323 I/ReactNativeJS(29261): Attempting reconnect in 1194ms
+11-01 15:42:51.547 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:42:51.555 I/ReactNativeJS(29261): Attempting reconnect in 2624ms
+11-01 15:42:54.206 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:42:54.213 I/ReactNativeJS(29261): Attempting reconnect in 2372ms
+11-01 15:42:56.612 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:42:56.620 I/ReactNativeJS(29261): Attempting reconnect in 4179ms
+11-01 15:43:01.843 W/ReactNativeJS(29261): 'GeminiSearchError', { mutationKey: undefined,
+11-01 15:43:01.843 W/ReactNativeJS(29261):   error: 
+11-01 15:43:01.843 W/ReactNativeJS(29261):    { [GeminiSearchError]
+11-01 15:43:01.843 W/ReactNativeJS(29261):      transient: false,
+11-01 15:43:01.843 W/ReactNativeJS(29261):      _tag: 'GeminiSearchError',
+11-01 15:43:01.843 W/ReactNativeJS(29261):      messageKey: 'ERRORS.GENERATION' } }
+11-01 15:43:01.886 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:02.477 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:43:02.480 I/ReactNativeJS(29261): Attempting reconnect in 11808ms
+11-01 15:43:03.147 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:04.417 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:05.601 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:06.802 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:07.972 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:09.219 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:10.406 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:11.593 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:12.784 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:13.946 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:14.329 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:43:14.336 I/ReactNativeJS(29261): Attempting reconnect in 13957ms
+11-01 15:43:15.116 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:16.309 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:17.550 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:18.719 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:19.984 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:21.227 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:22.405 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:23.633 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:24.832 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:26.013 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:27.200 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:28.327 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:43:28.336 I/ReactNativeJS(29261): Attempting reconnect in 22019ms
+11-01 15:43:28.425 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:29.594 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:30.802 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:32.004 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:33.235 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:34.426 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:35.635 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:36.830 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:38.079 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:39.325 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:40.574 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:41.756 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:42.890 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:44.096 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:45.369 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:46.571 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:47.762 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:48.943 I/adbd    ( 1679): adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-d' '-s' 'ReactNativeJS:W' 'ReactNativeJS:E''
+11-01 15:43:50.398 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:43:50.406 I/ReactNativeJS(29261): Attempting reconnect in 8550ms
+11-01 15:43:58.987 I/ReactNativeJS(29261): WebSocket closed with code 1006: Unable to resolve host "abundant-gazelle-370.convex.cloud": No address associated with hostname
+11-01 15:43:58.991 I/ReactNativeJS(29261): Attempting reconnect in 21635ms
