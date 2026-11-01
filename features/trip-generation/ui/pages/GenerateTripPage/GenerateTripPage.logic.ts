@@ -1,29 +1,21 @@
-import { useUser } from '@clerk/expo';
 import { useEffect, useState } from 'react';
-import { BaseError, ErrorCode } from '@/features/core/error';
 import { navigationService } from '@/features/core/navigation';
 import { useToast } from '@/features/core/toast';
 import { useLocale } from '@/features/core/translations';
-import {
-  enrichDishesWithImagesUseCase,
-  enrichTripWithCoverImageUseCase,
-  enrichTripWithPhotosUseCase,
-} from '@/features/trip-generation/di/resolve';
 import { useGenerateTrip } from '@/features/trip-generation/facades/useGenerateTrip';
+import { useSaveTrip } from '@/features/trip-generation/facades/useSaveTrip';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
-import { type TripAiResp, useAddTrip } from '@/features/trips';
-import { useDecrementTokens, useGetUserTokens } from '@/features/user';
+import { TokensExhausted, useDecrementTokens, useGetUserTokens } from '@/features/user';
 
 export const useGenerateTripPageLogic = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { tripSelectors } = useTripGenerationState();
-  const { user } = useUser();
   const { locale } = useLocale();
   // NOTE: accepted exception to the "toast in facades" rule.
   const { showErrorToast } = useToast();
   const { generate } = useGenerateTrip();
-  const { addTrip } = useAddTrip();
+  const { save } = useSaveTrip();
   const { decrementTokens } = useDecrementTokens();
   const { userTokens } = useGetUserTokens();
 
@@ -38,39 +30,15 @@ export const useGenerateTripPageLogic = () => {
     setIsLoading(false);
   };
 
-  const saveTrip = async (trip: TripAiResp) => {
-    const [photosResult, dishesResult, coverResult] = await Promise.all([
-      enrichTripWithPhotosUseCase.execute(trip),
-      enrichDishesWithImagesUseCase.execute(trip),
-      enrichTripWithCoverImageUseCase.execute(trip),
-    ]);
-
-    const enrichedData = {
-      ...(photosResult.success ? photosResult.data : trip),
-      food: dishesResult.success ? dishesResult.data.food : trip.food,
-      coverImage: coverResult.success ? coverResult.data.coverImage : { url: '', blurHash: '' },
-    };
-
-    const addTripResult = await addTrip({
-      userId: user?.id ?? 'unknown_user',
-      tripAiResp: enrichedData,
-      isFavorite: false,
-    });
-
-    if (!addTripResult.success) {
-      showErrorToast(addTripResult.error);
-      leave();
-      return;
-    }
-
+  const showTrip = (id: string) => {
     decrementTokens(datesInfo.totalNoOfDays);
     setIsLoading(false);
-    navigationService.toTripDetails({ id: addTripResult.data, fromGenerate: true });
+    navigationService.toTripDetails({ id, fromGenerate: true });
   };
 
   const generateTrip = () => {
     if (userTokens === 0) {
-      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
+      showErrorToast(new TokensExhausted());
       navigationService.toHome();
       return;
     }
@@ -86,7 +54,7 @@ export const useGenerateTripPageLogic = () => {
         endDate: datesInfo.endDate as Date,
         locale,
       },
-      { onSuccess: saveTrip, onError: leave },
+      { onSuccess: trip => save(trip, { onSuccess: showTrip, onError: leave }), onError: leave },
     );
   };
 

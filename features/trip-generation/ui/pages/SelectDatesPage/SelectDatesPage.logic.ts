@@ -1,10 +1,6 @@
 import { differenceInDays } from 'date-fns';
 import { useState } from 'react';
-import {
-  getTimezoneFormattedDateUseCase,
-  getTodayInLocalTimezoneUseCase,
-  translateDateUseCase,
-} from '@/features/core/dates';
+import { getTimezoneFormattedDate, getTodayInLocalTimezone, translateDate } from '@/features/core/dates';
 import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
@@ -16,7 +12,7 @@ export const useSelectDatesPageLogic = () => {
   const [calendarKey, setCalendarKey] = useState<number>(0);
 
   const { tripActions } = useTripGenerationState();
-  const todayInLocalTimezone = getTodayInLocalTimezoneUseCase.execute();
+  const todayInLocalTimezone = getTodayInLocalTimezone();
 
   const handleDateChange = (date: Date, type?: 'START_DATE' | 'END_DATE') => {
     // NOTE: the library's types declare `date` as `Date`, but it passes null at runtime during
@@ -28,7 +24,7 @@ export const useSelectDatesPageLogic = () => {
       return;
     }
 
-    const timezoneFormattedDate = getTimezoneFormattedDateUseCase.execute(safeDate);
+    const timezoneFormattedDate = getTimezoneFormattedDate(safeDate);
 
     if (type === 'START_DATE') {
       setStartDate(timezoneFormattedDate);
@@ -56,8 +52,8 @@ export const useSelectDatesPageLogic = () => {
 
   const { userTokens } = useGetUserTokens();
 
-  const startDateLabel = translateDateUseCase.execute(locale, startDate);
-  const endDateLabel = translateDateUseCase.execute(locale, endDate);
+  const startDateLabel = translateDate(locale, startDate);
+  const endDateLabel = translateDate(locale, endDate);
 
   const removeDates = () => {
     setStartDate(null);
