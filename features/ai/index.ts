@@ -9,6 +9,6 @@ export {
   type GenerationFailed,
   isTransient,
 } from '@/features/ai/domain/errors/AiErrors';
-export type { GeneratedTrip } from '@/features/ai/domain/schemas/GeneratedTripSchema';
+export { type GeneratedTrip, GeneratedTripSchema } from '@/features/ai/domain/schemas/GeneratedTripSchema';
 export { AiService } from '@/features/ai/domain/services/AiService';
 export { SpanKeys as AiSpanKeys } from '@/features/ai/domain/utils/SpanKeys';
