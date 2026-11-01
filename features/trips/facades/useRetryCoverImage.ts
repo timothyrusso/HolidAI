@@ -1,31 +1,28 @@
-import { useCallback, useRef } from 'react';
+import { useEffectMutation } from '@timothyrusso/effect-core/react';
+import { useCallback } from 'react';
 import type { Id } from '@/convex/_generated/dataModel';
-import { fetchUnsplashImageUseCase, UrlType } from '@/features/core/images';
-import { checkConnectivityUseCase } from '@/features/core/network';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+import { useRetriedUrls } from '@/features/trips/hooks/useRetriedUrls';
+import { retryCoverImage as retry } from '@/features/trips/useCases/retryImage';
 
+/** Looks up a new cover when the trip's cover fails to load, once per failed URL and only online. */
 export const useRetryCoverImage = (tripId: Id<'trips'> | undefined, location: string) => {
-  const repo = useTripRepository();
-  const retriedUrls = useRef<Set<string>>(new Set());
+  const { updateCoverImage } = useTripRepository();
+  const isFirstRetry = useRetriedUrls();
+  const { mutate } = useEffectMutation({
+    mutationFn: ({ id, failedUrl }: { id: Id<'trips'>; failedUrl: string }) =>
+      retry(
+        location,
+        () => isFirstRetry(failedUrl),
+        coverImage => updateCoverImage({ id, coverImage }),
+      ),
+  });
 
   const retryCoverImage = useCallback(
-    async (failedUrl: string) => {
-      if (!tripId) return;
-      const connectivity = await checkConnectivityUseCase.execute();
-      if (!(connectivity.success && connectivity.data)) return;
-      if (retriedUrls.current.has(failedUrl)) return;
-      retriedUrls.current.add(failedUrl);
-
-      const result = await fetchUnsplashImageUseCase.execute(location, { urlType: UrlType.REGULAR });
-      if (!(result.success && result.data)) return;
-
-      const coverImage = {
-        url: typeof result.data.url === 'string' ? result.data.url : '',
-        blurHash: result.data.blurHash ?? '',
-      };
-      await repo.updateCoverImage({ id: tripId, coverImage });
+    (failedUrl: string) => {
+      if (tripId) mutate({ id: tripId, failedUrl });
     },
-    [tripId, location, repo],
+    [tripId, mutate],
   );
 
   return { retryCoverImage };

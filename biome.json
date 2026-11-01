@@ -9,11 +9,6 @@
       "!**/features/core/design-system/assets/lottie"
     ]
   },
-  "javascript": {
-    "parser": {
-      "unsafeParameterDecoratorsEnabled": true
-    }
-  },
   "overrides": [
     {
       "includes": [

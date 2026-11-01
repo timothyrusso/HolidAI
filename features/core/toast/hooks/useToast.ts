@@ -1,16 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import type { AppError, BaseError } from '@/features/core/error';
-import { errorCodeToMessageKey, errorTagToMessageKey } from '@/features/core/error';
+import type { AppError } from '@/features/core/error';
+import { errorTagToMessageKey } from '@/features/core/error';
 import { ToastType } from '@/features/core/toast/domain/entities/ToastType';
 import { toastClient } from '@/features/core/toast/libraries/toastClient';
 
 export const useToast = () => {
   const { t } = useTranslation();
 
-  const showErrorToast = (error: BaseError | AppError): void => {
-    const key =
-      '_tag' in error ? errorTagToMessageKey[error._tag] : (errorCodeToMessageKey[error.code] ?? 'ERRORS.GENERIC');
-    toastClient.show({ type: ToastType.ERROR, text1: t(key) });
+  const showErrorToast = (error: AppError): void => {
+    toastClient.show({ type: ToastType.ERROR, text1: t(errorTagToMessageKey[error._tag]) });
   };
 
   const showSuccessToast = (key: string): void => {

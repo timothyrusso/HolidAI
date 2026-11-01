@@ -1,7 +1,8 @@
 import { Effect, Layer, Schema } from 'effect';
+import { AppConfig } from '@/features/core/config';
 import { StorageFailure } from '@/features/core/error';
 import { Storage } from '@/features/core/storage/domain/services/Storage';
-import { mmkvClient } from '@/features/core/storage/libraries/mmkvClient';
+import { createMmkvClient } from '@/features/core/storage/libraries/mmkvClient';
 
 /** The part of MMKV the storage reads and writes through. */
 export interface KeyValueStore {
@@ -37,4 +38,8 @@ export const makeStorage = (store: KeyValueStore): Storage['Type'] => {
   };
 };
 
-export const StorageLive = Layer.sync(Storage, () => makeStorage(mmkvClient));
+/** The `Storage` over MMKV, encrypted with the key from the decoded app config. */
+export const StorageLive = Layer.effect(
+  Storage,
+  Effect.map(AppConfig.Config, config => makeStorage(createMmkvClient(config.mmkvEncryptionKey))),
+);

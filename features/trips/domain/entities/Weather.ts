@@ -1,10 +1,3 @@
-export interface Weather {
-  weatherGeneralNotes: string;
-  averageHighTemperature: string;
-  averageLowTemperature: string;
-  daylight: string;
-  weatherClothingNotes: string;
-  weatherSunProtectionNotes: string;
-  weatherRainPreparednessNotes: string;
-  weatherOutdoorActivitiesNotes: string;
-}
+import type { TripAiResp } from '@/features/trips/domain/entities/Trip';
+
+export type Weather = TripAiResp['weather'];

@@ -1,9 +1,10 @@
-import type { Result } from '@/features/core/error';
+import type { Effect } from 'effect';
+import type { UnexpectedError } from '@/features/core/error';
 
 export interface IUserRepository {
   getUser():
     | { id: string; username: string | null; email: string | undefined; profileImageUrl: string | undefined }
     | undefined;
-  signOut(): Promise<Result<void>>;
-  deleteUser(): Promise<Result<void>>;
+  /** Spends `amount` of the signed-in user's generation tokens; nothing when no one is signed in. */
+  decrementTokens(amount: number): Effect.Effect<void, UnexpectedError>;
 }

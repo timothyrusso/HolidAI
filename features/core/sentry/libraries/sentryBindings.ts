@@ -35,9 +35,7 @@ export const wrap = <P extends Record<string, unknown>>(component: React.Compone
   return Sentry.wrap(component);
 };
 
-export const startSpan = Sentry.startSpan;
 export const startInactiveSpan = Sentry.startInactiveSpan;
-export const setMeasurement = Sentry.setMeasurement;
 
 export const registerNavigationContainer = (ref: unknown): void => {
   sentryNavigationIntegration.registerNavigationContainer(ref);

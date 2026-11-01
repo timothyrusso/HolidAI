@@ -14,9 +14,6 @@ export class NotFound extends AppErrorBase('NotFound', 'ERRORS.NOT_FOUND')<{
   readonly resource: string;
 }> {}
 
-/** The AI pipeline could not produce a usable result. */
-export class GenerationFailed extends AppErrorBase('GenerationFailed', 'ERRORS.GENERATION') {}
-
 /** Reading or writing device storage failed, or a stored value no longer decodes. */
 export class StorageFailure extends AppErrorBase('StorageFailure', 'ERRORS.STORAGE')<{
   readonly key: string;

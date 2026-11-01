@@ -1,7 +1,6 @@
 import type { ConfigError, UnexpectedError } from '@timothyrusso/effect-core';
 import type {
   ConfigMissing,
-  GenerationFailed,
   ImageFetchFailed,
   NetworkFailure,
   NotFound,
@@ -21,7 +20,6 @@ export interface AppErrorRegistry {
     | NetworkFailure
     | Unauthorized
     | NotFound
-    | GenerationFailed
     | StorageFailure
     | ImageFetchFailed;
 }

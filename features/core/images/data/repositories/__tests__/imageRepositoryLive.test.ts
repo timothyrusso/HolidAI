@@ -135,6 +135,51 @@ describe('ImageRepositoryLive, Google Places', () => {
   );
 });
 
+const placesDown = HttpClientFake({ [PLACES]: new Error('down') });
+const placesWithoutKey = HttpClientFake({ [PLACES]: {} });
+
+const getPlacePhotoNames = (query: string, count: number) =>
+  Effect.flatMap(ImageRepository, repository => repository.getPlacePhotoNames(query, count));
+
+describe('ImageRepositoryLive, Google Places photo names', () => {
+  itEffect(
+    'returns the photo names of the first place, up to the count asked for',
+    Effect.gen(function* () {
+      expect(yield* getPlacePhotoNames('Colosseum, Rome', 1)).toEqual(['places/ChIJ1/photos/AU1']);
+    }),
+    repositoryOver(placesOk),
+  );
+
+  itEffect(
+    'returns no names when the place has no photo',
+    Effect.gen(function* () {
+      expect(yield* getPlacePhotoNames('Colosseum, Rome', 6)).toEqual([]);
+    }),
+    repositoryOver(placesWithoutPhotos),
+  );
+
+  itEffect(
+    'fails with the NetworkFailure of the search',
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(getPlacePhotoNames('Colosseum, Rome', 6));
+
+      expect(error._tag).toBe('NetworkFailure');
+    }),
+    repositoryOver(placesDown),
+  );
+
+  itEffect(
+    'fails with ConfigMissing and sends nothing when the Places key is not configured',
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(getPlacePhotoNames('Colosseum, Rome', 6));
+
+      expect(error).toMatchObject({ _tag: 'ConfigMissing', field: 'googlePlacesApiKey' });
+      expect(placesWithoutKey.sent).toEqual([]);
+    }),
+    repositoryOver(placesWithoutKey, { ...TEST_CONFIG, googlePlacesApiKey: undefined }),
+  );
+});
+
 const commonsOk = HttpClientFake({
   [COMMONS]: {
     query: {

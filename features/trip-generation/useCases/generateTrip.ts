@@ -7,7 +7,7 @@ import {
   isTransient,
   travelPlanPrompt,
 } from '@/features/ai';
-import { formatDateForPromptUseCase } from '@/features/core/dates';
+import { formatDateForPrompt } from '@/features/core/dates';
 import { type SpanOptions, startSpan } from '@/features/core/performance';
 import type { TripAiResp } from '@/features/trips';
 
@@ -39,8 +39,8 @@ const promptFor = (params: GenerateTripParams) =>
     .replaceAll('{travelersNumber}', params.travelersNumber.toString())
     .replaceAll('{travelersType}', params.travelerType)
     .replaceAll('{budget}', params.budgetInfo)
-    .replaceAll('{startDate}', formatDateForPromptUseCase.execute(params.startDate))
-    .replaceAll('{endDate}', formatDateForPromptUseCase.execute(params.endDate))
+    .replaceAll('{startDate}', formatDateForPrompt(params.startDate))
+    .replaceAll('{endDate}', formatDateForPrompt(params.endDate))
     .replaceAll('{locale}', params.locale);
 
 /** One step of the pipeline: each attempt times out on its own, transient failures retry, all in one span. */

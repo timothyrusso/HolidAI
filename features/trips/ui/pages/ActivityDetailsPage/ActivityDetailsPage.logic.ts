@@ -2,7 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
 import type { Id } from '@/convex/_generated/dataModel';
-import { buildPlacePhotoUrlUseCase, IMAGE_RESOLUTION } from '@/features/core/images';
+import { IMAGE_RESOLUTION, usePlacePhotoUrls } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
 import { useRetryActivityImage } from '@/features/trips/facades/useRetryActivityImage';
@@ -30,13 +30,11 @@ export const useActivityDetailsPageLogic = () => {
     useNativeDriver: false,
   });
 
-  const photoResourceNames = activity?.photoResourceNames ?? [];
-  const mainPhotoUrl = photoResourceNames[0]
-    ? buildPlacePhotoUrlUseCase.execute(photoResourceNames[0], IMAGE_RESOLUTION.medium)
-    : undefined;
-  const carouselImages = photoResourceNames
-    .slice(1)
-    .map(name => ({ url: buildPlacePhotoUrlUseCase.execute(name, IMAGE_RESOLUTION.medium) }));
+  const [mainPhotoUrl, ...otherPhotoUrls] = usePlacePhotoUrls(
+    activity?.photoResourceNames ?? [],
+    IMAGE_RESOLUTION.medium,
+  );
+  const carouselImages = otherPhotoUrls.map(url => ({ url }));
 
   const ticketPricing = activity?.ticketPricing ?? null;
   const currency = trip?.tripAiResp.tripDetails.currency ?? 'N/A';

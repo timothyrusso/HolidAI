@@ -21,9 +21,4 @@ export const styles = (isSelected: boolean) =>
       fontSize: fontSize.LG,
       fontFamily: fontFamily.interMedium,
     },
-    skeleton: {
-      width: '100%',
-      borderRadius: spacing.Double,
-      height: spacing.separator80,
-    },
   });

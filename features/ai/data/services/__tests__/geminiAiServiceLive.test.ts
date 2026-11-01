@@ -36,6 +36,12 @@ const extractTrip = (context: string) => Effect.flatMap(AiService, ai => ai.extr
 const found = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
 const askedModel = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
 const offline = GeminiFake([]);
+const ourBug = {
+  sent: [],
+  fetch: async () => {
+    throw new TypeError("Cannot read properties of undefined (reading 'candidates')");
+  },
+};
 const foundNothing = GeminiFake([aCandidate('')]);
 const overloaded = GeminiFake([{ status: 503, body: anApiError(503, 'UNAVAILABLE') }]);
 const badRequest = GeminiFake([{ status: 400, body: anApiError(400, 'INVALID_ARGUMENT') }]);
@@ -70,6 +76,16 @@ describe('GeminiAiServiceLive, search', () => {
       expect(Either.isLeft(result) && result.left).toMatchObject({ _tag: 'GeminiSearchError', transient: true });
     }),
     serviceOver(offline),
+  );
+
+  itEffect(
+    'fails with a non-transient GeminiSearchError for any other TypeError, so it is never sent again',
+    Effect.gen(function* () {
+      const result = yield* Effect.either(search('Lisbon for 2 days'));
+
+      expect(Either.isLeft(result) && result.left).toMatchObject({ _tag: 'GeminiSearchError', transient: false });
+    }),
+    serviceOver(ourBug),
   );
 
   itEffect(
