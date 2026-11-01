@@ -20,10 +20,9 @@ export const useHeaderIconsLogic = () => {
     toggleFavoriteTrip({ id: trip._id, isFavorite: !trip.isFavorite });
   }, [trip, toggleFavoriteTrip]);
 
-  const handleDeleteTrip = async () => {
+  const handleDeleteTrip = () => {
     if (!trip) return;
-    const deleted = await deleteTrip(trip._id);
-    if (deleted) navigationService.back();
+    deleteTrip(trip._id, { onSuccess: () => navigationService.back() });
   };
 
   const goBackHandler = () => {

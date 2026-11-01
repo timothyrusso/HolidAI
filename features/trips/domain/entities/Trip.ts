@@ -1,22 +1,11 @@
-// NOTE: pragmatic exception to domain purity — `Id<'trips'>` is a Convex branded string type used
+// NOTE: pragmatic exception to domain purity: `Id<'trips'>` is a Convex branded string type used
 // throughout the Convex query/mutation API. Replacing it with a plain string would need an adapter
 // layer at every data boundary, for minimal architectural gain: it carries no runtime behaviour.
 import type { Id } from '@/convex/_generated/dataModel';
-import type { CoverImage } from '@/features/trips/domain/entities/CoverImage';
-import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
-import type { Food } from '@/features/trips/domain/entities/Food';
-import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
-import type { Weather } from '@/features/trips/domain/entities/Weather';
+import type { GeneratedTrip } from '@/features/ai';
 
-export interface TripAiResp {
-  budgetNotes: string;
-  dayPlans: DayPlan[];
-  transportationNotes: string;
-  tripDetails: TripDetails;
-  weather: Weather;
-  food: Food;
-  coverImage: CoverImage;
-}
+/** The generated part of a saved trip: the trip `GeneratedTripSchema` decodes, once enriched. */
+export type TripAiResp = GeneratedTrip;
 
 export interface Trip {
   _id: Id<'trips'>;

@@ -1,10 +1,3 @@
-export interface TypicalDish {
-  name: string;
-  searchTerm: string;
-  description: string;
-  ingredients: string[];
-  isGlutenFree: boolean;
-  isVegetarian: boolean;
-  isVegan: boolean;
-  imageUrl: string;
-}
+import type { Food } from '@/features/trips/domain/entities/Food';
+
+export type TypicalDish = Food['typicalDishes'][number];

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { buildPlacePhotoUrlUseCase, IMAGE_RESOLUTION } from '@/features/core/images';
+import { IMAGE_RESOLUTION, usePlacePhotoUrls } from '@/features/core/images';
 import { navigationService } from '@/features/core/navigation';
 import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
 
@@ -10,7 +10,7 @@ export const useActivityItemLogic = (scheduleItem: ScheduleItem, tripId: string,
     navigationService.toActivityDetails({ tripId, activityId: scheduleItem.placeNumberID });
   };
 
-  const resourceName = scheduleItem.photoResourceNames?.[0];
+  const [image] = usePlacePhotoUrls((scheduleItem.photoResourceNames ?? []).slice(0, 1), IMAGE_RESOLUTION.medium);
 
   const priceLabel =
     scheduleItem.ticketPricing === null
@@ -28,7 +28,7 @@ export const useActivityItemLogic = (scheduleItem: ScheduleItem, tripId: string,
       placeDetails: scheduleItem.placeDetails,
     },
     derived: {
-      image: resourceName ? buildPlacePhotoUrlUseCase.execute(resourceName, IMAGE_RESOLUTION.medium) : undefined,
+      image,
       rating: scheduleItem.rating.toString(),
       priceLabel,
     },

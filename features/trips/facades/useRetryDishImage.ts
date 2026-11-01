@@ -1,28 +1,28 @@
-import { useCallback, useRef } from 'react';
+import { useEffectMutation } from '@timothyrusso/effect-core/react';
+import { useCallback } from 'react';
 import type { Id } from '@/convex/_generated/dataModel';
-import { fetchWikimediaDishImageUseCase } from '@/features/core/images';
-import { checkConnectivityUseCase } from '@/features/core/network';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+import { useRetriedUrls } from '@/features/trips/hooks/useRetriedUrls';
+import { retryDishImage as retry } from '@/features/trips/useCases/retryImage';
 
+/** Looks up a new dish picture when one fails to load, once per failed URL and only online. */
 export const useRetryDishImage = (tripId: Id<'trips'> | undefined, searchTerm: string) => {
-  const repo = useTripRepository();
-  const retriedUrls = useRef<Set<string>>(new Set());
+  const { updateDishImage } = useTripRepository();
+  const isFirstRetry = useRetriedUrls();
+  const { mutate } = useEffectMutation({
+    mutationFn: ({ id, failedUrl }: { id: Id<'trips'>; failedUrl: string }) =>
+      retry(
+        searchTerm,
+        () => isFirstRetry(failedUrl),
+        imageUrl => updateDishImage({ id, searchTerm, imageUrl }),
+      ),
+  });
 
   const retryDishImage = useCallback(
-    async (failedUrl: string) => {
-      if (!tripId) return;
-      const connectivity = await checkConnectivityUseCase.execute();
-      if (!(connectivity.success && connectivity.data)) return;
-      if (retriedUrls.current.has(failedUrl)) return;
-      retriedUrls.current.add(failedUrl);
-
-      const result = await fetchWikimediaDishImageUseCase.execute(searchTerm);
-      if (!result.success) return;
-
-      const imageUrl = typeof result.data?.url === 'string' ? result.data.url : '';
-      await repo.updateDishImage({ id: tripId, searchTerm, imageUrl });
+    (failedUrl: string) => {
+      if (tripId) mutate({ id: tripId, failedUrl });
     },
-    [tripId, searchTerm, repo],
+    [tripId, mutate],
   );
 
   return { retryDishImage };
