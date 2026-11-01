@@ -1,25 +1,13 @@
-import { useAuth } from '@clerk/expo';
-import { Stack, useRouter } from 'expo-router';
-import { useEffect, useRef } from 'react';
-import { Routes, Stacks } from '@/features/core/navigation';
+import { Stack } from 'expo-router';
+import { Stacks } from '@/features/core/navigation';
+import { useSessionChanges } from '@/features/user';
 
 export default function AppLayout() {
-  const { isLoaded, isSignedIn } = useAuth();
-  const router = useRouter();
-  const prevSignedIn = useRef<boolean | undefined>(undefined);
-
-  useEffect(() => {
-    if (!isLoaded) return;
-    const wasSignedIn = prevSignedIn.current;
-    prevSignedIn.current = isSignedIn;
-    if (wasSignedIn === false && isSignedIn) {
-      router.replace(`/${Routes.HomePage}`);
-    }
-  }, [isLoaded, isSignedIn, router]);
+  const { isSignedIn } = useSessionChanges();
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!isSignedIn}>
+      <Stack.Protected guard={isSignedIn}>
         <Stack.Screen name={Stacks.Authenticated} />
       </Stack.Protected>
       <Stack.Protected guard={!isSignedIn}>
