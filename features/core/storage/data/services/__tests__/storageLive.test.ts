@@ -70,6 +70,19 @@ describe('makeStorage', () => {
     }),
   );
 
+  itEffect('fails with StorageFailure and writes nothing when the value does not encode', () =>
+    Effect.gen(function* () {
+      const { store, values } = aStore();
+
+      const error = yield* Effect.flip(
+        makeStorage(store).setObject('trip_count', Schema.Number.pipe(Schema.positive()), -1),
+      );
+
+      expect(error).toMatchObject({ _tag: 'StorageFailure', key: 'trip_count' });
+      expect(values.has('trip_count')).toBe(false);
+    }),
+  );
+
   itEffect('removes a key', () =>
     Effect.gen(function* () {
       const { store, values } = aStore({ app_language: 'en' });
