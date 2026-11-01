@@ -4,8 +4,6 @@ import { navigationService } from '@/features/core/navigation';
 import { useTripGenerationState } from '@/features/trip-generation/state/useTripGenerationState';
 import { BudgetData } from '@/features/trip-generation/ui/pages/SelectBudgetPage/SelectBudgetPage.data';
 
-export { BudgetData };
-
 export const useSelectBudgetPageLogic = () => {
   const { tripActions } = useTripGenerationState();
   const { t } = useTranslation();
@@ -22,12 +20,16 @@ export const useSelectBudgetPageLogic = () => {
     navigationService.toReviewTrip();
   };
 
+  const options = BudgetData.map(option => ({ ...option, onPress: () => handleCardPress(option.id) }));
+
   return {
     state: {
       selectedBudget,
     },
+    derived: {
+      options,
+    },
     effects: {
-      handleCardPress,
       handleButtonPress,
     },
   };

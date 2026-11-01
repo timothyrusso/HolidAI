@@ -2,18 +2,15 @@ import { FlatList, View } from 'react-native';
 import { BasicView, CardType, CustomIconTextCard, CustomText, colors } from '@/features/core/design-system';
 import { Routes } from '@/features/core/navigation';
 import { TravelersNumberSelector } from '@/features/trip-generation/ui/components/TravelersNumberSelector/TravelersNumberSelector';
-import {
-  TravelerData,
-  useSelectTravelersPageLogic,
-} from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.logic';
+import { useSelectTravelersPageLogic } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.logic';
 import { style } from '@/features/trip-generation/ui/pages/SelectTravelersPage/SelectTravelersPage.style';
 
 const SeparatorItem = () => <View style={style.separator} />;
 
 export const SelectTravelersPage = () => {
-  const { state, effects } = useSelectTravelersPageLogic();
+  const { state, derived, effects } = useSelectTravelersPageLogic();
 
-  const renderItem = ({ item }: { item: (typeof TravelerData)[number] }) =>
+  const renderItem = ({ item }: { item: (typeof derived.options)[number] }) =>
     item.id !== null ? (
       <CustomIconTextCard
         cardType={CardType.Secondary}
@@ -21,7 +18,7 @@ export const SelectTravelersPage = () => {
         icon={item.icon}
         style={style.twoColumnCard}
         selected={state.selectedTravelers === item.id}
-        onPress={() => effects.handleCardPress(item.id ?? 0)}
+        onPress={item.onPress}
         iconColor={state.selectedTravelers === item.id ? colors.primaryWhite : colors.primaryBlack}
       />
     ) : null;
@@ -36,7 +33,7 @@ export const SelectTravelersPage = () => {
       <CustomText text="SELECT_TRAVELERS.TRAVELERS_NUMBER" style={style.subtitle} />
       <TravelersNumberSelector />
       <FlatList
-        data={TravelerData}
+        data={derived.options}
         numColumns={2}
         keyExtractor={item => item.id?.toString() ?? ''}
         ItemSeparatorComponent={SeparatorItem}
