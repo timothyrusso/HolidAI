@@ -2,7 +2,7 @@ import { act } from '@testing-library/react-native';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { registerStore } from '@/features/core/state';
-import { clerkFake, NoFeatures, renderWithLayer, routerFake } from '@/features/core/testing';
+import { A_CLERK_USER, clerkFake, NoFeatures, renderWithLayer, routerFake } from '@/features/core/testing';
 import { useSessionChanges } from '@/features/user/facades/useSessionChanges';
 
 const wizardStore = createWithEqualityFn<{ destination: string }>()(() => ({ destination: '' }), shallow);
@@ -22,6 +22,19 @@ describe('useSessionChanges', () => {
     await act(async () => rerender(undefined));
 
     expect(wizardStore.getState().destination).toBe('');
+    await done();
+  });
+
+  it('resets every client store when another account takes over the session', async () => {
+    clerkFake.signIn();
+    const { rerender, done } = await renderWithLayer(NoFeatures, useSessionChanges, undefined);
+    wizardStore.setState({ destination: 'Kyoto, Japan' });
+
+    clerkFake.signIn({ ...A_CLERK_USER, id: 'user_2other' });
+    await act(async () => rerender(undefined));
+
+    expect(wizardStore.getState().destination).toBe('');
+    expect(routerFake.history).toEqual([]);
     await done();
   });
 
