@@ -17,21 +17,24 @@ const retrySchedule = Schedule.exponential(Duration.millis(200)).pipe(Schedule.i
 /** No response at all, or a server error: worth another attempt. A 4xx or a bad body is not. */
 const isTransient = (failure: NetworkFailure) => failure.status === undefined || failure.status >= 500;
 
-/** An `HttpClient` over `fetchFn`. */
+/**
+ * An `HttpClient` over `fetchFn`. The fetch and the body read share one signal, so a timeout
+ * aborts whichever is still running.
+ */
 export const makeHttpClient = (fetchFn: Fetch): HttpClient['Type'] => {
   const request = (url: string, init: RequestInit) =>
     Effect.tryPromise({
-      try: signal => fetchFn(url, { ...init, signal }),
-      catch: cause => new NetworkFailure({ url, cause }),
+      try: async (signal): Promise<unknown> => {
+        const response = await fetchFn(url, { ...init, signal });
+        if (!response.ok) throw new NetworkFailure({ url, status: response.status });
+        try {
+          return await response.json();
+        } catch (cause) {
+          throw new NetworkFailure({ url, status: response.status, cause });
+        }
+      },
+      catch: cause => (cause instanceof NetworkFailure ? cause : new NetworkFailure({ url, cause })),
     }).pipe(
-      Effect.flatMap(response =>
-        response.ok
-          ? Effect.tryPromise({
-              try: (): Promise<unknown> => response.json(),
-              catch: cause => new NetworkFailure({ url, status: response.status, cause }),
-            })
-          : Effect.fail(new NetworkFailure({ url, status: response.status })),
-      ),
       Effect.timeoutFail({ duration: REQUEST_TIMEOUT, onTimeout: () => new NetworkFailure({ url }) }),
       Effect.retry({ schedule: retrySchedule, while: isTransient }),
     );
@@ -39,11 +42,13 @@ export const makeHttpClient = (fetchFn: Fetch): HttpClient['Type'] => {
   return {
     getJson: (url, options) => request(url, { method: 'GET', headers: { ...options?.headers } }),
     postJson: (url, body, options) =>
-      request(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...options?.headers },
-        body: JSON.stringify(body),
-      }),
+      Effect.suspend(() =>
+        request(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...options?.headers },
+          body: JSON.stringify(body),
+        }),
+      ),
   };
 };
 

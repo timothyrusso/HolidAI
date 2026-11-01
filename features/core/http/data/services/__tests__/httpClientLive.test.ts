@@ -107,6 +107,35 @@ describe('makeHttpClient', () => {
       expect(sent[0]?.init.signal?.aborted).toBe(true);
     }),
   );
+
+  itEffect('times out a body that never arrives, aborting its request', () =>
+    Effect.gen(function* () {
+      const { fetchFn, sent } = fakeFetch(
+        { ok: true, status: 200, json: () => new Promise(() => undefined) },
+        aResponse(200, { results: [] }),
+      );
+
+      const fiber = yield* Effect.fork(makeHttpClient(fetchFn).getJson(URL));
+      yield* advanceClock(Duration.seconds(10));
+      yield* advanceClock(Duration.millis(200));
+
+      expect(yield* Fiber.join(fiber)).toEqual({ results: [] });
+      expect(sent[0]?.init.signal?.aborted).toBe(true);
+    }),
+  );
+
+  itEffect('serializes the POST body only when the request runs', () =>
+    Effect.gen(function* () {
+      const { fetchFn, sent } = fakeFetch(aResponse(200, {}));
+      const body = { textQuery: 'Colosseum' };
+
+      const post = makeHttpClient(fetchFn).postJson(URL, body);
+      body.textQuery = 'Pantheon';
+      yield* post;
+
+      expect(sent[0]?.init.body).toBe('{"textQuery":"Pantheon"}');
+    }),
+  );
 });
 
 function aResponse(status: number, body: unknown): FetchResponse {
