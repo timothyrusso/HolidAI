@@ -48,10 +48,9 @@ flowchart TD
     LOG -->|"imports"| FAC
     LOG -->|"imports"| HOK
     LOG -->|"imports"| STA
-    LOG -.->|"page-specific, not yet promoted"| USE
 
     FAC -->|"calls"| USE
-    FAC -.->|"direct · documented exception"| HREP
+    FAC -->|"calls"| HREP
 
     USE -->|"depends on"| ENT
     USE -->|"depends on"| IREP
@@ -64,5 +63,4 @@ flowchart TD
 
     CREP -->|"depends on"| ISVC
     CREP -->|"uses"| ADA
-    HREP -->|"uses"| ADA
     SVC -->|"uses"| LIB

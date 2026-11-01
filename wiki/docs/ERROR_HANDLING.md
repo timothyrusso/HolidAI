@@ -38,7 +38,7 @@ from the kit's logging rule are listed under Exceptions in [ARCHITECTURE.md](ARC
   `app/_layout.tsx` builds the Convex client and mounts Clerk only after it resolves. On a
   rejection it reports the error (a `ConfigError` names the missing key) and renders
   `RootAppCrashView`, which shows the generic message and whose retry reloads the app.
-- Root: `app/_layout.tsx` exports `ErrorBoundary`, rendering `RootAppCrashView`.
+- Root: `RootAppCrashView`.
 - Route: `app/(main)/(authenticated)/_layout.tsx` exports `ErrorBoundary`, rendering
   `GenericCrashView` with a retry and a way back home. It covers every signed-in screen, trip
   generation included.

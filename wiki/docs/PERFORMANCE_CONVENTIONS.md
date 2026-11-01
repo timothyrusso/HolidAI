@@ -7,7 +7,7 @@ from `@/features/core/performance`, never `@sentry/react-native` directly.
 
 `startSpan(options)` wraps an Effect in a span: it needs the `PerformanceTracker` Tag, which the
 runtime provides as Sentry tracing in release builds and a no-op in development. A span ends with
-its Effect and is marked failed when the Effect fails.
+its Effect and is marked failed when the Effect fails or is interrupted.
 
 `SentryLive` starts each span with Sentry's `startInactiveSpan`, which never becomes the active
 span, so a `startSpan` inside another one's Effect does not nest under it in the trace view: both
@@ -24,8 +24,7 @@ const context = yield* ai.search(prompt).pipe(startSpan(AiSpanKeys.search));
 `ai.generate`, and each step in `ai.search` or `ai.extract`. Each step's span covers its
 attempts, timeouts and retries together, so a span's length is what the user waited for that step.
 
-Spans go where the measured work is an Effect: use cases and Live Layers. Facades and ViewModels
-run no Effect of their own, so they measure nothing. Tests get a `PerformanceTracker` that only
+Spans go in use cases and Live Layers. Tests get a `PerformanceTracker` that only
 runs the Effect, from `makeTestAppLayer`.
 
 ## Span names: `<feature>.<action>`

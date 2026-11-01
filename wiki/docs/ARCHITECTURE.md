@@ -36,14 +36,14 @@ There is no tier 4.
 | --- | --- |
 | `core/error` | the `AppError` union over `AppErrorRegistry`, the core tagged errors, `errorTagToMessageKey`, `useErrorMessage`, the two crash views; `kit.ts` re-exports `AppErrorBase` and `toAppError` for `domain/` files |
 | `core/config` | `AppConfig` from `makeConfig`, decoding `extra` of `app.config.js`; `requireConfigKey` for the optional keys |
-| `core/logger` | `LoggerLive` (`ConsoleLogger` in development, `SentryLoggerLive` in release), `logBackgroundFailure`, `useReportFailure` |
+| `core/logger` | `LoggerLive` (see Logging in [ERROR_HANDLING.md](ERROR_HANDLING.md)), `logBackgroundFailure`, `useReportFailure` |
 | `core/sentry` | the `Sentry` Tag (`captureException`, `withSpan`) and `SentryLive`; the SDK bootstrap (`initSentry`, `wrap`, `registerNavigationContainer`, `reportBootFailure`) |
 | `core/performance` | the `PerformanceTracker` Tag (Sentry in release, a no-op in development) and the `startSpan` combinator; see [PERFORMANCE_CONVENTIONS.md](PERFORMANCE_CONVENTIONS.md) |
 | `core/http` | the `HttpClient` Tag: a 10 second timeout per attempt, two retries on no response or a 5xx |
 | `core/network` | the `Network` Tag over `expo-network` |
 | `core/storage` | the `Storage` Tag over one encrypted MMKV instance (`holidai.expo.storage`), keyed from `AppConfig`; objects go through Schema |
 | `core/images` | the `ImageRepository` Tag over Unsplash, Google Places and Wikimedia, `fetchImage`, `useGetImage`, `usePlacePhotoUrls` |
-| `core/query` | `queryClient`: no TanStack retry for an app error |
+| `core/query` | `queryClient` |
 | `core/state` | `createSelectors`, `registerStore`, `resetAllStores` |
 | `core/translations` | i18next, the `en` and `it` catalogs, `useChangeLanguage`, `languageToRestore` |
 | `core/dates`, `core/navigation`, `core/toast` | date formatting for prompts and screens; routes and `navigationService`; the toast |
@@ -68,12 +68,11 @@ HolidAI wires dependencies two ways.
 
 ### Convex boundary
 
-- Queries are subscriptions, so they stay `useQuery` values: `undefined` while loading, never an
-  Effect. The trips query is skipped (`'skip'`) until Clerk has a user.
-- Every mutation is wrapped in its hook repository and nowhere else, as one
-  `Effect.tryPromise({ try: () => mutate(args), catch: cause => toAppError(cause) })` (`run` in
-  `useTripRepository`). A Convex rejection becomes an `UnexpectedError`; Convex has no typed
-  failure the UI reads.
+- Queries and mutations follow the kit's
+  [hook repositories](https://github.com/timothyrusso/agentic-kit/blob/main/ARCHITECTURE.md#hook-repositories-hook-only-sdks).
+- The trips query is skipped (`'skip'`) until Clerk has a user.
+- `run` in `useTripRepository` wraps every trip mutation. A Convex rejection becomes an
+  `UnexpectedError`; Convex has no typed failure the UI reads.
 - The optimistic updates (favourite, cover, dish image, activity photos) stay on the Convex
   mutation with `withOptimisticUpdate`, inside the hook repository.
 - `Id<'trips'>` is Convex's branded string type, used as is in `trips/domain/` (a `// NOTE:` in
@@ -142,9 +141,8 @@ Each is a deliberate departure from a kit rule, with the reason.
 
 ## Behaviour notes
 
-- **Release builds send only `Logger.error` to Sentry.** `SentryLoggerLive` drops `warn`, `info`
-  and `debug`, so a typed failure (which the boundary logs as `warn`, an image fetch for example)
-  no longer reaches Sentry; only defects do.
+- **Release builds send only defects to Sentry**, not typed failures (Logging in
+  [ERROR_HANDLING.md](ERROR_HANDLING.md)).
 - **`generateText` with `Output.object`**, not `generateObject`, which `ai@6` deprecates.
 - **The generation timeouts are estimates** (1 minute for search, 4 minutes for extract); the
   `ai.search` and `ai.extract` spans make them tunable from Sentry data.
@@ -198,9 +196,8 @@ app/
 
 ## Tests
 
-- Use case tests fake Tags as Layers (`aiServiceFake`, `tripImagesFake` in the feature's
-  `di/__tests__/`, the core fakes in `core/testing`); facade and ViewModel tests render with
-  `renderWithLayer`.
+- Feature fakes live in the feature's `di/__tests__/` (`aiServiceFake`, `tripImagesFake`), the
+  core ones in `core/testing`.
 - **Convex and Clerk are faked behind root `__mocks__/`** (`convex/react.ts`, `@clerk/expo.ts`),
   which hand out `convexFake` and `clerkFake` from `core/testing`. TESTING.md allows `__mocks__`
   only for a native module with no Tag and leaves hook repositories to device QA; HolidAI goes
@@ -210,7 +207,8 @@ app/
   `jestAfterEnv.ts` resets the router, Convex and Clerk fakes before every test.
 - The library mocks in `__mocks__/` are each library's own (`react-native-reanimated`,
   `react-native-worklets`, `react-native-keyboard-controller`, `react-native-safe-area-context`),
-  plus a no-op `@sentry/react-native` (the real SDK leaves a timer that keeps jest running).
+  plus a no-op `@sentry/react-native` (the real SDK leaves a timer that keeps jest running) and
+  `expo-router`, which hands out `routerFake`.
 - Coverage is measured over `features/**/*.ts` (`jest.config.cjs`), not the preset's whole tree:
   the Convex functions run on Convex's servers and the Storybook config on Storybook's.
 
