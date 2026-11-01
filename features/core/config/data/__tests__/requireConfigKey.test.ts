@@ -2,12 +2,13 @@ import { itEffect } from '@timothyrusso/effect-core/testing';
 import { Effect } from 'effect';
 import { requireConfigKey } from '@/features/core/config/data/requireConfigKey';
 import type { AppConfigValues } from '@/features/core/config/domain/schemas/AppConfigSchema';
+import { TEST_CONFIG } from '@/features/core/testing';
 
 describe('requireConfigKey', () => {
   itEffect(
     'returns the value of a key that is set',
     Effect.gen(function* () {
-      expect(yield* requireConfigKey(aConfig(), 'unsplashAccessKey')).toBe('unsplash-key');
+      expect(yield* requireConfigKey(aConfig(), 'unsplashAccessKey')).toBe('unsplash-test-key');
     }),
   );
 
@@ -33,11 +34,4 @@ describe('requireConfigKey', () => {
   );
 });
 
-const aConfig = (overrides: Partial<AppConfigValues> = {}): AppConfigValues => ({
-  convexUrl: 'https://happy-otter-123.convex.cloud',
-  clerkPublishableKey: 'pk_test_holidai',
-  mmkvEncryptionKey: 'holidai-encryption-key',
-  googlePlacesApiKey: 'places-key',
-  unsplashAccessKey: 'unsplash-key',
-  ...overrides,
-});
+const aConfig = (overrides: Partial<AppConfigValues> = {}): AppConfigValues => ({ ...TEST_CONFIG, ...overrides });
