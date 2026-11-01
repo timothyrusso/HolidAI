@@ -1,9 +1,9 @@
 import { isValid, parse } from 'date-fns';
 
-const STRING_FORMATS = ['dd/MM/yyyy', 'MM/dd/yyyy', 'yyyy/dd/MM', 'yyyy-MM-dd', 'dd-MM-yyyy', 'MM-dd-yyyy'];
+const STRING_FORMATS = ['dd/MM/yyyy', 'MM/dd/yyyy', 'yyyy/MM/dd', 'yyyy-MM-dd', 'dd-MM-yyyy', 'MM-dd-yyyy'];
 
 const toDate = (date: Date | string): Date | undefined => {
-  if (typeof date !== 'string') return date;
+  if (typeof date !== 'string') return isValid(date) ? date : undefined;
   return STRING_FORMATS.map(format => parse(date, format, new Date())).find(isValid);
 };
 
