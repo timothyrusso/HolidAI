@@ -1,6 +1,6 @@
 import { type AppServicesOf, makeAppRuntime } from '@timothyrusso/effect-core';
 import { Layer } from 'effect';
-import { ConfigLive } from '@/features/core/config';
+import { AppConfig, type AppConfigValues, ConfigLive } from '@/features/core/config';
 import type { AppError } from '@/features/core/error';
 import { HttpClientLive } from '@/features/core/http';
 import { ImagesLive } from '@/features/core/images';
@@ -29,6 +29,16 @@ export const AppLayer = FeaturesLive.pipe(Layer.provideMerge(CoreLive));
 
 /** The app's one runtime. Only `app/_layout.tsx` imports it, to boot it and mount the provider. */
 export const runtime = makeAppRuntime(AppLayer);
+
+/**
+ * Builds the runtime once, at launch, and resolves with the decoded app config the providers
+ * above it need (the Convex URL, the Clerk key). Rejects with the Layer's own error, a
+ * `ConfigError` naming the missing field for example, for the caller to report.
+ */
+export const bootRuntime = async (): Promise<AppConfigValues> => {
+  await runtime.boot();
+  return runtime.runPromise(AppConfig.Config);
+};
 
 /** Every service the runtime provides: what a facade's Effect may need. */
 export type AppServices = AppServicesOf<typeof runtime>;

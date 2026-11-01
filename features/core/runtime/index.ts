@@ -6,4 +6,4 @@ import type { FeatureTier } from '@/features/core/featureTier';
  */
 export const FEATURE_TIER: FeatureTier = 5;
 
-export { AppLayer, type AppServices, runtime } from '@/features/core/runtime/runtime';
+export { AppLayer, type AppServices, bootRuntime, runtime } from '@/features/core/runtime/runtime';
