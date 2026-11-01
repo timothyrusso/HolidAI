@@ -51,13 +51,20 @@ describe('useHeaderIconsLogic', () => {
     await done();
   });
 
-  it('does nothing for a trip that is not loaded', async () => {
+  it('does not favourite a trip that is not loaded', async () => {
     const { result, backend, done } = await renderIcons({ id: 'trip_unknown' });
 
-    await act(async () => {
-      result.current.effects.addToFavoritesHandler();
-      result.current.effects.handleDeleteTrip();
-    });
+    await act(async () => result.current.effects.addToFavoritesHandler());
+
+    expect(backend.trips()).toEqual([aTrip()]);
+    expect(result.current.state.shouldAnimate).toBe(false);
+    await done();
+  });
+
+  it('does not delete a trip that is not loaded, and stays', async () => {
+    const { result, backend, done } = await renderIcons({ id: 'trip_unknown' });
+
+    await act(async () => result.current.effects.handleDeleteTrip());
 
     expect(backend.trips()).toEqual([aTrip()]);
     expect(routerFake.history).toEqual([]);

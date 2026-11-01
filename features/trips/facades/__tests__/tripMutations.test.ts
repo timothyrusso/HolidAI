@@ -52,7 +52,7 @@ describe('useToggleFavoriteTrip', () => {
 
     await act(async () => result.current.toggleFavoriteTrip({ id: aTripId(), isFavorite: true }));
 
-    await waitFor(() => expect(logs.entries).toHaveLength(1));
+    await waitFor(() => expect(logs.entries.map(entry => entry.message)).toEqual(['UnexpectedError']));
     expect(backend.trips()[0]?.isFavorite).toBe(false);
     await done();
   });
