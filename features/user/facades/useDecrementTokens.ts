@@ -1,16 +1,10 @@
-import { useUser } from '@clerk/expo';
-import { useMutation } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { useEffectMutation } from '@timothyrusso/effect-core/react';
+import { useUserRepository } from '@/features/user/data/repositories/useUserRepository';
 
+/** Spends the signed-in user's generation tokens; a failure is logged and nothing else. */
 export const useDecrementTokens = () => {
-  const { user } = useUser();
-  const decrementUserTokens = useMutation(api.users.decrementUserTokens);
+  const { decrementTokens } = useUserRepository();
+  const { mutate } = useEffectMutation({ mutationFn: decrementTokens });
 
-  const decrementTokens = (amount: number) => {
-    if (user?.id) {
-      decrementUserTokens({ clerkId: user.id, amount });
-    }
-  };
-
-  return { decrementTokens };
+  return { decrementTokens: mutate };
 };
