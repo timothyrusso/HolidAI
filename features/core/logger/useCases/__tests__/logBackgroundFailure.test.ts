@@ -1,5 +1,5 @@
 import { collectLogs, itEffect } from '@timothyrusso/effect-core/testing';
-import { Effect, Fiber } from 'effect';
+import { Effect } from 'effect';
 import { NetworkFailure } from '@/features/core/error';
 import { logBackgroundFailure } from '@/features/core/logger/useCases/logBackgroundFailure';
 
@@ -33,12 +33,11 @@ describe('logBackgroundFailure', () => {
   );
 
   itEffect(
-    'logs nothing when the task is interrupted',
+    'logs nothing and succeeds when the task is interrupted',
     Effect.gen(function* () {
-      const fiber = yield* Effect.fork(Effect.never.pipe(logBackgroundFailure('enrich dish images')));
+      const result = yield* Effect.exit(Effect.interrupt.pipe(logBackgroundFailure('enrich dish images')));
 
-      yield* Fiber.interrupt(fiber);
-
+      expect(result._tag).toBe('Success');
       expect(interrupted.entries).toEqual([]);
     }),
     interrupted.layer,
