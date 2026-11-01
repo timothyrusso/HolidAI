@@ -83,3 +83,6 @@ the agentic-kit plugin's `agent-memory/README.md`. Humans curate at PR review â€
   for `hitSlop`, which react-native-web ignores) falsely appear to miss. Use
   `agent-browser batch "mouse move X Y" "mouse down" "mouse up"` instead â€” it executes the
   sequence with minimal inter-command latency and matches real tap timing.
+- [2026-11-01] Since the Effect migration (Night 4) the app boots its runtime before mounting Convex
+  and Clerk: a missing required `.env` key shows the root crash view (generic message; the error sent
+  to Sentry names the field). Check `.env` before filing it as an app bug.

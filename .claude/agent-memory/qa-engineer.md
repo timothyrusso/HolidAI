@@ -103,3 +103,11 @@ the agentic-kit plugin's `agent-memory/README.md`. Humans curate at PR review â€
   its known coordinates after heavy interaction (picker dropdowns, rapid nav) with no AX/visual
   change and no error â€” not a hang. `open <app> --session <s> --relaunch` recovers it; don't sink
   retries into re-tapping the same spot.
+- [2026-11-01] Since the Effect migration (Night 4) a missing required `.env` key (Convex URL, Clerk
+  publishable key, MMKV key) fails the boot on the root crash view (generic message; the error sent to
+  Sentry names the field). Check `.env` before filing it as an app bug. A missing optional key fails only
+  the feature that needs it (Gemini: a generation toast; Unsplash: placeholder images).
+- [2026-11-01] Trip generation with the network off does not fail at once: React Native's
+  'Network request failed' counts as transient, so the search step retries 2 s then 4 s later
+  (`RETRY_SCHEDULE` in `generateTrip.ts`) before the 'Failed to generate content' toast and the
+  return to Home. Wait about 10 s before calling it a hang. A real generation takes about 50 s.
