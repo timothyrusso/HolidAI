@@ -12,13 +12,13 @@ export const ImageRepositoryFake = (
 ) =>
   Layer.succeed(ImageRepository, {
     getImage: request => {
-      const image = images[request.query];
+      const image = Object.hasOwn(images, request.query) ? images[request.query] : undefined;
       return image === 'fail'
         ? Effect.fail(new ImageFetchFailed({ source: request.source }))
         : Effect.succeed(image ?? null);
     },
     getPlacePhotoNames: (query, count) => {
-      const names = photoNames[query];
+      const names = Object.hasOwn(photoNames, query) ? photoNames[query] : undefined;
       return names === 'fail'
         ? Effect.fail(new ImageFetchFailed({ source: 'googlePlaces' }))
         : Effect.succeed((names ?? []).slice(0, count));

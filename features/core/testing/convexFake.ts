@@ -1,13 +1,14 @@
 import { type DefaultFunctionArgs, type FunctionReference, getFunctionName } from 'convex/server';
 import { useSyncExternalStore } from 'react';
 
-type Handler = (args: unknown) => unknown;
+type Handler = (args: unknown) => unknown | Promise<unknown>;
 
 const queries = new Map<string, Handler>();
 const mutations = new Map<string, Handler>();
 const failing = new Set<string>();
 const listeners = new Set<() => void>();
-const optimistic = new Map<string, unknown>();
+/** One overlay per optimistic mutation in flight, oldest first; a newer one wins on a shared key. */
+const optimisticLayers: Map<string, unknown>[] = [];
 const held: { gate: Promise<void> | null; release: () => void } = { gate: null, release: () => undefined };
 let version = 0;
 
@@ -15,17 +16,17 @@ const keyOf = (ref: FunctionReference<'query'>, args: unknown) => `${getFunction
 
 const answer = (ref: FunctionReference<'query'>, args: unknown) => {
   const key = keyOf(ref, args);
-  if (optimistic.has(key)) return optimistic.get(key);
+  const layer = [...optimisticLayers].reverse().find(candidate => candidate.has(key));
+  if (layer !== undefined) return layer.get(key);
   const handler = queries.get(getFunctionName(ref));
   return handler === undefined ? undefined : handler(args);
 };
 
-/** The local store an optimistic update reads and writes, as Convex hands it over. */
-const localStore = {
+/** The local store an optimistic update reads and writes, as Convex hands it over; it writes to `layer`. */
+const localStoreOver = (layer: Map<string, unknown>) => ({
   getQuery: (ref: FunctionReference<'query'>, args: unknown) => answer(ref, args),
-  setQuery: (ref: FunctionReference<'query'>, args: unknown, value: unknown) =>
-    void optimistic.set(keyOf(ref, args), value),
-};
+  setQuery: (ref: FunctionReference<'query'>, args: unknown, value: unknown) => void layer.set(keyOf(ref, args), value),
+});
 
 const notify = () => {
   version += 1;
@@ -52,7 +53,7 @@ export const convexFake = {
   ) => void queries.set(getFunctionName(ref), handler as Handler),
   setMutation: <Args extends DefaultFunctionArgs>(
     ref: FunctionReference<'mutation', 'public', Args>,
-    handler: (args: Args) => unknown,
+    handler: (args: Args) => unknown | Promise<unknown>,
   ) => void mutations.set(getFunctionName(ref), handler as Handler),
   failMutation: (ref: FunctionReference<'mutation'>) => void failing.add(getFunctionName(ref)),
   hold: () => {
@@ -69,7 +70,7 @@ export const convexFake = {
     mutations.clear();
     failing.clear();
     listeners.clear();
-    optimistic.clear();
+    optimisticLayers.length = 0;
     held.gate = null;
   },
   useQuery: (ref: FunctionReference<'query'>, args: unknown) => {
@@ -83,20 +84,23 @@ export const convexFake = {
       if (failing.has(name)) throw new Error(`[CONVEX M(${name})] Server Error`);
       const handler = mutations.get(name);
       if (handler === undefined) throw new Error(`convexFake has no mutation ${name}`);
-      const result = handler(args);
+      const result = await handler(args);
       notify();
       return result;
     };
-    const withOptimisticUpdate = (update: (store: typeof localStore, args: never) => void) => async (args: unknown) => {
-      update(localStore, args as never);
-      notify();
-      try {
-        return await mutate(args);
-      } finally {
-        optimistic.clear();
+    const withOptimisticUpdate =
+      (update: (store: ReturnType<typeof localStoreOver>, args: never) => void) => async (args: unknown) => {
+        const layer = new Map<string, unknown>();
+        optimisticLayers.push(layer);
+        update(localStoreOver(layer), args as never);
         notify();
-      }
-    };
+        try {
+          return await mutate(args);
+        } finally {
+          optimisticLayers.splice(optimisticLayers.indexOf(layer), 1);
+          notify();
+        }
+      };
     return Object.assign(mutate, { withOptimisticUpdate });
   },
 };
