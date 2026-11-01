@@ -12,7 +12,6 @@ const LEGACY_UNTIL_505 = [
   'error/domain/entities/**',
   'error/domain/utils/ensureError.ts',
   'error/mappers/errorCodeToMessageKey.ts',
-  'error/ui/**',
   'http/data/services/HttpClient.ts',
   'images/data/repositories/{GooglePlaces,Unsplash,WikimediaDish}ImageRepository.ts',
   'images/useCases/*UseCase.ts',
@@ -24,13 +23,19 @@ const LEGACY_UNTIL_505 = [
 ];
 
 /**
+ * ViewModels inside those concerns that are not on Effect yet: the crash views log through the
+ * deprecated `logger` and navigate through the Inversify `navigationService`. #505 moves and tests them.
+ */
+const VIEWMODELS_UNTIL_505 = ['error/ui/**'];
+
+/**
  * The kit's Jest preset plus HolidAI's deltas:
  *
  * - `inversify` ships ES modules, and the core public APIs still load the container through the
  *   deprecated shims until #505 removes it. `__mocks__/@sentry/react-native.ts` keeps the Sentry
  *   SDK, which those APIs also load, from leaving a timer behind.
  * - `jestAfterEnv.ts` resets the router fake that `__mocks__/expo-router.ts` hands out.
- * - Coverage is measured over the Effect footprint, without its legacy files: the features still
+ * - Coverage is measured over the Effect footprint, without its legacy files and ViewModels: the features still
  *   on Inversify have no tests until they move (#504, #505), and #505 measures the whole tree.
  */
 const config = {
@@ -42,7 +47,7 @@ const config = {
   collectCoverageFrom: [
     `<rootDir>/features/core/${EFFECT_FOOTPRINT}/**/*.ts`,
     ...preset.collectCoverageFrom.slice(1),
-    ...LEGACY_UNTIL_505.map(path => `!<rootDir>/features/core/${path}`),
+    ...[...LEGACY_UNTIL_505, ...VIEWMODELS_UNTIL_505].map(path => `!<rootDir>/features/core/${path}`),
   ],
 };
 
