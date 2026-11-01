@@ -9,14 +9,18 @@ import { TEST_CONFIG } from '@/features/core/testing';
 /** What the fake Gemini API answers each request with, in order, the last one repeating. */
 type Reply = { readonly status: number; readonly body: unknown };
 
-/** A `fetch` that answers like the Gemini API, and keeps the URL of every request it was sent. */
+/**
+ * A `fetch` that answers like the Gemini API, and keeps the URL of every request it was sent. With
+ * no replies it rejects as React Native's `fetch` does when the connection drops.
+ */
 const GeminiFake = (replies: readonly Reply[]) => {
   const sent: string[] = [];
   const fetch: typeof globalThis.fetch = async input => {
     sent.push(String(input));
     const reply = replies[Math.min(sent.length - 1, replies.length - 1)];
-    return new Response(JSON.stringify(reply?.body), {
-      status: reply?.status,
+    if (reply === undefined) throw new TypeError('Network request failed');
+    return new Response(JSON.stringify(reply.body), {
+      status: reply.status,
       headers: { 'Content-Type': 'application/json' },
     });
   };
@@ -30,6 +34,8 @@ const search = (prompt: string) => Effect.flatMap(AiService, ai => ai.search(pro
 const extractTrip = (context: string) => Effect.flatMap(AiService, ai => ai.extractTrip('Lisbon for 2 days', context));
 
 const found = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
+const askedModel = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
+const offline = GeminiFake([]);
 const foundNothing = GeminiFake([aCandidate('')]);
 const overloaded = GeminiFake([{ status: 503, body: anApiError(503, 'UNAVAILABLE') }]);
 const badRequest = GeminiFake([{ status: 400, body: anApiError(400, 'INVALID_ARGUMENT') }]);
@@ -42,9 +48,28 @@ describe('GeminiAiServiceLive, search', () => {
     'returns the text of the grounded answer',
     Effect.gen(function* () {
       expect(yield* search('Lisbon for 2 days')).toBe('Lisbon in May: castles, trams and custard tarts.');
-      expect(found.sent[0]).toContain('/models/gemini-2.5-flash:generateContent');
     }),
     serviceOver(found),
+  );
+
+  itEffect(
+    'asks Gemini 2.5 Flash',
+    Effect.gen(function* () {
+      yield* search('Lisbon for 2 days');
+
+      expect(askedModel.sent[0]).toContain('/models/gemini-2.5-flash:generateContent');
+    }),
+    serviceOver(askedModel),
+  );
+
+  itEffect(
+    'fails with a transient GeminiSearchError when the connection drops',
+    Effect.gen(function* () {
+      const result = yield* Effect.either(search('Lisbon for 2 days'));
+
+      expect(Either.isLeft(result) && result.left).toMatchObject({ _tag: 'GeminiSearchError', transient: true });
+    }),
+    serviceOver(offline),
   );
 
   itEffect(

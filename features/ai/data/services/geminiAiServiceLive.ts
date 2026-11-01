@@ -19,8 +19,13 @@ const CALL_SETTINGS = {
   maxRetries: 0,
 } as const;
 
-/** Whether the provider said a failed request may succeed if sent again (a 429, a 5xx, a dropped connection). */
-const isRetryable = (cause: unknown) => APICallError.isInstance(cause) && cause.isRetryable;
+/**
+ * Whether a failed request may succeed if sent again: the provider said so (a 429, a 5xx), or the
+ * connection dropped. React Native's `fetch` rejects a dropped connection with a bare `TypeError`
+ * ('Network request failed') that the SDK does not wrap, so that counts too.
+ */
+const isRetryable = (cause: unknown) =>
+  (APICallError.isInstance(cause) && cause.isRetryable) || cause instanceof TypeError;
 
 const extractionPrompt = (prompt: string, context: string) => `
   You are a data extraction assistant.
