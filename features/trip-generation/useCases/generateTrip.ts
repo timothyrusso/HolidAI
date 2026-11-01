@@ -1,4 +1,4 @@
-import { type Duration, Effect, Schedule } from 'effect';
+import { Cause, type Duration, Effect, Schedule } from 'effect';
 import {
   AiService,
   AiSpanKeys,
@@ -64,10 +64,22 @@ export const generateTrip = (params: GenerateTripParams) =>
 
     const context = yield* ai
       .search(prompt)
-      .pipe(step(AiSpanKeys.search, SEARCH_TIMEOUT, () => new GeminiSearchError({ transient: false })));
+      .pipe(
+        step(
+          AiSpanKeys.search,
+          SEARCH_TIMEOUT,
+          () => new GeminiSearchError({ transient: false, cause: new Cause.TimeoutException() }),
+        ),
+      );
     const trip: TripAiResp = yield* ai
       .extractTrip(prompt, context)
-      .pipe(step(AiSpanKeys.extract, EXTRACT_TIMEOUT, () => new GeminiExtractionError({ transient: false })));
+      .pipe(
+        step(
+          AiSpanKeys.extract,
+          EXTRACT_TIMEOUT,
+          () => new GeminiExtractionError({ transient: false, cause: new Cause.TimeoutException() }),
+        ),
+      );
 
     return trip;
   }).pipe(startSpan(AiSpanKeys.generate));

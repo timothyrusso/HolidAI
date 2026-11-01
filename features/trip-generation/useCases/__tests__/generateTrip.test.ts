@@ -1,5 +1,5 @@
 import { advanceClock, itEffect } from '@timothyrusso/effect-core/testing';
-import { Effect, Either, Fiber, Layer } from 'effect';
+import { Cause, Effect, Either, Fiber, Layer } from 'effect';
 import { GeminiExtractionError, GeminiSearchError } from '@/features/ai';
 import { PerformanceTracker } from '@/features/core/performance';
 import { aGeneratedTrip, aTripRequest } from '@/features/trip-generation/__fixtures__/builders';
@@ -95,6 +95,7 @@ describe('generateTrip', () => {
       const result = yield* generateAfter(SEARCH_TIMEOUT);
 
       expect(Either.isLeft(result) && result.left._tag).toBe('GeminiSearchError');
+      expect(Either.isLeft(result) && Cause.isTimeoutException(result.left.cause)).toBe(true);
       expect(searchHangs.searches).toHaveLength(1);
       expect(searchHangs.extractions).toEqual([]);
     }),
@@ -107,6 +108,7 @@ describe('generateTrip', () => {
       const result = yield* generateAfter(EXTRACT_TIMEOUT);
 
       expect(Either.isLeft(result) && result.left._tag).toBe('GeminiExtractionError');
+      expect(Either.isLeft(result) && Cause.isTimeoutException(result.left.cause)).toBe(true);
       expect(extractionHangs.extractions).toHaveLength(1);
     }),
     over(extractionHangs),
