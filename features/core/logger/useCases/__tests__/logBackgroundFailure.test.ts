@@ -6,6 +6,7 @@ import { logBackgroundFailure } from '@/features/core/logger/useCases/logBackgro
 const quiet = collectLogs();
 const failing = collectLogs();
 const interrupted = collectLogs();
+const defect = collectLogs();
 
 describe('logBackgroundFailure', () => {
   itEffect(
@@ -41,5 +42,19 @@ describe('logBackgroundFailure', () => {
       expect(interrupted.entries).toEqual([]);
     }),
     interrupted.layer,
+  );
+
+  itEffect(
+    'logs a defect once as an error naming the task, and succeeds',
+    Effect.gen(function* () {
+      const bug = new TypeError('dishes is undefined');
+
+      yield* Effect.die(bug).pipe(logBackgroundFailure('enrich dish images'));
+
+      expect(defect.entries).toEqual([
+        { level: 'error', message: String(bug), error: bug, context: { task: 'enrich dish images' } },
+      ]);
+    }),
+    defect.layer,
   );
 });
