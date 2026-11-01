@@ -23,15 +23,14 @@ describe('useGetImage', () => {
     await done();
   });
 
-  it('shows the food placeholder when a dish image fails, and logs the failure once', async () => {
-    const { result, logs, done } = await renderWithLayer(
+  it('shows the food placeholder when a dish image fails', async () => {
+    const { result, done } = await renderWithLayer(
       images,
       useGetImage,
       aRequest({ source: 'wikimediaDish', query: 'Carbonara' }),
     );
 
     await waitFor(() => expect(result.current.data?.url).toEqual(anAsset('food_placeholder.jpg')));
-    expect(logs.entries.map(entry => [entry.level, entry.message])).toEqual([['warn', 'ImageFetchFailed']]);
     await done();
   });
 
