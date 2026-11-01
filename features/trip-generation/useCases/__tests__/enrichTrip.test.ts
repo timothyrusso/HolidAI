@@ -85,7 +85,7 @@ describe('saveTrip', () => {
     Effect.gen(function* () {
       const saved: unknown[] = [];
 
-      const id = yield* saveTrip(aGeneratedTrip(), trip =>
+      const id = yield* saveTrip(aGeneratedTrip(), 'user_2qa', trip =>
         Effect.sync(() => saved.push(trip)).pipe(Effect.as('trip_1')),
       );
 
@@ -98,7 +98,9 @@ describe('saveTrip', () => {
   itEffect(
     'fails with the failure of the save',
     Effect.gen(function* () {
-      const error = yield* Effect.flip(saveTrip(aGeneratedTrip(), () => Effect.fail('Convex is down' as const)));
+      const error = yield* Effect.flip(
+        saveTrip(aGeneratedTrip(), 'user_2qa', () => Effect.fail('Convex is down' as const)),
+      );
 
       expect(error).toBe('Convex is down');
     }),

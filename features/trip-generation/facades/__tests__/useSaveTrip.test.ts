@@ -55,4 +55,15 @@ describe('useSaveTrip', () => {
     expect(created).toEqual([]);
     await done();
   });
+
+  it('reports Unauthorized, and saves nothing, when nobody is signed in', async () => {
+    const created = createTrips();
+    const { result, done } = await renderWithLayer(images, useSaveTrip, undefined);
+
+    await act(async () => result.current.save(aGeneratedTrip()));
+
+    await waitFor(() => expect(result.current.error?._tag).toBe('Unauthorized'));
+    expect(created).toEqual([]);
+    await done();
+  });
 });
