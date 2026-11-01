@@ -3,9 +3,9 @@ import type { MMKV } from 'react-native-mmkv';
 
 import { container } from '@/features/core/container';
 import { LocalStorage } from '@/features/core/storage/data/services/LocalStorage';
-import { mmkvClient } from '@/features/core/storage/di/factories/mmkvClient';
 import { STORAGE_TYPES } from '@/features/core/storage/di/types';
 import type { IStorage } from '@/features/core/storage/domain/entities/IStorage';
+import { mmkvClient } from '@/features/core/storage/libraries/mmkvClient';
 
 const storageModule = new ContainerModule(({ bind }) => {
   bind<MMKV>(STORAGE_TYPES.MMKV).toConstantValue(mmkvClient);

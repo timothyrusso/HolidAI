@@ -51,10 +51,12 @@
     "@react-native-vector-icons/ionicons": "^13.1.2",
     "@sentry/react-native": "^8.19.0",
     "@tanstack/react-query": "^5.62.7",
+    "@timothyrusso/effect-core": "^0.1.2",
     "@types/react-dom": "~19.2.0",
     "ai": "^6.0.3",
     "convex": "^1.38.0",
     "date-fns": "^4.1.0",
+    "effect": "^3.22.4",
     "expo": "^57.0.0",
     "expo-auth-session": "~57.0.3",
     "expo-blur": "~57.0.2",
@@ -122,6 +124,7 @@
     "@storybook/addon-ondevice-controls": "^10.5.4",
     "@storybook/react-native": "^10.5.4",
     "@storybook/react-native-web-vite": "^10.5.7",
+    "@testing-library/react-native": "^14.1.0",
     "@timothyrusso/arch-rules": "^0.1.2",
     "@timothyrusso/config-presets": "^0.1.2",
     "@timothyrusso/eslint-plugin-arch": "^0.1.2",
@@ -142,6 +145,7 @@
     "react-native-svg-transformer": "^1.5.1",
     "react-test-renderer": "19.2.0",
     "storybook": "^10.5.7",
+    "test-renderer": "^1.3.1",
     "typescript": "~6.0.3"
   },
   "private": true

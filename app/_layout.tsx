@@ -1,22 +1,24 @@
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { EffectRuntimeProvider } from '@timothyrusso/effect-core/react';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { reloadAppAsync } from 'expo';
 import { useAssets } from 'expo-asset';
-import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, SplashScreen, Stack, useNavigationContainerRef } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+import type { AppConfigValues } from '@/features/core/config';
 import { fontsConfig, ToastProvider } from '@/features/core/design-system';
 import { RootAppCrashView } from '@/features/core/error/pages';
 import { Stacks, screenOptions } from '@/features/core/navigation';
 import { queryClient } from '@/features/core/query';
-import { initSentry, registerNavigationContainer, wrap } from '@/features/core/sentry';
+import { bootRuntime, runtime } from '@/features/core/runtime';
+import { initSentry, registerNavigationContainer, reportBootFailure, wrap } from '@/features/core/sentry';
 import { initI18n } from '@/features/core/translations';
 
 initSentry();
@@ -42,11 +44,19 @@ export default wrap(function RootLayout() {
     }
   }, [ref]);
 
-  // biome-ignore lint/style/noNonNullAssertion: following the convex docs: https://docs.convex.dev/quickstart/react-native
-  // biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: following the convex docs: https://docs.convex.dev/quickstart/react-native
-  const convex = new ConvexReactClient(Constants.expoConfig?.extra?.convexUrl!, {
-    unsavedChangesWarning: false,
-  });
+  const [config, setConfig] = useState<AppConfigValues | null>(null);
+  const [bootError, setBootError] = useState<Error | null>(null);
+  useEffect(() => {
+    bootRuntime().then(setConfig, (error: unknown) => {
+      reportBootFailure(error);
+      setBootError(error instanceof Error ? error : new Error(String(error)));
+    });
+  }, []);
+
+  const convex = useMemo(
+    () => (config ? new ConvexReactClient(config.convexUrl, { unsavedChangesWarning: false }) : null),
+    [config],
+  );
 
   SplashScreen.preventAutoHideAsync();
 
@@ -66,26 +76,34 @@ export default wrap(function RootLayout() {
 
   const appReady = fontsLoaded && (!!welcomeAssets || !!welcomeAssetsError);
 
+  const launched = appReady && (convex !== null || bootError !== null);
+
   useEffect(() => {
-    if (appReady) {
+    if (launched) {
       SplashScreen.hideAsync();
     }
-  }, [appReady]);
+  }, [launched]);
 
-  if (!appReady) {
+  if (bootError) {
+    return <RootAppCrashView error={bootError} retry={() => reloadAppAsync()} />;
+  }
+
+  if (!(appReady && config && convex)) {
     return null;
   }
 
   return (
     <GestureHandlerRootView style={styles.root}>
-      <ClerkProvider publishableKey={Constants.expoConfig?.extra?.clerkPublishableKey} tokenCache={tokenCache}>
+      <ClerkProvider publishableKey={config.clerkPublishableKey} tokenCache={tokenCache}>
         <ClerkLoaded>
           <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
             <QueryClientProvider client={queryClient}>
-              <KeyboardProvider>
-                <InitialLayout />
-                <ToastProvider />
-              </KeyboardProvider>
+              <EffectRuntimeProvider runtime={runtime}>
+                <KeyboardProvider>
+                  <InitialLayout />
+                  <ToastProvider />
+                </KeyboardProvider>
+              </EffectRuntimeProvider>
             </QueryClientProvider>
           </ConvexProviderWithClerk>
         </ClerkLoaded>

@@ -189,6 +189,9 @@
     "UNAUTHORIZED": "Non sei autorizzato",
     "GENERATION": "Impossibile generare il contenuto",
     "NOT_FOUND": "Contenuto non trovato",
+    "STORAGE": "Errore di archiviazione, riprova",
+    "IMAGE_FETCH": "Impossibile caricare l'immagine",
+    "CONFIG": "Manca un valore di configurazione dell'app",
     "AUTH": {
       "SIGN_IN_FAILED": "Email o password non corretti",
       "SIGN_UP_FAILED": "Impossibile creare l'account, riprova",

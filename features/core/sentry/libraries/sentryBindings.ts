@@ -22,8 +22,13 @@ export const initSentry = (): void => {
   });
 };
 
-export const captureException = (error: Error, context?: Record<string, unknown>): void => {
+export const captureException = (error: unknown, context?: Readonly<Record<string, unknown>>): void => {
   Sentry.captureException(error, { extra: context });
+};
+
+/** Reports a runtime that failed to boot: the `Logger` is part of the Layer that failed. */
+export const reportBootFailure = (error: unknown): void => {
+  Sentry.captureException(error, { tags: { phase: 'boot' } });
 };
 
 export const wrap = <P extends Record<string, unknown>>(component: React.ComponentType<P>): React.ComponentType<P> => {
@@ -31,6 +36,7 @@ export const wrap = <P extends Record<string, unknown>>(component: React.Compone
 };
 
 export const startSpan = Sentry.startSpan;
+export const startInactiveSpan = Sentry.startInactiveSpan;
 export const setMeasurement = Sentry.setMeasurement;
 
 export const registerNavigationContainer = (ref: unknown): void => {
