@@ -124,7 +124,8 @@ Each is a deliberate departure from a kit rule, with the reason.
 2. **SDK callback failures through a mutation.** `useReportFailure` (`core/logger`) runs
    `reportFailure(cause)`, an Effect that only fails, through `useEffectMutation`, so a failure an
    SDK hands to a callback is logged once by the boundary like any other. Its one caller is the
-   `PlacesAutocomplete` ViewModel (the Google Places SDK's `onFail`).
+   `PlacesAutocomplete` ViewModel (the Google Places SDK's `onFail`, and its `onTimeout`, reported
+   as an `Error` naming the timeout).
 3. **`bootRuntime` runs an Effect in the composition root.** After `runtime.boot()`,
    `core/runtime/runtime.ts` reads `AppConfig` and `languageToRestore` through
    `runtime.runPromise`, because the providers above the runtime (Convex, Clerk) need the decoded

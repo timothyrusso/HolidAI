@@ -46,6 +46,7 @@ export const PlacesAutocomplete: FC<PlacesAutocompleteProps> = ({
         },
       }}
       onFail={effects.handleFail}
+      onTimeout={effects.handleTimeout}
       autoFillOnNotFound={false}
       currentLocation={false}
       currentLocationLabel="Current location"

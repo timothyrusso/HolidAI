@@ -23,6 +23,7 @@ export const usePlacesAutocompleteLogic = (placeholder: string) => {
     },
     effects: {
       handleFail: (error: Error) => reportFailure(error),
+      handleTimeout: () => reportFailure(new Error('google places autocomplete: request timeout')),
     },
   };
 };
