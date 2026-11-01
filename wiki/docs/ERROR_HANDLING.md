@@ -13,15 +13,18 @@ from the kit's logging rule are listed under Exceptions in [ARCHITECTURE.md](ARC
 
 | Key | Members | Declared in |
 | --- | --- | --- |
-| `core` | the kit's `UnexpectedError` and `ConfigError`, `ConfigMissing`, `NetworkFailure`, `Unauthorized`, `NotFound`, `StorageFailure`, `ImageFetchFailed` | `core/error/domain/errors/CoreErrors.ts` |
+| `core` | the kit's `UnexpectedError` and `ConfigError`, `ConfigMissing`, `NetworkFailure`, `Unauthorized`, `NotFound`, `StorageFailure`, `ImageFetchFailed` | the kit's two in `@timothyrusso/effect-core` (re-exported by `core/error/kit.ts`); the rest in `core/error/domain/errors/CoreErrors.ts` |
 | `ai` | `GeminiSearchError`, `GeminiExtractionError` (`GenerationFailed`), each with a `transient` flag the retry reads | `ai/domain/errors/AiErrors.ts` |
 | `user` | `TokensExhausted` | `user/domain/errors/UserErrors.ts` |
 
-- `domain/` files import `AppErrorBase` and `toAppError` from `@/features/core/error` (whose
-  `kit.ts` re-exports them), because `domain-pure-except-effect` keeps
-  `@timothyrusso/effect-core` out of `domain/`.
-- The two generation errors share `ERRORS.GENERATION`: the user sees one message, Sentry sees two
-  tags. The kit's `UnexpectedError` maps to `ERRORS.GENERIC`.
+- Domain error files import `AppErrorBase` from `@/features/core/error` (whose `kit.ts`
+  re-exports it), because `domain-pure-except-effect` keeps `@timothyrusso/effect-core` out of
+  `domain/`.
+- `toAppError`, from the same module, is used in the `catch` of the data repositories'
+  `Effect.tryPromise` and in the logger's `reportFailure`.
+- The two generation errors share `ERRORS.GENERATION`: the user sees one message, and their
+  distinct `_tag`s separate them in logs and tests. Being typed failures, they do not reach Sentry
+  in release builds. The kit's `UnexpectedError` maps to `ERRORS.GENERIC`.
 - Convex mutations fail only with `UnexpectedError` (see the Convex boundary in
   [ARCHITECTURE.md](ARCHITECTURE.md)).
 
@@ -29,7 +32,8 @@ from the kit's logging rule are listed under Exceptions in [ARCHITECTURE.md](ARC
 
 - `LoggerLive` is `ConsoleLogger` in development and `SentryLoggerLive` in release builds, which
   sends `error` to Sentry's `captureException` and drops `warn`, `info` and `debug`. A typed
-  failure therefore never reaches Sentry; a defect does.
+  failure logged through `LoggerLive` therefore never reaches Sentry; a defect does. Boot is the
+  exception (next bullet).
 - A boot failure is reported with `reportBootFailure` from `core/sentry`, tagged `phase: boot`.
 
 ## Boundaries and boot

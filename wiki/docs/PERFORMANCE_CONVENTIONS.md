@@ -15,6 +15,7 @@ attach to whatever span is active at the time. Treat a span's name, not its plac
 in the tree, as what groups it.
 
 ```ts
+import { AiSpanKeys } from '@/features/ai';
 import { startSpan } from '@/features/core/performance';
 
 const context = yield* ai.search(prompt).pipe(startSpan(AiSpanKeys.search));

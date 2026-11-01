@@ -10,7 +10,8 @@ import type {
 
 /**
  * Every error that can reach the UI, keyed by the feature that declares it. Each feature adds
- * `<feature>: <its error union>` here by module augmentation from its `domain/errors/index.ts`.
+ * `<feature>: <its error union>` here by module augmentation from its
+ * `domain/errors/<Feature>Errors.ts` (for example `ai/domain/errors/AiErrors.ts`).
  */
 export interface AppErrorRegistry {
   core:

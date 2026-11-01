@@ -104,9 +104,11 @@ HolidAI wires dependencies two ways.
   takes), and `GeneratedTripSchema` re-decodes its answer; a test keeps the two accepting the same
   fixtures.
 - **Optional config keys fail late.** The Convex URL, the Clerk key and the MMKV key are required
-  at boot; the provider keys and the Sentry DSN are optional, and the feature that needs one fails
-  with `ConfigMissing` when it runs (`requireConfigKey`). The Gemini client is built on the first
-  call through `Effect.cached`, so a checkout without the key still starts.
+  at boot; the provider keys are optional, and the feature that needs one fails with
+  `ConfigMissing` when it runs (`requireConfigKey`). The Gemini client is built on the first
+  call through `Effect.cached`, so a checkout without the key still starts. The Sentry DSN is
+  optional too, but `initSentry` reads it from `Constants` at boot, and Sentry stays off without
+  it; it goes through neither `requireConfigKey` nor `ConfigMissing`.
 - **The wizard resets when generation succeeds**, in `useGenerateTrip`, before enrichment and
   save. A save that fails after that loses the wizard's inputs.
 - **Generation runs in two timed steps.** See [EFFECT_NOTES.md](EFFECT_NOTES.md) for the retry

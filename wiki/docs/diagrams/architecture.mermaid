@@ -21,7 +21,7 @@ flowchart TD
     end
 
     subgraph FHS["Facades / hooks / state"]
-        FAC["facade: useEffectQuery / useEffectMutation"]:::facade
+        FAC["facade: useEffectQuery / useEffectMutation, or hook repo (Convex/Clerk)"]:::facade
         HOK["hook: stateful utility, no repo"]:::facade
         STA["state: Zustand, client-only"]:::facade
     end

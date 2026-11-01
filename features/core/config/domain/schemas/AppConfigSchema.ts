@@ -2,8 +2,10 @@ import { Schema } from 'effect';
 
 /**
  * What the `extra` block of `app.config.js` holds. The Convex URL, the Clerk publishable key and
- * the MMKV key are required: without one the boot fails naming it. The provider keys and the
- * Sentry DSN are optional: the feature that needs one fails with `ConfigMissing` when it runs.
+ * the MMKV key are required: without one the boot fails naming it. The provider keys are
+ * optional: the feature that needs one fails with `ConfigMissing` when it runs. The Sentry DSN is
+ * optional too, but `initSentry` reads it from `Constants` at boot, and Sentry stays off without
+ * it; it never goes through `requireConfigKey` or `ConfigMissing`.
  */
 export const AppConfigSchema = Schema.Struct({
   convexUrl: Schema.NonEmptyString,

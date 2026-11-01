@@ -11,7 +11,10 @@ export class ImageRepository extends Context.Tag('images/ImageRepository')<
     readonly getImage: (
       request: ImageRequest,
     ) => Effect.Effect<ImageResult | null, ImageFetchFailed | NetworkFailure | ConfigMissing>;
-    /** The resource names of up to `count` Google Places photos of the place `query` names. */
+    /**
+     * Searches Google Places for `query` and returns the photo resource names of the first
+     * matching place, up to `count`.
+     */
     readonly getPlacePhotoNames: (
       query: string,
       count: number,
