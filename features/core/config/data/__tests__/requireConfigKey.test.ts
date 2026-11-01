@@ -29,6 +29,7 @@ describe('requireConfigKey', () => {
     Effect.gen(function* () {
       const error = yield* Effect.flip(requireConfigKey(aConfig({ unsplashAccessKey: '' }), 'unsplashAccessKey'));
 
+      expect(error._tag).toBe('ConfigMissing');
       expect(error.field).toBe('unsplashAccessKey');
     }),
   );

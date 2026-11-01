@@ -23,6 +23,12 @@ describe('makeNetwork', () => {
     }),
   );
 
+  itEffect('is not connected when there is no network and reachability is unknown', () =>
+    Effect.gen(function* () {
+      expect(yield* makeNetwork(reading({ isConnected: false, isInternetReachable: null })).isConnected).toBe(false);
+    }),
+  );
+
   itEffect('fails with NetworkFailure when the state cannot be read', () =>
     Effect.gen(function* () {
       const error = yield* Effect.flip(makeNetwork(() => Promise.reject(new Error('no module'))).isConnected);

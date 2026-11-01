@@ -20,9 +20,13 @@ describe('getTimezoneFormattedDate', () => {
   it('shifts a date so its UTC fields read as the local date and time', () => {
     const shifted = getTimezoneFormattedDate(CALENDAR_PICK);
 
-    expect([shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate(), shifted.getUTCHours()]).toEqual([
-      2026, 4, 12, 9,
-    ]);
+    expect([
+      shifted.getUTCFullYear(),
+      shifted.getUTCMonth(),
+      shifted.getUTCDate(),
+      shifted.getUTCHours(),
+      shifted.getUTCMinutes(),
+    ]).toEqual([2026, 4, 12, 9, 30]);
   });
 });
 

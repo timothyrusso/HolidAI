@@ -53,7 +53,13 @@ describe('languageToRestore', () => {
     'falls back to the device language, and logs the StorageFailure, when storage cannot be read',
     Effect.gen(function* () {
       expect(yield* languageToRestore).toBeUndefined();
-      expect(unreadableLogs.entries).toMatchObject([{ level: 'warn', message: 'restore the saved language failed' }]);
+      expect(unreadableLogs.entries).toMatchObject([
+        {
+          level: 'warn',
+          message: 'restore the saved language failed',
+          context: { cause: { _tag: 'StorageFailure', key: 'app_language' } },
+        },
+      ]);
     }),
     unreadable,
   );

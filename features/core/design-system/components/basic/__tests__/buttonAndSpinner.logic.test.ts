@@ -11,6 +11,7 @@ import {
   useCustomSpinnerLogic,
 } from '@/features/core/design-system/components/basic/CustomSpinner/CustomSpinner.logic';
 import { colors } from '@/features/core/design-system/style/colors';
+import { opacity } from '@/features/core/design-system/style/opacity';
 
 const renderButton = async () => (await renderHook(useCustomButtonLogic)).result.current.derived;
 
@@ -97,6 +98,7 @@ describe('useCustomSpinnerLogic', () => {
 
     expect(result.current.derived.accessibilityValue).toEqual({ min: 0, max: 100, now: 42 });
     expect(result.current.derived.spinnerColors.track).toBe(colors.primaryWhite);
+    expect(result.current.derived.spinnerColors.trackOpacity).toBe(opacity.opacity20);
   });
 
   it('draws no arc for no progress', async () => {
