@@ -48,13 +48,18 @@ describe('useEffectQuery', () => {
   });
 
   it('interrupts the running Effect when the hook unmounts, and logs nothing', async () => {
+    const fiber = { interrupted: false };
     const { result, unmount, runtime, logs } = await renderOnTestRuntime(() =>
-      useEffectQuery({ queryKey: ['never'], queryFn: Effect.never }),
+      useEffectQuery({
+        queryKey: ['never'],
+        queryFn: Effect.never.pipe(Effect.onInterrupt(() => Effect.sync(() => (fiber.interrupted = true)))),
+      }),
     );
 
     await waitFor(() => expect(result.current.fetchStatus).toBe('fetching'));
     await unmount();
 
+    await waitFor(() => expect(fiber.interrupted).toBe(true));
     expect(logs.entries).toEqual([]);
     await runtime.dispose();
   });
