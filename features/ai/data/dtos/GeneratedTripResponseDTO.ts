@@ -1,7 +1,11 @@
 import { z } from 'zod';
-import { normalizeDateToISO } from '@/features/trip-generation/domain/schemas/normalizeDateToISO';
+import { normalizeDateToISO } from '@/features/ai/domain/utils/normalizeDateToISO';
 
-export const generatedTripSchema = z.object({
+/**
+ * The trip the extract step asks the model for, in the SDK's format: the descriptions guide the
+ * model, and the SDK checks the answer against it. `GeneratedTripSchema` mirrors it for the domain.
+ */
+export const GeneratedTripResponseDTO = z.object({
   tripDetails: z.object({
     location: z.string(),
     budget: z.string(),
