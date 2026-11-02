@@ -1,4 +1,4 @@
-import { translateDateUseCase } from '@/features/core/dates';
+import { translateDate } from '@/features/core/dates';
 import { navigationService } from '@/features/core/navigation';
 import { useLocale } from '@/features/core/translations';
 
@@ -7,7 +7,7 @@ export const useDetailsBoxLogic = (tripId: string, tripStartDate: string) => {
 
   const handlePress = () => navigationService.toTripDetails({ id: tripId });
 
-  const dateLabel = translateDateUseCase.execute(locale, tripStartDate);
+  const dateLabel = translateDate(locale, tripStartDate);
 
   const handleShowAllTripsButton = () => navigationService.toTripList();
 

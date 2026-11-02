@@ -1,28 +1,35 @@
-export type WikimediaExtMetadataDTO = {
-  Restrictions?: { value: string };
-  DeletionReason?: { value: string };
-};
+import { Schema } from 'effect';
 
-export type WikimediaImageInfoDTO = {
-  thumburl: string;
-  width: number;
-  height: number;
-  extmetadata?: WikimediaExtMetadataDTO;
-};
+const MetadataValue = Schema.Struct({ value: Schema.String });
 
-export type WikimediaCategoryDTO = {
-  title: string;
-};
+export const WikimediaExtMetadataDTO = Schema.Struct({
+  Restrictions: Schema.optional(MetadataValue),
+  DeletionReason: Schema.optional(MetadataValue),
+});
+export type WikimediaExtMetadataDTO = typeof WikimediaExtMetadataDTO.Type;
 
-export type WikimediaPageDTO = {
-  pageid: number;
-  title: string;
-  categories?: WikimediaCategoryDTO[];
-  imageinfo?: WikimediaImageInfoDTO[];
-};
+export const WikimediaImageInfoDTO = Schema.Struct({
+  thumburl: Schema.optional(Schema.String),
+  width: Schema.optional(Schema.Number),
+  height: Schema.optional(Schema.Number),
+  extmetadata: Schema.optional(WikimediaExtMetadataDTO),
+});
+export type WikimediaImageInfoDTO = typeof WikimediaImageInfoDTO.Type;
 
-export type WikimediaSearchResponseDTO = {
-  query?: {
-    pages?: Record<string, WikimediaPageDTO>;
-  };
-};
+export const WikimediaCategoryDTO = Schema.Struct({ title: Schema.String });
+export type WikimediaCategoryDTO = typeof WikimediaCategoryDTO.Type;
+
+export const WikimediaPageDTO = Schema.Struct({
+  pageid: Schema.Number,
+  title: Schema.String,
+  categories: Schema.optional(Schema.Array(WikimediaCategoryDTO)),
+  imageinfo: Schema.optional(Schema.Array(WikimediaImageInfoDTO)),
+});
+export type WikimediaPageDTO = typeof WikimediaPageDTO.Type;
+
+export const WikimediaSearchResponseDTO = Schema.Struct({
+  query: Schema.optional(
+    Schema.Struct({ pages: Schema.optional(Schema.Record({ key: Schema.String, value: WikimediaPageDTO })) }),
+  ),
+});
+export type WikimediaSearchResponseDTO = typeof WikimediaSearchResponseDTO.Type;

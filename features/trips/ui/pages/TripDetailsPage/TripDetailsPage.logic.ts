@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { Animated } from 'react-native';
-import { translateDateUseCase } from '@/features/core/dates';
+import { translateDate } from '@/features/core/dates';
 import { useLocale } from '@/features/core/translations';
 import type { TripDetails } from '@/features/trips/domain/entities/TripDetails';
 import { useGetTripById } from '@/features/trips/facades/useGetTripById';
@@ -99,8 +99,8 @@ export const useTripDetailsPageLogic = () => {
     travelers: travelers ?? 0,
     durationDays: durationDays ?? 0,
     durationNights: durationNights ?? 0,
-    startDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.startDate),
-    endDate: translateDateUseCase.execute(locale, trip?.tripAiResp.tripDetails.endDate),
+    startDate: translateDate(locale, trip?.tripAiResp.tripDetails.startDate),
+    endDate: translateDate(locale, trip?.tripAiResp.tripDetails.endDate),
     currency: trip?.tripAiResp.tripDetails.currency ?? 'N/A',
   };
 

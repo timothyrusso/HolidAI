@@ -1,6 +1,5 @@
-import { BaseError, ErrorCode } from '@/features/core/error';
 import { useToast } from '@/features/core/toast';
-import { useGetUserTokens } from '@/features/user';
+import { TokensExhausted, useGetUserTokens } from '@/features/user';
 
 export const useStartNewTrip = () => {
   const { userTokens } = useGetUserTokens();
@@ -8,7 +7,7 @@ export const useStartNewTrip = () => {
 
   const canStart = () => {
     if (userTokens === 0) {
-      showErrorToast(new BaseError('No tokens remaining', ErrorCode.TokensExhausted));
+      showErrorToast(new TokensExhausted());
       return false;
     }
     return true;

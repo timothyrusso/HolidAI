@@ -1,10 +1,13 @@
-import { useClerk, useUser } from '@clerk/expo';
-import { BaseError, ErrorCode, ensureError, fail, ok } from '@/features/core/error';
+import { useUser } from '@clerk/expo';
+import { useMutation } from 'convex/react';
+import { Effect } from 'effect';
+import { api } from '@/convex/_generated/api';
+import { toAppError } from '@/features/core/error';
 import type { IUserRepository } from '@/features/user/domain/entities/repositories/IUserRepository';
 
 export const useUserRepository = (): IUserRepository => {
-  const { signOut } = useClerk();
   const { user } = useUser();
+  const decrementUserTokens = useMutation(api.users.decrementUserTokens);
 
   return {
     getUser: () =>
@@ -17,23 +20,13 @@ export const useUserRepository = (): IUserRepository => {
           }
         : undefined,
 
-    signOut: async () => {
-      try {
-        await signOut();
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    deleteUser: async () => {
-      if (!user) return fail(new BaseError('No user to delete', ErrorCode.NotFound));
-      try {
-        await user.delete();
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
+    decrementTokens: amount => {
+      const clerkId = user?.id;
+      if (!clerkId) return Effect.void;
+      return Effect.tryPromise({
+        try: () => decrementUserTokens({ clerkId, amount }),
+        catch: cause => toAppError(cause),
+      });
     },
   };
 };

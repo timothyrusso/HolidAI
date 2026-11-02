@@ -103,3 +103,6 @@ the agentic-kit plugin's `agent-memory/README.md`. Humans curate at PR review â€
   its known coordinates after heavy interaction (picker dropdowns, rapid nav) with no AX/visual
   change and no error â€” not a hang. `open <app> --session <s> --relaunch` recovers it; don't sink
   retries into re-tapping the same spot.
+- [2026-11-01] The dev-client gear overlay sits on top-right header buttons (trip-detail heart) and swallows taps; drag it aside with `swipe 360 108 200 500` before tapping.
+- [2026-11-01] A per-simulator network cut is not available without touching the host network (Wi-Fi, proxy, or Network Link Conditioner with GUI and sudo); plan network-off scenarios as BLOCKED unless the lead approves a host-wide cut.
+- [2026-11-01] `.env` reads are denied here; sign-in works without it from the prefilled "Last Used" `+clerk_test` address and code 424242.

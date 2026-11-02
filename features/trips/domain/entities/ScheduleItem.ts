@@ -1,18 +1,3 @@
-interface GeoCoordinates {
-  latitude: number;
-  longitude: number;
-}
+import type { DayPlan } from '@/features/trips/domain/entities/DayPlan';
 
-export interface ScheduleItem {
-  placeNumberID: number;
-  bestTimeToVisit: string;
-  rating: number;
-  ticketPricing: number | null;
-  placeDetails: string;
-  placeDetailsLongDescription: string;
-  placeSecretsAndInsights: string;
-  geoCoordinates: GeoCoordinates;
-  placeName: string;
-  activity: string;
-  photoResourceNames: string[];
-}
+export type ScheduleItem = DayPlan['schedule'][number];

@@ -6,17 +6,17 @@ export const useTravelersNumberSelectorLogic = () => {
   const { tripActions, tripSelectors } = useTripGenerationState();
   const travelersNumber = tripSelectors.travelersNumber();
 
-  const handleCardPress = (value: number) => {
-    tripActions.setTravelersNumber(value);
-  };
+  const options = TRAVELERS_NUMBER_OPTIONS.map(value => ({
+    value,
+    onPress: () => tripActions.setTravelersNumber(value),
+  }));
 
   return {
     state: {
       travelersNumber,
-      data: TRAVELERS_NUMBER_OPTIONS,
     },
-    effects: {
-      handleCardPress,
+    derived: {
+      options,
     },
   };
 };

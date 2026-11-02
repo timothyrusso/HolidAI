@@ -1,7 +1,3 @@
-import type { TypicalDish } from '@/features/trips/domain/entities/TypicalDish';
+import type { TripAiResp } from '@/features/trips/domain/entities/Trip';
 
-export interface Food {
-  foodGeneralNotes: string;
-  foodBudgetNotes: string;
-  typicalDishes: TypicalDish[];
-}
+export type Food = TripAiResp['food'];

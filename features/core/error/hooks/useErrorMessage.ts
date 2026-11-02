@@ -1,10 +1,10 @@
+import { useErrorMessage as useMappedErrorMessage } from '@timothyrusso/effect-core/react';
 import { useTranslation } from 'react-i18next';
-import type { BaseError } from '@/features/core/error/domain/entities/BaseError';
-import { errorCodeToMessageKey } from '@/features/core/error/mappers/errorCodeToMessageKey';
+import type { AppError } from '@/features/core/error/appError';
+import { errorTagToMessageKey } from '@/features/core/error/mappers/errorTagToMessageKey';
 
-export const useErrorMessage = (error: BaseError | null): string | null => {
+/** The translated message for an app error, or `undefined` when there is none. */
+export const useErrorMessage = (error: AppError | null | undefined): string | undefined => {
   const { t } = useTranslation();
-  if (!error) return null;
-  const messageKey = errorCodeToMessageKey[error.code] ?? 'ERRORS.GENERIC';
-  return t(messageKey);
+  return useMappedErrorMessage(error, errorTagToMessageKey, key => t(key));
 };

@@ -189,6 +189,9 @@
     "UNAUTHORIZED": "You are not authorized",
     "GENERATION": "Failed to generate content",
     "NOT_FOUND": "Content not found",
+    "STORAGE": "Storage error, please try again",
+    "IMAGE_FETCH": "Image could not be loaded",
+    "CONFIG": "The app is missing a configuration value",
     "AUTH": {
       "SIGN_IN_FAILED": "Incorrect email or password",
       "SIGN_UP_FAILED": "Unable to create account, please try again",

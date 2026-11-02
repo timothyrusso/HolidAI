@@ -39,7 +39,7 @@ The model processes user inputs through a carefully designed prompt engineering 
 - **Database**: Convex
 - **Client State Management**: Zustand
 - **Caching and Server State Management**: TanStack Query
-- **Dependency Injection**: Inversify
+- **Effects and Dependency Injection**: Effect (Tags and Layers) through `@timothyrusso/effect-core`
 - **Linting**: Biome
 - **Git hooks manager**: Lefthook
 - **Internationalization**: i18next with react-i18next
@@ -200,8 +200,9 @@ The shared architecture, error handling, testing and AI-assisted workflow come f
 [Agentic Workflow](https://github.com/timothyrusso/agentic-kit/blob/main/AGENTIC_WORKFLOW.md).
 [`wiki/docs/`](wiki/docs/) holds what HolidAI does differently:
 
-- [Architecture deltas](wiki/docs/ARCHITECTURE.md): features and tiers, Inversify and hook repositories, Convex, Clerk, Storybook, Sentry
-- [Error handling deltas](wiki/docs/ERROR_HANDLING.md): `Result<T>`, `BaseError`, `ensureError` until the Effect migration
+- [Architecture deltas](wiki/docs/ARCHITECTURE.md): features and tiers, Layers plus hook repositories, Convex, Clerk, exceptions and known leftovers
+- [Error handling deltas](wiki/docs/ERROR_HANDLING.md): the `AppError` registry, logging to Sentry, boot failures
+- [Effect notes](wiki/docs/EFFECT_NOTES.md): the HolidAI file that is the worked example of each Effect primer section
 - [Performance Conventions](wiki/docs/PERFORMANCE_CONVENTIONS.md)
 - [Agentic workflow deltas](wiki/docs/AGENTIC_WORKFLOW.md): plugin wiring and HolidAI's own agent pieces
 

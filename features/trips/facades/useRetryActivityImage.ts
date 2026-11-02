@@ -1,34 +1,34 @@
-import { useCallback, useRef } from 'react';
+import { useEffectMutation } from '@timothyrusso/effect-core/react';
+import { useCallback } from 'react';
 import type { Id } from '@/convex/_generated/dataModel';
-import { fetchPhotoNamesUseCase } from '@/features/core/images';
-import { checkConnectivityUseCase } from '@/features/core/network';
 import { useTripRepository } from '@/features/trips/data/repositories/useTripRepository';
+import { useRetriedUrls } from '@/features/trips/hooks/useRetriedUrls';
+import { retryActivityPhotos } from '@/features/trips/useCases/retryImage';
 
-const MAX_PHOTOS = 6;
-
+/** Looks up new photos when an activity's photo fails to load, once per failed URL and only online. */
 export const useRetryActivityImage = (
   tripId: Id<'trips'> | undefined,
   placeNumberID: number,
   placeName: string,
   location: string,
 ) => {
-  const repo = useTripRepository();
-  const retriedUrls = useRef<Set<string>>(new Set());
+  const { updateActivityPhotos } = useTripRepository();
+  const isFirstRetry = useRetriedUrls();
+  const { mutate } = useEffectMutation({
+    mutationFn: ({ id, failedUrl }: { id: Id<'trips'>; failedUrl: string }) =>
+      retryActivityPhotos(
+        placeName,
+        location,
+        () => isFirstRetry(failedUrl),
+        photoResourceNames => updateActivityPhotos({ id, placeNumberID, photoResourceNames }),
+      ),
+  });
 
   const retryActivityImage = useCallback(
-    async (failedUrl: string) => {
-      if (!tripId) return;
-      const connectivity = await checkConnectivityUseCase.execute();
-      if (!(connectivity.success && connectivity.data)) return;
-      if (retriedUrls.current.has(failedUrl)) return;
-      retriedUrls.current.add(failedUrl);
-
-      const result = await fetchPhotoNamesUseCase.execute(`${placeName}, ${location}`, MAX_PHOTOS);
-      if (!result.success) return;
-
-      await repo.updateActivityPhotos({ id: tripId, placeNumberID, photoResourceNames: result.data });
+    (failedUrl: string) => {
+      if (tripId) mutate({ id: tripId, failedUrl });
     },
-    [tripId, placeNumberID, placeName, location, repo],
+    [tripId, mutate],
   );
 
   return { retryActivityImage };

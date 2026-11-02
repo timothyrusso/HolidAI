@@ -1,7 +1,3 @@
-import type { ScheduleItem } from '@/features/trips/domain/entities/ScheduleItem';
+import type { TripAiResp } from '@/features/trips/domain/entities/Trip';
 
-export interface DayPlan {
-  schedule: ScheduleItem[];
-  day: number;
-  theme: string;
-}
+export type DayPlan = TripAiResp['dayPlans'][number];

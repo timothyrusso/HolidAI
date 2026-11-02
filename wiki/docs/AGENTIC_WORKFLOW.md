@@ -15,7 +15,8 @@ HolidAI no longer keeps its own copies of the agents, skills or workflow; agents
   [`kit.config.json`](../../kit.config.json), as described in the kit's
   [`kit.config.json` section](https://github.com/timothyrusso/agentic-kit/blob/main/AGENTIC_WORKFLOW.md#1-kitconfigjson).
 - The agents read the kit docs, then these deltas
-  ([ARCHITECTURE.md](ARCHITECTURE.md), [ERROR_HANDLING.md](ERROR_HANDLING.md)) and
+  ([ARCHITECTURE.md](ARCHITECTURE.md), [ERROR_HANDLING.md](ERROR_HANDLING.md),
+  [EFFECT_NOTES.md](EFFECT_NOTES.md)) and
   [`.claude/CLAUDE.md`](../../.claude/CLAUDE.md).
 
 ## HolidAI's own pieces

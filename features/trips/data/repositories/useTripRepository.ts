@@ -1,7 +1,8 @@
 import { useUser } from '@clerk/expo';
 import { useMutation, useQuery } from 'convex/react';
+import { Effect } from 'effect';
 import { api } from '@/convex/_generated/api';
-import { ensureError, fail, ok } from '@/features/core/error';
+import { toAppError } from '@/features/core/error';
 import type { ITripRepository } from '@/features/trips/domain/entities/repositories/ITripRepository';
 
 export const useTripRepository = (): ITripRepository => {
@@ -10,7 +11,6 @@ export const useTripRepository = (): ITripRepository => {
 
   const userTrips = useQuery(api.trips.getAllTripsbyUserId, userId ? { userId } : 'skip');
   const createTrip = useMutation(api.trips.createTrip);
-  const deleteAllTripsMutation = useMutation(api.trips.deleteAllTripsByUserId);
   const deleteTripMutation = useMutation(api.trips.deleteTrip);
 
   const updateActivityPhotosMutation = useMutation(api.trips.updateActivityPhotos).withOptimisticUpdate(
@@ -99,70 +99,17 @@ export const useTripRepository = (): ITripRepository => {
     },
   );
 
+  const run = <A>(mutate: () => Promise<A>) =>
+    Effect.tryPromise({ try: () => mutate(), catch: cause => toAppError(cause) });
+
   return {
     getTrips: () => userTrips,
-
-    addTrip: async params => {
-      try {
-        const id = await createTrip(params);
-        return ok(id);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    deleteAllTrips: async id => {
-      try {
-        await deleteAllTripsMutation({ userId: id });
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    deleteTrip: async id => {
-      try {
-        await deleteTripMutation({ id });
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    toggleFavoriteTrip: async params => {
-      try {
-        await toggleFavoriteTripMutation(params);
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    updateActivityPhotos: async params => {
-      try {
-        await updateActivityPhotosMutation(params);
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    updateDishImage: async params => {
-      try {
-        await updateDishImageMutation(params);
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
-
-    updateCoverImage: async params => {
-      try {
-        await updateCoverImageMutation(params);
-        return ok(undefined);
-      } catch (err) {
-        return fail(ensureError(err));
-      }
-    },
+    addTrip: params => run(() => createTrip(params)),
+    deleteTrip: id => run(() => deleteTripMutation({ id })),
+    toggleFavoriteTrip: params => run(() => toggleFavoriteTripMutation(params)),
+    updateActivityPhotos: params =>
+      run(() => updateActivityPhotosMutation({ ...params, photoResourceNames: [...params.photoResourceNames] })),
+    updateDishImage: params => run(() => updateDishImageMutation(params)),
+    updateCoverImage: params => run(() => updateCoverImageMutation(params)),
   };
 };

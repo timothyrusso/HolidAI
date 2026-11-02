@@ -1,85 +1,56 @@
 # Error handling: HolidAI deltas
 
-The generic error strategy (nothing throws across a layer, one class per failure mode, the UI
-never reads `error.message`, error boundaries, toast for mutations and inline for forms) is the
-kit's [ERROR_HANDLING.md](https://github.com/timothyrusso/agentic-kit/blob/main/ERROR_HANDLING.md).
-Read it first. This file holds what HolidAI does differently; where the two disagree, this file
-wins.
+The error strategy (tagged errors, the closed `AppError` union, `toAppError`, logging once at the
+runtime boundary, boot failures, error boundaries, toast or inline or boundary) is the kit's
+`ERROR_HANDLING.md` (in the plugin's `docs/`, and on
+[GitHub](https://github.com/timothyrusso/agentic-kit/blob/main/ERROR_HANDLING.md)). Read it first.
+This file holds only what HolidAI adds; where the two disagree, this file wins. The departures
+from the kit's logging rule are listed under Exceptions in [ARCHITECTURE.md](ARCHITECTURE.md).
 
-**Until Night 4** (#504) HolidAI has no Effect: failures are `Result<T>` values, errors are
-`BaseError` subclasses with an `ErrorCode`, and the logging point is the use case, because there
-is no runtime boundary to log at.
+## The union
 
-## Kit concept to HolidAI today
+`AppErrorRegistry` (`features/core/error/appError.ts`) has three entries:
 
-| Kit | HolidAI until Night 4 | Where |
+| Key | Members | Declared in |
 | --- | --- | --- |
-| `Effect<A, E, R>` | `Result<T>` (`Promise<Result<T>>` when async) with `ok()` / `fail()` | `core/error/domain/entities/Result.ts` |
-| `Data.TaggedError` via `AppErrorBase` | A `BaseError` subclass carrying an `ErrorCode` | `<feature>/domain/entities/errors/` |
-| The closed `AppError` union | The `ErrorCode` const object | `core/error/domain/entities/ErrorCode.ts` |
-| `errorTagToMessageKey` (exhaustive) | `errorCodeToMessageKey` (partial; missing codes fall back to `ERRORS.GENERIC`) | `core/error/mappers/` |
-| `toAppError(cause)` | `ensureError(value)` in every `catch` | `core/error/domain/utils/ensureError.ts` |
-| `Logger` at the runtime boundary | Injected `ILogger`, called in `useCases/` | `core/error/di/` |
-| `useAppErrorMessage(error)` | `useErrorMessage(error)` | `core/error/hooks/` |
-| `runtime.boot()` and the fatal screen | None: DI resolves at module load | |
+| `core` | the kit's `UnexpectedError` and `ConfigError`, `ConfigMissing`, `NetworkFailure`, `Unauthorized`, `NotFound`, `StorageFailure`, `ImageFetchFailed` | the kit's two in `@timothyrusso/effect-core` (re-exported by `core/error/kit.ts`); the rest in `core/error/domain/errors/CoreErrors.ts` |
+| `ai` | `GeminiSearchError`, `GeminiExtractionError` (`GenerationFailed`), each with a `transient` flag the retry reads | `ai/domain/errors/AiErrors.ts` |
+| `user` | `TokensExhausted` | `user/domain/errors/UserErrors.ts` |
 
-## Types
-
-```ts
-type Result<T> = { success: true; data: T } | { success: false; error: BaseError };
-const ok = <T>(data: T): Result<T> => ({ success: true, data });
-const fail = (error: BaseError): Result<never> => ({ success: false, error });
-
-declare class BaseError extends Error {
-  readonly code: ErrorCode;
-  readonly context?: Record<string, unknown>;
-  constructor(message: string, code?: ErrorCode,
-              options?: { context?: Record<string, unknown>; cause?: Error });
-}
-```
-
-- `ErrorCode` values: `UnexpectedError`, `NotFound`, `Unauthorized`, `NetworkFailure`,
-  `GenerationFailed`, `Unknown`, `AuthSignInFailed`, `AuthSignUpFailed`,
-  `AuthVerificationFailed`, `AuthPasswordResetFailed`, `TokensExhausted`. Add a code only when the
-  UI must treat the failure differently from every existing one.
-- `UnexpectedError` is for anything caught that was not anticipated; `Unknown` only for a named
-  failure state that has no final code yet.
-- `ensureError` returns a `BaseError` as is, wraps an `Error` as `UnexpectedError` with it as
-  `cause`, and turns anything else into an `UnexpectedError` (a string becomes the message, other
-  values go in `context.raw`).
-- A feature error extends `BaseError`, never `Error`, and reuses an existing code when the UI
-  shows the same message: `GeminiSearchError` and `GeminiExtractionError` in `ai` both use
-  `GenerationFailed`, so the user sees one message and Sentry sees two names. The constructor
-  message is for logs only.
-
-## Layer by layer
-
-| Layer | HolidAI until Night 4 |
-| --- | --- |
-| `data/repositories/` (class and hook) | Catch, `fail(ensureError(err))`, return `Result<T>`. Hook repositories' reactive reads return `undefined` while loading, no `Result` |
-| `useCases/` | Propagate a failed `Result` unchanged (`if (!result.success) return result;`); catch, `logger.error(error, context)`, return `fail(error)`; never re-throw. **The one logging point** |
-| `facades/` | Branch on `result.success`; the toast is `showErrorToast(error)` from `core/toast`. No `try/catch` around repositories or use cases: their contract is that nothing escapes |
-| `.logic.ts`, `.tsx` | As in the kit, with `useErrorMessage` for text |
+- Domain error files import `AppErrorBase` from `@/features/core/error` (whose `kit.ts`
+  re-exports it), because `domain-pure-except-effect` keeps `@timothyrusso/effect-core` out of
+  `domain/`.
+- `toAppError`, from the same module, is used in the `catch` of the data repositories'
+  `Effect.tryPromise` and in the logger's `reportFailure`.
+- The two generation errors share `ERRORS.GENERATION`: the user sees one message, and their
+  distinct `_tag`s separate them in logs and tests. Being typed failures, they do not reach Sentry
+  in release builds. The kit's `UnexpectedError` maps to `ERRORS.GENERIC`.
+- Convex mutations fail only with `UnexpectedError` (see the Convex boundary in
+  [ARCHITECTURE.md](ARCHITECTURE.md)).
 
 ## Logging
 
-`ILogger` (`log`, `error(error, context)`, `warning`, `info`, `debug`) is bound in
-`core/error/di/config.ts`: `BasicLogger` in development, `SentryLogger` in release builds.
-`SentryLogger` forwards `error()` to Sentry's `captureException` through `ISentryErrorClient`
-and drops the other levels. Pass a `BaseError` for application failures; crash-boundary and SDK callbacks pass their supplied `Error` directly.
+- `LoggerLive` is `ConsoleLogger` in development and `SentryLoggerLive` in release builds, which
+  sends `error` to Sentry's `captureException` and drops `warn`, `info` and `debug`. A typed
+  failure logged through `LoggerLive` therefore never reaches Sentry; a defect does. Boot is the
+  exception (next bullet).
+- A boot failure is reported with `reportBootFailure` from `core/sentry`, tagged `phase: boot`.
 
-Outside use cases, three ViewModels log because no use case saw the error: the two crash views
-(the render error a boundary caught) and the design-system `PlacesAutocomplete` (its library's
-failure callback).
+## Boundaries and boot
 
-Convex functions run on the server without the app's logger; `convex/http.ts` uses
-`console.error` behind a `biome-ignore`.
-
-## Boundaries in HolidAI
-
-- Root: `app/_layout.tsx` exports `ErrorBoundary`, rendering `RootAppCrashView`, whose retry
-  reloads the app (`reloadAppAsync`).
+- `bootRuntime()` in `core/runtime` boots the runtime, then reads the config and the language;
+  `app/_layout.tsx` builds the Convex client and mounts Clerk only after it resolves. On a
+  rejection it reports the error (a `ConfigError` names the missing key) and renders
+  `RootAppCrashView`, which shows the generic message and whose retry reloads the app.
+- Root: `RootAppCrashView`.
 - Route: `app/(main)/(authenticated)/_layout.tsx` exports `ErrorBoundary`, rendering
-  `GenericCrashView` with a retry and a way back to the home page. It covers every signed-in
-  screen, including trip generation.
+  `GenericCrashView` with a retry and a way back home. It covers every signed-in screen, trip
+  generation included.
 - Both crash views come from `core/error/pages.ts`.
+
+## Trip generation
+
+A failed generation or save shows the error toast from its facade (`useGenerateTrip`,
+`useSaveTrip`) and the page goes home. Running out of tokens is checked before generating and
+shown as a `TokensExhausted` toast by `GenerateTripPage.logic.ts` (Exceptions in
+[ARCHITECTURE.md](ARCHITECTURE.md)).
