@@ -21,13 +21,16 @@ const CALL_SETTINGS = {
 
 /**
  * Whether a failed request may succeed if sent again: the provider said so (a 429, a 5xx), or the
- * connection dropped. React Native's `fetch` rejects a dropped connection with a bare `TypeError`
- * ('Network request failed') that the SDK does not wrap, so that one counts too; any other
- * `TypeError` is a bug, and retrying it could bill a request twice.
+ * connection dropped. The SDK does not wrap a dropped connection on native, so both shapes count
+ * too: Expo's global `fetch` rejects with a plain `Error` whose message starts 'fetch failed: '
+ * (its `FetchError`, not exported), and React Native's own `fetch` with a bare `TypeError`
+ * ('Network request failed'). Any other `TypeError` is a bug, and retrying it could bill a request
+ * twice.
  */
 const isRetryable = (cause: unknown) =>
   (APICallError.isInstance(cause) && cause.isRetryable) ||
-  (cause instanceof TypeError && cause.message === 'Network request failed');
+  (cause instanceof TypeError && cause.message === 'Network request failed') ||
+  (cause instanceof Error && cause.message.startsWith('fetch failed: '));
 
 const extractionPrompt = (prompt: string, context: string) => `
   You are a data extraction assistant.
