@@ -97,7 +97,8 @@ export const convexFake = {
         try {
           return await mutate(args);
         } finally {
-          optimisticLayers.splice(optimisticLayers.indexOf(layer), 1);
+          const at = optimisticLayers.indexOf(layer);
+          if (at !== -1) optimisticLayers.splice(at, 1);
           notify();
         }
       };
