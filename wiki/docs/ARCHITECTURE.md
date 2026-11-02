@@ -105,7 +105,9 @@ HolidAI wires dependencies two ways.
   fixtures.
 - **Optional config keys fail late.** The Convex URL, the Clerk key and the MMKV key are required
   at boot; the provider keys are optional, and the feature that needs one fails with
-  `ConfigMissing` when it runs (`requireConfigKey`). The Gemini client is built on the first
+  `ConfigMissing` when it runs (`requireConfigKey`). `PlacesAutocomplete` is the exception: it
+  reads the Places key from `Constants` (see Known leftovers), so a missing key does not fail with
+  `ConfigMissing`. The Gemini client is built on the first
   call through `Effect.cached`, so a checkout without the key still starts. The Sentry DSN is
   optional too, but `initSentry` reads it from `Constants` at boot, and Sentry stays off without
   it; it goes through neither `requireConfigKey` nor `ConfigMissing`.
