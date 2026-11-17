@@ -36,6 +36,12 @@ const extractTrip = (context: string) => Effect.flatMap(AiService, ai => ai.extr
 const found = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
 const askedModel = GeminiFake([aCandidate('Lisbon in May: castles, trams and custard tarts.')]);
 const offline = GeminiFake([]);
+const offlineOnExpoFetch = {
+  sent: [],
+  fetch: async () => {
+    throw new Error('fetch failed: java.net.UnknownHostException: Unable to resolve host');
+  },
+};
 const ourBug = {
   sent: [],
   fetch: async () => {
@@ -76,6 +82,16 @@ describe('GeminiAiServiceLive, search', () => {
       expect(Either.isLeft(result) && result.left).toMatchObject({ _tag: 'GeminiSearchError', transient: true });
     }),
     serviceOver(offline),
+  );
+
+  itEffect(
+    "fails with a transient GeminiSearchError when Expo's fetch loses the connection",
+    Effect.gen(function* () {
+      const result = yield* Effect.either(search('Lisbon for 2 days'));
+
+      expect(Either.isLeft(result) && result.left).toMatchObject({ _tag: 'GeminiSearchError', transient: true });
+    }),
+    serviceOver(offlineOnExpoFetch),
   );
 
   itEffect(
